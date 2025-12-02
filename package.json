@@ -6,6 +6,9 @@
   "description": "Centy - React application deployed as Docker image",
   "scripts": {
     "dev": "vite",
+    "dev:pm2": "pm2 start ecosystem.config.cjs",
+    "dev:pm2:stop": "pm2 stop centy-app",
+    "dev:pm2:logs": "pm2 logs centy-app",
     "build": "tsc -b && vite build",
     "proto": "buf generate",
     "preview": "vite preview",
@@ -51,6 +54,7 @@
     "jsdom": "^26.1.0",
     "knip": "^5.66.2",
     "lint-staged": "^16.1.0",
+    "pm2": "^6.0.14",
     "prettier": "^3.5.3",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.4",
