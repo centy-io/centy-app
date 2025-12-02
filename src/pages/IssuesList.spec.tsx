@@ -324,4 +324,171 @@ describe('IssuesList', () => {
       expect(priorityBadge).toHaveClass('priority-high')
     })
   })
+
+  it('should handle isInitialized network error', async () => {
+    const mockIsInitialized = vi.mocked(centyClient.isInitialized)
+    mockIsInitialized.mockRejectedValue(new Error('Network error'))
+
+    renderComponent()
+
+    const projectInput = screen.getByLabelText('Project Path:')
+    fireEvent.change(projectInput, { target: { value: '/test/path' } })
+
+    await waitFor(() => {
+      expect(
+        screen.getByText('Centy is not initialized in this directory')
+      ).toBeInTheDocument()
+    })
+  })
+
+  it('should filter issues by priority', async () => {
+    const mockIsInitialized = vi.mocked(centyClient.isInitialized)
+    const mockListIssues = vi.mocked(centyClient.listIssues)
+
+    mockIsInitialized.mockResolvedValue({
+      initialized: true,
+      centyPath: '/test/path/.centy',
+      $typeName: 'centy.IsInitializedResponse',
+      $unknown: undefined,
+    })
+
+    mockListIssues.mockResolvedValue({
+      issues: [],
+      totalCount: 0,
+      $typeName: 'centy.ListIssuesResponse',
+      $unknown: undefined,
+    })
+
+    renderComponent()
+
+    const projectInput = screen.getByLabelText('Project Path:')
+    fireEvent.change(projectInput, { target: { value: '/test/path' } })
+
+    await waitFor(() => {
+      expect(screen.getByLabelText('Priority:')).toBeInTheDocument()
+    })
+
+    const priorityFilter = screen.getByLabelText('Priority:')
+    fireEvent.change(priorityFilter, { target: { value: 'high' } })
+
+    await waitFor(() => {
+      expect(mockListIssues).toHaveBeenCalledWith(
+        expect.objectContaining({
+          priority: 'high',
+        })
+      )
+    })
+  })
+
+  it('should handle non-Error rejection', async () => {
+    const mockIsInitialized = vi.mocked(centyClient.isInitialized)
+    const mockListIssues = vi.mocked(centyClient.listIssues)
+
+    mockIsInitialized.mockResolvedValue({
+      initialized: true,
+      centyPath: '/test/path/.centy',
+      $typeName: 'centy.IsInitializedResponse',
+      $unknown: undefined,
+    })
+
+    mockListIssues.mockRejectedValue('string error')
+
+    renderComponent()
+
+    const projectInput = screen.getByLabelText('Project Path:')
+    fireEvent.change(projectInput, { target: { value: '/test/path' } })
+
+    await waitFor(() => {
+      expect(
+        screen.getByText('Failed to connect to daemon')
+      ).toBeInTheDocument()
+    })
+  })
+
+  it('should show closed status badge correctly', async () => {
+    const mockIsInitialized = vi.mocked(centyClient.isInitialized)
+    const mockListIssues = vi.mocked(centyClient.listIssues)
+
+    mockIsInitialized.mockResolvedValue({
+      initialized: true,
+      centyPath: '/test/path/.centy',
+      $typeName: 'centy.IsInitializedResponse',
+      $unknown: undefined,
+    })
+
+    mockListIssues.mockResolvedValue({
+      issues: [
+        {
+          issueNumber: '0001',
+          title: 'Closed Issue',
+          description: 'Description',
+          metadata: {
+            status: 'closed',
+            priority: 'low',
+            createdAt: '2024-01-15T10:00:00Z',
+            updatedAt: '2024-01-15T10:00:00Z',
+            customFields: {},
+            $typeName: 'centy.IssueMetadata',
+            $unknown: undefined,
+          },
+          $typeName: 'centy.Issue',
+          $unknown: undefined,
+        },
+      ],
+      totalCount: 1,
+      $typeName: 'centy.ListIssuesResponse',
+      $unknown: undefined,
+    })
+
+    renderComponent()
+
+    const projectInput = screen.getByLabelText('Project Path:')
+    fireEvent.change(projectInput, { target: { value: '/test/path' } })
+
+    await waitFor(() => {
+      const statusBadge = screen.getByText('closed')
+      const priorityBadge = screen.getByText('low')
+
+      expect(statusBadge).toHaveClass('status-closed')
+      expect(priorityBadge).toHaveClass('priority-low')
+    })
+  })
+
+  it('should display issue without metadata gracefully', async () => {
+    const mockIsInitialized = vi.mocked(centyClient.isInitialized)
+    const mockListIssues = vi.mocked(centyClient.listIssues)
+
+    mockIsInitialized.mockResolvedValue({
+      initialized: true,
+      centyPath: '/test/path/.centy',
+      $typeName: 'centy.IsInitializedResponse',
+      $unknown: undefined,
+    })
+
+    mockListIssues.mockResolvedValue({
+      issues: [
+        {
+          issueNumber: '0001',
+          title: 'Issue Without Metadata',
+          description: 'Description',
+          metadata: undefined,
+          $typeName: 'centy.Issue',
+          $unknown: undefined,
+        },
+      ],
+      totalCount: 1,
+      $typeName: 'centy.ListIssuesResponse',
+      $unknown: undefined,
+    })
+
+    renderComponent()
+
+    const projectInput = screen.getByLabelText('Project Path:')
+    fireEvent.change(projectInput, { target: { value: '/test/path' } })
+
+    await waitFor(() => {
+      expect(screen.getByText('Issue Without Metadata')).toBeInTheDocument()
+      expect(screen.getAllByText('unknown')).toHaveLength(2)
+    })
+  })
 })

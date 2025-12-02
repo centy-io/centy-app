@@ -247,4 +247,121 @@ describe('CreateIssue', () => {
     fireEvent.change(prioritySelect, { target: { value: 'high' } })
     expect(prioritySelect).toHaveValue('high')
   })
+
+  it('should handle isInitialized network error', async () => {
+    const mockIsInitialized = vi.mocked(centyClient.isInitialized)
+    mockIsInitialized.mockRejectedValue(new Error('Network error'))
+
+    renderComponent()
+
+    const projectInput = screen.getByLabelText('Project Path:')
+    fireEvent.change(projectInput, { target: { value: '/test/path' } })
+
+    await waitFor(() => {
+      expect(
+        screen.getByText('Centy is not initialized in this directory')
+      ).toBeInTheDocument()
+    })
+  })
+
+  it('should clear validation when project path is cleared', async () => {
+    const mockIsInitialized = vi.mocked(centyClient.isInitialized)
+    mockIsInitialized.mockResolvedValue({
+      initialized: true,
+      centyPath: '/test/path/.centy',
+      $typeName: 'centy.IsInitializedResponse',
+      $unknown: undefined,
+    })
+
+    renderComponent()
+
+    const projectInput = screen.getByLabelText('Project Path:')
+    fireEvent.change(projectInput, { target: { value: '/test/path' } })
+
+    await waitFor(() => {
+      expect(screen.getByText('Centy project found')).toBeInTheDocument()
+    })
+
+    fireEvent.change(projectInput, { target: { value: '' } })
+
+    await waitFor(() => {
+      expect(screen.queryByText('Centy project found')).not.toBeInTheDocument()
+    })
+  })
+
+  it('should use default error message when createIssue returns empty error', async () => {
+    const mockIsInitialized = vi.mocked(centyClient.isInitialized)
+    const mockCreateIssue = vi.mocked(centyClient.createIssue)
+
+    mockIsInitialized.mockResolvedValue({
+      initialized: true,
+      centyPath: '/test/path/.centy',
+      $typeName: 'centy.IsInitializedResponse',
+      $unknown: undefined,
+    })
+
+    mockCreateIssue.mockResolvedValue({
+      success: false,
+      error: '',
+      issueNumber: '',
+      createdFiles: [],
+      manifest: undefined,
+      $typeName: 'centy.CreateIssueResponse',
+      $unknown: undefined,
+    })
+
+    renderComponent()
+
+    const projectInput = screen.getByLabelText('Project Path:')
+    const titleInput = screen.getByLabelText('Title:')
+
+    fireEvent.change(projectInput, { target: { value: '/test/path' } })
+    fireEvent.change(titleInput, { target: { value: 'Test Issue' } })
+
+    await waitFor(() => {
+      expect(screen.getByText('Centy project found')).toBeInTheDocument()
+    })
+
+    const submitBtn = screen.getByRole('button', { name: 'Create Issue' })
+    fireEvent.click(submitBtn)
+
+    await waitFor(() => {
+      expect(screen.getByText('Failed to create issue')).toBeInTheDocument()
+    })
+  })
+
+  it('should handle non-Error rejection', async () => {
+    const mockIsInitialized = vi.mocked(centyClient.isInitialized)
+    const mockCreateIssue = vi.mocked(centyClient.createIssue)
+
+    mockIsInitialized.mockResolvedValue({
+      initialized: true,
+      centyPath: '/test/path/.centy',
+      $typeName: 'centy.IsInitializedResponse',
+      $unknown: undefined,
+    })
+
+    mockCreateIssue.mockRejectedValue('string error')
+
+    renderComponent()
+
+    const projectInput = screen.getByLabelText('Project Path:')
+    const titleInput = screen.getByLabelText('Title:')
+
+    fireEvent.change(projectInput, { target: { value: '/test/path' } })
+    fireEvent.change(titleInput, { target: { value: 'Test Issue' } })
+
+    await waitFor(() => {
+      expect(screen.getByText('Centy project found')).toBeInTheDocument()
+    })
+
+    const submitBtn = screen.getByRole('button', { name: 'Create Issue' })
+    fireEvent.click(submitBtn)
+
+    await waitFor(() => {
+      expect(
+        screen.getByText('Failed to connect to daemon')
+      ).toBeInTheDocument()
+    })
+  })
 })
