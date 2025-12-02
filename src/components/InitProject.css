@@ -1,0 +1,244 @@
+.init-project {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.init-project h2 {
+  margin-bottom: 1.5rem;
+  color: #213547;
+}
+
+.init-project h3 {
+  margin-bottom: 1rem;
+  color: #213547;
+}
+
+.init-project h4 {
+  margin: 1rem 0 0.5rem;
+  color: #535bf2;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.init-project p {
+  margin-bottom: 1rem;
+  color: #666;
+}
+
+.init-project code {
+  background: #f4f4f5;
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* Input Step */
+.path-input {
+  margin-bottom: 1.5rem;
+}
+
+.path-input label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.input-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.input-row input {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.input-row input:focus {
+  outline: none;
+  border-color: #535bf2;
+  box-shadow: 0 0 0 3px rgba(83, 91, 242, 0.1);
+}
+
+.browse-btn {
+  padding: 0.75rem 1rem;
+  background: #f4f4f5;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.browse-btn:hover {
+  background: #e4e4e7;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.actions button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.actions button.primary {
+  background: #535bf2;
+  color: white;
+}
+
+.actions button.primary:hover:not(:disabled) {
+  background: #4349d8;
+}
+
+.actions button.secondary {
+  background: #f4f4f5;
+  color: #213547;
+}
+
+.actions button.secondary:hover:not(:disabled) {
+  background: #e4e4e7;
+}
+
+.actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* File Lists */
+.file-list {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.file-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.file-list li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.file-list li:last-child {
+  border-bottom: none;
+}
+
+.file-icon {
+  font-size: 1.1rem;
+}
+
+.file-path {
+  font-family: monospace;
+  font-size: 0.9rem;
+}
+
+/* Checkbox List */
+.checkbox-list .description {
+  font-size: 0.85rem;
+  color: #888;
+  margin-bottom: 0.5rem;
+}
+
+.checkbox-list label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.checkbox-list input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+/* Executing Step */
+.executing-step {
+  text-align: center;
+  padding: 3rem;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #f4f4f5;
+  border-top-color: #535bf2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Success Step */
+.success-step {
+  text-align: center;
+}
+
+.success-step h3 {
+  color: #10b981;
+}
+
+.result-section {
+  text-align: left;
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.result-section h4 {
+  margin-top: 0;
+}
+
+.result-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.result-section li {
+  font-family: monospace;
+  font-size: 0.9rem;
+  padding: 0.25rem 0;
+}
+
+/* Error Step */
+.error-step {
+  text-align: center;
+}
+
+.error-step h3 {
+  color: #ef4444;
+}
+
+.error-message {
+  background: #fef2f2;
+  color: #dc2626;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}

@@ -8,9 +8,10 @@
     "**/*.test.ts",
     "**/*.test.tsx",
     "dist/**",
-    "coverage/**"
+    "coverage/**",
+    "src/gen/**"
   ],
-  "ignoreDependencies": [],
+  "ignoreDependencies": ["@bufbuild/protoc-gen-es"],
   "ignoreExportsUsedInFile": true,
   "ignoreWorkspaces": []
 }

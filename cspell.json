@@ -15,13 +15,20 @@
     "lcov",
     "codecov",
     "dockerhub",
-    "tupe"
+    "tupe",
+    "bufbuild",
+    "connectrpc",
+    "protobuf",
+    "grpc",
+    "codegenv",
+    "protoc"
   ],
   "ignorePaths": [
     "node_modules",
     "dist",
     "coverage",
     "pnpm-lock.yaml",
-    "*.min.js"
+    "*.min.js",
+    "src/gen/**"
   ]
 }
