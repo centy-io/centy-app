@@ -21,6 +21,7 @@ export default defineConfig({
         '**/*.config.ts',
         '**/*.config.js',
         '**/*.config.mjs',
+        '**/*.config.cjs',
         'coverage/',
         'src/test/',
         'src/main.tsx',
