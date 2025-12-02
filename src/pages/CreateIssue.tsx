@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { centyClient } from '../api/client.ts'
 import { create } from '@bufbuild/protobuf'
 import {
@@ -11,8 +11,7 @@ import './CreateIssue.css'
 
 export function CreateIssue() {
   const navigate = useNavigate()
-  const { projectPath, setProjectPath, isInitialized, setIsInitialized } =
-    useProject()
+  const { projectPath, isInitialized, setIsInitialized } = useProject()
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [priority, setPriority] = useState('medium')
@@ -40,11 +39,10 @@ export function CreateIssue() {
   )
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
+    if (projectPath && isInitialized === null) {
       checkInitialized(projectPath)
-    }, 300)
-    return () => clearTimeout(timeoutId)
-  }, [projectPath, checkInitialized])
+    }
+  }, [projectPath, isInitialized, checkInitialized])
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -81,31 +79,34 @@ export function CreateIssue() {
     [projectPath, title, description, priority, navigate]
   )
 
+  if (!projectPath) {
+    return (
+      <div className="create-issue">
+        <h2>Create New Issue</h2>
+        <div className="no-project-message">
+          <p>Select a project from the header to create an issue</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (isInitialized === false) {
+    return (
+      <div className="create-issue">
+        <h2>Create New Issue</h2>
+        <div className="not-initialized-message">
+          <p>Centy is not initialized in this directory</p>
+          <Link to="/">Initialize Project</Link>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="create-issue">
       <h2>Create New Issue</h2>
 
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="project-path">Project Path:</label>
-          <input
-            id="project-path"
-            type="text"
-            value={projectPath}
-            onChange={e => setProjectPath(e.target.value)}
-            placeholder="/path/to/your/project"
-            required
-          />
-          {projectPath && isInitialized === false && (
-            <p className="field-error">
-              Centy is not initialized in this directory
-            </p>
-          )}
-          {projectPath && isInitialized === true && (
-            <p className="field-success">Centy project found</p>
-          )}
-        </div>
-
         <div className="form-group">
           <label htmlFor="title">Title:</label>
           <input
@@ -154,12 +155,7 @@ export function CreateIssue() {
           </button>
           <button
             type="submit"
-            disabled={
-              !projectPath.trim() ||
-              !title.trim() ||
-              loading ||
-              isInitialized === false
-            }
+            disabled={!title.trim() || loading}
             className="primary"
           >
             {loading ? 'Creating...' : 'Create Issue'}

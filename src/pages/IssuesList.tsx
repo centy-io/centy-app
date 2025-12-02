@@ -11,8 +11,7 @@ import { useProject } from '../context/ProjectContext.tsx'
 import './IssuesList.css'
 
 export function IssuesList() {
-  const { projectPath, setProjectPath, isInitialized, setIsInitialized } =
-    useProject()
+  const { projectPath, isInitialized, setIsInitialized } = useProject()
   const [issues, setIssues] = useState<Issue[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -110,23 +109,20 @@ export function IssuesList() {
         </Link>
       </div>
 
-      <div className="project-selector">
-        <label htmlFor="project-path">Project Path:</label>
-        <input
-          id="project-path"
-          type="text"
-          value={projectPath}
-          onChange={e => setProjectPath(e.target.value)}
-          placeholder="/path/to/your/project"
-        />
-        {projectPath && isInitialized === false && (
-          <p className="field-error">
-            Centy is not initialized in this directory
-          </p>
-        )}
-      </div>
+      {!projectPath && (
+        <div className="no-project-message">
+          <p>Select a project from the header to view issues</p>
+        </div>
+      )}
 
-      {isInitialized === true && (
+      {projectPath && isInitialized === false && (
+        <div className="not-initialized-message">
+          <p>Centy is not initialized in this directory</p>
+          <Link to="/">Initialize Project</Link>
+        </div>
+      )}
+
+      {projectPath && isInitialized === true && (
         <>
           <div className="filters">
             <div className="filter-group">

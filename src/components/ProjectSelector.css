@@ -1,0 +1,246 @@
+.project-selector-container {
+  position: relative;
+}
+
+.project-selector-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  min-width: 200px;
+  transition: all 0.2s;
+}
+
+.project-selector-trigger:hover {
+  background: #333;
+  border-color: #555;
+}
+
+.project-icon {
+  font-size: 1.1em;
+}
+
+.project-name {
+  flex: 1;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dropdown-arrow {
+  font-size: 0.7em;
+  color: #888;
+}
+
+.project-selector-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  min-width: 350px;
+  max-height: 400px;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.project-selector-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #444;
+}
+
+.project-selector-header h3 {
+  margin: 0;
+  font-size: 0.9em;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.project-selector-header .refresh-btn {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  font-size: 1.2em;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.project-selector-header .refresh-btn:hover {
+  background: #333;
+  color: #fff;
+}
+
+.project-selector-header .refresh-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.project-selector-error {
+  padding: 12px 16px;
+  color: #ff6b6b;
+  font-size: 0.9em;
+  background: rgba(255, 107, 107, 0.1);
+}
+
+.project-selector-loading {
+  padding: 24px 16px;
+  text-align: center;
+  color: #888;
+}
+
+.project-selector-empty {
+  padding: 24px 16px;
+  text-align: center;
+  color: #888;
+}
+
+.project-selector-empty p {
+  margin: 0;
+}
+
+.project-selector-empty .hint {
+  font-size: 0.85em;
+  margin-top: 8px;
+  opacity: 0.7;
+}
+
+.project-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  max-height: 250px;
+}
+
+.project-item {
+  padding: 12px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid #333;
+  transition: background 0.2s;
+}
+
+.project-item:hover {
+  background: #333;
+}
+
+.project-item.selected {
+  background: #2d4a3e;
+  border-left: 3px solid #4ade80;
+}
+
+.project-item:last-child {
+  border-bottom: none;
+}
+
+.project-item-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.project-item-name {
+  font-weight: 500;
+  color: #fff;
+}
+
+.project-badge {
+  font-size: 0.75em;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.project-badge.not-initialized {
+  background: #4a3a2d;
+  color: #fbbf24;
+}
+
+.project-item-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.project-item-path {
+  font-size: 0.8em;
+  color: #666;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.project-item-stats {
+  display: flex;
+  gap: 12px;
+  font-size: 0.8em;
+  color: #888;
+}
+
+.project-selector-manual {
+  padding: 12px 16px;
+  border-top: 1px solid #444;
+  background: #252525;
+}
+
+.project-selector-manual form {
+  display: flex;
+  gap: 8px;
+}
+
+.manual-path-input {
+  flex: 1;
+  padding: 8px 12px;
+  background: #333;
+  border: 1px solid #444;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 0.9em;
+}
+
+.manual-path-input:focus {
+  outline: none;
+  border-color: #646cff;
+}
+
+.manual-path-input::placeholder {
+  color: #666;
+}
+
+.manual-path-submit {
+  padding: 8px 16px;
+  background: #646cff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.manual-path-submit:hover:not(:disabled) {
+  background: #535bf2;
+}
+
+.manual-path-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

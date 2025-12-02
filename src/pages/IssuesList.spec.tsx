@@ -2,7 +2,6 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { BrowserRouter } from 'react-router-dom'
 import { IssuesList } from './IssuesList'
-import { ProjectProvider } from '../context/ProjectContext'
 
 vi.mock('../api/client.ts', () => ({
   centyClient: {
@@ -11,20 +10,29 @@ vi.mock('../api/client.ts', () => ({
   },
 }))
 
+const mockUseProject = vi.fn()
+vi.mock('../context/ProjectContext.tsx', () => ({
+  useProject: () => mockUseProject(),
+}))
+
 import { centyClient } from '../api/client.ts'
 
 describe('IssuesList', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    localStorage.clear()
+    // Default mock - no project selected
+    mockUseProject.mockReturnValue({
+      projectPath: '',
+      setProjectPath: vi.fn(),
+      isInitialized: null,
+      setIsInitialized: vi.fn(),
+    })
   })
 
   const renderComponent = () => {
     return render(
       <BrowserRouter>
-        <ProjectProvider>
-          <IssuesList />
-        </ProjectProvider>
+        <IssuesList />
       </BrowserRouter>
     )
   }
@@ -34,41 +42,34 @@ describe('IssuesList', () => {
 
     expect(screen.getByText('Issues')).toBeInTheDocument()
     expect(screen.getByText('+ New Issue')).toBeInTheDocument()
-    expect(screen.getByLabelText('Project Path:')).toBeInTheDocument()
   })
 
-  it('should show error when project is not initialized', async () => {
-    const mockIsInitialized = vi.mocked(centyClient.isInitialized)
-    mockIsInitialized.mockResolvedValue({
-      initialized: false,
-      centyPath: '',
-      $typeName: 'centy.IsInitializedResponse',
-      $unknown: undefined,
+  it('should show message when no project is selected', () => {
+    renderComponent()
+
+    expect(
+      screen.getByText('Select a project from the header to view issues')
+    ).toBeInTheDocument()
+  })
+
+  it('should show error when project is not initialized', () => {
+    mockUseProject.mockReturnValue({
+      projectPath: '/test/path',
+      setProjectPath: vi.fn(),
+      isInitialized: false,
+      setIsInitialized: vi.fn(),
     })
 
     renderComponent()
 
-    const projectInput = screen.getByLabelText('Project Path:')
-    fireEvent.change(projectInput, { target: { value: '/test/path' } })
-
-    await waitFor(() => {
-      expect(
-        screen.getByText('Centy is not initialized in this directory')
-      ).toBeInTheDocument()
-    })
+    expect(
+      screen.getByText('Centy is not initialized in this directory')
+    ).toBeInTheDocument()
+    expect(screen.getByText('Initialize Project')).toBeInTheDocument()
   })
 
   it('should show empty state when no issues exist', async () => {
-    const mockIsInitialized = vi.mocked(centyClient.isInitialized)
     const mockListIssues = vi.mocked(centyClient.listIssues)
-
-    mockIsInitialized.mockResolvedValue({
-      initialized: true,
-      centyPath: '/test/path/.centy',
-      $typeName: 'centy.IsInitializedResponse',
-      $unknown: undefined,
-    })
-
     mockListIssues.mockResolvedValue({
       issues: [],
       totalCount: 0,
@@ -76,10 +77,14 @@ describe('IssuesList', () => {
       $unknown: undefined,
     })
 
-    renderComponent()
+    mockUseProject.mockReturnValue({
+      projectPath: '/test/path',
+      setProjectPath: vi.fn(),
+      isInitialized: true,
+      setIsInitialized: vi.fn(),
+    })
 
-    const projectInput = screen.getByLabelText('Project Path:')
-    fireEvent.change(projectInput, { target: { value: '/test/path' } })
+    renderComponent()
 
     await waitFor(() => {
       expect(screen.getByText('No issues found')).toBeInTheDocument()
@@ -88,16 +93,7 @@ describe('IssuesList', () => {
   })
 
   it('should display list of issues', async () => {
-    const mockIsInitialized = vi.mocked(centyClient.isInitialized)
     const mockListIssues = vi.mocked(centyClient.listIssues)
-
-    mockIsInitialized.mockResolvedValue({
-      initialized: true,
-      centyPath: '/test/path/.centy',
-      $typeName: 'centy.IsInitializedResponse',
-      $unknown: undefined,
-    })
-
     mockListIssues.mockResolvedValue({
       issues: [
         {
@@ -138,10 +134,14 @@ describe('IssuesList', () => {
       $unknown: undefined,
     })
 
-    renderComponent()
+    mockUseProject.mockReturnValue({
+      projectPath: '/test/path',
+      setProjectPath: vi.fn(),
+      isInitialized: true,
+      setIsInitialized: vi.fn(),
+    })
 
-    const projectInput = screen.getByLabelText('Project Path:')
-    fireEvent.change(projectInput, { target: { value: '/test/path' } })
+    renderComponent()
 
     await waitFor(() => {
       expect(screen.getByText('First Issue')).toBeInTheDocument()
@@ -152,16 +152,7 @@ describe('IssuesList', () => {
   })
 
   it('should show filters when project is initialized', async () => {
-    const mockIsInitialized = vi.mocked(centyClient.isInitialized)
     const mockListIssues = vi.mocked(centyClient.listIssues)
-
-    mockIsInitialized.mockResolvedValue({
-      initialized: true,
-      centyPath: '/test/path/.centy',
-      $typeName: 'centy.IsInitializedResponse',
-      $unknown: undefined,
-    })
-
     mockListIssues.mockResolvedValue({
       issues: [],
       totalCount: 0,
@@ -169,10 +160,14 @@ describe('IssuesList', () => {
       $unknown: undefined,
     })
 
-    renderComponent()
+    mockUseProject.mockReturnValue({
+      projectPath: '/test/path',
+      setProjectPath: vi.fn(),
+      isInitialized: true,
+      setIsInitialized: vi.fn(),
+    })
 
-    const projectInput = screen.getByLabelText('Project Path:')
-    fireEvent.change(projectInput, { target: { value: '/test/path' } })
+    renderComponent()
 
     await waitFor(() => {
       expect(screen.getByLabelText('Status:')).toBeInTheDocument()
@@ -182,16 +177,7 @@ describe('IssuesList', () => {
   })
 
   it('should filter issues by status', async () => {
-    const mockIsInitialized = vi.mocked(centyClient.isInitialized)
     const mockListIssues = vi.mocked(centyClient.listIssues)
-
-    mockIsInitialized.mockResolvedValue({
-      initialized: true,
-      centyPath: '/test/path/.centy',
-      $typeName: 'centy.IsInitializedResponse',
-      $unknown: undefined,
-    })
-
     mockListIssues.mockResolvedValue({
       issues: [],
       totalCount: 0,
@@ -199,10 +185,14 @@ describe('IssuesList', () => {
       $unknown: undefined,
     })
 
-    renderComponent()
+    mockUseProject.mockReturnValue({
+      projectPath: '/test/path',
+      setProjectPath: vi.fn(),
+      isInitialized: true,
+      setIsInitialized: vi.fn(),
+    })
 
-    const projectInput = screen.getByLabelText('Project Path:')
-    fireEvent.change(projectInput, { target: { value: '/test/path' } })
+    renderComponent()
 
     await waitFor(() => {
       expect(screen.getByLabelText('Status:')).toBeInTheDocument()
@@ -221,22 +211,17 @@ describe('IssuesList', () => {
   })
 
   it('should handle network errors', async () => {
-    const mockIsInitialized = vi.mocked(centyClient.isInitialized)
     const mockListIssues = vi.mocked(centyClient.listIssues)
-
-    mockIsInitialized.mockResolvedValue({
-      initialized: true,
-      centyPath: '/test/path/.centy',
-      $typeName: 'centy.IsInitializedResponse',
-      $unknown: undefined,
-    })
-
     mockListIssues.mockRejectedValue(new Error('Connection refused'))
 
-    renderComponent()
+    mockUseProject.mockReturnValue({
+      projectPath: '/test/path',
+      setProjectPath: vi.fn(),
+      isInitialized: true,
+      setIsInitialized: vi.fn(),
+    })
 
-    const projectInput = screen.getByLabelText('Project Path:')
-    fireEvent.change(projectInput, { target: { value: '/test/path' } })
+    renderComponent()
 
     await waitFor(() => {
       expect(screen.getByText('Connection refused')).toBeInTheDocument()
@@ -244,16 +229,7 @@ describe('IssuesList', () => {
   })
 
   it('should refresh issues when clicking refresh button', async () => {
-    const mockIsInitialized = vi.mocked(centyClient.isInitialized)
     const mockListIssues = vi.mocked(centyClient.listIssues)
-
-    mockIsInitialized.mockResolvedValue({
-      initialized: true,
-      centyPath: '/test/path/.centy',
-      $typeName: 'centy.IsInitializedResponse',
-      $unknown: undefined,
-    })
-
     mockListIssues.mockResolvedValue({
       issues: [],
       totalCount: 0,
@@ -261,10 +237,14 @@ describe('IssuesList', () => {
       $unknown: undefined,
     })
 
-    renderComponent()
+    mockUseProject.mockReturnValue({
+      projectPath: '/test/path',
+      setProjectPath: vi.fn(),
+      isInitialized: true,
+      setIsInitialized: vi.fn(),
+    })
 
-    const projectInput = screen.getByLabelText('Project Path:')
-    fireEvent.change(projectInput, { target: { value: '/test/path' } })
+    renderComponent()
 
     await waitFor(() => {
       expect(screen.getByText('Refresh')).toBeInTheDocument()
@@ -281,16 +261,7 @@ describe('IssuesList', () => {
   })
 
   it('should display status and priority badges with correct styling', async () => {
-    const mockIsInitialized = vi.mocked(centyClient.isInitialized)
     const mockListIssues = vi.mocked(centyClient.listIssues)
-
-    mockIsInitialized.mockResolvedValue({
-      initialized: true,
-      centyPath: '/test/path/.centy',
-      $typeName: 'centy.IsInitializedResponse',
-      $unknown: undefined,
-    })
-
     mockListIssues.mockResolvedValue({
       issues: [
         {
@@ -315,10 +286,14 @@ describe('IssuesList', () => {
       $unknown: undefined,
     })
 
-    renderComponent()
+    mockUseProject.mockReturnValue({
+      projectPath: '/test/path',
+      setProjectPath: vi.fn(),
+      isInitialized: true,
+      setIsInitialized: vi.fn(),
+    })
 
-    const projectInput = screen.getByLabelText('Project Path:')
-    fireEvent.change(projectInput, { target: { value: '/test/path' } })
+    renderComponent()
 
     await waitFor(() => {
       const statusBadge = screen.getByText('open')
@@ -329,33 +304,8 @@ describe('IssuesList', () => {
     })
   })
 
-  it('should handle isInitialized network error', async () => {
-    const mockIsInitialized = vi.mocked(centyClient.isInitialized)
-    mockIsInitialized.mockRejectedValue(new Error('Network error'))
-
-    renderComponent()
-
-    const projectInput = screen.getByLabelText('Project Path:')
-    fireEvent.change(projectInput, { target: { value: '/test/path' } })
-
-    await waitFor(() => {
-      expect(
-        screen.getByText('Centy is not initialized in this directory')
-      ).toBeInTheDocument()
-    })
-  })
-
   it('should filter issues by priority', async () => {
-    const mockIsInitialized = vi.mocked(centyClient.isInitialized)
     const mockListIssues = vi.mocked(centyClient.listIssues)
-
-    mockIsInitialized.mockResolvedValue({
-      initialized: true,
-      centyPath: '/test/path/.centy',
-      $typeName: 'centy.IsInitializedResponse',
-      $unknown: undefined,
-    })
-
     mockListIssues.mockResolvedValue({
       issues: [],
       totalCount: 0,
@@ -363,10 +313,14 @@ describe('IssuesList', () => {
       $unknown: undefined,
     })
 
-    renderComponent()
+    mockUseProject.mockReturnValue({
+      projectPath: '/test/path',
+      setProjectPath: vi.fn(),
+      isInitialized: true,
+      setIsInitialized: vi.fn(),
+    })
 
-    const projectInput = screen.getByLabelText('Project Path:')
-    fireEvent.change(projectInput, { target: { value: '/test/path' } })
+    renderComponent()
 
     await waitFor(() => {
       expect(screen.getByLabelText('Priority:')).toBeInTheDocument()
@@ -385,22 +339,17 @@ describe('IssuesList', () => {
   })
 
   it('should handle non-Error rejection', async () => {
-    const mockIsInitialized = vi.mocked(centyClient.isInitialized)
     const mockListIssues = vi.mocked(centyClient.listIssues)
-
-    mockIsInitialized.mockResolvedValue({
-      initialized: true,
-      centyPath: '/test/path/.centy',
-      $typeName: 'centy.IsInitializedResponse',
-      $unknown: undefined,
-    })
-
     mockListIssues.mockRejectedValue('string error')
 
-    renderComponent()
+    mockUseProject.mockReturnValue({
+      projectPath: '/test/path',
+      setProjectPath: vi.fn(),
+      isInitialized: true,
+      setIsInitialized: vi.fn(),
+    })
 
-    const projectInput = screen.getByLabelText('Project Path:')
-    fireEvent.change(projectInput, { target: { value: '/test/path' } })
+    renderComponent()
 
     await waitFor(() => {
       expect(
@@ -410,16 +359,7 @@ describe('IssuesList', () => {
   })
 
   it('should show closed status badge correctly', async () => {
-    const mockIsInitialized = vi.mocked(centyClient.isInitialized)
     const mockListIssues = vi.mocked(centyClient.listIssues)
-
-    mockIsInitialized.mockResolvedValue({
-      initialized: true,
-      centyPath: '/test/path/.centy',
-      $typeName: 'centy.IsInitializedResponse',
-      $unknown: undefined,
-    })
-
     mockListIssues.mockResolvedValue({
       issues: [
         {
@@ -444,10 +384,14 @@ describe('IssuesList', () => {
       $unknown: undefined,
     })
 
-    renderComponent()
+    mockUseProject.mockReturnValue({
+      projectPath: '/test/path',
+      setProjectPath: vi.fn(),
+      isInitialized: true,
+      setIsInitialized: vi.fn(),
+    })
 
-    const projectInput = screen.getByLabelText('Project Path:')
-    fireEvent.change(projectInput, { target: { value: '/test/path' } })
+    renderComponent()
 
     await waitFor(() => {
       const statusBadge = screen.getByText('closed')
@@ -459,16 +403,7 @@ describe('IssuesList', () => {
   })
 
   it('should display issue without metadata gracefully', async () => {
-    const mockIsInitialized = vi.mocked(centyClient.isInitialized)
     const mockListIssues = vi.mocked(centyClient.listIssues)
-
-    mockIsInitialized.mockResolvedValue({
-      initialized: true,
-      centyPath: '/test/path/.centy',
-      $typeName: 'centy.IsInitializedResponse',
-      $unknown: undefined,
-    })
-
     mockListIssues.mockResolvedValue({
       issues: [
         {
@@ -485,10 +420,14 @@ describe('IssuesList', () => {
       $unknown: undefined,
     })
 
-    renderComponent()
+    mockUseProject.mockReturnValue({
+      projectPath: '/test/path',
+      setProjectPath: vi.fn(),
+      isInitialized: true,
+      setIsInitialized: vi.fn(),
+    })
 
-    const projectInput = screen.getByLabelText('Project Path:')
-    fireEvent.change(projectInput, { target: { value: '/test/path' } })
+    renderComponent()
 
     await waitFor(() => {
       expect(screen.getByText('Issue Without Metadata')).toBeInTheDocument()
