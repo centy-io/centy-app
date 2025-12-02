@@ -2,6 +2,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { BrowserRouter } from 'react-router-dom'
 import { CreateIssue } from './CreateIssue'
+import { ProjectProvider } from '../context/ProjectContext'
 
 const mockNavigate = vi.fn()
 
@@ -30,7 +31,9 @@ describe('CreateIssue', () => {
   const renderComponent = () => {
     return render(
       <BrowserRouter>
-        <CreateIssue />
+        <ProjectProvider>
+          <CreateIssue />
+        </ProjectProvider>
       </BrowserRouter>
     )
   }
@@ -150,9 +153,7 @@ describe('CreateIssue', () => {
       )
     })
 
-    expect(mockNavigate).toHaveBeenCalledWith(
-      '/issues/0001?project=%2Ftest%2Fpath'
-    )
+    expect(mockNavigate).toHaveBeenCalledWith('/issues/0001')
   })
 
   it('should show error on create failure', async () => {

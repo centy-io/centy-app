@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react'
-import { useParams, useSearchParams, useNavigate, Link } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import { centyClient } from '../api/client.ts'
 import { create } from '@bufbuild/protobuf'
 import {
@@ -8,13 +8,13 @@ import {
   DeleteIssueRequestSchema,
   type Issue,
 } from '../gen/centy_pb.ts'
+import { useProject } from '../context/ProjectContext.tsx'
 import './IssueDetail.css'
 
 export function IssueDetail() {
   const { issueNumber } = useParams<{ issueNumber: string }>()
-  const [searchParams] = useSearchParams()
   const navigate = useNavigate()
-  const projectPath = searchParams.get('project') || ''
+  const { projectPath } = useProject()
 
   const [issue, setIssue] = useState<Issue | null>(null)
   const [loading, setLoading] = useState(true)
@@ -115,7 +115,7 @@ export function IssueDetail() {
       const response = await centyClient.deleteIssue(request)
 
       if (response.success) {
-        navigate(`/issues?project=${encodeURIComponent(projectPath)}`)
+        navigate('/issues')
       } else {
         setError(response.error || 'Failed to delete issue')
         setShowDeleteConfirm(false)
@@ -189,10 +189,7 @@ export function IssueDetail() {
     return (
       <div className="issue-detail">
         <div className="error-message">{error}</div>
-        <Link
-          to={`/issues?project=${encodeURIComponent(projectPath)}`}
-          className="back-link"
-        >
+        <Link to="/issues" className="back-link">
           Back to Issues
         </Link>
       </div>
@@ -203,10 +200,7 @@ export function IssueDetail() {
     return (
       <div className="issue-detail">
         <div className="error-message">Issue not found</div>
-        <Link
-          to={`/issues?project=${encodeURIComponent(projectPath)}`}
-          className="back-link"
-        >
+        <Link to="/issues" className="back-link">
           Back to Issues
         </Link>
       </div>
@@ -216,10 +210,7 @@ export function IssueDetail() {
   return (
     <div className="issue-detail">
       <div className="issue-header">
-        <Link
-          to={`/issues?project=${encodeURIComponent(projectPath)}`}
-          className="back-link"
-        >
+        <Link to="/issues" className="back-link">
           Back to Issues
         </Link>
 

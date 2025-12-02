@@ -6,34 +6,38 @@ import {
   CreateIssueRequestSchema,
   IsInitializedRequestSchema,
 } from '../gen/centy_pb.ts'
+import { useProject } from '../context/ProjectContext.tsx'
 import './CreateIssue.css'
 
 export function CreateIssue() {
   const navigate = useNavigate()
-  const [projectPath, setProjectPath] = useState('')
+  const { projectPath, setProjectPath, isInitialized, setIsInitialized } =
+    useProject()
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [priority, setPriority] = useState('medium')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [isInitialized, setIsInitialized] = useState<boolean | null>(null)
 
-  const checkInitialized = useCallback(async (path: string) => {
-    if (!path.trim()) {
-      setIsInitialized(null)
-      return
-    }
+  const checkInitialized = useCallback(
+    async (path: string) => {
+      if (!path.trim()) {
+        setIsInitialized(null)
+        return
+      }
 
-    try {
-      const request = create(IsInitializedRequestSchema, {
-        projectPath: path.trim(),
-      })
-      const response = await centyClient.isInitialized(request)
-      setIsInitialized(response.initialized)
-    } catch {
-      setIsInitialized(false)
-    }
-  }, [])
+      try {
+        const request = create(IsInitializedRequestSchema, {
+          projectPath: path.trim(),
+        })
+        const response = await centyClient.isInitialized(request)
+        setIsInitialized(response.initialized)
+      } catch {
+        setIsInitialized(false)
+      }
+    },
+    [setIsInitialized]
+  )
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -62,9 +66,7 @@ export function CreateIssue() {
         const response = await centyClient.createIssue(request)
 
         if (response.success) {
-          navigate(
-            `/issues/${response.issueNumber}?project=${encodeURIComponent(projectPath.trim())}`
-          )
+          navigate(`/issues/${response.issueNumber}`)
         } else {
           setError(response.error || 'Failed to create issue')
         }

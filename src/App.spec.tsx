@@ -1,7 +1,8 @@
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import App from './App'
+import { ProjectProvider } from './context/ProjectContext'
 
 // Mock the centyClient
 vi.mock('./api/client.ts', () => ({
@@ -21,12 +22,18 @@ vi.mock('./api/client.ts', () => ({
 const renderWithRouter = (initialRoute = '/') => {
   return render(
     <MemoryRouter initialEntries={[initialRoute]}>
-      <App />
+      <ProjectProvider>
+        <App />
+      </ProjectProvider>
     </MemoryRouter>
   )
 }
 
 describe('App', () => {
+  beforeEach(() => {
+    localStorage.clear()
+  })
+
   it('should render the header', () => {
     renderWithRouter()
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Centy')

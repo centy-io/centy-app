@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { centyClient } from '../api/client.ts'
 import { create } from '@bufbuild/protobuf'
 import {
@@ -7,36 +7,37 @@ import {
   IsInitializedRequestSchema,
   type Issue,
 } from '../gen/centy_pb.ts'
+import { useProject } from '../context/ProjectContext.tsx'
 import './IssuesList.css'
 
 export function IssuesList() {
-  const [searchParams, setSearchParams] = useSearchParams()
-  const [projectPath, setProjectPath] = useState(
-    searchParams.get('project') || ''
-  )
+  const { projectPath, setProjectPath, isInitialized, setIsInitialized } =
+    useProject()
   const [issues, setIssues] = useState<Issue[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [isInitialized, setIsInitialized] = useState<boolean | null>(null)
   const [statusFilter, setStatusFilter] = useState('')
   const [priorityFilter, setPriorityFilter] = useState('')
 
-  const checkInitialized = useCallback(async (path: string) => {
-    if (!path.trim()) {
-      setIsInitialized(null)
-      return
-    }
+  const checkInitialized = useCallback(
+    async (path: string) => {
+      if (!path.trim()) {
+        setIsInitialized(null)
+        return
+      }
 
-    try {
-      const request = create(IsInitializedRequestSchema, {
-        projectPath: path.trim(),
-      })
-      const response = await centyClient.isInitialized(request)
-      setIsInitialized(response.initialized)
-    } catch {
-      setIsInitialized(false)
-    }
-  }, [])
+      try {
+        const request = create(IsInitializedRequestSchema, {
+          projectPath: path.trim(),
+        })
+        const response = await centyClient.isInitialized(request)
+        setIsInitialized(response.initialized)
+      } catch {
+        setIsInitialized(false)
+      }
+    },
+    [setIsInitialized]
+  )
 
   const fetchIssues = useCallback(async () => {
     if (!projectPath.trim() || isInitialized !== true) return
@@ -73,15 +74,6 @@ export function IssuesList() {
       fetchIssues()
     }
   }, [isInitialized, fetchIssues])
-
-  const handleProjectPathChange = (path: string) => {
-    setProjectPath(path)
-    if (path.trim()) {
-      setSearchParams({ project: path.trim() })
-    } else {
-      setSearchParams({})
-    }
-  }
 
   const getPriorityClass = (priority: string) => {
     switch (priority) {
@@ -124,7 +116,7 @@ export function IssuesList() {
           id="project-path"
           type="text"
           value={projectPath}
-          onChange={e => handleProjectPathChange(e.target.value)}
+          onChange={e => setProjectPath(e.target.value)}
           placeholder="/path/to/your/project"
         />
         {projectPath && isInitialized === false && (
@@ -199,16 +191,12 @@ export function IssuesList() {
                   {issues.map(issue => (
                     <tr key={issue.issueNumber}>
                       <td className="issue-number">
-                        <Link
-                          to={`/issues/${issue.issueNumber}?project=${encodeURIComponent(projectPath)}`}
-                        >
+                        <Link to={`/issues/${issue.issueNumber}`}>
                           #{issue.issueNumber}
                         </Link>
                       </td>
                       <td className="issue-title">
-                        <Link
-                          to={`/issues/${issue.issueNumber}?project=${encodeURIComponent(projectPath)}`}
-                        >
+                        <Link to={`/issues/${issue.issueNumber}`}>
                           {issue.title}
                         </Link>
                       </td>

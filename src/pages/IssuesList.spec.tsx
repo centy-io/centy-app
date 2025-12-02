@@ -2,6 +2,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { BrowserRouter } from 'react-router-dom'
 import { IssuesList } from './IssuesList'
+import { ProjectProvider } from '../context/ProjectContext'
 
 vi.mock('../api/client.ts', () => ({
   centyClient: {
@@ -15,12 +16,15 @@ import { centyClient } from '../api/client.ts'
 describe('IssuesList', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    localStorage.clear()
   })
 
   const renderComponent = () => {
     return render(
       <BrowserRouter>
-        <IssuesList />
+        <ProjectProvider>
+          <IssuesList />
+        </ProjectProvider>
       </BrowserRouter>
     )
   }

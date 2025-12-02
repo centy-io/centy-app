@@ -21,20 +21,28 @@ vi.mock('../api/client.ts', () => ({
   },
 }))
 
+const mockUseProject = vi.fn()
+vi.mock('../context/ProjectContext.tsx', () => ({
+  useProject: () => mockUseProject(),
+}))
+
 import { centyClient } from '../api/client.ts'
 
 describe('IssueDetail', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    // Default mock returns valid project path
+    mockUseProject.mockReturnValue({
+      projectPath: '/test/path',
+      setProjectPath: vi.fn(),
+      isInitialized: true,
+      setIsInitialized: vi.fn(),
+    })
   })
 
-  const renderComponent = (issueNumber: string, projectPath: string) => {
+  const renderComponent = (issueNumber: string) => {
     return render(
-      <MemoryRouter
-        initialEntries={[
-          `/issues/${issueNumber}?project=${encodeURIComponent(projectPath)}`,
-        ]}
-      >
+      <MemoryRouter initialEntries={[`/issues/${issueNumber}`]}>
         <Routes>
           <Route path="/issues/:issueNumber" element={<IssueDetail />} />
         </Routes>
@@ -43,6 +51,13 @@ describe('IssueDetail', () => {
   }
 
   it('should show error when no project path is provided', () => {
+    mockUseProject.mockReturnValue({
+      projectPath: '',
+      setProjectPath: vi.fn(),
+      isInitialized: null,
+      setIsInitialized: vi.fn(),
+    })
+
     render(
       <MemoryRouter initialEntries={['/issues/0001']}>
         <Routes>
@@ -58,7 +73,7 @@ describe('IssueDetail', () => {
     const mockGetIssue = vi.mocked(centyClient.getIssue)
     mockGetIssue.mockImplementation(() => new Promise(() => {})) // Never resolves
 
-    renderComponent('0001', '/test/path')
+    renderComponent('0001')
 
     expect(screen.getByText('Loading issue...')).toBeInTheDocument()
   })
@@ -82,7 +97,7 @@ describe('IssueDetail', () => {
       $unknown: undefined,
     })
 
-    renderComponent('0001', '/test/path')
+    renderComponent('0001')
 
     await waitFor(() => {
       expect(screen.getByText('Test Issue Title')).toBeInTheDocument()
@@ -97,7 +112,7 @@ describe('IssueDetail', () => {
     const mockGetIssue = vi.mocked(centyClient.getIssue)
     mockGetIssue.mockRejectedValue(new Error('Issue not found'))
 
-    renderComponent('0001', '/test/path')
+    renderComponent('0001')
 
     await waitFor(() => {
       expect(screen.getByText('Issue not found')).toBeInTheDocument()
@@ -123,7 +138,7 @@ describe('IssueDetail', () => {
       $unknown: undefined,
     })
 
-    renderComponent('0001', '/test/path')
+    renderComponent('0001')
 
     await waitFor(() => {
       expect(screen.getByText('Edit')).toBeInTheDocument()
@@ -157,7 +172,7 @@ describe('IssueDetail', () => {
       $unknown: undefined,
     })
 
-    renderComponent('0001', '/test/path')
+    renderComponent('0001')
 
     await waitFor(() => {
       expect(screen.getByText('Edit')).toBeInTheDocument()
@@ -220,7 +235,7 @@ describe('IssueDetail', () => {
       $unknown: undefined,
     })
 
-    renderComponent('0001', '/test/path')
+    renderComponent('0001')
 
     await waitFor(() => {
       expect(screen.getByText('Edit')).toBeInTheDocument()
@@ -269,7 +284,7 @@ describe('IssueDetail', () => {
       $unknown: undefined,
     })
 
-    renderComponent('0001', '/test/path')
+    renderComponent('0001')
 
     await waitFor(() => {
       expect(screen.getByText('Delete')).toBeInTheDocument()
@@ -313,7 +328,7 @@ describe('IssueDetail', () => {
       $unknown: undefined,
     })
 
-    renderComponent('0001', '/test/path')
+    renderComponent('0001')
 
     await waitFor(() => {
       expect(screen.getByText('Delete')).toBeInTheDocument()
@@ -334,7 +349,7 @@ describe('IssueDetail', () => {
       )
     })
 
-    expect(mockNavigate).toHaveBeenCalledWith('/issues?project=%2Ftest%2Fpath')
+    expect(mockNavigate).toHaveBeenCalledWith('/issues')
   })
 
   it('should cancel delete confirmation', async () => {
@@ -356,7 +371,7 @@ describe('IssueDetail', () => {
       $unknown: undefined,
     })
 
-    renderComponent('0001', '/test/path')
+    renderComponent('0001')
 
     await waitFor(() => {
       expect(screen.getByText('Delete')).toBeInTheDocument()
@@ -396,7 +411,7 @@ describe('IssueDetail', () => {
       $unknown: undefined,
     })
 
-    renderComponent('0001', '/test/path')
+    renderComponent('0001')
 
     await waitFor(() => {
       expect(screen.getByText('No description provided')).toBeInTheDocument()
@@ -433,7 +448,7 @@ describe('IssueDetail', () => {
       $unknown: undefined,
     })
 
-    renderComponent('0001', '/test/path')
+    renderComponent('0001')
 
     await waitFor(() => {
       expect(screen.getByText('Edit')).toBeInTheDocument()
@@ -473,7 +488,7 @@ describe('IssueDetail', () => {
 
     mockUpdateIssue.mockRejectedValue(new Error('Network error'))
 
-    renderComponent('0001', '/test/path')
+    renderComponent('0001')
 
     await waitFor(() => {
       expect(screen.getByText('Edit')).toBeInTheDocument()
@@ -519,7 +534,7 @@ describe('IssueDetail', () => {
       $unknown: undefined,
     })
 
-    renderComponent('0001', '/test/path')
+    renderComponent('0001')
 
     await waitFor(() => {
       expect(screen.getByText('Delete')).toBeInTheDocument()
@@ -559,7 +574,7 @@ describe('IssueDetail', () => {
 
     mockDeleteIssue.mockRejectedValue(new Error('Network error'))
 
-    renderComponent('0001', '/test/path')
+    renderComponent('0001')
 
     await waitFor(() => {
       expect(screen.getByText('Delete')).toBeInTheDocument()
@@ -580,7 +595,7 @@ describe('IssueDetail', () => {
     const mockGetIssue = vi.mocked(centyClient.getIssue)
     mockGetIssue.mockRejectedValue('string error')
 
-    renderComponent('0001', '/test/path')
+    renderComponent('0001')
 
     await waitFor(() => {
       expect(
@@ -608,7 +623,7 @@ describe('IssueDetail', () => {
       $unknown: undefined,
     })
 
-    renderComponent('0001', '/test/path')
+    renderComponent('0001')
 
     await waitFor(() => {
       const statusBadge = screen.getByText('in-progress')
@@ -638,7 +653,7 @@ describe('IssueDetail', () => {
       $unknown: undefined,
     })
 
-    renderComponent('0001', '/test/path')
+    renderComponent('0001')
 
     await waitFor(() => {
       const statusBadge = screen.getByText('closed')
@@ -657,7 +672,7 @@ describe('IssueDetail', () => {
       $unknown: undefined,
     })
 
-    renderComponent('0001', '/test/path')
+    renderComponent('0001')
 
     await waitFor(() => {
       expect(screen.getByText('Issue Without Metadata')).toBeInTheDocument()
@@ -695,7 +710,7 @@ describe('IssueDetail', () => {
       $unknown: undefined,
     })
 
-    renderComponent('0001', '/test/path')
+    renderComponent('0001')
 
     await waitFor(() => {
       expect(screen.getByText('Edit')).toBeInTheDocument()
@@ -741,7 +756,7 @@ describe('IssueDetail', () => {
       $unknown: undefined,
     })
 
-    renderComponent('0001', '/test/path')
+    renderComponent('0001')
 
     await waitFor(() => {
       expect(screen.getByText('Delete')).toBeInTheDocument()
