@@ -1,5 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { MemoryRouter } from 'react-router-dom'
 import {
   ProjectProvider,
   useProject,
@@ -58,9 +59,11 @@ describe('ProjectContext', () => {
 
   it('should provide default empty project path', () => {
     render(
-      <ProjectProvider>
-        <TestComponent />
-      </ProjectProvider>
+      <MemoryRouter>
+        <ProjectProvider>
+          <TestComponent />
+        </ProjectProvider>
+      </MemoryRouter>
     )
 
     expect(screen.getByTestId('project-path')).toHaveTextContent('')
@@ -68,9 +71,11 @@ describe('ProjectContext', () => {
 
   it('should update project path when setProjectPath is called', () => {
     render(
-      <ProjectProvider>
-        <TestComponent />
-      </ProjectProvider>
+      <MemoryRouter>
+        <ProjectProvider>
+          <TestComponent />
+        </ProjectProvider>
+      </MemoryRouter>
     )
 
     const input = screen.getByTestId('path-input')
@@ -81,9 +86,11 @@ describe('ProjectContext', () => {
 
   it('should persist project path to localStorage', () => {
     render(
-      <ProjectProvider>
-        <TestComponent />
-      </ProjectProvider>
+      <MemoryRouter>
+        <ProjectProvider>
+          <TestComponent />
+        </ProjectProvider>
+      </MemoryRouter>
     )
 
     const input = screen.getByTestId('path-input')
@@ -99,9 +106,11 @@ describe('ProjectContext', () => {
     localStorageMock.getItem.mockReturnValue('/stored/path')
 
     render(
-      <ProjectProvider>
-        <TestComponent />
-      </ProjectProvider>
+      <MemoryRouter>
+        <ProjectProvider>
+          <TestComponent />
+        </ProjectProvider>
+      </MemoryRouter>
     )
 
     expect(screen.getByTestId('project-path')).toHaveTextContent('/stored/path')
@@ -109,9 +118,11 @@ describe('ProjectContext', () => {
 
   it('should provide isInitialized state', () => {
     render(
-      <ProjectProvider>
-        <TestComponent />
-      </ProjectProvider>
+      <MemoryRouter>
+        <ProjectProvider>
+          <TestComponent />
+        </ProjectProvider>
+      </MemoryRouter>
     )
 
     expect(screen.getByTestId('is-initialized')).toHaveTextContent('null')
@@ -124,9 +135,13 @@ describe('ProjectContext', () => {
   it('should throw error when useProject is used outside provider', () => {
     const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
 
-    expect(() => render(<TestComponent />)).toThrow(
-      'useProject must be used within a ProjectProvider'
-    )
+    expect(() =>
+      render(
+        <MemoryRouter>
+          <TestComponent />
+        </MemoryRouter>
+      )
+    ).toThrow('useProject must be used within a ProjectProvider')
 
     consoleError.mockRestore()
   })
@@ -135,9 +150,11 @@ describe('ProjectContext', () => {
     localStorageMock.getItem.mockReturnValue('/initial/path')
 
     render(
-      <ProjectProvider>
-        <TestComponent />
-      </ProjectProvider>
+      <MemoryRouter>
+        <ProjectProvider>
+          <TestComponent />
+        </ProjectProvider>
+      </MemoryRouter>
     )
 
     const input = screen.getByTestId('path-input')
