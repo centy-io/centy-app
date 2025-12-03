@@ -41,17 +41,6 @@ const createMockManifest = () => ({
   centyVersion: '0.1.0',
   createdAt: '2024-01-15T10:00:00Z',
   updatedAt: '2024-01-16T10:00:00Z',
-  managedFiles: [
-    {
-      path: '.centy/config.toml',
-      hash: 'abc123',
-      version: '0.1.0',
-      createdAt: '2024-01-15T10:00:00Z',
-      fileType: 1,
-      $typeName: 'centy.ManagedFile' as const,
-      $unknown: undefined,
-    },
-  ],
   $typeName: 'centy.Manifest' as const,
   $unknown: undefined,
 })
@@ -257,7 +246,6 @@ describe('Settings', () => {
     await waitFor(() => {
       expect(screen.getByText('Schema Version')).toBeInTheDocument()
       expect(screen.getByText('1')).toBeInTheDocument()
-      expect(screen.getByText('Managed Files (1)')).toBeInTheDocument()
     })
   })
 

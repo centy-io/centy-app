@@ -603,20 +603,6 @@ export function Settings() {
                           </span>
                         </div>
                       </div>
-
-                      <div className="managed-files">
-                        <h4>Managed Files ({manifest.managedFiles.length})</h4>
-                        <div className="files-list">
-                          {manifest.managedFiles.map((file, idx) => (
-                            <div key={idx} className="file-item">
-                              <span className="file-path">{file.path}</span>
-                              <span className="file-hash">
-                                {file.hash?.slice(0, 8)}...
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
                     </div>
                   )}
                 </div>
