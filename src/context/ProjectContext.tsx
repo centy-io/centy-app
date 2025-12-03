@@ -3,8 +3,10 @@ import {
   useContext,
   useState,
   useCallback,
+  useEffect,
   type ReactNode,
 } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
 interface ProjectContextType {
   projectPath: string
@@ -30,15 +32,45 @@ function setArchivedProjectsStorage(paths: string[]): void {
   }
 }
 
+const PROJECT_QUERY_PARAM = 'project'
+
 export function ProjectProvider({ children }: { children: ReactNode }) {
+  const [searchParams, setSearchParams] = useSearchParams()
+
   const [projectPath, setProjectPathState] = useState(() => {
-    // Initialize from localStorage if available
+    // Priority: query string > localStorage > empty
+    const queryProject = searchParams.get(PROJECT_QUERY_PARAM)
+    if (queryProject) {
+      return queryProject
+    }
     if (typeof window !== 'undefined') {
       return localStorage.getItem(STORAGE_KEY) || ''
     }
     return ''
   })
   const [isInitialized, setIsInitialized] = useState<boolean | null>(null)
+
+  // Sync query string with project path on mount and when projectPath changes
+  useEffect(() => {
+    const currentQueryProject = searchParams.get(PROJECT_QUERY_PARAM)
+    if (projectPath && currentQueryProject !== projectPath) {
+      setSearchParams(
+        prev => {
+          prev.set(PROJECT_QUERY_PARAM, projectPath)
+          return prev
+        },
+        { replace: true }
+      )
+    } else if (!projectPath && currentQueryProject) {
+      setSearchParams(
+        prev => {
+          prev.delete(PROJECT_QUERY_PARAM)
+          return prev
+        },
+        { replace: true }
+      )
+    }
+  }, [projectPath, searchParams, setSearchParams])
 
   const setProjectPath = useCallback((path: string) => {
     setProjectPathState(path)
