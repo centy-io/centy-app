@@ -166,8 +166,8 @@ describe('IssuesList', () => {
     await waitFor(() => {
       expect(screen.getByText('First Issue')).toBeInTheDocument()
       expect(screen.getByText('Second Issue')).toBeInTheDocument()
-      expect(screen.getByText('#0001')).toBeInTheDocument()
-      expect(screen.getByText('#0002')).toBeInTheDocument()
+      expect(screen.getByText('#1')).toBeInTheDocument()
+      expect(screen.getByText('#2')).toBeInTheDocument()
     })
   })
 

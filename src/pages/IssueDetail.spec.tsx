@@ -133,7 +133,7 @@ describe('IssueDetail', () => {
     await waitFor(() => {
       expect(screen.getByText('Test Issue Title')).toBeInTheDocument()
       expect(screen.getByText('Test issue description')).toBeInTheDocument()
-      expect(screen.getByText('#0001')).toBeInTheDocument()
+      expect(screen.getByText('#1')).toBeInTheDocument()
       expect(screen.getByText('open')).toBeInTheDocument()
       expect(screen.getByText('high')).toBeInTheDocument()
     })

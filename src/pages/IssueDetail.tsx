@@ -339,7 +339,7 @@ export function IssueDetail() {
       )}
 
       <div className="issue-content">
-        <div className="issue-number-badge">#{issue.issueNumber}</div>
+        <div className="issue-number-badge">#{issue.displayNumber}</div>
 
         {isEditing ? (
           <div className="edit-form">

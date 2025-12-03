@@ -197,7 +197,7 @@ export function IssuesList() {
                     <tr key={issue.issueNumber}>
                       <td className="issue-number">
                         <Link to={`/issues/${issue.issueNumber}`}>
-                          #{issue.issueNumber}
+                          #{issue.displayNumber}
                         </Link>
                       </td>
                       <td className="issue-title">
