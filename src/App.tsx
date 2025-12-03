@@ -1,6 +1,7 @@
 import { Routes, Route, Link, useLocation } from 'react-router-dom'
 import { InitProject } from './components/InitProject.tsx'
 import { ProjectSelector } from './components/ProjectSelector.tsx'
+import { DaemonStatusIndicator } from './components/DaemonStatusIndicator.tsx'
 import { CreateIssue } from './pages/CreateIssue.tsx'
 import { IssuesList } from './pages/IssuesList.tsx'
 import { IssueDetail } from './pages/IssueDetail.tsx'
@@ -17,7 +18,10 @@ function App() {
           <h1>
             <Link to="/">Centy</Link>
           </h1>
-          <ProjectSelector />
+          <div className="header-controls">
+            <DaemonStatusIndicator />
+            <ProjectSelector />
+          </div>
         </div>
         <p>Local-first issue and documentation tracker</p>
         <nav className="app-nav">

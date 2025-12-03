@@ -3,6 +3,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import App from './App'
 import { ProjectProvider } from './context/ProjectContext'
+import { DaemonStatusProvider } from './context/DaemonStatusContext'
 
 // Mock the centyClient
 vi.mock('./api/client.ts', () => ({
@@ -22,9 +23,11 @@ vi.mock('./api/client.ts', () => ({
 const renderWithRouter = (initialRoute = '/') => {
   return render(
     <MemoryRouter initialEntries={[initialRoute]}>
-      <ProjectProvider>
-        <App />
-      </ProjectProvider>
+      <DaemonStatusProvider>
+        <ProjectProvider>
+          <App />
+        </ProjectProvider>
+      </DaemonStatusProvider>
     </MemoryRouter>
   )
 }
