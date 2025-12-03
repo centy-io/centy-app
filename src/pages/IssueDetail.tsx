@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { centyClient } from '../api/client.ts'
 import { create } from '@bufbuild/protobuf'
@@ -10,6 +10,8 @@ import {
 } from '../gen/centy_pb.ts'
 import { useProject } from '../context/ProjectContext.tsx'
 import './IssueDetail.css'
+
+const STATUS_OPTIONS = ['open', 'in-progress', 'closed'] as const
 
 export function IssueDetail() {
   const { issueNumber } = useParams<{ issueNumber: string }>()
@@ -27,6 +29,9 @@ export function IssueDetail() {
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [showStatusDropdown, setShowStatusDropdown] = useState(false)
+  const [updatingStatus, setUpdatingStatus] = useState(false)
+  const statusDropdownRef = useRef<HTMLDivElement>(null)
 
   const fetchIssue = useCallback(async () => {
     if (!projectPath || !issueNumber) {
@@ -41,7 +46,7 @@ export function IssueDetail() {
     try {
       const request = create(GetIssueRequestSchema, {
         projectPath,
-        issueNumber,
+        issueId: issueNumber,
       })
       const response = await centyClient.getIssue(request)
       setIssue(response)
@@ -62,6 +67,63 @@ export function IssueDetail() {
     fetchIssue()
   }, [fetchIssue])
 
+  // Close status dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        statusDropdownRef.current &&
+        !statusDropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowStatusDropdown(false)
+      }
+    }
+
+    if (showStatusDropdown) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showStatusDropdown])
+
+  // Handle inline status change (without entering full edit mode)
+  const handleStatusChange = useCallback(
+    async (newStatus: string) => {
+      if (!projectPath || !issueNumber || !issue) return
+      if (newStatus === issue.metadata?.status) {
+        setShowStatusDropdown(false)
+        return
+      }
+
+      setUpdatingStatus(true)
+      setError(null)
+
+      try {
+        const request = create(UpdateIssueRequestSchema, {
+          projectPath,
+          issueId: issueNumber,
+          status: newStatus,
+        })
+        const response = await centyClient.updateIssue(request)
+
+        if (response.success && response.issue) {
+          setIssue(response.issue)
+          setEditStatus(response.issue.metadata?.status || 'open')
+        } else {
+          setError(response.error || 'Failed to update status')
+        }
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : 'Failed to connect to daemon'
+        )
+      } finally {
+        setUpdatingStatus(false)
+        setShowStatusDropdown(false)
+      }
+    },
+    [projectPath, issueNumber, issue]
+  )
+
   const handleSave = useCallback(async () => {
     if (!projectPath || !issueNumber) return
 
@@ -71,7 +133,7 @@ export function IssueDetail() {
     try {
       const request = create(UpdateIssueRequestSchema, {
         projectPath,
-        issueNumber,
+        issueId: issueNumber,
         title: editTitle,
         description: editDescription,
         status: editStatus,
@@ -110,7 +172,7 @@ export function IssueDetail() {
     try {
       const request = create(DeleteIssueRequestSchema, {
         projectPath,
-        issueNumber,
+        issueId: issueNumber,
       })
       const response = await centyClient.deleteIssue(request)
 
@@ -334,11 +396,42 @@ export function IssueDetail() {
             <h1 className="issue-title">{issue.title}</h1>
 
             <div className="issue-metadata">
-              <span
-                className={`status-badge ${getStatusClass(issue.metadata?.status || '')}`}
-              >
-                {issue.metadata?.status || 'unknown'}
-              </span>
+              <div className="status-selector" ref={statusDropdownRef}>
+                <button
+                  className={`status-badge status-badge-clickable ${getStatusClass(issue.metadata?.status || '')} ${updatingStatus ? 'updating' : ''}`}
+                  onClick={() => setShowStatusDropdown(!showStatusDropdown)}
+                  disabled={updatingStatus}
+                  aria-label="Change status"
+                  aria-expanded={showStatusDropdown}
+                  aria-haspopup="listbox"
+                >
+                  {updatingStatus
+                    ? 'Updating...'
+                    : issue.metadata?.status || 'unknown'}
+                  <span className="status-dropdown-arrow" aria-hidden="true">
+                    ▼
+                  </span>
+                </button>
+                {showStatusDropdown && (
+                  <ul
+                    className="status-dropdown"
+                    role="listbox"
+                    aria-label="Status options"
+                  >
+                    {STATUS_OPTIONS.map(status => (
+                      <li
+                        key={status}
+                        role="option"
+                        aria-selected={status === issue.metadata?.status}
+                        className={`status-option ${getStatusClass(status)} ${status === issue.metadata?.status ? 'selected' : ''}`}
+                        onClick={() => handleStatusChange(status)}
+                      >
+                        {status}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
               <span
                 className={`priority-badge ${getPriorityClass(issue.metadata?.priorityLabel || '')}`}
               >

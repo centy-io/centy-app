@@ -22,7 +22,7 @@ import type { Message } from '@bufbuild/protobuf'
 export const file_centy: GenFile =
   /*@__PURE__*/
   fileDesc(
-    'CgtjZW50eS5wcm90bxIFY2VudHkiZQoLSW5pdFJlcXVlc3QSFAoMcHJvamVjdF9wYXRoGAEgASgJEg0KBWZvcmNlGAIgASgIEjEKCWRlY2lzaW9ucxgDIAEoCzIeLmNlbnR5LlJlY29uY2lsaWF0aW9uRGVjaXNpb25zIpQBCgxJbml0UmVzcG9uc2USDwoHc3VjY2VzcxgBIAEoCBINCgVlcnJvchgCIAEoCRIPCgdjcmVhdGVkGAMgAygJEhAKCHJlc3RvcmVkGAQgAygJEg0KBXJlc2V0GAUgAygJEg8KB3NraXBwZWQYBiADKAkSIQoIbWFuaWZlc3QYByABKAsyDy5jZW50eS5NYW5pZmVzdCI0ChxHZXRSZWNvbmNpbGlhdGlvblBsYW5SZXF1ZXN0EhQKDHByb2plY3RfcGF0aBgBIAEoCSLjAQoSUmVjb25jaWxpYXRpb25QbGFuEiIKCXRvX2NyZWF0ZRgBIAMoCzIPLmNlbnR5LkZpbGVJbmZvEiMKCnRvX3Jlc3RvcmUYAiADKAsyDy5jZW50eS5GaWxlSW5mbxIhCgh0b19yZXNldBgDIAMoCzIPLmNlbnR5LkZpbGVJbmZvEiMKCnVwX3RvX2RhdGUYBCADKAsyDy5jZW50eS5GaWxlSW5mbxIjCgp1c2VyX2ZpbGVzGAUgAygLMg8uY2VudHkuRmlsZUluZm8SFwoPbmVlZHNfZGVjaXNpb25zGAYgASgIImcKHEV4ZWN1dGVSZWNvbmNpbGlhdGlvblJlcXVlc3QSFAoMcHJvamVjdF9wYXRoGAEgASgJEjEKCWRlY2lzaW9ucxgCIAEoCzIeLmNlbnR5LlJlY29uY2lsaWF0aW9uRGVjaXNpb25zIjkKF1JlY29uY2lsaWF0aW9uRGVjaXNpb25zEg8KB3Jlc3RvcmUYASADKAkSDQoFcmVzZXQYAiADKAki+wEKEkNyZWF0ZUlzc3VlUmVxdWVzdBIUCgxwcm9qZWN0X3BhdGgYASABKAkSDQoFdGl0bGUYAiABKAkSEwoLZGVzY3JpcHRpb24YAyABKAkSEAoIcHJpb3JpdHkYBCABKAUSDgoGc3RhdHVzGAUgASgJEkIKDWN1c3RvbV9maWVsZHMYBiADKAsyKy5jZW50eS5DcmVhdGVJc3N1ZVJlcXVlc3QuQ3VzdG9tRmllbGRzRW50cnkSEAoIdGVtcGxhdGUYByABKAkaMwoRQ3VzdG9tRmllbGRzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASKFAQoTQ3JlYXRlSXNzdWVSZXNwb25zZRIPCgdzdWNjZXNzGAEgASgIEg0KBWVycm9yGAIgASgJEhQKDGlzc3VlX251bWJlchgDIAEoCRIVCg1jcmVhdGVkX2ZpbGVzGAQgAygJEiEKCG1hbmlmZXN0GAUgASgLMg8uY2VudHkuTWFuaWZlc3QiMQoZR2V0TmV4dElzc3VlTnVtYmVyUmVxdWVzdBIUCgxwcm9qZWN0X3BhdGgYASABKAkiMgoaR2V0TmV4dElzc3VlTnVtYmVyUmVzcG9uc2USFAoMaXNzdWVfbnVtYmVyGAEgASgJImkKBUlzc3VlEhQKDGlzc3VlX251bWJlchgBIAEoCRINCgV0aXRsZRgCIAEoCRITCgtkZXNjcmlwdGlvbhgDIAEoCRImCghtZXRhZGF0YRgEIAEoCzIULmNlbnR5Lklzc3VlTWV0YWRhdGEi5QEKDUlzc3VlTWV0YWRhdGESDgoGc3RhdHVzGAEgASgJEhAKCHByaW9yaXR5GAIgASgFEhIKCmNyZWF0ZWRfYXQYAyABKAkSEgoKdXBkYXRlZF9hdBgEIAEoCRI9Cg1jdXN0b21fZmllbGRzGAUgAygLMiYuY2VudHkuSXNzdWVNZXRhZGF0YS5DdXN0b21GaWVsZHNFbnRyeRIWCg5wcmlvcml0eV9sYWJlbBgGIAEoCRozChFDdXN0b21GaWVsZHNFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBIj0KD0dldElzc3VlUmVxdWVzdBIUCgxwcm9qZWN0X3BhdGgYASABKAkSFAoMaXNzdWVfbnVtYmVyGAIgASgJIksKEUxpc3RJc3N1ZXNSZXF1ZXN0EhQKDHByb2plY3RfcGF0aBgBIAEoCRIOCgZzdGF0dXMYAiABKAkSEAoIcHJpb3JpdHkYAyABKAUiRwoSTGlzdElzc3Vlc1Jlc3BvbnNlEhwKBmlzc3VlcxgBIAMoCzIMLmNlbnR5Lklzc3VlEhMKC3RvdGFsX2NvdW50GAIgASgFIv8BChJVcGRhdGVJc3N1ZVJlcXVlc3QSFAoMcHJvamVjdF9wYXRoGAEgASgJEhQKDGlzc3VlX251bWJlchgCIAEoCRINCgV0aXRsZRgDIAEoCRITCgtkZXNjcmlwdGlvbhgEIAEoCRIOCgZzdGF0dXMYBSABKAkSEAoIcHJpb3JpdHkYBiABKAUSQgoNY3VzdG9tX2ZpZWxkcxgHIAMoCzIrLmNlbnR5LlVwZGF0ZUlzc3VlUmVxdWVzdC5DdXN0b21GaWVsZHNFbnRyeRozChFDdXN0b21GaWVsZHNFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBInUKE1VwZGF0ZUlzc3VlUmVzcG9uc2USDwoHc3VjY2VzcxgBIAEoCBINCgVlcnJvchgCIAEoCRIbCgVpc3N1ZRgDIAEoCzIMLmNlbnR5Lklzc3VlEiEKCG1hbmlmZXN0GAQgASgLMg8uY2VudHkuTWFuaWZlc3QiQAoSRGVsZXRlSXNzdWVSZXF1ZXN0EhQKDHByb2plY3RfcGF0aBgBIAEoCRIUCgxpc3N1ZV9udW1iZXIYAiABKAkiWAoTRGVsZXRlSXNzdWVSZXNwb25zZRIPCgdzdWNjZXNzGAEgASgIEg0KBWVycm9yGAIgASgJEiEKCG1hbmlmZXN0GAMgASgLMg8uY2VudHkuTWFuaWZlc3QiKgoSR2V0TWFuaWZlc3RSZXF1ZXN0EhQKDHByb2plY3RfcGF0aBgBIAEoCSKMAQoITWFuaWZlc3QSFgoOc2NoZW1hX3ZlcnNpb24YASABKAUSFQoNY2VudHlfdmVyc2lvbhgCIAEoCRISCgpjcmVhdGVkX2F0GAMgASgJEhIKCnVwZGF0ZWRfYXQYBCABKAkSKQoNbWFuYWdlZF9maWxlcxgFIAMoCzISLmNlbnR5Lk1hbmFnZWRGaWxlInIKC01hbmFnZWRGaWxlEgwKBHBhdGgYASABKAkSDAoEaGFzaBgCIAEoCRIPCgd2ZXJzaW9uGAMgASgJEhIKCmNyZWF0ZWRfYXQYBCABKAkSIgoJZmlsZV90eXBlGAUgASgOMg8uY2VudHkuRmlsZVR5cGUiYwoIRmlsZUluZm8SDAoEcGF0aBgBIAEoCRIiCglmaWxlX3R5cGUYAiABKA4yDy5jZW50eS5GaWxlVHlwZRIMCgRoYXNoGAMgASgJEhcKD2NvbnRlbnRfcHJldmlldxgEIAEoCSIoChBHZXRDb25maWdSZXF1ZXN0EhQKDHByb2plY3RfcGF0aBgBIAEoCSK2AQoGQ29uZmlnEjMKDWN1c3RvbV9maWVsZHMYASADKAsyHC5jZW50eS5DdXN0b21GaWVsZERlZmluaXRpb24SLQoIZGVmYXVsdHMYAiADKAsyGy5jZW50eS5Db25maWcuRGVmYXVsdHNFbnRyeRIXCg9wcmlvcml0eV9sZXZlbHMYAyABKAUaLwoNRGVmYXVsdHNFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBIncKFUN1c3RvbUZpZWxkRGVmaW5pdGlvbhIMCgRuYW1lGAEgASgJEhIKCmZpZWxkX3R5cGUYAiABKAkSEAoIcmVxdWlyZWQYAyABKAgSFQoNZGVmYXVsdF92YWx1ZRgEIAEoCRITCgtlbnVtX3ZhbHVlcxgFIAMoCSIsChRJc0luaXRpYWxpemVkUmVxdWVzdBIUCgxwcm9qZWN0X3BhdGgYASABKAkiQAoVSXNJbml0aWFsaXplZFJlc3BvbnNlEhMKC2luaXRpYWxpemVkGAEgASgIEhIKCmNlbnR5X3BhdGgYAiABKAkiaAoQQ3JlYXRlRG9jUmVxdWVzdBIUCgxwcm9qZWN0X3BhdGgYASABKAkSDQoFdGl0bGUYAiABKAkSDwoHY29udGVudBgDIAEoCRIMCgRzbHVnGAQgASgJEhAKCHRlbXBsYXRlGAUgASgJInoKEUNyZWF0ZURvY1Jlc3BvbnNlEg8KB3N1Y2Nlc3MYASABKAgSDQoFZXJyb3IYAiABKAkSDAoEc2x1ZxgDIAEoCRIUCgxjcmVhdGVkX2ZpbGUYBCABKAkSIQoIbWFuaWZlc3QYBSABKAsyDy5jZW50eS5NYW5pZmVzdCIzCg1HZXREb2NSZXF1ZXN0EhQKDHByb2plY3RfcGF0aBgBIAEoCRIMCgRzbHVnGAIgASgJIicKD0xpc3REb2NzUmVxdWVzdBIUCgxwcm9qZWN0X3BhdGgYASABKAkiQQoQTGlzdERvY3NSZXNwb25zZRIYCgRkb2NzGAEgAygLMgouY2VudHkuRG9jEhMKC3RvdGFsX2NvdW50GAIgASgFIlkKA0RvYxIMCgRzbHVnGAEgASgJEg0KBXRpdGxlGAIgASgJEg8KB2NvbnRlbnQYAyABKAkSJAoIbWV0YWRhdGEYBCABKAsyEi5jZW50eS5Eb2NNZXRhZGF0YSI1CgtEb2NNZXRhZGF0YRISCgpjcmVhdGVkX2F0GAEgASgJEhIKCnVwZGF0ZWRfYXQYAiABKAkiaAoQVXBkYXRlRG9jUmVxdWVzdBIUCgxwcm9qZWN0X3BhdGgYASABKAkSDAoEc2x1ZxgCIAEoCRINCgV0aXRsZRgDIAEoCRIPCgdjb250ZW50GAQgASgJEhAKCG5ld19zbHVnGAUgASgJIm8KEVVwZGF0ZURvY1Jlc3BvbnNlEg8KB3N1Y2Nlc3MYASABKAgSDQoFZXJyb3IYAiABKAkSFwoDZG9jGAMgASgLMgouY2VudHkuRG9jEiEKCG1hbmlmZXN0GAQgASgLMg8uY2VudHkuTWFuaWZlc3QiNgoQRGVsZXRlRG9jUmVxdWVzdBIUCgxwcm9qZWN0X3BhdGgYASABKAkSDAoEc2x1ZxgCIAEoCSJWChFEZWxldGVEb2NSZXNwb25zZRIPCgdzdWNjZXNzGAEgASgIEg0KBWVycm9yGAIgASgJEiEKCG1hbmlmZXN0GAMgASgLMg8uY2VudHkuTWFuaWZlc3QilQEKC1Byb2plY3RJbmZvEgwKBHBhdGgYASABKAkSFgoOZmlyc3RfYWNjZXNzZWQYAiABKAkSFQoNbGFzdF9hY2Nlc3NlZBgDIAEoCRITCgtpc3N1ZV9jb3VudBgEIAEoDRIRCglkb2NfY291bnQYBSABKA0SEwoLaW5pdGlhbGl6ZWQYBiABKAgSDAoEbmFtZRgHIAEoCSIsChNMaXN0UHJvamVjdHNSZXF1ZXN0EhUKDWluY2x1ZGVfc3RhbGUYASABKAgiUQoUTGlzdFByb2plY3RzUmVzcG9uc2USJAoIcHJvamVjdHMYASADKAsyEi5jZW50eS5Qcm9qZWN0SW5mbxITCgt0b3RhbF9jb3VudBgCIAEoBSIuChZSZWdpc3RlclByb2plY3RSZXF1ZXN0EhQKDHByb2plY3RfcGF0aBgBIAEoCSJeChdSZWdpc3RlclByb2plY3RSZXNwb25zZRIPCgdzdWNjZXNzGAEgASgIEg0KBWVycm9yGAIgASgJEiMKB3Byb2plY3QYAyABKAsyEi5jZW50eS5Qcm9qZWN0SW5mbyItChVVbnRyYWNrUHJvamVjdFJlcXVlc3QSFAoMcHJvamVjdF9wYXRoGAEgASgJIjgKFlVudHJhY2tQcm9qZWN0UmVzcG9uc2USDwoHc3VjY2VzcxgBIAEoCBINCgVlcnJvchgCIAEoCSItChVHZXRQcm9qZWN0SW5mb1JlcXVlc3QSFAoMcHJvamVjdF9wYXRoGAEgASgJIkwKFkdldFByb2plY3RJbmZvUmVzcG9uc2USDQoFZm91bmQYASABKAgSIwoHcHJvamVjdBgCIAEoCzISLmNlbnR5LlByb2plY3RJbmZvKlIKCEZpbGVUeXBlEhkKFUZJTEVfVFlQRV9VTlNQRUNJRklFRBAAEhIKDkZJTEVfVFlQRV9GSUxFEAESFwoTRklMRV9UWVBFX0RJUkVDVE9SWRACMqoLCgtDZW50eURhZW1vbhIvCgRJbml0EhIuY2VudHkuSW5pdFJlcXVlc3QaEy5jZW50eS5Jbml0UmVzcG9uc2USVwoVR2V0UmVjb25jaWxpYXRpb25QbGFuEiMuY2VudHkuR2V0UmVjb25jaWxpYXRpb25QbGFuUmVxdWVzdBoZLmNlbnR5LlJlY29uY2lsaWF0aW9uUGxhbhJRChVFeGVjdXRlUmVjb25jaWxpYXRpb24SIy5jZW50eS5FeGVjdXRlUmVjb25jaWxpYXRpb25SZXF1ZXN0GhMuY2VudHkuSW5pdFJlc3BvbnNlEkQKC0NyZWF0ZUlzc3VlEhkuY2VudHkuQ3JlYXRlSXNzdWVSZXF1ZXN0GhouY2VudHkuQ3JlYXRlSXNzdWVSZXNwb25zZRIwCghHZXRJc3N1ZRIWLmNlbnR5LkdldElzc3VlUmVxdWVzdBoMLmNlbnR5Lklzc3VlEkEKCkxpc3RJc3N1ZXMSGC5jZW50eS5MaXN0SXNzdWVzUmVxdWVzdBoZLmNlbnR5Lkxpc3RJc3N1ZXNSZXNwb25zZRJECgtVcGRhdGVJc3N1ZRIZLmNlbnR5LlVwZGF0ZUlzc3VlUmVxdWVzdBoaLmNlbnR5LlVwZGF0ZUlzc3VlUmVzcG9uc2USRAoLRGVsZXRlSXNzdWUSGS5jZW50eS5EZWxldGVJc3N1ZVJlcXVlc3QaGi5jZW50eS5EZWxldGVJc3N1ZVJlc3BvbnNlElkKEkdldE5leHRJc3N1ZU51bWJlchIgLmNlbnR5LkdldE5leHRJc3N1ZU51bWJlclJlcXVlc3QaIS5jZW50eS5HZXROZXh0SXNzdWVOdW1iZXJSZXNwb25zZRI5CgtHZXRNYW5pZmVzdBIZLmNlbnR5LkdldE1hbmlmZXN0UmVxdWVzdBoPLmNlbnR5Lk1hbmlmZXN0EjMKCUdldENvbmZpZxIXLmNlbnR5LkdldENvbmZpZ1JlcXVlc3QaDS5jZW50eS5Db25maWcSSgoNSXNJbml0aWFsaXplZBIbLmNlbnR5LklzSW5pdGlhbGl6ZWRSZXF1ZXN0GhwuY2VudHkuSXNJbml0aWFsaXplZFJlc3BvbnNlEj4KCUNyZWF0ZURvYxIXLmNlbnR5LkNyZWF0ZURvY1JlcXVlc3QaGC5jZW50eS5DcmVhdGVEb2NSZXNwb25zZRIqCgZHZXREb2MSFC5jZW50eS5HZXREb2NSZXF1ZXN0GgouY2VudHkuRG9jEjsKCExpc3REb2NzEhYuY2VudHkuTGlzdERvY3NSZXF1ZXN0GhcuY2VudHkuTGlzdERvY3NSZXNwb25zZRI+CglVcGRhdGVEb2MSFy5jZW50eS5VcGRhdGVEb2NSZXF1ZXN0GhguY2VudHkuVXBkYXRlRG9jUmVzcG9uc2USPgoJRGVsZXRlRG9jEhcuY2VudHkuRGVsZXRlRG9jUmVxdWVzdBoYLmNlbnR5LkRlbGV0ZURvY1Jlc3BvbnNlEkcKDExpc3RQcm9qZWN0cxIaLmNlbnR5Lkxpc3RQcm9qZWN0c1JlcXVlc3QaGy5jZW50eS5MaXN0UHJvamVjdHNSZXNwb25zZRJQCg9SZWdpc3RlclByb2plY3QSHS5jZW50eS5SZWdpc3RlclByb2plY3RSZXF1ZXN0Gh4uY2VudHkuUmVnaXN0ZXJQcm9qZWN0UmVzcG9uc2USTQoOVW50cmFja1Byb2plY3QSHC5jZW50eS5VbnRyYWNrUHJvamVjdFJlcXVlc3QaHS5jZW50eS5VbnRyYWNrUHJvamVjdFJlc3BvbnNlEk0KDkdldFByb2plY3RJbmZvEhwuY2VudHkuR2V0UHJvamVjdEluZm9SZXF1ZXN0Gh0uY2VudHkuR2V0UHJvamVjdEluZm9SZXNwb25zZWIGcHJvdG8z'
+    'CgtjZW50eS5wcm90bxIFY2VudHkiZQoLSW5pdFJlcXVlc3QSFAoMcHJvamVjdF9wYXRoGAEgASgJEg0KBWZvcmNlGAIgASgIEjEKCWRlY2lzaW9ucxgDIAEoCzIeLmNlbnR5LlJlY29uY2lsaWF0aW9uRGVjaXNpb25zIpQBCgxJbml0UmVzcG9uc2USDwoHc3VjY2VzcxgBIAEoCBINCgVlcnJvchgCIAEoCRIPCgdjcmVhdGVkGAMgAygJEhAKCHJlc3RvcmVkGAQgAygJEg0KBXJlc2V0GAUgAygJEg8KB3NraXBwZWQYBiADKAkSIQoIbWFuaWZlc3QYByABKAsyDy5jZW50eS5NYW5pZmVzdCI0ChxHZXRSZWNvbmNpbGlhdGlvblBsYW5SZXF1ZXN0EhQKDHByb2plY3RfcGF0aBgBIAEoCSLjAQoSUmVjb25jaWxpYXRpb25QbGFuEiIKCXRvX2NyZWF0ZRgBIAMoCzIPLmNlbnR5LkZpbGVJbmZvEiMKCnRvX3Jlc3RvcmUYAiADKAsyDy5jZW50eS5GaWxlSW5mbxIhCgh0b19yZXNldBgDIAMoCzIPLmNlbnR5LkZpbGVJbmZvEiMKCnVwX3RvX2RhdGUYBCADKAsyDy5jZW50eS5GaWxlSW5mbxIjCgp1c2VyX2ZpbGVzGAUgAygLMg8uY2VudHkuRmlsZUluZm8SFwoPbmVlZHNfZGVjaXNpb25zGAYgASgIImcKHEV4ZWN1dGVSZWNvbmNpbGlhdGlvblJlcXVlc3QSFAoMcHJvamVjdF9wYXRoGAEgASgJEjEKCWRlY2lzaW9ucxgCIAEoCzIeLmNlbnR5LlJlY29uY2lsaWF0aW9uRGVjaXNpb25zIjkKF1JlY29uY2lsaWF0aW9uRGVjaXNpb25zEg8KB3Jlc3RvcmUYASADKAkSDQoFcmVzZXQYAiADKAki+wEKEkNyZWF0ZUlzc3VlUmVxdWVzdBIUCgxwcm9qZWN0X3BhdGgYASABKAkSDQoFdGl0bGUYAiABKAkSEwoLZGVzY3JpcHRpb24YAyABKAkSEAoIcHJpb3JpdHkYBCABKAUSDgoGc3RhdHVzGAUgASgJEkIKDWN1c3RvbV9maWVsZHMYBiADKAsyKy5jZW50eS5DcmVhdGVJc3N1ZVJlcXVlc3QuQ3VzdG9tRmllbGRzRW50cnkSEAoIdGVtcGxhdGUYByABKAkaMwoRQ3VzdG9tRmllbGRzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASKpAQoTQ3JlYXRlSXNzdWVSZXNwb25zZRIPCgdzdWNjZXNzGAEgASgIEg0KBWVycm9yGAIgASgJEgoKAmlkGAMgASgJEhYKDmRpc3BsYXlfbnVtYmVyGAQgASgNEhQKDGlzc3VlX251bWJlchgFIAEoCRIVCg1jcmVhdGVkX2ZpbGVzGAYgAygJEiEKCG1hbmlmZXN0GAcgASgLMg8uY2VudHkuTWFuaWZlc3QiMQoZR2V0TmV4dElzc3VlTnVtYmVyUmVxdWVzdBIUCgxwcm9qZWN0X3BhdGgYASABKAkiMgoaR2V0TmV4dElzc3VlTnVtYmVyUmVzcG9uc2USFAoMaXNzdWVfbnVtYmVyGAEgASgJIo0BCgVJc3N1ZRIKCgJpZBgBIAEoCRIWCg5kaXNwbGF5X251bWJlchgCIAEoDRIUCgxpc3N1ZV9udW1iZXIYAyABKAkSDQoFdGl0bGUYBCABKAkSEwoLZGVzY3JpcHRpb24YBSABKAkSJgoIbWV0YWRhdGEYBiABKAsyFC5jZW50eS5Jc3N1ZU1ldGFkYXRhIv0BCg1Jc3N1ZU1ldGFkYXRhEhYKDmRpc3BsYXlfbnVtYmVyGAEgASgNEg4KBnN0YXR1cxgCIAEoCRIQCghwcmlvcml0eRgDIAEoBRISCgpjcmVhdGVkX2F0GAQgASgJEhIKCnVwZGF0ZWRfYXQYBSABKAkSPQoNY3VzdG9tX2ZpZWxkcxgGIAMoCzImLmNlbnR5Lklzc3VlTWV0YWRhdGEuQ3VzdG9tRmllbGRzRW50cnkSFgoOcHJpb3JpdHlfbGFiZWwYByABKAkaMwoRQ3VzdG9tRmllbGRzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASI5Cg9HZXRJc3N1ZVJlcXVlc3QSFAoMcHJvamVjdF9wYXRoGAEgASgJEhAKCGlzc3VlX2lkGAIgASgJIk4KHkdldElzc3VlQnlEaXNwbGF5TnVtYmVyUmVxdWVzdBIUCgxwcm9qZWN0X3BhdGgYASABKAkSFgoOZGlzcGxheV9udW1iZXIYAiABKA0iSwoRTGlzdElzc3Vlc1JlcXVlc3QSFAoMcHJvamVjdF9wYXRoGAEgASgJEg4KBnN0YXR1cxgCIAEoCRIQCghwcmlvcml0eRgDIAEoBSJHChJMaXN0SXNzdWVzUmVzcG9uc2USHAoGaXNzdWVzGAEgAygLMgwuY2VudHkuSXNzdWUSEwoLdG90YWxfY291bnQYAiABKAUi+wEKElVwZGF0ZUlzc3VlUmVxdWVzdBIUCgxwcm9qZWN0X3BhdGgYASABKAkSEAoIaXNzdWVfaWQYAiABKAkSDQoFdGl0bGUYAyABKAkSEwoLZGVzY3JpcHRpb24YBCABKAkSDgoGc3RhdHVzGAUgASgJEhAKCHByaW9yaXR5GAYgASgFEkIKDWN1c3RvbV9maWVsZHMYByADKAsyKy5jZW50eS5VcGRhdGVJc3N1ZVJlcXVlc3QuQ3VzdG9tRmllbGRzRW50cnkaMwoRQ3VzdG9tRmllbGRzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASJ1ChNVcGRhdGVJc3N1ZVJlc3BvbnNlEg8KB3N1Y2Nlc3MYASABKAgSDQoFZXJyb3IYAiABKAkSGwoFaXNzdWUYAyABKAsyDC5jZW50eS5Jc3N1ZRIhCghtYW5pZmVzdBgEIAEoCzIPLmNlbnR5Lk1hbmlmZXN0IjwKEkRlbGV0ZUlzc3VlUmVxdWVzdBIUCgxwcm9qZWN0X3BhdGgYASABKAkSEAoIaXNzdWVfaWQYAiABKAkiWAoTRGVsZXRlSXNzdWVSZXNwb25zZRIPCgdzdWNjZXNzGAEgASgIEg0KBWVycm9yGAIgASgJEiEKCG1hbmlmZXN0GAMgASgLMg8uY2VudHkuTWFuaWZlc3QiKgoSR2V0TWFuaWZlc3RSZXF1ZXN0EhQKDHByb2plY3RfcGF0aBgBIAEoCSKMAQoITWFuaWZlc3QSFgoOc2NoZW1hX3ZlcnNpb24YASABKAUSFQoNY2VudHlfdmVyc2lvbhgCIAEoCRISCgpjcmVhdGVkX2F0GAMgASgJEhIKCnVwZGF0ZWRfYXQYBCABKAkSKQoNbWFuYWdlZF9maWxlcxgFIAMoCzISLmNlbnR5Lk1hbmFnZWRGaWxlInIKC01hbmFnZWRGaWxlEgwKBHBhdGgYASABKAkSDAoEaGFzaBgCIAEoCRIPCgd2ZXJzaW9uGAMgASgJEhIKCmNyZWF0ZWRfYXQYBCABKAkSIgoJZmlsZV90eXBlGAUgASgOMg8uY2VudHkuRmlsZVR5cGUiYwoIRmlsZUluZm8SDAoEcGF0aBgBIAEoCRIiCglmaWxlX3R5cGUYAiABKA4yDy5jZW50eS5GaWxlVHlwZRIMCgRoYXNoGAMgASgJEhcKD2NvbnRlbnRfcHJldmlldxgEIAEoCSIoChBHZXRDb25maWdSZXF1ZXN0EhQKDHByb2plY3RfcGF0aBgBIAEoCSLlAQoGQ29uZmlnEjMKDWN1c3RvbV9maWVsZHMYASADKAsyHC5jZW50eS5DdXN0b21GaWVsZERlZmluaXRpb24SLQoIZGVmYXVsdHMYAiADKAsyGy5jZW50eS5Db25maWcuRGVmYXVsdHNFbnRyeRIXCg9wcmlvcml0eV9sZXZlbHMYAyABKAUSFgoOYWxsb3dlZF9zdGF0ZXMYBCADKAkSFQoNZGVmYXVsdF9zdGF0ZRgFIAEoCRovCg1EZWZhdWx0c0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEidwoVQ3VzdG9tRmllbGREZWZpbml0aW9uEgwKBG5hbWUYASABKAkSEgoKZmllbGRfdHlwZRgCIAEoCRIQCghyZXF1aXJlZBgDIAEoCBIVCg1kZWZhdWx0X3ZhbHVlGAQgASgJEhMKC2VudW1fdmFsdWVzGAUgAygJIiwKFElzSW5pdGlhbGl6ZWRSZXF1ZXN0EhQKDHByb2plY3RfcGF0aBgBIAEoCSJAChVJc0luaXRpYWxpemVkUmVzcG9uc2USEwoLaW5pdGlhbGl6ZWQYASABKAgSEgoKY2VudHlfcGF0aBgCIAEoCSJoChBDcmVhdGVEb2NSZXF1ZXN0EhQKDHByb2plY3RfcGF0aBgBIAEoCRINCgV0aXRsZRgCIAEoCRIPCgdjb250ZW50GAMgASgJEgwKBHNsdWcYBCABKAkSEAoIdGVtcGxhdGUYBSABKAkiegoRQ3JlYXRlRG9jUmVzcG9uc2USDwoHc3VjY2VzcxgBIAEoCBINCgVlcnJvchgCIAEoCRIMCgRzbHVnGAMgASgJEhQKDGNyZWF0ZWRfZmlsZRgEIAEoCRIhCghtYW5pZmVzdBgFIAEoCzIPLmNlbnR5Lk1hbmlmZXN0IjMKDUdldERvY1JlcXVlc3QSFAoMcHJvamVjdF9wYXRoGAEgASgJEgwKBHNsdWcYAiABKAkiJwoPTGlzdERvY3NSZXF1ZXN0EhQKDHByb2plY3RfcGF0aBgBIAEoCSJBChBMaXN0RG9jc1Jlc3BvbnNlEhgKBGRvY3MYASADKAsyCi5jZW50eS5Eb2MSEwoLdG90YWxfY291bnQYAiABKAUiWQoDRG9jEgwKBHNsdWcYASABKAkSDQoFdGl0bGUYAiABKAkSDwoHY29udGVudBgDIAEoCRIkCghtZXRhZGF0YRgEIAEoCzISLmNlbnR5LkRvY01ldGFkYXRhIjUKC0RvY01ldGFkYXRhEhIKCmNyZWF0ZWRfYXQYASABKAkSEgoKdXBkYXRlZF9hdBgCIAEoCSJoChBVcGRhdGVEb2NSZXF1ZXN0EhQKDHByb2plY3RfcGF0aBgBIAEoCRIMCgRzbHVnGAIgASgJEg0KBXRpdGxlGAMgASgJEg8KB2NvbnRlbnQYBCABKAkSEAoIbmV3X3NsdWcYBSABKAkibwoRVXBkYXRlRG9jUmVzcG9uc2USDwoHc3VjY2VzcxgBIAEoCBINCgVlcnJvchgCIAEoCRIXCgNkb2MYAyABKAsyCi5jZW50eS5Eb2MSIQoIbWFuaWZlc3QYBCABKAsyDy5jZW50eS5NYW5pZmVzdCI2ChBEZWxldGVEb2NSZXF1ZXN0EhQKDHByb2plY3RfcGF0aBgBIAEoCRIMCgRzbHVnGAIgASgJIlYKEURlbGV0ZURvY1Jlc3BvbnNlEg8KB3N1Y2Nlc3MYASABKAgSDQoFZXJyb3IYAiABKAkSIQoIbWFuaWZlc3QYAyABKAsyDy5jZW50eS5NYW5pZmVzdCKVAQoLUHJvamVjdEluZm8SDAoEcGF0aBgBIAEoCRIWCg5maXJzdF9hY2Nlc3NlZBgCIAEoCRIVCg1sYXN0X2FjY2Vzc2VkGAMgASgJEhMKC2lzc3VlX2NvdW50GAQgASgNEhEKCWRvY19jb3VudBgFIAEoDRITCgtpbml0aWFsaXplZBgGIAEoCBIMCgRuYW1lGAcgASgJIiwKE0xpc3RQcm9qZWN0c1JlcXVlc3QSFQoNaW5jbHVkZV9zdGFsZRgBIAEoCCJRChRMaXN0UHJvamVjdHNSZXNwb25zZRIkCghwcm9qZWN0cxgBIAMoCzISLmNlbnR5LlByb2plY3RJbmZvEhMKC3RvdGFsX2NvdW50GAIgASgFIi4KFlJlZ2lzdGVyUHJvamVjdFJlcXVlc3QSFAoMcHJvamVjdF9wYXRoGAEgASgJIl4KF1JlZ2lzdGVyUHJvamVjdFJlc3BvbnNlEg8KB3N1Y2Nlc3MYASABKAgSDQoFZXJyb3IYAiABKAkSIwoHcHJvamVjdBgDIAEoCzISLmNlbnR5LlByb2plY3RJbmZvIi0KFVVudHJhY2tQcm9qZWN0UmVxdWVzdBIUCgxwcm9qZWN0X3BhdGgYASABKAkiOAoWVW50cmFja1Byb2plY3RSZXNwb25zZRIPCgdzdWNjZXNzGAEgASgIEg0KBWVycm9yGAIgASgJIi0KFUdldFByb2plY3RJbmZvUmVxdWVzdBIUCgxwcm9qZWN0X3BhdGgYASABKAkiTAoWR2V0UHJvamVjdEluZm9SZXNwb25zZRINCgVmb3VuZBgBIAEoCBIjCgdwcm9qZWN0GAIgASgLMhIuY2VudHkuUHJvamVjdEluZm8qUgoIRmlsZVR5cGUSGQoVRklMRV9UWVBFX1VOU1BFQ0lGSUVEEAASEgoORklMRV9UWVBFX0ZJTEUQARIXChNGSUxFX1RZUEVfRElSRUNUT1JZEAIy+gsKC0NlbnR5RGFlbW9uEi8KBEluaXQSEi5jZW50eS5Jbml0UmVxdWVzdBoTLmNlbnR5LkluaXRSZXNwb25zZRJXChVHZXRSZWNvbmNpbGlhdGlvblBsYW4SIy5jZW50eS5HZXRSZWNvbmNpbGlhdGlvblBsYW5SZXF1ZXN0GhkuY2VudHkuUmVjb25jaWxpYXRpb25QbGFuElEKFUV4ZWN1dGVSZWNvbmNpbGlhdGlvbhIjLmNlbnR5LkV4ZWN1dGVSZWNvbmNpbGlhdGlvblJlcXVlc3QaEy5jZW50eS5Jbml0UmVzcG9uc2USRAoLQ3JlYXRlSXNzdWUSGS5jZW50eS5DcmVhdGVJc3N1ZVJlcXVlc3QaGi5jZW50eS5DcmVhdGVJc3N1ZVJlc3BvbnNlEjAKCEdldElzc3VlEhYuY2VudHkuR2V0SXNzdWVSZXF1ZXN0GgwuY2VudHkuSXNzdWUSTgoXR2V0SXNzdWVCeURpc3BsYXlOdW1iZXISJS5jZW50eS5HZXRJc3N1ZUJ5RGlzcGxheU51bWJlclJlcXVlc3QaDC5jZW50eS5Jc3N1ZRJBCgpMaXN0SXNzdWVzEhguY2VudHkuTGlzdElzc3Vlc1JlcXVlc3QaGS5jZW50eS5MaXN0SXNzdWVzUmVzcG9uc2USRAoLVXBkYXRlSXNzdWUSGS5jZW50eS5VcGRhdGVJc3N1ZVJlcXVlc3QaGi5jZW50eS5VcGRhdGVJc3N1ZVJlc3BvbnNlEkQKC0RlbGV0ZUlzc3VlEhkuY2VudHkuRGVsZXRlSXNzdWVSZXF1ZXN0GhouY2VudHkuRGVsZXRlSXNzdWVSZXNwb25zZRJZChJHZXROZXh0SXNzdWVOdW1iZXISIC5jZW50eS5HZXROZXh0SXNzdWVOdW1iZXJSZXF1ZXN0GiEuY2VudHkuR2V0TmV4dElzc3VlTnVtYmVyUmVzcG9uc2USOQoLR2V0TWFuaWZlc3QSGS5jZW50eS5HZXRNYW5pZmVzdFJlcXVlc3QaDy5jZW50eS5NYW5pZmVzdBIzCglHZXRDb25maWcSFy5jZW50eS5HZXRDb25maWdSZXF1ZXN0Gg0uY2VudHkuQ29uZmlnEkoKDUlzSW5pdGlhbGl6ZWQSGy5jZW50eS5Jc0luaXRpYWxpemVkUmVxdWVzdBocLmNlbnR5LklzSW5pdGlhbGl6ZWRSZXNwb25zZRI+CglDcmVhdGVEb2MSFy5jZW50eS5DcmVhdGVEb2NSZXF1ZXN0GhguY2VudHkuQ3JlYXRlRG9jUmVzcG9uc2USKgoGR2V0RG9jEhQuY2VudHkuR2V0RG9jUmVxdWVzdBoKLmNlbnR5LkRvYxI7CghMaXN0RG9jcxIWLmNlbnR5Lkxpc3REb2NzUmVxdWVzdBoXLmNlbnR5Lkxpc3REb2NzUmVzcG9uc2USPgoJVXBkYXRlRG9jEhcuY2VudHkuVXBkYXRlRG9jUmVxdWVzdBoYLmNlbnR5LlVwZGF0ZURvY1Jlc3BvbnNlEj4KCURlbGV0ZURvYxIXLmNlbnR5LkRlbGV0ZURvY1JlcXVlc3QaGC5jZW50eS5EZWxldGVEb2NSZXNwb25zZRJHCgxMaXN0UHJvamVjdHMSGi5jZW50eS5MaXN0UHJvamVjdHNSZXF1ZXN0GhsuY2VudHkuTGlzdFByb2plY3RzUmVzcG9uc2USUAoPUmVnaXN0ZXJQcm9qZWN0Eh0uY2VudHkuUmVnaXN0ZXJQcm9qZWN0UmVxdWVzdBoeLmNlbnR5LlJlZ2lzdGVyUHJvamVjdFJlc3BvbnNlEk0KDlVudHJhY2tQcm9qZWN0EhwuY2VudHkuVW50cmFja1Byb2plY3RSZXF1ZXN0Gh0uY2VudHkuVW50cmFja1Byb2plY3RSZXNwb25zZRJNCg5HZXRQcm9qZWN0SW5mbxIcLmNlbnR5LkdldFByb2plY3RJbmZvUmVxdWVzdBodLmNlbnR5LkdldFByb2plY3RJbmZvUmVzcG9uc2ViBnByb3RvMw'
   )
 
 /**
@@ -306,23 +306,37 @@ export type CreateIssueResponse = Message<'centy.CreateIssueResponse'> & {
   error: string
 
   /**
-   * The created issue number (e.g., "0001")
+   * The created issue ID (UUID)
    *
-   * @generated from field: string issue_number = 3;
+   * @generated from field: string id = 3;
+   */
+  id: string
+
+  /**
+   * Human-readable display number (1, 2, 3...)
+   *
+   * @generated from field: uint32 display_number = 4;
+   */
+  displayNumber: number
+
+  /**
+   * Legacy: same as id (for backward compatibility)
+   *
+   * @generated from field: string issue_number = 5;
    */
   issueNumber: string
 
   /**
    * Paths to created files
    *
-   * @generated from field: repeated string created_files = 4;
+   * @generated from field: repeated string created_files = 6;
    */
   createdFiles: string[]
 
   /**
    * The updated manifest
    *
-   * @generated from field: centy.Manifest manifest = 5;
+   * @generated from field: centy.Manifest manifest = 7;
    */
   manifest?: Manifest
 }
@@ -380,24 +394,38 @@ export const GetNextIssueNumberResponseSchema: GenMessage<GetNextIssueNumberResp
  */
 export type Issue = Message<'centy.Issue'> & {
   /**
-   * e.g., "0001"
+   * UUID-based issue ID (folder name)
    *
-   * @generated from field: string issue_number = 1;
+   * @generated from field: string id = 1;
+   */
+  id: string
+
+  /**
+   * Human-readable display number (1, 2, 3...)
+   *
+   * @generated from field: uint32 display_number = 2;
+   */
+  displayNumber: number
+
+  /**
+   * Legacy: same as id (for backward compatibility)
+   *
+   * @generated from field: string issue_number = 3;
    */
   issueNumber: string
 
   /**
-   * @generated from field: string title = 2;
+   * @generated from field: string title = 4;
    */
   title: string
 
   /**
-   * @generated from field: string description = 3;
+   * @generated from field: string description = 5;
    */
   description: string
 
   /**
-   * @generated from field: centy.IssueMetadata metadata = 4;
+   * @generated from field: centy.IssueMetadata metadata = 6;
    */
   metadata?: IssueMetadata
 }
@@ -415,42 +443,49 @@ export const IssueSchema: GenMessage<Issue> =
  */
 export type IssueMetadata = Message<'centy.IssueMetadata'> & {
   /**
+   * Human-readable display number (1, 2, 3...)
+   *
+   * @generated from field: uint32 display_number = 1;
+   */
+  displayNumber: number
+
+  /**
    * e.g., "open", "in-progress", "closed"
    *
-   * @generated from field: string status = 1;
+   * @generated from field: string status = 2;
    */
   status: string
 
   /**
    * 1 = highest priority, N = lowest
    *
-   * @generated from field: int32 priority = 2;
+   * @generated from field: int32 priority = 3;
    */
   priority: number
 
   /**
    * ISO timestamp
    *
-   * @generated from field: string created_at = 3;
+   * @generated from field: string created_at = 4;
    */
   createdAt: string
 
   /**
    * ISO timestamp
    *
-   * @generated from field: string updated_at = 4;
+   * @generated from field: string updated_at = 5;
    */
   updatedAt: string
 
   /**
-   * @generated from field: map<string, string> custom_fields = 5;
+   * @generated from field: map<string, string> custom_fields = 6;
    */
   customFields: { [key: string]: string }
 
   /**
    * Human-readable label (e.g., "high", "P1")
    *
-   * @generated from field: string priority_label = 6;
+   * @generated from field: string priority_label = 7;
    */
   priorityLabel: string
 }
@@ -473,11 +508,11 @@ export type GetIssueRequest = Message<'centy.GetIssueRequest'> & {
   projectPath: string
 
   /**
-   * e.g., "0001"
+   * UUID or legacy issue number (e.g., "0001")
    *
-   * @generated from field: string issue_number = 2;
+   * @generated from field: string issue_id = 2;
    */
-  issueNumber: string
+  issueId: string
 }
 
 /**
@@ -487,6 +522,32 @@ export type GetIssueRequest = Message<'centy.GetIssueRequest'> & {
 export const GetIssueRequestSchema: GenMessage<GetIssueRequest> =
   /*@__PURE__*/
   messageDesc(file_centy, 12)
+
+/**
+ * @generated from message centy.GetIssueByDisplayNumberRequest
+ */
+export type GetIssueByDisplayNumberRequest =
+  Message<'centy.GetIssueByDisplayNumberRequest'> & {
+    /**
+     * @generated from field: string project_path = 1;
+     */
+    projectPath: string
+
+    /**
+     * Human-readable number (1, 2, 3...)
+     *
+     * @generated from field: uint32 display_number = 2;
+     */
+    displayNumber: number
+  }
+
+/**
+ * Describes the message centy.GetIssueByDisplayNumberRequest.
+ * Use `create(GetIssueByDisplayNumberRequestSchema)` to create a new message.
+ */
+export const GetIssueByDisplayNumberRequestSchema: GenMessage<GetIssueByDisplayNumberRequest> =
+  /*@__PURE__*/
+  messageDesc(file_centy, 13)
 
 /**
  * @generated from message centy.ListIssuesRequest
@@ -520,7 +581,7 @@ export type ListIssuesRequest = Message<'centy.ListIssuesRequest'> & {
  */
 export const ListIssuesRequestSchema: GenMessage<ListIssuesRequest> =
   /*@__PURE__*/
-  messageDesc(file_centy, 13)
+  messageDesc(file_centy, 14)
 
 /**
  * @generated from message centy.ListIssuesResponse
@@ -543,7 +604,7 @@ export type ListIssuesResponse = Message<'centy.ListIssuesResponse'> & {
  */
 export const ListIssuesResponseSchema: GenMessage<ListIssuesResponse> =
   /*@__PURE__*/
-  messageDesc(file_centy, 14)
+  messageDesc(file_centy, 15)
 
 /**
  * @generated from message centy.UpdateIssueRequest
@@ -555,9 +616,11 @@ export type UpdateIssueRequest = Message<'centy.UpdateIssueRequest'> & {
   projectPath: string
 
   /**
-   * @generated from field: string issue_number = 2;
+   * UUID or legacy issue number
+   *
+   * @generated from field: string issue_id = 2;
    */
-  issueNumber: string
+  issueId: string
 
   /**
    * Fields to update (empty string = don't update, 0 = don't update priority)
@@ -595,7 +658,7 @@ export type UpdateIssueRequest = Message<'centy.UpdateIssueRequest'> & {
  */
 export const UpdateIssueRequestSchema: GenMessage<UpdateIssueRequest> =
   /*@__PURE__*/
-  messageDesc(file_centy, 15)
+  messageDesc(file_centy, 16)
 
 /**
  * @generated from message centy.UpdateIssueResponse
@@ -630,7 +693,7 @@ export type UpdateIssueResponse = Message<'centy.UpdateIssueResponse'> & {
  */
 export const UpdateIssueResponseSchema: GenMessage<UpdateIssueResponse> =
   /*@__PURE__*/
-  messageDesc(file_centy, 16)
+  messageDesc(file_centy, 17)
 
 /**
  * @generated from message centy.DeleteIssueRequest
@@ -642,9 +705,11 @@ export type DeleteIssueRequest = Message<'centy.DeleteIssueRequest'> & {
   projectPath: string
 
   /**
-   * @generated from field: string issue_number = 2;
+   * UUID or legacy issue number
+   *
+   * @generated from field: string issue_id = 2;
    */
-  issueNumber: string
+  issueId: string
 }
 
 /**
@@ -653,7 +718,7 @@ export type DeleteIssueRequest = Message<'centy.DeleteIssueRequest'> & {
  */
 export const DeleteIssueRequestSchema: GenMessage<DeleteIssueRequest> =
   /*@__PURE__*/
-  messageDesc(file_centy, 17)
+  messageDesc(file_centy, 18)
 
 /**
  * @generated from message centy.DeleteIssueResponse
@@ -683,7 +748,7 @@ export type DeleteIssueResponse = Message<'centy.DeleteIssueResponse'> & {
  */
 export const DeleteIssueResponseSchema: GenMessage<DeleteIssueResponse> =
   /*@__PURE__*/
-  messageDesc(file_centy, 18)
+  messageDesc(file_centy, 19)
 
 /**
  * @generated from message centy.GetManifestRequest
@@ -701,7 +766,7 @@ export type GetManifestRequest = Message<'centy.GetManifestRequest'> & {
  */
 export const GetManifestRequestSchema: GenMessage<GetManifestRequest> =
   /*@__PURE__*/
-  messageDesc(file_centy, 19)
+  messageDesc(file_centy, 20)
 
 /**
  * @generated from message centy.Manifest
@@ -739,7 +804,7 @@ export type Manifest = Message<'centy.Manifest'> & {
  */
 export const ManifestSchema: GenMessage<Manifest> =
   /*@__PURE__*/
-  messageDesc(file_centy, 20)
+  messageDesc(file_centy, 21)
 
 /**
  * @generated from message centy.ManagedFile
@@ -777,7 +842,7 @@ export type ManagedFile = Message<'centy.ManagedFile'> & {
  */
 export const ManagedFileSchema: GenMessage<ManagedFile> =
   /*@__PURE__*/
-  messageDesc(file_centy, 21)
+  messageDesc(file_centy, 22)
 
 /**
  * @generated from message centy.FileInfo
@@ -812,7 +877,7 @@ export type FileInfo = Message<'centy.FileInfo'> & {
  */
 export const FileInfoSchema: GenMessage<FileInfo> =
   /*@__PURE__*/
-  messageDesc(file_centy, 22)
+  messageDesc(file_centy, 23)
 
 /**
  * @generated from message centy.GetConfigRequest
@@ -830,7 +895,7 @@ export type GetConfigRequest = Message<'centy.GetConfigRequest'> & {
  */
 export const GetConfigRequestSchema: GenMessage<GetConfigRequest> =
   /*@__PURE__*/
-  messageDesc(file_centy, 23)
+  messageDesc(file_centy, 24)
 
 /**
  * @generated from message centy.Config
@@ -852,6 +917,20 @@ export type Config = Message<'centy.Config'> & {
    * @generated from field: int32 priority_levels = 3;
    */
   priorityLevels: number
+
+  /**
+   * Allowed status values (default: ["open", "in-progress", "closed"])
+   *
+   * @generated from field: repeated string allowed_states = 4;
+   */
+  allowedStates: string[]
+
+  /**
+   * Default state for new issues (default: "open")
+   *
+   * @generated from field: string default_state = 5;
+   */
+  defaultState: string
 }
 
 /**
@@ -860,7 +939,7 @@ export type Config = Message<'centy.Config'> & {
  */
 export const ConfigSchema: GenMessage<Config> =
   /*@__PURE__*/
-  messageDesc(file_centy, 24)
+  messageDesc(file_centy, 25)
 
 /**
  * @generated from message centy.CustomFieldDefinition
@@ -902,7 +981,7 @@ export type CustomFieldDefinition = Message<'centy.CustomFieldDefinition'> & {
  */
 export const CustomFieldDefinitionSchema: GenMessage<CustomFieldDefinition> =
   /*@__PURE__*/
-  messageDesc(file_centy, 25)
+  messageDesc(file_centy, 26)
 
 /**
  * @generated from message centy.IsInitializedRequest
@@ -920,7 +999,7 @@ export type IsInitializedRequest = Message<'centy.IsInitializedRequest'> & {
  */
 export const IsInitializedRequestSchema: GenMessage<IsInitializedRequest> =
   /*@__PURE__*/
-  messageDesc(file_centy, 26)
+  messageDesc(file_centy, 27)
 
 /**
  * @generated from message centy.IsInitializedResponse
@@ -945,7 +1024,7 @@ export type IsInitializedResponse = Message<'centy.IsInitializedResponse'> & {
  */
 export const IsInitializedResponseSchema: GenMessage<IsInitializedResponse> =
   /*@__PURE__*/
-  messageDesc(file_centy, 27)
+  messageDesc(file_centy, 28)
 
 /**
  * @generated from message centy.CreateDocRequest
@@ -991,7 +1070,7 @@ export type CreateDocRequest = Message<'centy.CreateDocRequest'> & {
  */
 export const CreateDocRequestSchema: GenMessage<CreateDocRequest> =
   /*@__PURE__*/
-  messageDesc(file_centy, 28)
+  messageDesc(file_centy, 29)
 
 /**
  * @generated from message centy.CreateDocResponse
@@ -1033,7 +1112,7 @@ export type CreateDocResponse = Message<'centy.CreateDocResponse'> & {
  */
 export const CreateDocResponseSchema: GenMessage<CreateDocResponse> =
   /*@__PURE__*/
-  messageDesc(file_centy, 29)
+  messageDesc(file_centy, 30)
 
 /**
  * @generated from message centy.GetDocRequest
@@ -1058,7 +1137,7 @@ export type GetDocRequest = Message<'centy.GetDocRequest'> & {
  */
 export const GetDocRequestSchema: GenMessage<GetDocRequest> =
   /*@__PURE__*/
-  messageDesc(file_centy, 30)
+  messageDesc(file_centy, 31)
 
 /**
  * @generated from message centy.ListDocsRequest
@@ -1076,7 +1155,7 @@ export type ListDocsRequest = Message<'centy.ListDocsRequest'> & {
  */
 export const ListDocsRequestSchema: GenMessage<ListDocsRequest> =
   /*@__PURE__*/
-  messageDesc(file_centy, 31)
+  messageDesc(file_centy, 32)
 
 /**
  * @generated from message centy.ListDocsResponse
@@ -1099,7 +1178,7 @@ export type ListDocsResponse = Message<'centy.ListDocsResponse'> & {
  */
 export const ListDocsResponseSchema: GenMessage<ListDocsResponse> =
   /*@__PURE__*/
-  messageDesc(file_centy, 32)
+  messageDesc(file_centy, 33)
 
 /**
  * Doc represents a documentation file
@@ -1138,7 +1217,7 @@ export type Doc = Message<'centy.Doc'> & {
  */
 export const DocSchema: GenMessage<Doc> =
   /*@__PURE__*/
-  messageDesc(file_centy, 33)
+  messageDesc(file_centy, 34)
 
 /**
  * @generated from message centy.DocMetadata
@@ -1165,7 +1244,7 @@ export type DocMetadata = Message<'centy.DocMetadata'> & {
  */
 export const DocMetadataSchema: GenMessage<DocMetadata> =
   /*@__PURE__*/
-  messageDesc(file_centy, 34)
+  messageDesc(file_centy, 35)
 
 /**
  * @generated from message centy.UpdateDocRequest
@@ -1207,7 +1286,7 @@ export type UpdateDocRequest = Message<'centy.UpdateDocRequest'> & {
  */
 export const UpdateDocRequestSchema: GenMessage<UpdateDocRequest> =
   /*@__PURE__*/
-  messageDesc(file_centy, 35)
+  messageDesc(file_centy, 36)
 
 /**
  * @generated from message centy.UpdateDocResponse
@@ -1242,7 +1321,7 @@ export type UpdateDocResponse = Message<'centy.UpdateDocResponse'> & {
  */
 export const UpdateDocResponseSchema: GenMessage<UpdateDocResponse> =
   /*@__PURE__*/
-  messageDesc(file_centy, 36)
+  messageDesc(file_centy, 37)
 
 /**
  * @generated from message centy.DeleteDocRequest
@@ -1265,7 +1344,7 @@ export type DeleteDocRequest = Message<'centy.DeleteDocRequest'> & {
  */
 export const DeleteDocRequestSchema: GenMessage<DeleteDocRequest> =
   /*@__PURE__*/
-  messageDesc(file_centy, 37)
+  messageDesc(file_centy, 38)
 
 /**
  * @generated from message centy.DeleteDocResponse
@@ -1293,7 +1372,7 @@ export type DeleteDocResponse = Message<'centy.DeleteDocResponse'> & {
  */
 export const DeleteDocResponseSchema: GenMessage<DeleteDocResponse> =
   /*@__PURE__*/
-  messageDesc(file_centy, 38)
+  messageDesc(file_centy, 39)
 
 /**
  * Returned by API (enriched with live data from disk)
@@ -1357,7 +1436,7 @@ export type ProjectInfo = Message<'centy.ProjectInfo'> & {
  */
 export const ProjectInfoSchema: GenMessage<ProjectInfo> =
   /*@__PURE__*/
-  messageDesc(file_centy, 39)
+  messageDesc(file_centy, 40)
 
 /**
  * @generated from message centy.ListProjectsRequest
@@ -1377,7 +1456,7 @@ export type ListProjectsRequest = Message<'centy.ListProjectsRequest'> & {
  */
 export const ListProjectsRequestSchema: GenMessage<ListProjectsRequest> =
   /*@__PURE__*/
-  messageDesc(file_centy, 40)
+  messageDesc(file_centy, 41)
 
 /**
  * @generated from message centy.ListProjectsResponse
@@ -1400,7 +1479,7 @@ export type ListProjectsResponse = Message<'centy.ListProjectsResponse'> & {
  */
 export const ListProjectsResponseSchema: GenMessage<ListProjectsResponse> =
   /*@__PURE__*/
-  messageDesc(file_centy, 41)
+  messageDesc(file_centy, 42)
 
 /**
  * @generated from message centy.RegisterProjectRequest
@@ -1420,7 +1499,7 @@ export type RegisterProjectRequest = Message<'centy.RegisterProjectRequest'> & {
  */
 export const RegisterProjectRequestSchema: GenMessage<RegisterProjectRequest> =
   /*@__PURE__*/
-  messageDesc(file_centy, 42)
+  messageDesc(file_centy, 43)
 
 /**
  * @generated from message centy.RegisterProjectResponse
@@ -1451,7 +1530,7 @@ export type RegisterProjectResponse =
  */
 export const RegisterProjectResponseSchema: GenMessage<RegisterProjectResponse> =
   /*@__PURE__*/
-  messageDesc(file_centy, 43)
+  messageDesc(file_centy, 44)
 
 /**
  * @generated from message centy.UntrackProjectRequest
@@ -1469,7 +1548,7 @@ export type UntrackProjectRequest = Message<'centy.UntrackProjectRequest'> & {
  */
 export const UntrackProjectRequestSchema: GenMessage<UntrackProjectRequest> =
   /*@__PURE__*/
-  messageDesc(file_centy, 44)
+  messageDesc(file_centy, 45)
 
 /**
  * @generated from message centy.UntrackProjectResponse
@@ -1492,7 +1571,7 @@ export type UntrackProjectResponse = Message<'centy.UntrackProjectResponse'> & {
  */
 export const UntrackProjectResponseSchema: GenMessage<UntrackProjectResponse> =
   /*@__PURE__*/
-  messageDesc(file_centy, 45)
+  messageDesc(file_centy, 46)
 
 /**
  * @generated from message centy.GetProjectInfoRequest
@@ -1510,7 +1589,7 @@ export type GetProjectInfoRequest = Message<'centy.GetProjectInfoRequest'> & {
  */
 export const GetProjectInfoRequestSchema: GenMessage<GetProjectInfoRequest> =
   /*@__PURE__*/
-  messageDesc(file_centy, 46)
+  messageDesc(file_centy, 47)
 
 /**
  * @generated from message centy.GetProjectInfoResponse
@@ -1533,7 +1612,7 @@ export type GetProjectInfoResponse = Message<'centy.GetProjectInfoResponse'> & {
  */
 export const GetProjectInfoResponseSchema: GenMessage<GetProjectInfoResponse> =
   /*@__PURE__*/
-  messageDesc(file_centy, 47)
+  messageDesc(file_centy, 48)
 
 /**
  * @generated from enum centy.FileType
@@ -1609,13 +1688,23 @@ export const CentyDaemon: GenService<{
     output: typeof CreateIssueResponseSchema
   }
   /**
-   * Get a single issue by number
+   * Get a single issue by ID (UUID or legacy number)
    *
    * @generated from rpc centy.CentyDaemon.GetIssue
    */
   getIssue: {
     methodKind: 'unary'
     input: typeof GetIssueRequestSchema
+    output: typeof IssueSchema
+  }
+  /**
+   * Get a single issue by display number (human-readable number like 1, 2, 3)
+   *
+   * @generated from rpc centy.CentyDaemon.GetIssueByDisplayNumber
+   */
+  getIssueByDisplayNumber: {
+    methodKind: 'unary'
+    input: typeof GetIssueByDisplayNumberRequestSchema
     output: typeof IssueSchema
   }
   /**

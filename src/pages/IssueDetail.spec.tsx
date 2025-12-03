@@ -241,7 +241,7 @@ describe('IssueDetail', () => {
       expect(mockUpdateIssue).toHaveBeenCalledWith(
         expect.objectContaining({
           projectPath: '/test/path',
-          issueNumber: '0001',
+          issueId: '0001',
           title: 'Updated Title',
         })
       )
@@ -301,7 +301,7 @@ describe('IssueDetail', () => {
       expect(mockDeleteIssue).toHaveBeenCalledWith(
         expect.objectContaining({
           projectPath: '/test/path',
-          issueNumber: '0001',
+          issueId: '0001',
         })
       )
     })
@@ -605,6 +605,146 @@ describe('IssueDetail', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Failed to delete issue')).toBeInTheDocument()
+    })
+  })
+
+  // Inline Status Selector Tests
+  describe('inline status selector', () => {
+    it('should show status dropdown when clicking on status badge', async () => {
+      const mockGetIssue = vi.mocked(centyClient.getIssue)
+      mockGetIssue.mockResolvedValue(
+        createMockIssue({
+          status: 'open',
+        })
+      )
+
+      renderComponent('0001')
+
+      await waitFor(() => {
+        expect(screen.getByLabelText('Change status')).toBeInTheDocument()
+      })
+
+      const statusButton = screen.getByLabelText('Change status')
+      fireEvent.click(statusButton)
+
+      await waitFor(() => {
+        expect(screen.getByRole('listbox')).toBeInTheDocument()
+        expect(screen.getByRole('option', { name: 'open' })).toBeInTheDocument()
+        expect(
+          screen.getByRole('option', { name: 'in-progress' })
+        ).toBeInTheDocument()
+        expect(
+          screen.getByRole('option', { name: 'closed' })
+        ).toBeInTheDocument()
+      })
+    })
+
+    it('should update status when clicking on a status option', async () => {
+      const mockGetIssue = vi.mocked(centyClient.getIssue)
+      const mockUpdateIssue = vi.mocked(centyClient.updateIssue)
+
+      mockGetIssue.mockResolvedValue(
+        createMockIssue({
+          status: 'open',
+        })
+      )
+
+      mockUpdateIssue.mockResolvedValue({
+        success: true,
+        error: '',
+        issue: createMockIssue({
+          status: 'in-progress',
+        }),
+        manifest: undefined,
+        $typeName: 'centy.UpdateIssueResponse',
+        $unknown: undefined,
+      })
+
+      renderComponent('0001')
+
+      await waitFor(() => {
+        expect(screen.getByLabelText('Change status')).toBeInTheDocument()
+      })
+
+      const statusButton = screen.getByLabelText('Change status')
+      fireEvent.click(statusButton)
+
+      const inProgressOption = await screen.findByRole('option', {
+        name: 'in-progress',
+      })
+      fireEvent.click(inProgressOption)
+
+      await waitFor(() => {
+        expect(mockUpdateIssue).toHaveBeenCalledWith(
+          expect.objectContaining({
+            projectPath: '/test/path',
+            issueId: '0001',
+            status: 'in-progress',
+          })
+        )
+      })
+    })
+
+    it('should show error on status update failure', async () => {
+      const mockGetIssue = vi.mocked(centyClient.getIssue)
+      const mockUpdateIssue = vi.mocked(centyClient.updateIssue)
+
+      mockGetIssue.mockResolvedValue(
+        createMockIssue({
+          status: 'open',
+        })
+      )
+
+      mockUpdateIssue.mockResolvedValue({
+        success: false,
+        error: 'Status update failed',
+        issue: undefined,
+        manifest: undefined,
+        $typeName: 'centy.UpdateIssueResponse',
+        $unknown: undefined,
+      })
+
+      renderComponent('0001')
+
+      await waitFor(() => {
+        expect(screen.getByLabelText('Change status')).toBeInTheDocument()
+      })
+
+      const statusButton = screen.getByLabelText('Change status')
+      fireEvent.click(statusButton)
+
+      const closedOption = await screen.findByRole('option', { name: 'closed' })
+      fireEvent.click(closedOption)
+
+      await waitFor(() => {
+        expect(screen.getByText('Status update failed')).toBeInTheDocument()
+      })
+    })
+
+    it('should close dropdown when clicking same status', async () => {
+      const mockGetIssue = vi.mocked(centyClient.getIssue)
+
+      mockGetIssue.mockResolvedValue(
+        createMockIssue({
+          status: 'open',
+        })
+      )
+
+      renderComponent('0001')
+
+      await waitFor(() => {
+        expect(screen.getByLabelText('Change status')).toBeInTheDocument()
+      })
+
+      const statusButton = screen.getByLabelText('Change status')
+      fireEvent.click(statusButton)
+
+      const openOption = await screen.findByRole('option', { name: 'open' })
+      fireEvent.click(openOption)
+
+      await waitFor(() => {
+        expect(screen.queryByRole('listbox')).not.toBeInTheDocument()
+      })
     })
   })
 })

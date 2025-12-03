@@ -132,6 +132,8 @@ describe('CreateIssue', () => {
     mockCreateIssue.mockResolvedValue({
       success: true,
       error: '',
+      id: '0001',
+      displayNumber: 1,
       issueNumber: '0001',
       createdFiles: ['issues/0001.md'],
       manifest: undefined,
@@ -179,6 +181,8 @@ describe('CreateIssue', () => {
     mockCreateIssue.mockResolvedValue({
       success: false,
       error: 'Failed to create issue',
+      id: '',
+      displayNumber: 0,
       issueNumber: '',
       createdFiles: [],
       manifest: undefined,
@@ -268,6 +272,8 @@ describe('CreateIssue', () => {
     mockCreateIssue.mockResolvedValue({
       success: false,
       error: '',
+      id: '',
+      displayNumber: 0,
       issueNumber: '',
       createdFiles: [],
       manifest: undefined,
