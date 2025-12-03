@@ -260,6 +260,109 @@
   color: #1d4ed8;
 }
 
+/* Inline Status Selector */
+.status-selector {
+  position: relative;
+}
+
+.status-badge-clickable {
+  cursor: pointer;
+  border: none;
+  gap: var(--space-2);
+  transition: all var(--transition-fast);
+}
+
+.status-badge-clickable:hover:not(:disabled) {
+  filter: brightness(0.95);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.status-badge-clickable:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.status-badge-clickable.updating {
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.status-dropdown-arrow {
+  font-size: 0.625rem;
+  margin-left: var(--space-1);
+  transition: transform var(--transition-fast);
+}
+
+.status-badge-clickable[aria-expanded='true'] .status-dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.status-dropdown {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  left: 0;
+  z-index: 50;
+  min-width: 140px;
+  background: white;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  list-style: none;
+  padding: var(--space-2);
+  margin: 0;
+  animation: dropdownFadeIn 0.15s ease-out;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.status-option {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  transition: all var(--transition-fast);
+  margin-bottom: var(--space-1);
+}
+
+.status-option:last-child {
+  margin-bottom: 0;
+}
+
+.status-option:hover {
+  filter: brightness(0.95);
+}
+
+.status-option.selected {
+  position: relative;
+}
+
+.status-option.selected::after {
+  content: '\2713';
+  position: absolute;
+  right: var(--space-3);
+  font-weight: bold;
+}
+
 /* Issue Date */
 .issue-date {
   color: var(--color-gray-500);

@@ -2,69 +2,48 @@
   "schemaVersion": 1,
   "centyVersion": "0.1.0",
   "createdAt": "2025-12-02T21:25:17.679740+00:00",
-  "updatedAt": "2025-12-03T07:27:14.994524+00:00",
+  "updatedAt": "2025-12-03T07:57:22.147023+00:00",
   "managedFiles": [
     {
-      "path": "templates/README.md",
-      "hash": "bf7624e03a34f28be16c62cc615d1c9cb73d066973eb25d9b219b644fbda6c51",
+      "path": "README.md",
+      "hash": "38dc211bc45b097dc3418a55407695a61902ad586e7de8e91d4e36123cb67823",
       "version": "0.1.0",
-      "createdAt": "2025-12-02T21:31:24.279630+00:00",
+      "createdAt": "2025-12-03T07:57:22.147022+00:00",
       "type": "file"
     },
     {
       "path": "assets/",
       "hash": "",
       "version": "0.1.0",
-      "createdAt": "2025-12-02T21:31:24.279635+00:00",
+      "createdAt": "2025-12-03T07:57:22.146917+00:00",
       "type": "directory"
     },
     {
       "path": "docs/",
       "hash": "",
       "version": "0.1.0",
-      "createdAt": "2025-12-02T21:31:24.279636+00:00",
-      "type": "directory"
-    },
-    {
-      "path": "templates/",
-      "hash": "",
-      "version": "0.1.0",
-      "createdAt": "2025-12-02T21:31:24.279637+00:00",
+      "createdAt": "2025-12-03T07:57:22.146693+00:00",
       "type": "directory"
     },
     {
       "path": "issues/",
       "hash": "",
       "version": "0.1.0",
-      "createdAt": "2025-12-02T21:31:24.279637+00:00",
+      "createdAt": "2025-12-03T07:57:22.147019+00:00",
       "type": "directory"
-    },
-    {
-      "path": "templates/docs/",
-      "hash": "",
-      "version": "0.1.0",
-      "createdAt": "2025-12-02T21:31:24.279638+00:00",
-      "type": "directory"
-    },
-    {
-      "path": "templates/issues/",
-      "hash": "",
-      "version": "0.1.0",
-      "createdAt": "2025-12-02T21:31:24.279639+00:00",
-      "type": "directory"
-    },
-    {
-      "path": "README.md",
-      "hash": "38dc211bc45b097dc3418a55407695a61902ad586e7de8e91d4e36123cb67823",
-      "version": "0.1.0",
-      "createdAt": "2025-12-02T21:31:24.279642+00:00",
-      "type": "file"
     },
     {
       "path": "issues/0001/",
       "hash": "",
       "version": "0.1.0",
       "createdAt": "2025-12-02T21:32:18.554247+00:00",
+      "type": "directory"
+    },
+    {
+      "path": "issues/0001/assets/",
+      "hash": "",
+      "version": "0.1.0",
+      "createdAt": "2025-12-02T21:32:18.554257+00:00",
       "type": "directory"
     },
     {
@@ -82,17 +61,17 @@
       "type": "file"
     },
     {
-      "path": "issues/0001/assets/",
-      "hash": "",
-      "version": "0.1.0",
-      "createdAt": "2025-12-02T21:32:18.554257+00:00",
-      "type": "directory"
-    },
-    {
       "path": "issues/0002/",
       "hash": "",
       "version": "0.1.0",
       "createdAt": "2025-12-03T07:24:25.247497+00:00",
+      "type": "directory"
+    },
+    {
+      "path": "issues/0002/assets/",
+      "hash": "",
+      "version": "0.1.0",
+      "createdAt": "2025-12-03T07:24:25.247756+00:00",
       "type": "directory"
     },
     {
@@ -110,17 +89,17 @@
       "type": "file"
     },
     {
-      "path": "issues/0002/assets/",
-      "hash": "",
-      "version": "0.1.0",
-      "createdAt": "2025-12-03T07:24:25.247756+00:00",
-      "type": "directory"
-    },
-    {
       "path": "issues/0003/",
       "hash": "",
       "version": "0.1.0",
       "createdAt": "2025-12-03T07:27:14.994482+00:00",
+      "type": "directory"
+    },
+    {
+      "path": "issues/0003/assets/",
+      "hash": "",
+      "version": "0.1.0",
+      "createdAt": "2025-12-03T07:27:14.994524+00:00",
       "type": "directory"
     },
     {
@@ -138,10 +117,31 @@
       "type": "file"
     },
     {
-      "path": "issues/0003/assets/",
+      "path": "templates/",
       "hash": "",
       "version": "0.1.0",
-      "createdAt": "2025-12-03T07:27:14.994524+00:00",
+      "createdAt": "2025-12-03T07:57:22.147019+00:00",
+      "type": "directory"
+    },
+    {
+      "path": "templates/README.md",
+      "hash": "bf7624e03a34f28be16c62cc615d1c9cb73d066973eb25d9b219b644fbda6c51",
+      "version": "0.1.0",
+      "createdAt": "2025-12-03T07:57:22.147014+00:00",
+      "type": "file"
+    },
+    {
+      "path": "templates/docs/",
+      "hash": "",
+      "version": "0.1.0",
+      "createdAt": "2025-12-03T07:57:22.146809+00:00",
+      "type": "directory"
+    },
+    {
+      "path": "templates/issues/",
+      "hash": "",
+      "version": "0.1.0",
+      "createdAt": "2025-12-03T07:57:22.147013+00:00",
       "type": "directory"
     }
   ]
