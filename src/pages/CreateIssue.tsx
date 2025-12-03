@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { centyClient } from '../api/client.ts'
 import { create } from '@bufbuild/protobuf'
@@ -7,6 +7,11 @@ import {
   IsInitializedRequestSchema,
 } from '../gen/centy_pb.ts'
 import { useProject } from '../context/ProjectContext.tsx'
+import {
+  AssetUploader,
+  type AssetUploaderHandle,
+  type PendingAsset,
+} from '../components/AssetUploader.tsx'
 import './CreateIssue.css'
 
 export function CreateIssue() {
@@ -17,6 +22,8 @@ export function CreateIssue() {
   const [priority, setPriority] = useState(2) // 1=high, 2=medium, 3=low
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [pendingAssets, setPendingAssets] = useState<PendingAsset[]>([])
+  const assetUploaderRef = useRef<AssetUploaderHandle>(null)
 
   const checkInitialized = useCallback(
     async (path: string) => {
@@ -64,6 +71,10 @@ export function CreateIssue() {
         const response = await centyClient.createIssue(request)
 
         if (response.success) {
+          // Upload pending assets if any
+          if (pendingAssets.length > 0 && assetUploaderRef.current) {
+            await assetUploaderRef.current.uploadAllPending(response.id)
+          }
           navigate(`/issues/${response.issueNumber}`)
         } else {
           setError(response.error || 'Failed to create issue')
@@ -76,7 +87,7 @@ export function CreateIssue() {
         setLoading(false)
       }
     },
-    [projectPath, title, description, priority, navigate]
+    [projectPath, title, description, priority, pendingAssets, navigate]
   )
 
   if (!projectPath) {
@@ -141,6 +152,16 @@ export function CreateIssue() {
             <option value={2}>Medium</option>
             <option value={3}>Low</option>
           </select>
+        </div>
+
+        <div className="form-group">
+          <label>Attachments:</label>
+          <AssetUploader
+            ref={assetUploaderRef}
+            projectPath={projectPath}
+            mode="create"
+            onPendingChange={setPendingAssets}
+          />
         </div>
 
         {error && <div className="error-message">{error}</div>}

@@ -6,9 +6,12 @@ import {
   GetIssueRequestSchema,
   UpdateIssueRequestSchema,
   DeleteIssueRequestSchema,
+  ListAssetsRequestSchema,
   type Issue,
+  type Asset,
 } from '../gen/centy_pb.ts'
 import { useProject } from '../context/ProjectContext.tsx'
+import { AssetUploader } from '../components/AssetUploader.tsx'
 import './IssueDetail.css'
 
 const STATUS_OPTIONS = ['open', 'in-progress', 'closed'] as const
@@ -31,6 +34,7 @@ export function IssueDetail() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [showStatusDropdown, setShowStatusDropdown] = useState(false)
   const [updatingStatus, setUpdatingStatus] = useState(false)
+  const [assets, setAssets] = useState<Asset[]>([])
   const statusDropdownRef = useRef<HTMLDivElement>(null)
 
   const fetchIssue = useCallback(async () => {
@@ -63,9 +67,25 @@ export function IssueDetail() {
     }
   }, [projectPath, issueNumber])
 
+  const fetchAssets = useCallback(async () => {
+    if (!projectPath || !issueNumber) return
+
+    try {
+      const request = create(ListAssetsRequestSchema, {
+        projectPath,
+        issueId: issueNumber,
+      })
+      const response = await centyClient.listAssets(request)
+      setAssets(response.assets)
+    } catch (err) {
+      console.error('Failed to load assets:', err)
+    }
+  }, [projectPath, issueNumber])
+
   useEffect(() => {
     fetchIssue()
-  }, [fetchIssue])
+    fetchAssets()
+  }, [fetchIssue, fetchAssets])
 
   // Close status dropdown when clicking outside
   useEffect(() => {
@@ -390,6 +410,17 @@ export function IssueDetail() {
                 rows={10}
               />
             </div>
+
+            <div className="form-group">
+              <label>Attachments:</label>
+              <AssetUploader
+                projectPath={projectPath}
+                issueId={issueNumber}
+                mode="edit"
+                initialAssets={assets}
+                onAssetsChange={setAssets}
+              />
+            </div>
           </div>
         ) : (
           <>
@@ -456,6 +487,21 @@ export function IssueDetail() {
                 <p>{issue.description}</p>
               ) : (
                 <p className="no-description">No description provided</p>
+              )}
+            </div>
+
+            <div className="issue-assets">
+              <h3>Attachments</h3>
+              {assets.length > 0 ? (
+                <AssetUploader
+                  projectPath={projectPath}
+                  issueId={issueNumber}
+                  mode="edit"
+                  initialAssets={assets}
+                  onAssetsChange={setAssets}
+                />
+              ) : (
+                <p className="no-assets">No attachments</p>
               )}
             </div>
           </>

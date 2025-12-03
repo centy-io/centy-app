@@ -73,6 +73,20 @@ service CentyDaemon {
 
   // Get info about a specific project
   rpc GetProjectInfo(GetProjectInfoRequest) returns (GetProjectInfoResponse);
+
+  // ============ Asset RPCs ============
+
+  // Add an asset to an issue
+  rpc AddAsset(AddAssetRequest) returns (AddAssetResponse);
+
+  // Remove an asset from an issue
+  rpc RemoveAsset(RemoveAssetRequest) returns (RemoveAssetResponse);
+
+  // List all assets for an issue
+  rpc ListAssets(ListAssetsRequest) returns (ListAssetsResponse);
+
+  // Get asset content for download/preview
+  rpc GetAsset(GetAssetRequest) returns (GetAssetResponse);
 }
 
 // ============ Init Messages ============
@@ -257,6 +271,62 @@ message DeleteIssueResponse {
   bool success = 1;
   string error = 2;
   Manifest manifest = 3;          // Updated manifest after deletion
+}
+
+// ============ Asset Messages ============
+
+// Asset represents a file attached to an issue
+message Asset {
+  string id = 1;                  // UUID for the asset
+  string issue_id = 2;            // The issue this asset belongs to
+  string filename = 3;            // Original filename
+  string mime_type = 4;           // MIME type (e.g., "image/png")
+  int64 size_bytes = 5;           // File size in bytes
+  string created_at = 6;          // ISO timestamp
+}
+
+message AddAssetRequest {
+  string project_path = 1;
+  string issue_id = 2;            // UUID or legacy number
+  string filename = 3;            // Original filename
+  bytes content = 4;              // File content as bytes
+}
+
+message AddAssetResponse {
+  bool success = 1;
+  string error = 2;
+  Asset asset = 3;                // The created asset
+}
+
+message RemoveAssetRequest {
+  string project_path = 1;
+  string issue_id = 2;
+  string asset_id = 3;            // UUID of the asset to remove
+}
+
+message RemoveAssetResponse {
+  bool success = 1;
+  string error = 2;
+}
+
+message ListAssetsRequest {
+  string project_path = 1;
+  string issue_id = 2;
+}
+
+message ListAssetsResponse {
+  repeated Asset assets = 1;
+}
+
+message GetAssetRequest {
+  string project_path = 1;
+  string issue_id = 2;
+  string asset_id = 3;
+}
+
+message GetAssetResponse {
+  Asset asset = 1;
+  bytes content = 2;              // File content for download/preview
 }
 
 // ============ Manifest Messages ============
