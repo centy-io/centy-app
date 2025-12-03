@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "centyVersion": "0.1.0",
   "createdAt": "2025-12-02T21:25:17.679740+00:00",
-  "updatedAt": "2025-12-03T16:45:08.758608+00:00",
+  "updatedAt": "2025-12-03T16:54:51.893580+00:00",
   "managedFiles": [
     {
       "path": "README.md",
@@ -117,6 +117,41 @@
       "type": "file"
     },
     {
+      "path": "issues/46288846-a5df-4ed3-8490-eff6f1f413b0/",
+      "hash": "",
+      "version": "0.1.0",
+      "createdAt": "2025-12-03T16:54:36.573503+00:00",
+      "type": "directory"
+    },
+    {
+      "path": "issues/46288846-a5df-4ed3-8490-eff6f1f413b0/assets/",
+      "hash": "",
+      "version": "0.1.0",
+      "createdAt": "2025-12-03T16:54:36.573533+00:00",
+      "type": "directory"
+    },
+    {
+      "path": "issues/46288846-a5df-4ed3-8490-eff6f1f413b0/assets/Screenshot 2025-12-03 at 18.54.08.png",
+      "hash": "e632fa62c791efbe19bf3444b0556d180789683e836296da32839fb3f015c2a1",
+      "version": "0.1.0",
+      "createdAt": "2025-12-03T16:54:36.583405+00:00",
+      "type": "file"
+    },
+    {
+      "path": "issues/46288846-a5df-4ed3-8490-eff6f1f413b0/issue.md",
+      "hash": "ba5b88651afb0eafad0bc588f3b2f7464e847b263050d32b836a297d27940280",
+      "version": "0.1.0",
+      "createdAt": "2025-12-03T16:54:36.573509+00:00",
+      "type": "file"
+    },
+    {
+      "path": "issues/46288846-a5df-4ed3-8490-eff6f1f413b0/metadata.json",
+      "hash": "32ab08daaa14b469dd3239d3ad7a67dcb4ffc8b267b1124bbb51cb0a834a513d",
+      "version": "0.1.0",
+      "createdAt": "2025-12-03T16:54:36.573527+00:00",
+      "type": "file"
+    },
+    {
       "path": "issues/69000e35-e94b-4b6f-b2ec-b70830aede68/",
       "hash": "",
       "version": "0.1.0",
@@ -142,6 +177,34 @@
       "hash": "cb540b899e460a1448479651c5f4ac45623c1b2607e59e7b4ddf005f3b27f3af",
       "version": "0.1.0",
       "createdAt": "2025-12-03T08:02:52.824328+00:00",
+      "type": "file"
+    },
+    {
+      "path": "issues/b28c1ffd-fb90-493c-976f-b142e962cdce/",
+      "hash": "",
+      "version": "0.1.0",
+      "createdAt": "2025-12-03T16:54:51.893568+00:00",
+      "type": "directory"
+    },
+    {
+      "path": "issues/b28c1ffd-fb90-493c-976f-b142e962cdce/assets/",
+      "hash": "",
+      "version": "0.1.0",
+      "createdAt": "2025-12-03T16:54:51.893579+00:00",
+      "type": "directory"
+    },
+    {
+      "path": "issues/b28c1ffd-fb90-493c-976f-b142e962cdce/issue.md",
+      "hash": "ba5b88651afb0eafad0bc588f3b2f7464e847b263050d32b836a297d27940280",
+      "version": "0.1.0",
+      "createdAt": "2025-12-03T16:54:51.893575+00:00",
+      "type": "file"
+    },
+    {
+      "path": "issues/b28c1ffd-fb90-493c-976f-b142e962cdce/metadata.json",
+      "hash": "4c632ffa190e6e1236b2593f35d5390a10f68e91d707156ea528d6c9d256e467",
+      "version": "0.1.0",
+      "createdAt": "2025-12-03T16:54:51.893578+00:00",
       "type": "file"
     },
     {

@@ -1,6 +1,13 @@
 {
   "version": "0.2",
-  "language": "en",
+  "language": "en,he",
+  "dictionaries": ["he"],
+  "languageSettings": [
+    {
+      "languageId": "*",
+      "locale": "en,he"
+    }
+  ],
   "words": [
     "centy",
     "pnpm",
