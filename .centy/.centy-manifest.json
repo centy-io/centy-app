@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "centyVersion": "0.1.0",
   "createdAt": "2025-12-02T21:25:17.679740+00:00",
-  "updatedAt": "2025-12-03T18:30:48.553238+00:00",
+  "updatedAt": "2025-12-03T18:43:20.130618+00:00",
   "managedFiles": [
     {
       "path": "README.md",
@@ -104,16 +104,16 @@
     },
     {
       "path": "issues/0003/issue.md",
-      "hash": "e09c4e8631447076119c7417638823a211f9898fe2ee65dd56e38317f543f7d5",
+      "hash": "9541c4706d4de084ecce2aab05bbbd841bd5779b76ee05745c09c55f6e104c89",
       "version": "0.1.0",
-      "createdAt": "2025-12-03T07:27:14.994519+00:00",
+      "createdAt": "2025-12-03T18:43:20.130600+00:00",
       "type": "file"
     },
     {
       "path": "issues/0003/metadata.json",
-      "hash": "38311bda8c2ddbb8fc53196fe7c2d3792b184533d318a8c8a7fe6a5f20ccecfd",
+      "hash": "c8e506dd64a0878d427f5abec3f4f92f5f118296be675ced56ba71722f52cefc",
       "version": "0.1.0",
-      "createdAt": "2025-12-03T07:27:14.994523+00:00",
+      "createdAt": "2025-12-03T18:43:20.130617+00:00",
       "type": "file"
     },
     {
@@ -261,6 +261,34 @@
       "hash": "e5686a5aa836601d44a8e646179f086f355cacc959c54551a2215ce4c8e9093c",
       "version": "0.1.0",
       "createdAt": "2025-12-03T16:45:08.758607+00:00",
+      "type": "file"
+    },
+    {
+      "path": "issues/d5fb9336-5cd1-45ec-bfbd-bafef46658e5/",
+      "hash": "",
+      "version": "0.1.0",
+      "createdAt": "2025-12-03T18:32:25.737018+00:00",
+      "type": "directory"
+    },
+    {
+      "path": "issues/d5fb9336-5cd1-45ec-bfbd-bafef46658e5/assets/",
+      "hash": "",
+      "version": "0.1.0",
+      "createdAt": "2025-12-03T18:32:25.737025+00:00",
+      "type": "directory"
+    },
+    {
+      "path": "issues/d5fb9336-5cd1-45ec-bfbd-bafef46658e5/issue.md",
+      "hash": "740df84e7bf49614994a72fc467b3256f469622dbd129b2e65ee68fc99004f77",
+      "version": "0.1.0",
+      "createdAt": "2025-12-03T18:32:25.737022+00:00",
+      "type": "file"
+    },
+    {
+      "path": "issues/d5fb9336-5cd1-45ec-bfbd-bafef46658e5/metadata.json",
+      "hash": "9b21a82b7c8fe34212af832c626ac369321f745d4a52ae2119438bfe0968a922",
+      "version": "0.1.0",
+      "createdAt": "2025-12-03T18:32:25.737025+00:00",
       "type": "file"
     },
     {
