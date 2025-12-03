@@ -91,6 +91,14 @@ export function useArchivedProjects() {
     })
   }, [])
 
+  const removeArchivedProject = useCallback((path: string) => {
+    setArchivedPathsState(prev => {
+      const updated = prev.filter(p => p !== path)
+      setArchivedProjectsStorage(updated)
+      return updated
+    })
+  }, [])
+
   const isArchived = useCallback(
     (path: string) => {
       return archivedPaths.includes(path)
@@ -98,5 +106,11 @@ export function useArchivedProjects() {
     [archivedPaths]
   )
 
-  return { archivedPaths, archiveProject, unarchiveProject, isArchived }
+  return {
+    archivedPaths,
+    archiveProject,
+    unarchiveProject,
+    removeArchivedProject,
+    isArchived,
+  }
 }

@@ -1,6 +1,10 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { ProjectProvider, useProject } from './ProjectContext'
+import {
+  ProjectProvider,
+  useProject,
+  useArchivedProjects,
+} from './ProjectContext'
 
 // Mock localStorage
 const localStorageMock = (() => {
@@ -142,5 +146,121 @@ describe('ProjectContext', () => {
     expect(localStorageMock.removeItem).toHaveBeenCalledWith(
       'centy-project-path'
     )
+  })
+})
+
+function ArchivedProjectsTestComponent() {
+  const {
+    archivedPaths,
+    archiveProject,
+    unarchiveProject,
+    removeArchivedProject,
+    isArchived,
+  } = useArchivedProjects()
+
+  return (
+    <div>
+      <span data-testid="archived-paths">{archivedPaths.join(',')}</span>
+      <span data-testid="is-archived-test">
+        {String(isArchived('/test/project'))}
+      </span>
+      <button
+        data-testid="archive-btn"
+        onClick={() => archiveProject('/test/project')}
+      >
+        Archive
+      </button>
+      <button
+        data-testid="unarchive-btn"
+        onClick={() => unarchiveProject('/test/project')}
+      >
+        Unarchive
+      </button>
+      <button
+        data-testid="remove-btn"
+        onClick={() => removeArchivedProject('/test/project')}
+      >
+        Remove
+      </button>
+    </div>
+  )
+}
+
+describe('useArchivedProjects', () => {
+  beforeEach(() => {
+    localStorageMock.clear()
+    vi.clearAllMocks()
+    localStorageMock.getItem.mockReturnValue(null)
+  })
+
+  it('should provide empty archived paths by default', () => {
+    render(<ArchivedProjectsTestComponent />)
+
+    expect(screen.getByTestId('archived-paths')).toHaveTextContent('')
+  })
+
+  it('should archive a project', () => {
+    render(<ArchivedProjectsTestComponent />)
+
+    fireEvent.click(screen.getByTestId('archive-btn'))
+
+    expect(screen.getByTestId('archived-paths')).toHaveTextContent(
+      '/test/project'
+    )
+    expect(localStorageMock.setItem).toHaveBeenCalledWith(
+      'centy-archived-projects',
+      '["/test/project"]'
+    )
+  })
+
+  it('should unarchive a project', () => {
+    localStorageMock.getItem.mockReturnValue('["/test/project"]')
+
+    render(<ArchivedProjectsTestComponent />)
+
+    fireEvent.click(screen.getByTestId('unarchive-btn'))
+
+    expect(screen.getByTestId('archived-paths')).toHaveTextContent('')
+    expect(localStorageMock.setItem).toHaveBeenCalledWith(
+      'centy-archived-projects',
+      '[]'
+    )
+  })
+
+  it('should remove an archived project', () => {
+    localStorageMock.getItem.mockReturnValue('["/test/project"]')
+
+    render(<ArchivedProjectsTestComponent />)
+
+    fireEvent.click(screen.getByTestId('remove-btn'))
+
+    expect(screen.getByTestId('archived-paths')).toHaveTextContent('')
+    expect(localStorageMock.setItem).toHaveBeenCalledWith(
+      'centy-archived-projects',
+      '[]'
+    )
+  })
+
+  it('should check if a project is archived', () => {
+    localStorageMock.getItem.mockReturnValue('["/test/project"]')
+
+    render(<ArchivedProjectsTestComponent />)
+
+    expect(screen.getByTestId('is-archived-test')).toHaveTextContent('true')
+  })
+
+  it('should not duplicate when archiving the same project twice', () => {
+    render(<ArchivedProjectsTestComponent />)
+
+    fireEvent.click(screen.getByTestId('archive-btn'))
+    fireEvent.click(screen.getByTestId('archive-btn'))
+
+    expect(screen.getByTestId('archived-paths')).toHaveTextContent(
+      '/test/project'
+    )
+    // Should only have one entry
+    expect(
+      screen.getByTestId('archived-paths').textContent?.split(',').length
+    ).toBe(1)
   })
 })

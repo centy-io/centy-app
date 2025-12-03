@@ -2,16 +2,23 @@ import { useState, useCallback, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { centyClient } from '../api/client.ts'
 import { create } from '@bufbuild/protobuf'
-import { ListProjectsRequestSchema, type ProjectInfo } from '../gen/centy_pb.ts'
+import {
+  ListProjectsRequestSchema,
+  UntrackProjectRequestSchema,
+  type ProjectInfo,
+} from '../gen/centy_pb.ts'
 import { useArchivedProjects, useProject } from '../context/ProjectContext.tsx'
 import './ArchivedProjects.css'
 
 export function ArchivedProjects() {
-  const { archivedPaths, unarchiveProject } = useArchivedProjects()
+  const { archivedPaths, unarchiveProject, removeArchivedProject } =
+    useArchivedProjects()
   const { setProjectPath, setIsInitialized } = useProject()
   const [allProjects, setAllProjects] = useState<ProjectInfo[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [removingPath, setRemovingPath] = useState<string | null>(null)
+  const [confirmRemove, setConfirmRemove] = useState<string | null>(null)
 
   const fetchProjects = useCallback(async () => {
     setLoading(true)
@@ -49,6 +56,31 @@ export function ArchivedProjects() {
     unarchiveProject(project.path)
     setProjectPath(project.path)
     setIsInitialized(project.initialized)
+  }
+
+  const handleRemove = async (projectPath: string) => {
+    setRemovingPath(projectPath)
+    setError(null)
+    try {
+      const request = create(UntrackProjectRequestSchema, { projectPath })
+      const response = await centyClient.untrackProject(request)
+      if (!response.success && response.error) {
+        setError(response.error)
+      } else {
+        removeArchivedProject(projectPath)
+        setAllProjects(prev => prev.filter(p => p.path !== projectPath))
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to remove project')
+    } finally {
+      setRemovingPath(null)
+      setConfirmRemove(null)
+    }
+  }
+
+  const handleRemoveStale = (path: string) => {
+    removeArchivedProject(path)
+    setConfirmRemove(null)
   }
 
   return (
@@ -90,18 +122,46 @@ export function ArchivedProjects() {
                 </div>
               </div>
               <div className="archived-item-actions">
-                <button
-                  className="restore-btn"
-                  onClick={() => handleRestore(project.path)}
-                >
-                  Restore
-                </button>
-                <button
-                  className="restore-select-btn"
-                  onClick={() => handleRestoreAndSelect(project)}
-                >
-                  Restore & Select
-                </button>
+                {confirmRemove === project.path ? (
+                  <>
+                    <span className="confirm-text">Remove permanently?</span>
+                    <button
+                      className="confirm-yes-btn"
+                      onClick={() => handleRemove(project.path)}
+                      disabled={removingPath === project.path}
+                    >
+                      {removingPath === project.path ? 'Removing...' : 'Yes'}
+                    </button>
+                    <button
+                      className="confirm-no-btn"
+                      onClick={() => setConfirmRemove(null)}
+                      disabled={removingPath === project.path}
+                    >
+                      No
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      className="restore-btn"
+                      onClick={() => handleRestore(project.path)}
+                    >
+                      Restore
+                    </button>
+                    <button
+                      className="restore-select-btn"
+                      onClick={() => handleRestoreAndSelect(project)}
+                    >
+                      Restore & Select
+                    </button>
+                    <button
+                      className="remove-btn"
+                      onClick={() => setConfirmRemove(project.path)}
+                    >
+                      Remove
+                    </button>
+                  </>
+                )}
               </div>
             </li>
           ))}
@@ -117,12 +177,30 @@ export function ArchivedProjects() {
                 </div>
               </div>
               <div className="archived-item-actions">
-                <button
-                  className="restore-btn"
-                  onClick={() => handleRestore(path)}
-                >
-                  Remove from Archive
-                </button>
+                {confirmRemove === path ? (
+                  <>
+                    <span className="confirm-text">Remove permanently?</span>
+                    <button
+                      className="confirm-yes-btn"
+                      onClick={() => handleRemoveStale(path)}
+                    >
+                      Yes
+                    </button>
+                    <button
+                      className="confirm-no-btn"
+                      onClick={() => setConfirmRemove(null)}
+                    >
+                      No
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    className="remove-btn"
+                    onClick={() => setConfirmRemove(path)}
+                  >
+                    Remove
+                  </button>
+                )}
               </div>
             </li>
           ))}
