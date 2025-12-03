@@ -322,6 +322,30 @@ describe('IssuesList', () => {
 
     renderComponent()
 
+    // Wait for the component to load - the table will be rendered but empty due to default filter (open, in-progress only)
+    await waitFor(() => {
+      // Table should exist even though no issues are visible
+      expect(screen.getByRole('table')).toBeInTheDocument()
+    })
+
+    // Open the status multi-select dropdown and select closed
+    const statusFilterTriggers = screen
+      .getAllByRole('button')
+      .filter(btn => btn.classList.contains('multi-select-trigger'))
+    fireEvent.click(statusFilterTriggers[0])
+
+    // Select Closed and deselect Open and In Progress
+    await waitFor(() => {
+      const closedCheckbox = screen.getByRole('checkbox', { name: 'Closed' })
+      const openCheckbox = screen.getByRole('checkbox', { name: 'Open' })
+      const inProgressCheckbox = screen.getByRole('checkbox', {
+        name: 'In Progress',
+      })
+      fireEvent.click(closedCheckbox)
+      fireEvent.click(openCheckbox)
+      fireEvent.click(inProgressCheckbox)
+    })
+
     await waitFor(() => {
       const statusBadge = screen.getByText('closed')
       const priorityBadge = screen.getByText('low')
@@ -355,6 +379,28 @@ describe('IssuesList', () => {
 
     renderComponent()
 
+    // Wait for table to render
+    await waitFor(() => {
+      expect(screen.getByRole('table')).toBeInTheDocument()
+    })
+
+    // Clear status filter to show issues with 'unknown' status (no metadata)
+    const filterTriggers = screen
+      .getAllByRole('button')
+      .filter(btn => btn.classList.contains('multi-select-trigger'))
+    fireEvent.click(filterTriggers[0])
+
+    // Deselect Open and In Progress to clear filter (which shows all issues including 'unknown')
+    await waitFor(() => {
+      const openCheckbox = screen.getByRole('checkbox', { name: 'Open' })
+      const inProgressCheckbox = screen.getByRole('checkbox', {
+        name: 'In Progress',
+      })
+      fireEvent.click(openCheckbox)
+      fireEvent.click(inProgressCheckbox)
+    })
+
+    // Now with no filter, all issues including 'unknown' should be visible
     await waitFor(() => {
       expect(screen.getByText('Issue Without Metadata')).toBeInTheDocument()
       expect(screen.getAllByText('unknown')).toHaveLength(2)
@@ -445,12 +491,13 @@ describe('IssuesList', () => {
       const filterInputs = screen.getAllByPlaceholderText('Filter...')
       const titleFilter = filterInputs[1] // Title is the second column
 
-      fireEvent.change(titleFilter, { target: { value: 'Beta' } })
+      // Filter by "Gamma" which is an open issue (visible by default)
+      fireEvent.change(titleFilter, { target: { value: 'Gamma' } })
 
       await waitFor(() => {
-        expect(screen.getByText('Beta Issue')).toBeInTheDocument()
+        expect(screen.getByText('Gamma Issue')).toBeInTheDocument()
         expect(screen.queryByText('Alpha Issue')).not.toBeInTheDocument()
-        expect(screen.queryByText('Gamma Issue')).not.toBeInTheDocument()
+        // Beta Issue is closed and hidden by default
       })
     })
 
@@ -461,27 +508,36 @@ describe('IssuesList', () => {
       const filterInputs = screen.getAllByPlaceholderText('Filter...')
       const numberFilter = filterInputs[0]
 
-      fireEvent.change(numberFilter, { target: { value: '2' } })
+      // Filter by issue number 3 (Gamma Issue, which is open and visible by default)
+      fireEvent.change(numberFilter, { target: { value: '3' } })
 
       await waitFor(() => {
-        expect(screen.getByText('Beta Issue')).toBeInTheDocument()
+        expect(screen.getByText('Gamma Issue')).toBeInTheDocument()
         expect(screen.queryByText('Alpha Issue')).not.toBeInTheDocument()
       })
     })
 
-    it('should filter by status using column select dropdown', async () => {
+    it('should filter by status using multi-select dropdown', async () => {
       await setupWithIssues()
 
-      // Find the column filter selects (inside .column-filter class, not the server-side filters)
-      const columnFilterSelects = screen
-        .getAllByRole('combobox')
-        .filter(select => select.classList.contains('column-filter'))
+      // Open the status multi-select dropdown
+      const statusFilterTriggers = screen
+        .getAllByRole('button')
+        .filter(btn => btn.classList.contains('multi-select-trigger'))
+      fireEvent.click(statusFilterTriggers[0])
 
-      // Status column filter is the first one (index 0)
-      const statusColumnFilter = columnFilterSelects[0]
-
-      expect(statusColumnFilter).toBeDefined()
-      fireEvent.change(statusColumnFilter!, { target: { value: 'closed' } })
+      // By default, Open and In Progress are selected, so Beta Issue (closed) is not visible
+      // Select Closed and deselect Open and In Progress to show only closed issues
+      await waitFor(() => {
+        const closedCheckbox = screen.getByRole('checkbox', { name: 'Closed' })
+        const openCheckbox = screen.getByRole('checkbox', { name: 'Open' })
+        const inProgressCheckbox = screen.getByRole('checkbox', {
+          name: 'In Progress',
+        })
+        fireEvent.click(closedCheckbox)
+        fireEvent.click(openCheckbox)
+        fireEvent.click(inProgressCheckbox)
+      })
 
       await waitFor(() => {
         expect(screen.getByText('Beta Issue')).toBeInTheDocument()
@@ -490,46 +546,49 @@ describe('IssuesList', () => {
       })
     })
 
-    it('should filter by priority using column select dropdown', async () => {
+    it('should filter by priority using multi-select dropdown', async () => {
       await setupWithIssues()
 
-      // Find the column filter selects (inside .column-filter class)
-      const columnFilterSelects = screen
-        .getAllByRole('combobox')
-        .filter(select => select.classList.contains('column-filter'))
+      // Open the priority multi-select dropdown (second one)
+      const filterTriggers = screen
+        .getAllByRole('button')
+        .filter(btn => btn.classList.contains('multi-select-trigger'))
+      fireEvent.click(filterTriggers[1])
 
-      // Priority column filter is the second one (index 1)
-      const priorityColumnFilter = columnFilterSelects[1]
-
-      expect(priorityColumnFilter).toBeDefined()
-      fireEvent.change(priorityColumnFilter!, { target: { value: 'medium' } })
+      // Select only medium priority
+      await waitFor(() => {
+        const mediumCheckbox = screen.getByRole('checkbox', { name: 'Medium' })
+        fireEvent.click(mediumCheckbox)
+      })
 
       await waitFor(() => {
         expect(screen.getByText('Gamma Issue')).toBeInTheDocument()
         expect(screen.queryByText('Alpha Issue')).not.toBeInTheDocument()
-        expect(screen.queryByText('Beta Issue')).not.toBeInTheDocument()
+        // Beta Issue is also hidden due to default status filter
       })
     })
 
-    it('should clear column filter when selecting All', async () => {
+    it('should show all issues when selecting All in status filter', async () => {
       await setupWithIssues()
 
-      // Find the column filter selects
-      const columnFilterSelects = screen
-        .getAllByRole('combobox')
-        .filter(select => select.classList.contains('column-filter'))
-
-      const statusColumnFilter = columnFilterSelects[0]
-
-      // Filter by closed first
-      fireEvent.change(statusColumnFilter!, { target: { value: 'closed' } })
-
+      // By default, Open and In Progress are selected, so Beta Issue (closed) is not visible
       await waitFor(() => {
-        expect(screen.queryByText('Alpha Issue')).not.toBeInTheDocument()
+        expect(screen.getByText('Alpha Issue')).toBeInTheDocument()
+        expect(screen.queryByText('Beta Issue')).not.toBeInTheDocument()
+        expect(screen.getByText('Gamma Issue')).toBeInTheDocument()
       })
 
-      // Clear filter by selecting "All"
-      fireEvent.change(statusColumnFilter!, { target: { value: '' } })
+      // Open the status multi-select dropdown and select All
+      const filterTriggers = screen
+        .getAllByRole('button')
+        .filter(btn => btn.classList.contains('multi-select-trigger'))
+      fireEvent.click(filterTriggers[0])
+
+      // Click All checkbox to select all statuses
+      await waitFor(() => {
+        const allCheckbox = screen.getAllByRole('checkbox')[0] // First checkbox is "All"
+        fireEvent.click(allCheckbox)
+      })
 
       await waitFor(() => {
         expect(screen.getByText('Alpha Issue')).toBeInTheDocument()
@@ -540,6 +599,21 @@ describe('IssuesList', () => {
 
     it('should sort by priority with custom order (high > medium > low)', async () => {
       await setupWithIssues()
+
+      // First, show all issues (including closed) by selecting All in status filter
+      const filterTriggers = screen
+        .getAllByRole('button')
+        .filter(btn => btn.classList.contains('multi-select-trigger'))
+      fireEvent.click(filterTriggers[0])
+
+      await waitFor(() => {
+        const allCheckbox = screen.getAllByRole('checkbox')[0]
+        fireEvent.click(allCheckbox)
+      })
+
+      await waitFor(() => {
+        expect(screen.getByText('Beta Issue')).toBeInTheDocument()
+      })
 
       // Click Priority header to sort
       const priorityHeader = screen.getByRole('button', { name: /priority/i })

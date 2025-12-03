@@ -18,7 +18,23 @@ import {
   type SortingState,
   type ColumnFiltersState,
 } from '@tanstack/react-table'
+import {
+  MultiSelect,
+  type MultiSelectOption,
+} from '../components/MultiSelect.tsx'
 import './IssuesList.css'
+
+const STATUS_OPTIONS: MultiSelectOption[] = [
+  { value: 'open', label: 'Open' },
+  { value: 'in-progress', label: 'In Progress' },
+  { value: 'closed', label: 'Closed' },
+]
+
+const PRIORITY_OPTIONS: MultiSelectOption[] = [
+  { value: 'high', label: 'High' },
+  { value: 'medium', label: 'Medium' },
+  { value: 'low', label: 'Low' },
+]
 
 const columnHelper = createColumnHelper<Issue>()
 
@@ -65,7 +81,9 @@ export function IssuesList() {
 
   // TanStack Table state
   const [sorting, setSorting] = useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
+    { id: 'status', value: ['open', 'in-progress'] },
+  ])
 
   const columns = useMemo(
     () => [
@@ -110,7 +128,15 @@ export function IssuesList() {
           )
         },
         enableColumnFilter: true,
-        filterFn: 'includesString',
+        filterFn: (row, columnId, filterValue) => {
+          const status = row.getValue(columnId) as string
+          // Multi-select filter: show if status is in selected values
+          const selectedValues = filterValue as string[]
+          if (!selectedValues || selectedValues.length === 0) {
+            return true // Show all when nothing selected
+          }
+          return selectedValues.includes(status)
+        },
       }),
       columnHelper.accessor(row => row.metadata?.priorityLabel || 'unknown', {
         id: 'priority',
@@ -124,7 +150,15 @@ export function IssuesList() {
           )
         },
         enableColumnFilter: true,
-        filterFn: 'includesString',
+        filterFn: (row, columnId, filterValue) => {
+          const priority = (row.getValue(columnId) as string).toLowerCase()
+          // Multi-select filter: show if priority is in selected values
+          const selectedValues = filterValue as string[]
+          if (!selectedValues || selectedValues.length === 0) {
+            return true // Show all when nothing selected
+          }
+          return selectedValues.includes(priority)
+        },
         sortingFn: (rowA, rowB) => {
           const priorityOrder: Record<string, number> = {
             high: 1,
@@ -306,43 +340,35 @@ export function IssuesList() {
                             </button>
                             {header.column.getCanFilter() &&
                               (header.column.id === 'status' ? (
-                                <select
-                                  className="column-filter"
+                                <MultiSelect
+                                  options={STATUS_OPTIONS}
                                   value={
-                                    (header.column.getFilterValue() as string) ??
-                                    ''
+                                    (header.column.getFilterValue() as string[]) ??
+                                    []
                                   }
-                                  onChange={e =>
+                                  onChange={values =>
                                     header.column.setFilterValue(
-                                      e.target.value || undefined
+                                      values.length > 0 ? values : undefined
                                     )
                                   }
-                                >
-                                  <option value="">All</option>
-                                  <option value="open">Open</option>
-                                  <option value="in-progress">
-                                    In Progress
-                                  </option>
-                                  <option value="closed">Closed</option>
-                                </select>
+                                  placeholder="All"
+                                  className="column-filter-multi"
+                                />
                               ) : header.column.id === 'priority' ? (
-                                <select
-                                  className="column-filter"
+                                <MultiSelect
+                                  options={PRIORITY_OPTIONS}
                                   value={
-                                    (header.column.getFilterValue() as string) ??
-                                    ''
+                                    (header.column.getFilterValue() as string[]) ??
+                                    []
                                   }
-                                  onChange={e =>
+                                  onChange={values =>
                                     header.column.setFilterValue(
-                                      e.target.value || undefined
+                                      values.length > 0 ? values : undefined
                                     )
                                   }
-                                >
-                                  <option value="">All</option>
-                                  <option value="high">High</option>
-                                  <option value="medium">Medium</option>
-                                  <option value="low">Low</option>
-                                </select>
+                                  placeholder="All"
+                                  className="column-filter-multi"
+                                />
                               ) : (
                                 <input
                                   type="text"
