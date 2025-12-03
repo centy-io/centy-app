@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   useFloating,
   autoUpdate,
@@ -20,6 +20,7 @@ import './ProjectSelector.css'
 export function ProjectSelector() {
   const { projectPath, setProjectPath, setIsInitialized } = useProject()
   const { isArchived, archiveProject } = useArchivedProjects()
+  const navigate = useNavigate()
   const [projects, setProjects] = useState<ProjectInfo[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -60,6 +61,7 @@ export function ProjectSelector() {
     setProjectPath(project.path)
     setIsInitialized(project.initialized)
     setIsOpen(false)
+    navigate('/issues')
   }
 
   const handleManualSubmit = async (e: React.FormEvent) => {
@@ -92,6 +94,7 @@ export function ProjectSelector() {
       }
       setManualPath('')
       setIsOpen(false)
+      navigate('/issues')
     }
   }
 
