@@ -11,7 +11,7 @@
     "coverage/**",
     "src/gen/**"
   ],
-  "ignoreDependencies": ["@bufbuild/protoc-gen-es"],
+  "ignoreDependencies": ["@bufbuild/protoc-gen-es", "@cspell/dict-he"],
   "ignoreExportsUsedInFile": true,
   "ignoreWorkspaces": []
 }

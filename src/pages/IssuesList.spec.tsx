@@ -171,7 +171,7 @@ describe('IssuesList', () => {
     })
   })
 
-  it('should show filters when project is initialized', async () => {
+  it('should show refresh button when project is initialized', async () => {
     const mockListIssues = vi.mocked(centyClient.listIssues)
     mockListIssues.mockResolvedValue({
       issues: [],
@@ -190,43 +190,7 @@ describe('IssuesList', () => {
     renderComponent()
 
     await waitFor(() => {
-      expect(screen.getByLabelText('Status:')).toBeInTheDocument()
-      expect(screen.getByLabelText('Priority:')).toBeInTheDocument()
       expect(screen.getByText('Refresh')).toBeInTheDocument()
-    })
-  })
-
-  it('should filter issues by status', async () => {
-    const mockListIssues = vi.mocked(centyClient.listIssues)
-    mockListIssues.mockResolvedValue({
-      issues: [],
-      totalCount: 0,
-      $typeName: 'centy.ListIssuesResponse',
-      $unknown: undefined,
-    })
-
-    mockUseProject.mockReturnValue({
-      projectPath: '/test/path',
-      setProjectPath: vi.fn(),
-      isInitialized: true,
-      setIsInitialized: vi.fn(),
-    })
-
-    renderComponent()
-
-    await waitFor(() => {
-      expect(screen.getByLabelText('Status:')).toBeInTheDocument()
-    })
-
-    const statusFilter = screen.getByLabelText('Status:')
-    fireEvent.change(statusFilter, { target: { value: 'open' } })
-
-    await waitFor(() => {
-      expect(mockListIssues).toHaveBeenCalledWith(
-        expect.objectContaining({
-          status: 'open',
-        })
-      )
     })
   })
 
@@ -310,40 +274,6 @@ describe('IssuesList', () => {
 
       expect(statusBadge).toHaveClass('status-open')
       expect(priorityBadge).toHaveClass('priority-high')
-    })
-  })
-
-  it('should filter issues by priority', async () => {
-    const mockListIssues = vi.mocked(centyClient.listIssues)
-    mockListIssues.mockResolvedValue({
-      issues: [],
-      totalCount: 0,
-      $typeName: 'centy.ListIssuesResponse',
-      $unknown: undefined,
-    })
-
-    mockUseProject.mockReturnValue({
-      projectPath: '/test/path',
-      setProjectPath: vi.fn(),
-      isInitialized: true,
-      setIsInitialized: vi.fn(),
-    })
-
-    renderComponent()
-
-    await waitFor(() => {
-      expect(screen.getByLabelText('Priority:')).toBeInTheDocument()
-    })
-
-    const priorityFilter = screen.getByLabelText('Priority:')
-    fireEvent.change(priorityFilter, { target: { value: '1' } }) // 1 = high
-
-    await waitFor(() => {
-      expect(mockListIssues).toHaveBeenCalledWith(
-        expect.objectContaining({
-          priority: 1,
-        })
-      )
     })
   })
 

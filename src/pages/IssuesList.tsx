@@ -62,8 +62,6 @@ export function IssuesList() {
   const [issues, setIssues] = useState<Issue[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [statusFilter, setStatusFilter] = useState('')
-  const [priorityFilter, setPriorityFilter] = useState(0) // 0 = all, 1 = high, 2 = medium, 3 = low
 
   // TanStack Table state
   const [sorting, setSorting] = useState<SortingState>([])
@@ -212,8 +210,6 @@ export function IssuesList() {
     try {
       const request = create(ListIssuesRequestSchema, {
         projectPath: projectPath.trim(),
-        status: statusFilter,
-        priority: priorityFilter, // 0 = all
       })
       const response = await centyClient.listIssues(request)
       setIssues(response.issues)
@@ -224,7 +220,7 @@ export function IssuesList() {
     } finally {
       setLoading(false)
     }
-  }, [projectPath, statusFilter, priorityFilter, isInitialized])
+  }, [projectPath, isInitialized])
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -243,9 +239,20 @@ export function IssuesList() {
     <div className="issues-list">
       <div className="issues-header">
         <h2>Issues</h2>
-        <Link to="/issues/new" className="create-btn">
-          + New Issue
-        </Link>
+        <div className="header-actions">
+          {projectPath && isInitialized === true && (
+            <button
+              onClick={fetchIssues}
+              disabled={loading}
+              className="refresh-btn"
+            >
+              {loading ? 'Loading...' : 'Refresh'}
+            </button>
+          )}
+          <Link to="/issues/new" className="create-btn">
+            + New Issue
+          </Link>
+        </div>
       </div>
 
       {!projectPath && (
@@ -263,44 +270,6 @@ export function IssuesList() {
 
       {projectPath && isInitialized === true && (
         <>
-          <div className="filters">
-            <div className="filter-group">
-              <label htmlFor="status-filter">Status:</label>
-              <select
-                id="status-filter"
-                value={statusFilter}
-                onChange={e => setStatusFilter(e.target.value)}
-              >
-                <option value="">All</option>
-                <option value="open">Open</option>
-                <option value="in-progress">In Progress</option>
-                <option value="closed">Closed</option>
-              </select>
-            </div>
-
-            <div className="filter-group">
-              <label htmlFor="priority-filter">Priority:</label>
-              <select
-                id="priority-filter"
-                value={priorityFilter}
-                onChange={e => setPriorityFilter(Number(e.target.value))}
-              >
-                <option value={0}>All</option>
-                <option value={1}>High</option>
-                <option value={2}>Medium</option>
-                <option value={3}>Low</option>
-              </select>
-            </div>
-
-            <button
-              onClick={fetchIssues}
-              disabled={loading}
-              className="refresh-btn"
-            >
-              {loading ? 'Loading...' : 'Refresh'}
-            </button>
-          </div>
-
           {error && <div className="error-message">{error}</div>}
 
           {loading && issues.length === 0 ? (
