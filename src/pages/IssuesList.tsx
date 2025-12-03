@@ -8,6 +8,7 @@ import {
   type Issue,
 } from '../gen/centy_pb.ts'
 import { useProject } from '../context/ProjectContext.tsx'
+import { useCopyToClipboard } from '../hooks/useCopyToClipboard.ts'
 import {
   useReactTable,
   getCoreRowModel,
@@ -78,9 +79,12 @@ export function IssuesList() {
   const [issues, setIssues] = useState<Issue[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const { copiedId, copyToClipboard } = useCopyToClipboard()
 
-  // TanStack Table state
-  const [sorting, setSorting] = useState<SortingState>([])
+  // TanStack Table state - default sort by createdAt descending (newest first)
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: 'createdAt', desc: true },
+  ])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
     { id: 'status', value: ['open', 'in-progress'] },
   ])
@@ -89,14 +93,36 @@ export function IssuesList() {
     () => [
       columnHelper.accessor('displayNumber', {
         header: '#',
-        cell: info => (
-          <Link
-            to={`/issues/${info.row.original.issueNumber}`}
-            className="issue-number-link"
-          >
-            #{info.getValue()}
-          </Link>
-        ),
+        cell: info => {
+          const issueId = info.row.original.issueNumber
+          const meta = info.table.options.meta as {
+            copiedId: string | null
+            copyToClipboard: (text: string, id?: string) => Promise<boolean>
+          }
+          const isCopied = meta?.copiedId === issueId
+          return (
+            <div className="issue-number-cell">
+              <button
+                type="button"
+                className={`issue-number-copy-btn ${isCopied ? 'copied' : ''}`}
+                onClick={e => {
+                  e.stopPropagation()
+                  meta?.copyToClipboard(issueId, issueId)
+                }}
+                title={isCopied ? 'Copied!' : 'Click to copy UUID'}
+              >
+                #{info.getValue()}
+              </button>
+              <Link
+                to={`/issues/${issueId}`}
+                className="issue-number-link-icon"
+                title="Go to issue"
+              >
+                &rarr;
+              </Link>
+            </div>
+          )
+        },
         enableColumnFilter: true,
         filterFn: (row, columnId, filterValue) => {
           const value = row.getValue(columnId) as number
@@ -213,6 +239,10 @@ export function IssuesList() {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    meta: {
+      copiedId,
+      copyToClipboard,
+    },
   })
 
   const checkInitialized = useCallback(

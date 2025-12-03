@@ -633,7 +633,7 @@ describe('IssuesList', () => {
       expect(priorities).toEqual(['high', 'medium', 'low'])
     })
 
-    it('should sort by created date', async () => {
+    it('should sort by created date descending by default', async () => {
       const mockListIssues = vi.mocked(centyClient.listIssues)
       mockListIssues.mockResolvedValue({
         issues: [
@@ -678,13 +678,20 @@ describe('IssuesList', () => {
         expect(screen.getByText('Older Issue')).toBeInTheDocument()
       })
 
-      // Click Created header to sort
+      // Created header should be sorted by default (descending - newest first)
       const createdHeader = screen.getByRole('button', { name: /created/i })
-      fireEvent.click(createdHeader)
+      expect(createdHeader).toHaveClass('sorted')
 
-      await waitFor(() => {
-        expect(createdHeader).toHaveClass('sorted')
-      })
+      // Verify the descending sort indicator is shown
+      const sortIndicator = createdHeader.querySelector('.sort-indicator')
+      expect(sortIndicator?.textContent).toContain('▼')
+
+      // Issues should be displayed with newest first (descending order)
+      const rows = screen.getAllByRole('row').slice(1) // skip header row
+      const titles = rows.map(
+        row => row.querySelector('.issue-title-link')?.textContent
+      )
+      expect(titles).toEqual(['Newer Issue', 'Older Issue'])
     })
 
     it('should handle P1/P2/P3 priority format', async () => {
