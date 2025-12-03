@@ -430,4 +430,288 @@ describe('IssuesList', () => {
       expect(screen.getAllByText('unknown')).toHaveLength(2)
     })
   })
+
+  describe('TanStack Table sorting and filtering', () => {
+    const setupWithIssues = async () => {
+      const mockListIssues = vi.mocked(centyClient.listIssues)
+      mockListIssues.mockResolvedValue({
+        issues: [
+          createMockIssue({
+            issueNumber: '0001',
+            displayNumber: 1,
+            title: 'Alpha Issue',
+            status: 'open',
+            priorityLabel: 'high',
+          }),
+          createMockIssue({
+            issueNumber: '0002',
+            displayNumber: 2,
+            title: 'Beta Issue',
+            status: 'closed',
+            priorityLabel: 'low',
+          }),
+          createMockIssue({
+            issueNumber: '0003',
+            displayNumber: 3,
+            title: 'Gamma Issue',
+            status: 'in-progress',
+            priorityLabel: 'medium',
+          }),
+        ],
+        totalCount: 3,
+        $typeName: 'centy.ListIssuesResponse',
+        $unknown: undefined,
+      })
+
+      mockUseProject.mockReturnValue({
+        projectPath: '/test/path',
+        setProjectPath: vi.fn(),
+        isInitialized: true,
+        setIsInitialized: vi.fn(),
+      })
+
+      renderComponent()
+
+      await waitFor(() => {
+        expect(screen.getByText('Alpha Issue')).toBeInTheDocument()
+      })
+    }
+
+    it('should sort by column when clicking header', async () => {
+      await setupWithIssues()
+
+      // Find and click the Title sort button
+      const titleHeader = screen.getByRole('button', { name: /title/i })
+      fireEvent.click(titleHeader)
+
+      // After sorting, check that sort indicator appears
+      await waitFor(() => {
+        expect(titleHeader).toHaveClass('sorted')
+      })
+    })
+
+    it('should toggle sort direction on multiple clicks', async () => {
+      await setupWithIssues()
+
+      const titleHeader = screen.getByRole('button', { name: /title/i })
+
+      // First click - ascending
+      fireEvent.click(titleHeader)
+      await waitFor(() => {
+        expect(titleHeader.textContent).toContain('\u25B2') // Up arrow
+      })
+
+      // Second click - descending
+      fireEvent.click(titleHeader)
+      await waitFor(() => {
+        expect(titleHeader.textContent).toContain('\u25BC') // Down arrow
+      })
+    })
+
+    it('should filter by title using text input', async () => {
+      await setupWithIssues()
+
+      // Find the title column filter input
+      const filterInputs = screen.getAllByPlaceholderText('Filter...')
+      const titleFilter = filterInputs[1] // Title is the second column
+
+      fireEvent.change(titleFilter, { target: { value: 'Beta' } })
+
+      await waitFor(() => {
+        expect(screen.getByText('Beta Issue')).toBeInTheDocument()
+        expect(screen.queryByText('Alpha Issue')).not.toBeInTheDocument()
+        expect(screen.queryByText('Gamma Issue')).not.toBeInTheDocument()
+      })
+    })
+
+    it('should filter by issue number using text input', async () => {
+      await setupWithIssues()
+
+      // Find the # column filter input (first filter)
+      const filterInputs = screen.getAllByPlaceholderText('Filter...')
+      const numberFilter = filterInputs[0]
+
+      fireEvent.change(numberFilter, { target: { value: '2' } })
+
+      await waitFor(() => {
+        expect(screen.getByText('Beta Issue')).toBeInTheDocument()
+        expect(screen.queryByText('Alpha Issue')).not.toBeInTheDocument()
+      })
+    })
+
+    it('should filter by status using column select dropdown', async () => {
+      await setupWithIssues()
+
+      // Find the column filter selects (inside .column-filter class, not the server-side filters)
+      const columnFilterSelects = screen
+        .getAllByRole('combobox')
+        .filter(select => select.classList.contains('column-filter'))
+
+      // Status column filter is the first one (index 0)
+      const statusColumnFilter = columnFilterSelects[0]
+
+      expect(statusColumnFilter).toBeDefined()
+      fireEvent.change(statusColumnFilter!, { target: { value: 'closed' } })
+
+      await waitFor(() => {
+        expect(screen.getByText('Beta Issue')).toBeInTheDocument()
+        expect(screen.queryByText('Alpha Issue')).not.toBeInTheDocument()
+        expect(screen.queryByText('Gamma Issue')).not.toBeInTheDocument()
+      })
+    })
+
+    it('should filter by priority using column select dropdown', async () => {
+      await setupWithIssues()
+
+      // Find the column filter selects (inside .column-filter class)
+      const columnFilterSelects = screen
+        .getAllByRole('combobox')
+        .filter(select => select.classList.contains('column-filter'))
+
+      // Priority column filter is the second one (index 1)
+      const priorityColumnFilter = columnFilterSelects[1]
+
+      expect(priorityColumnFilter).toBeDefined()
+      fireEvent.change(priorityColumnFilter!, { target: { value: 'medium' } })
+
+      await waitFor(() => {
+        expect(screen.getByText('Gamma Issue')).toBeInTheDocument()
+        expect(screen.queryByText('Alpha Issue')).not.toBeInTheDocument()
+        expect(screen.queryByText('Beta Issue')).not.toBeInTheDocument()
+      })
+    })
+
+    it('should clear column filter when selecting All', async () => {
+      await setupWithIssues()
+
+      // Find the column filter selects
+      const columnFilterSelects = screen
+        .getAllByRole('combobox')
+        .filter(select => select.classList.contains('column-filter'))
+
+      const statusColumnFilter = columnFilterSelects[0]
+
+      // Filter by closed first
+      fireEvent.change(statusColumnFilter!, { target: { value: 'closed' } })
+
+      await waitFor(() => {
+        expect(screen.queryByText('Alpha Issue')).not.toBeInTheDocument()
+      })
+
+      // Clear filter by selecting "All"
+      fireEvent.change(statusColumnFilter!, { target: { value: '' } })
+
+      await waitFor(() => {
+        expect(screen.getByText('Alpha Issue')).toBeInTheDocument()
+        expect(screen.getByText('Beta Issue')).toBeInTheDocument()
+        expect(screen.getByText('Gamma Issue')).toBeInTheDocument()
+      })
+    })
+
+    it('should sort by priority with custom order (high > medium > low)', async () => {
+      await setupWithIssues()
+
+      // Click Priority header to sort
+      const priorityHeader = screen.getByRole('button', { name: /priority/i })
+      fireEvent.click(priorityHeader)
+
+      await waitFor(() => {
+        expect(priorityHeader).toHaveClass('sorted')
+      })
+
+      // Get all rows and verify order
+      const rows = screen.getAllByRole('row').slice(1) // Skip header row
+      const priorities = rows.map(
+        row => row.querySelector('.priority-badge')?.textContent
+      )
+
+      // Ascending order: high, medium, low
+      expect(priorities).toEqual(['high', 'medium', 'low'])
+    })
+
+    it('should sort by created date', async () => {
+      const mockListIssues = vi.mocked(centyClient.listIssues)
+      mockListIssues.mockResolvedValue({
+        issues: [
+          {
+            ...createMockIssue({
+              issueNumber: '0001',
+              displayNumber: 1,
+              title: 'Older Issue',
+            }),
+            metadata: {
+              ...createMockIssue().metadata!,
+              createdAt: '2024-01-01T10:00:00Z',
+            },
+          },
+          {
+            ...createMockIssue({
+              issueNumber: '0002',
+              displayNumber: 2,
+              title: 'Newer Issue',
+            }),
+            metadata: {
+              ...createMockIssue().metadata!,
+              createdAt: '2024-06-15T10:00:00Z',
+            },
+          },
+        ],
+        totalCount: 2,
+        $typeName: 'centy.ListIssuesResponse',
+        $unknown: undefined,
+      })
+
+      mockUseProject.mockReturnValue({
+        projectPath: '/test/path',
+        setProjectPath: vi.fn(),
+        isInitialized: true,
+        setIsInitialized: vi.fn(),
+      })
+
+      renderComponent()
+
+      await waitFor(() => {
+        expect(screen.getByText('Older Issue')).toBeInTheDocument()
+      })
+
+      // Click Created header to sort
+      const createdHeader = screen.getByRole('button', { name: /created/i })
+      fireEvent.click(createdHeader)
+
+      await waitFor(() => {
+        expect(createdHeader).toHaveClass('sorted')
+      })
+    })
+
+    it('should handle P1/P2/P3 priority format', async () => {
+      const mockListIssues = vi.mocked(centyClient.listIssues)
+      mockListIssues.mockResolvedValue({
+        issues: [
+          createMockIssue({
+            issueNumber: '0001',
+            displayNumber: 1,
+            title: 'P1 Issue',
+            priorityLabel: 'P1',
+          }),
+        ],
+        totalCount: 1,
+        $typeName: 'centy.ListIssuesResponse',
+        $unknown: undefined,
+      })
+
+      mockUseProject.mockReturnValue({
+        projectPath: '/test/path',
+        setProjectPath: vi.fn(),
+        isInitialized: true,
+        setIsInitialized: vi.fn(),
+      })
+
+      renderComponent()
+
+      await waitFor(() => {
+        const priorityBadge = screen.getByText('P1')
+        expect(priorityBadge).toHaveClass('priority-high')
+      })
+    })
+  })
 })
