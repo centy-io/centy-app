@@ -41,6 +41,9 @@ importers:
       '@tiptap/starter-kit':
         specifier: ^3.12.1
         version: 3.12.1
+      downdoc:
+        specifier: ^1.0.2-stable
+        version: 1.0.2-stable
       lowlight:
         specifier: ^3.3.0
         version: 3.3.0
@@ -1941,6 +1944,11 @@ packages:
   dot-prop@5.3.0:
     resolution: {integrity: sha512-QM8q3zDe58hqUqjraQOmzZ1LIH9SWQJTlEKCH4kJ2oQvLZk7RbQXvtDM2XEq3fwkV9CCvvH4LA0AV+ogFsBM2Q==}
     engines: {node: '>=8'}
+
+  downdoc@1.0.2-stable:
+    resolution: {integrity: sha512-eYTOmnYp3a6ibweDWLO72Y2NxWtw5YVA5rpfS4+vjWh6K1F9bD3TrwxYxfjfudqwBtYeeIYkn7b9UXN22NkZSw==}
+    engines: {node: '>=16.17.0'}
+    hasBin: true
 
   eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
@@ -5302,6 +5310,8 @@ snapshots:
   dot-prop@5.3.0:
     dependencies:
       is-obj: 2.0.0
+
+  downdoc@1.0.2-stable: {}
 
   eastasianwidth@0.2.0: {}
 

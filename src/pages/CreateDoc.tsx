@@ -7,7 +7,7 @@ import {
   IsInitializedRequestSchema,
 } from '../gen/centy_pb.ts'
 import { useProject } from '../context/ProjectContext.tsx'
-import { MarkdownEditor } from '../components/MarkdownEditor.tsx'
+import { TextEditor } from '../components/TextEditor'
 import './CreateDoc.css'
 
 export function CreateDoc() {
@@ -134,9 +134,11 @@ export function CreateDoc() {
 
         <div className="form-group">
           <label htmlFor="content">Content (Markdown):</label>
-          <MarkdownEditor
+          <TextEditor
             value={content}
             onChange={setContent}
+            format="md"
+            mode="edit"
             placeholder="Write your documentation in Markdown..."
             minHeight={300}
           />

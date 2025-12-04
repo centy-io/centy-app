@@ -10,7 +10,7 @@ import {
 } from '../gen/centy_pb.ts'
 import { useProject } from '../context/ProjectContext.tsx'
 import { useCopyToClipboard } from '../hooks/useCopyToClipboard.ts'
-import { MarkdownEditor } from '../components/MarkdownEditor.tsx'
+import { TextEditor } from '../components/TextEditor'
 import './DocDetail.css'
 
 export function DocDetail() {
@@ -265,9 +265,11 @@ export function DocDetail() {
 
             <div className="form-group">
               <label htmlFor="edit-content">Content (Markdown):</label>
-              <MarkdownEditor
+              <TextEditor
                 value={editContent}
                 onChange={setEditContent}
+                format="md"
+                mode="edit"
                 placeholder="Write your documentation in Markdown..."
                 minHeight={400}
               />
@@ -300,7 +302,7 @@ export function DocDetail() {
 
             <div className="doc-body">
               {doc.content ? (
-                <pre className="doc-content-pre">{doc.content}</pre>
+                <TextEditor value={doc.content} format="md" mode="display" />
               ) : (
                 <p className="no-content">No content</p>
               )}

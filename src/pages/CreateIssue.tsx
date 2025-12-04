@@ -12,7 +12,7 @@ import {
   type AssetUploaderHandle,
   type PendingAsset,
 } from '../components/AssetUploader.tsx'
-import { MarkdownEditor } from '../components/MarkdownEditor.tsx'
+import { TextEditor } from '../components/TextEditor'
 import './CreateIssue.css'
 
 export function CreateIssue() {
@@ -133,9 +133,11 @@ export function CreateIssue() {
 
         <div className="form-group">
           <label htmlFor="description">Description:</label>
-          <MarkdownEditor
+          <TextEditor
             value={description}
             onChange={setDescription}
+            format="md"
+            mode="edit"
             placeholder="Describe the issue..."
             minHeight={150}
           />

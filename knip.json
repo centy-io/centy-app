@@ -9,7 +9,8 @@
     "**/*.test.tsx",
     "dist/**",
     "coverage/**",
-    "src/gen/**"
+    "src/gen/**",
+    "src/types/**/*.d.ts"
   ],
   "ignoreDependencies": ["@bufbuild/protoc-gen-es", "@cspell/dict-he"],
   "ignoreExportsUsedInFile": true,

@@ -112,7 +112,8 @@ describe('DocDetail', () => {
     await waitFor(() => {
       expect(screen.getByText('My Test Document')).toBeInTheDocument()
       expect(screen.getByText('test-doc')).toBeInTheDocument()
-      expect(screen.getByText('# Hello World')).toBeInTheDocument()
+      // Content is now rendered as HTML via TextEditor, so # Hello World becomes <h1>Hello World</h1>
+      expect(screen.getByText('Hello World')).toBeInTheDocument()
     })
   })
 

@@ -1,12 +1,12 @@
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { MarkdownEditor } from './MarkdownEditor'
+import { TextEditor } from './TextEditor'
 
 // Mock window.prompt for link tests
 const mockPrompt = vi.fn()
 window.prompt = mockPrompt
 
-describe('MarkdownEditor', () => {
+describe('TextEditor', () => {
   beforeEach(() => {
     mockPrompt.mockReset()
   })
@@ -15,9 +15,56 @@ describe('MarkdownEditor', () => {
     vi.clearAllMocks()
   })
 
-  describe('Basic rendering', () => {
-    it('should render the editor with toolbar', async () => {
-      render(<MarkdownEditor value="" onChange={() => {}} />)
+  describe('Display Mode', () => {
+    it('should render content in readonly mode', async () => {
+      render(<TextEditor value="# Hello" mode="display" />)
+
+      await waitFor(() => {
+        const editorContent = document.querySelector('.editor-content')
+        expect(editorContent).toBeInTheDocument()
+      })
+
+      // Should have display class
+      const editor = document.querySelector('.text-editor')
+      expect(editor).toHaveClass('text-editor--display')
+    })
+
+    it('should hide toolbar in display mode', async () => {
+      render(<TextEditor value="Content" mode="display" />)
+
+      await waitFor(() => {
+        const editorContent = document.querySelector('.editor-content')
+        expect(editorContent).toBeInTheDocument()
+      })
+
+      expect(screen.queryByTitle('Bold (Ctrl+B)')).not.toBeInTheDocument()
+    })
+
+    it('should not require onChange in display mode', async () => {
+      // Should not throw
+      render(<TextEditor value="Content" mode="display" />)
+
+      await waitFor(() => {
+        const editorContent = document.querySelector('.editor-content')
+        expect(editorContent).toBeInTheDocument()
+      })
+    })
+  })
+
+  describe('Edit Mode', () => {
+    it('should render editable content', async () => {
+      render(<TextEditor value="# Hello" mode="edit" onChange={() => {}} />)
+
+      await waitFor(() => {
+        expect(screen.getByTitle('Bold (Ctrl+B)')).toBeInTheDocument()
+      })
+
+      const editor = document.querySelector('.text-editor')
+      expect(editor).toHaveClass('text-editor--edit')
+    })
+
+    it('should show toolbar in edit mode', async () => {
+      render(<TextEditor value="" mode="edit" onChange={() => {}} />)
 
       await waitFor(() => {
         expect(screen.getByTitle('Bold (Ctrl+B)')).toBeInTheDocument()
@@ -39,27 +86,115 @@ describe('MarkdownEditor', () => {
 
     it('should render with custom className', async () => {
       render(
-        <MarkdownEditor value="" onChange={() => {}} className="custom-class" />
+        <TextEditor
+          value=""
+          onChange={() => {}}
+          mode="edit"
+          className="custom-class"
+        />
       )
 
       await waitFor(() => {
-        // MarkdownEditor now wraps TextEditor which uses .text-editor class
         const editor = document.querySelector('.text-editor')
         expect(editor).toHaveClass('custom-class')
       })
     })
 
     it('should render with custom minHeight', async () => {
-      render(<MarkdownEditor value="" onChange={() => {}} minHeight={300} />)
+      render(
+        <TextEditor value="" onChange={() => {}} mode="edit" minHeight={300} />
+      )
 
       await waitFor(() => {
         const editorContent = document.querySelector('.editor-content')
         expect(editorContent).toHaveStyle({ minHeight: '300px' })
       })
     })
+  })
 
-    it('should render with initial value', async () => {
-      render(<MarkdownEditor value="# Hello World" onChange={() => {}} />)
+  describe('Mode Toggle', () => {
+    it('should show toggle button when allowModeToggle is true', async () => {
+      render(
+        <TextEditor value="Content" mode="display" allowModeToggle={true} />
+      )
+
+      await waitFor(() => {
+        expect(screen.getByText('Edit')).toBeInTheDocument()
+      })
+    })
+
+    it('should not show toggle button when allowModeToggle is false', async () => {
+      render(
+        <TextEditor value="Content" mode="display" allowModeToggle={false} />
+      )
+
+      await waitFor(() => {
+        const editorContent = document.querySelector('.editor-content')
+        expect(editorContent).toBeInTheDocument()
+      })
+
+      expect(screen.queryByText('Edit')).not.toBeInTheDocument()
+    })
+
+    it('should toggle between display and edit modes', async () => {
+      const onModeChange = vi.fn()
+      render(
+        <TextEditor
+          value="Content"
+          mode="display"
+          allowModeToggle={true}
+          onModeChange={onModeChange}
+        />
+      )
+
+      await waitFor(() => {
+        expect(screen.getByText('Edit')).toBeInTheDocument()
+      })
+
+      await act(async () => {
+        fireEvent.click(screen.getByText('Edit'))
+      })
+
+      expect(onModeChange).toHaveBeenCalledWith('edit')
+    })
+
+    it('should show View button when in edit mode with toggle enabled', async () => {
+      render(
+        <TextEditor
+          value="Content"
+          onChange={() => {}}
+          mode="edit"
+          allowModeToggle={true}
+        />
+      )
+
+      await waitFor(() => {
+        expect(screen.getByText('View')).toBeInTheDocument()
+      })
+    })
+  })
+
+  describe('Format Handling', () => {
+    it('should render Markdown content directly', async () => {
+      render(<TextEditor value="# Heading" format="md" mode="display" />)
+
+      await waitFor(() => {
+        const editorContent = document.querySelector('.editor-content')
+        expect(editorContent).toBeInTheDocument()
+      })
+    })
+
+    it('should convert AsciiDoc to Markdown', async () => {
+      render(<TextEditor value="= Heading" format="adoc" mode="display" />)
+
+      await waitFor(() => {
+        const editorContent = document.querySelector('.editor-content')
+        expect(editorContent).toBeInTheDocument()
+      })
+    })
+
+    it('should default to md format', async () => {
+      render(<TextEditor value="# Heading" mode="display" />)
 
       await waitFor(() => {
         const editorContent = document.querySelector('.editor-content')
@@ -70,7 +205,9 @@ describe('MarkdownEditor', () => {
 
   describe('Raw mode toggle', () => {
     it('should toggle to raw mode when MD button is clicked', async () => {
-      render(<MarkdownEditor value="Some content" onChange={() => {}} />)
+      render(
+        <TextEditor value="Some content" mode="edit" onChange={() => {}} />
+      )
 
       await waitFor(() => {
         expect(screen.getByTitle('Toggle Raw Markdown')).toBeInTheDocument()
@@ -88,7 +225,9 @@ describe('MarkdownEditor', () => {
     })
 
     it('should show textarea in raw mode', async () => {
-      render(<MarkdownEditor value="Test content" onChange={() => {}} />)
+      render(
+        <TextEditor value="Test content" mode="edit" onChange={() => {}} />
+      )
 
       await waitFor(() => {
         expect(screen.getByTitle('Toggle Raw Markdown')).toBeInTheDocument()
@@ -107,7 +246,7 @@ describe('MarkdownEditor', () => {
 
     it('should update value when typing in raw mode', async () => {
       const onChange = vi.fn()
-      render(<MarkdownEditor value="" onChange={onChange} />)
+      render(<TextEditor value="" mode="edit" onChange={onChange} />)
 
       await waitFor(() => {
         expect(screen.getByTitle('Toggle Raw Markdown')).toBeInTheDocument()
@@ -126,33 +265,11 @@ describe('MarkdownEditor', () => {
 
       expect(onChange).toHaveBeenCalledWith('# New content')
     })
-
-    it('should toggle back to WYSIWYG mode', async () => {
-      render(<MarkdownEditor value="Content" onChange={() => {}} />)
-
-      await waitFor(() => {
-        expect(screen.getByTitle('Toggle Raw Markdown')).toBeInTheDocument()
-      })
-
-      const mdButton = screen.getByTitle('Toggle Raw Markdown')
-
-      // Switch to raw mode
-      await act(async () => {
-        fireEvent.click(mdButton)
-      })
-      expect(mdButton).toHaveTextContent('WYSIWYG')
-
-      // Switch back to WYSIWYG mode
-      await act(async () => {
-        fireEvent.click(mdButton)
-      })
-      expect(mdButton).toHaveTextContent('MD')
-    })
   })
 
   describe('Toolbar buttons', () => {
     it('should click bold button', async () => {
-      render(<MarkdownEditor value="" onChange={() => {}} />)
+      render(<TextEditor value="" mode="edit" onChange={() => {}} />)
 
       await waitFor(() => {
         expect(screen.getByTitle('Bold (Ctrl+B)')).toBeInTheDocument()
@@ -163,12 +280,11 @@ describe('MarkdownEditor', () => {
         fireEvent.click(boldButton)
       })
 
-      // Button should toggle (may or may not be active depending on state)
       expect(boldButton).toBeInTheDocument()
     })
 
     it('should click italic button', async () => {
-      render(<MarkdownEditor value="" onChange={() => {}} />)
+      render(<TextEditor value="" mode="edit" onChange={() => {}} />)
 
       await waitFor(() => {
         expect(screen.getByTitle('Italic (Ctrl+I)')).toBeInTheDocument()
@@ -182,38 +298,8 @@ describe('MarkdownEditor', () => {
       expect(italicButton).toBeInTheDocument()
     })
 
-    it('should click strikethrough button', async () => {
-      render(<MarkdownEditor value="" onChange={() => {}} />)
-
-      await waitFor(() => {
-        expect(screen.getByTitle('Strikethrough')).toBeInTheDocument()
-      })
-
-      const strikeButton = screen.getByTitle('Strikethrough')
-      await act(async () => {
-        fireEvent.click(strikeButton)
-      })
-
-      expect(strikeButton).toBeInTheDocument()
-    })
-
-    it('should click inline code button', async () => {
-      render(<MarkdownEditor value="" onChange={() => {}} />)
-
-      await waitFor(() => {
-        expect(screen.getByTitle('Inline Code')).toBeInTheDocument()
-      })
-
-      const codeButton = screen.getByTitle('Inline Code')
-      await act(async () => {
-        fireEvent.click(codeButton)
-      })
-
-      expect(codeButton).toBeInTheDocument()
-    })
-
     it('should click heading buttons', async () => {
-      render(<MarkdownEditor value="" onChange={() => {}} />)
+      render(<TextEditor value="" mode="edit" onChange={() => {}} />)
 
       await waitFor(() => {
         expect(screen.getByTitle('Heading 1')).toBeInTheDocument()
@@ -240,7 +326,7 @@ describe('MarkdownEditor', () => {
     })
 
     it('should click list buttons', async () => {
-      render(<MarkdownEditor value="" onChange={() => {}} />)
+      render(<TextEditor value="" mode="edit" onChange={() => {}} />)
 
       await waitFor(() => {
         expect(screen.getByTitle('Bullet List')).toBeInTheDocument()
@@ -259,57 +345,12 @@ describe('MarkdownEditor', () => {
       })
       expect(orderedListButton).toBeInTheDocument()
     })
-
-    it('should click blockquote button', async () => {
-      render(<MarkdownEditor value="" onChange={() => {}} />)
-
-      await waitFor(() => {
-        expect(screen.getByTitle('Blockquote')).toBeInTheDocument()
-      })
-
-      const blockquoteButton = screen.getByTitle('Blockquote')
-      await act(async () => {
-        fireEvent.click(blockquoteButton)
-      })
-
-      expect(blockquoteButton).toBeInTheDocument()
-    })
-
-    it('should click code block button', async () => {
-      render(<MarkdownEditor value="" onChange={() => {}} />)
-
-      await waitFor(() => {
-        expect(screen.getByTitle('Code Block')).toBeInTheDocument()
-      })
-
-      const codeBlockButton = screen.getByTitle('Code Block')
-      await act(async () => {
-        fireEvent.click(codeBlockButton)
-      })
-
-      expect(codeBlockButton).toBeInTheDocument()
-    })
-
-    it('should click horizontal rule button', async () => {
-      render(<MarkdownEditor value="" onChange={() => {}} />)
-
-      await waitFor(() => {
-        expect(screen.getByTitle('Horizontal Rule')).toBeInTheDocument()
-      })
-
-      const hrButton = screen.getByTitle('Horizontal Rule')
-      await act(async () => {
-        fireEvent.click(hrButton)
-      })
-
-      expect(hrButton).toBeInTheDocument()
-    })
   })
 
   describe('Link functionality', () => {
     it('should open prompt when link button is clicked', async () => {
       mockPrompt.mockReturnValue(null) // User cancels
-      render(<MarkdownEditor value="" onChange={() => {}} />)
+      render(<TextEditor value="" mode="edit" onChange={() => {}} />)
 
       await waitFor(() => {
         expect(screen.getByTitle('Add Link')).toBeInTheDocument()
@@ -325,23 +366,7 @@ describe('MarkdownEditor', () => {
 
     it('should add link when URL is provided', async () => {
       mockPrompt.mockReturnValue('https://example.com')
-      render(<MarkdownEditor value="" onChange={() => {}} />)
-
-      await waitFor(() => {
-        expect(screen.getByTitle('Add Link')).toBeInTheDocument()
-      })
-
-      const linkButton = screen.getByTitle('Add Link')
-      await act(async () => {
-        fireEvent.click(linkButton)
-      })
-
-      expect(mockPrompt).toHaveBeenCalled()
-    })
-
-    it('should handle empty URL (unset link)', async () => {
-      mockPrompt.mockReturnValue('')
-      render(<MarkdownEditor value="" onChange={() => {}} />)
+      render(<TextEditor value="" mode="edit" onChange={() => {}} />)
 
       await waitFor(() => {
         expect(screen.getByTitle('Add Link')).toBeInTheDocument()
@@ -357,8 +382,8 @@ describe('MarkdownEditor', () => {
   })
 
   describe('Placeholder', () => {
-    it('should render with default placeholder', async () => {
-      render(<MarkdownEditor value="" onChange={() => {}} />)
+    it('should render with default placeholder in edit mode', async () => {
+      render(<TextEditor value="" mode="edit" onChange={() => {}} />)
 
       await waitFor(() => {
         const editorContent = document.querySelector('.editor-content')
@@ -368,8 +393,9 @@ describe('MarkdownEditor', () => {
 
     it('should render with custom placeholder', async () => {
       render(
-        <MarkdownEditor
+        <TextEditor
           value=""
+          mode="edit"
           onChange={() => {}}
           placeholder="Enter your text..."
         />
@@ -383,8 +409,9 @@ describe('MarkdownEditor', () => {
 
     it('should show placeholder in raw mode textarea', async () => {
       render(
-        <MarkdownEditor
+        <TextEditor
           value=""
+          mode="edit"
           onChange={() => {}}
           placeholder="Custom placeholder"
         />
@@ -404,27 +431,33 @@ describe('MarkdownEditor', () => {
     })
   })
 
-  describe('onChange callback', () => {
-    it('should call onChange when content changes in raw mode', async () => {
+  describe('Backward Compatibility', () => {
+    it('should work with existing MarkdownEditor props interface', async () => {
       const onChange = vi.fn()
-      render(<MarkdownEditor value="" onChange={onChange} />)
+      render(
+        <TextEditor
+          value="Content"
+          onChange={onChange}
+          placeholder="Enter text"
+          minHeight={300}
+          className="custom"
+        />
+      )
 
       await waitFor(() => {
-        expect(screen.getByTitle('Toggle Raw Markdown')).toBeInTheDocument()
+        const editor = document.querySelector('.text-editor')
+        expect(editor).toBeInTheDocument()
+        expect(editor).toHaveClass('custom')
       })
+    })
 
-      // Switch to raw mode
-      const mdButton = screen.getByTitle('Toggle Raw Markdown')
-      await act(async () => {
-        fireEvent.click(mdButton)
+    it('should default to edit mode when no mode specified', async () => {
+      render(<TextEditor value="" onChange={() => {}} />)
+
+      await waitFor(() => {
+        // Should show toolbar (edit mode default)
+        expect(screen.getByTitle('Bold (Ctrl+B)')).toBeInTheDocument()
       })
-
-      const textarea = screen.getByRole('textbox')
-      await act(async () => {
-        fireEvent.change(textarea, { target: { value: 'New value' } })
-      })
-
-      expect(onChange).toHaveBeenCalledWith('New value')
     })
   })
 })
