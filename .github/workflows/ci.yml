@@ -81,7 +81,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: tupe12334/centy
+          images: centy-io/centy
           tags: |
             type=raw,value=latest
             type=sha,prefix=

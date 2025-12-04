@@ -1,8 +1,8 @@
 # Centy App
 
-A React application built with Vite and TypeScript, deployed as a Docker image to `tupe12334/centy`.
+A React application built with Vite and TypeScript, deployed as a Docker image to `centy-io/centy`.
 
-**[📚 Documentation](https://docs.centy.io)** | **[Report an Issue](https://github.com/tupe12334/centy-app/issues)**
+**[📚 Documentation](https://docs.centy.io)** | **[Report an Issue](https://github.com/centy-io/centy-app/issues)**
 
 ## Prerequisites
 
@@ -56,7 +56,7 @@ docker run -p 3000:80 centy-app
 This project uses GitHub Actions for CI/CD:
 
 - **On Pull Request**: Runs tests, linting, and build
-- **On Push to Main**: Runs tests, then builds and pushes Docker image to `tupe12334/centy`
+- **On Push to Main**: Runs tests, then builds and pushes Docker image to `centy-io/centy`
 
 ### Required Secrets
 
