@@ -34,6 +34,7 @@
     "lcov",
     "lowlight",
     "msdownload",
+    "opennextjs",
     "pnpm",
     "protobuf",
     "protoc",
@@ -52,6 +53,6 @@
     "coverage",
     "pnpm-lock.yaml",
     "*.min.js",
-    "src/gen/**"
+    "gen/**"
   ]
 }
