@@ -11,9 +11,6 @@ importers:
       '@bufbuild/protobuf':
         specifier: ^2.10.1
         version: 2.10.1
-      '@centy-io/assets':
-        specifier: ^0.0.1
-        version: 0.0.1
       '@connectrpc/connect':
         specifier: ^2.1.1
         version: 2.1.1(@bufbuild/protobuf@2.10.1)
@@ -672,10 +669,6 @@ packages:
 
   '@bufbuild/protoplugin@2.10.1':
     resolution: {integrity: sha512-imB8dKEjrOnG5+XqVS+CeYn924WGLU/g3wogKhk11XtX9y9NJ7432OS6h24asuBbLrQcPdEZ6QkfM7KeOCeeyQ==}
-
-  '@centy-io/assets@0.0.1':
-    resolution: {integrity: sha512-gNbLxupnbSyS2d/sHJHriEP+geDX8Yu0FcrD7BcZC0vld/nLigK0qK78WhU1VRwrmO5NZjcwPG9bP73nMOmiiw==}
-    engines: {node: '>=20.0.0'}
 
   '@cloudflare/kv-asset-handler@0.4.1':
     resolution: {integrity: sha512-Nu8ahitGFFJztxUml9oD/DLb7Z28C8cd8F46IVQ7y5Btz575pvMY8AqZsXkX7Gds29eCKdMgIHjIvzskHgPSFg==}
@@ -7027,8 +7020,6 @@ snapshots:
       typescript: 5.4.5
     transitivePeerDependencies:
       - supports-color
-
-  '@centy-io/assets@0.0.1': {}
 
   '@cloudflare/kv-asset-handler@0.4.1':
     dependencies:
