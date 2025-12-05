@@ -40,8 +40,10 @@ export function DaemonDisconnectedOverlay() {
           Please start the daemon to use the application.
         </p>
         <div className="daemon-disconnected-instructions">
-          <p>To start the daemon, run:</p>
-          <code>centy-daemon</code>
+          <p>If you haven't installed Centy yet, run:</p>
+          <code>npm install -g centy</code>
+          <p>Then start the daemon:</p>
+          <code>npx centy start</code>
         </div>
         <button className="daemon-retry-button" onClick={checkNow}>
           Retry Connection
