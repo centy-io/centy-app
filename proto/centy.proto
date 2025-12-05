@@ -94,6 +94,9 @@ service CentyDaemon {
   // Get info about a specific project
   rpc GetProjectInfo(GetProjectInfoRequest) returns (GetProjectInfoResponse);
 
+  // Set project favorite status
+  rpc SetProjectFavorite(SetProjectFavoriteRequest) returns (SetProjectFavoriteResponse);
+
   // ============ Version RPCs ============
 
   // Get daemon version info
@@ -534,6 +537,7 @@ message ProjectInfo {
   uint32 doc_count = 5;           // Fetched live from .centy/docs/
   bool initialized = 6;           // Fetched live (manifest exists)
   string name = 7;                // Fetched live (directory name)
+  bool is_favorite = 8;           // User-marked favorite status
 }
 
 message ListProjectsRequest {
@@ -573,6 +577,17 @@ message GetProjectInfoResponse {
   ProjectInfo project = 2;
 }
 
+message SetProjectFavoriteRequest {
+  string project_path = 1;
+  bool is_favorite = 2;
+}
+
+message SetProjectFavoriteResponse {
+  bool success = 1;
+  string error = 2;
+  ProjectInfo project = 3;        // The updated project info
+}
+
 // ============ Version Messages ============
 
 message GetDaemonInfoRequest {}
@@ -580,6 +595,7 @@ message GetDaemonInfoRequest {}
 message DaemonInfo {
   string version = 1;                    // Current daemon version (e.g., "0.1.0")
   repeated string available_versions = 2; // All versions we can migrate to
+  string binary_path = 3;                // Absolute path to the running daemon binary
 }
 
 message GetProjectVersionRequest {

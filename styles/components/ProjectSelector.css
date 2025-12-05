@@ -306,3 +306,24 @@
   color: #fff;
   border-color: #555;
 }
+
+/* Favorite button */
+.favorite-btn {
+  background: transparent;
+  border: none;
+  color: #555;
+  cursor: pointer;
+  font-size: 1.1em;
+  padding: 2px 4px;
+  transition: all 0.2s;
+  line-height: 1;
+}
+
+.favorite-btn:hover {
+  color: #fbbf24;
+  transform: scale(1.1);
+}
+
+.favorite-btn.active {
+  color: #fbbf24;
+}

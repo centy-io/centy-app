@@ -15,6 +15,7 @@ import { create } from '@bufbuild/protobuf'
 import {
   ListProjectsRequestSchema,
   RegisterProjectRequestSchema,
+  SetProjectFavoriteRequestSchema,
   type ProjectInfo,
 } from '@/gen/centy_pb'
 import {
@@ -125,8 +126,36 @@ export function ProjectSelector() {
     }
   }
 
-  // Filter out archived projects
-  const visibleProjects = projects.filter(p => !isArchived(p.path))
+  const handleToggleFavorite = async (
+    e: React.MouseEvent,
+    project: ProjectInfo
+  ) => {
+    e.stopPropagation() // Prevent selecting the project
+    try {
+      const request = create(SetProjectFavoriteRequestSchema, {
+        projectPath: project.path,
+        isFavorite: !project.isFavorite,
+      })
+      const response = await centyClient.setProjectFavorite(request)
+      if (response.success && response.project) {
+        // Update the project in the list
+        setProjects(prev =>
+          prev.map(p => (p.path === project.path ? response.project! : p))
+        )
+      }
+    } catch (err) {
+      console.error('Failed to toggle favorite:', err)
+    }
+  }
+
+  // Filter out archived projects and sort favorites first
+  const visibleProjects = projects
+    .filter(p => !isArchived(p.path))
+    .sort((a, b) => {
+      if (a.isFavorite && !b.isFavorite) return -1
+      if (!a.isFavorite && b.isFavorite) return 1
+      return 0
+    })
 
   return (
     <div className="project-selector-container">
@@ -182,6 +211,17 @@ export function ProjectSelector() {
                   onClick={() => handleSelectProject(project)}
                 >
                   <div className="project-item-main">
+                    <button
+                      className={`favorite-btn ${project.isFavorite ? 'active' : ''}`}
+                      onClick={e => handleToggleFavorite(e, project)}
+                      title={
+                        project.isFavorite
+                          ? 'Remove from favorites'
+                          : 'Add to favorites'
+                      }
+                    >
+                      {project.isFavorite ? '★' : '☆'}
+                    </button>
                     <span className="project-item-name">{project.name}</span>
                     {!project.initialized && (
                       <span className="project-badge not-initialized">
