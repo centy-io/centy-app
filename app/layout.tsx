@@ -8,6 +8,10 @@ import '@/styles/globals.css'
 export const metadata: Metadata = {
   title: 'Centy',
   description: 'Local-first issue and documentation tracker',
+  icons: {
+    icon: '/icon.svg',
+    apple: '/apple-icon.svg',
+  },
 }
 
 export default function RootLayout({
