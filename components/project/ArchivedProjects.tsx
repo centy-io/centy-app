@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { centyClient } from '@/lib/grpc/client'
 import { create } from '@bufbuild/protobuf'
 import {
@@ -18,6 +19,7 @@ export function ArchivedProjects() {
   const { archivedPaths, unarchiveProject, removeArchivedProject } =
     useArchivedProjects()
   const { setProjectPath, setIsInitialized } = useProject()
+  const router = useRouter()
   const [allProjects, setAllProjects] = useState<ProjectInfo[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -60,6 +62,7 @@ export function ArchivedProjects() {
     unarchiveProject(project.path)
     setProjectPath(project.path)
     setIsInitialized(project.initialized)
+    router.push('/issues')
   }
 
   const handleRemove = async (projectPath: string) => {
