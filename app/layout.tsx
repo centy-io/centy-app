@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Providers } from '@/components/providers/Providers'
 import { DaemonDisconnectedOverlay } from '@/components/layout/DaemonDisconnectedOverlay'
+import { MobileNotSupportedOverlay } from '@/components/layout/MobileNotSupportedOverlay'
 import { Header } from '@/components/layout/Header'
 import { ClientRouteHandler } from '@/components/layout/ClientRouteHandler'
 import '@/styles/globals.css'
@@ -24,6 +25,7 @@ export default function RootLayout({
       <body>
         <Providers>
           <DaemonDisconnectedOverlay />
+          <MobileNotSupportedOverlay />
           <div className="app">
             <Header />
             <main>
