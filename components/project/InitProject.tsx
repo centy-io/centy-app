@@ -26,30 +26,55 @@ export function InitProject() {
   const [selectedRestore, setSelectedRestore] = useState<Set<string>>(new Set())
   const [selectedReset, setSelectedReset] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(false)
-  const [supportsDirectoryPicker, setSupportsDirectoryPicker] = useState(false)
+  const [isTauri, setIsTauri] = useState(false)
+  const [hasWebDirectoryPicker, setHasWebDirectoryPicker] = useState(false)
 
   useEffect(() => {
     // Check if running in Tauri (which supports full path directory picking)
-    setSupportsDirectoryPicker(
-      typeof window !== 'undefined' && '__TAURI__' in window
+    setIsTauri(typeof window !== 'undefined' && '__TAURI__' in window)
+    // Check if browser supports File System Access API
+    setHasWebDirectoryPicker(
+      typeof window !== 'undefined' && 'showDirectoryPicker' in window
     )
   }, [])
 
   const handleSelectFolder = useCallback(async () => {
     try {
-      const selected = await open({
-        directory: true,
-        multiple: false,
-        title: 'Select Project Folder',
-      })
-      if (selected) {
-        setProjectPath(selected as string)
+      if (isTauri) {
+        // Use Tauri's native file picker (provides full path)
+        const selected = await open({
+          directory: true,
+          multiple: false,
+          title: 'Select Project Folder',
+        })
+        if (selected) {
+          setProjectPath(selected as string)
+        }
+      } else if (hasWebDirectoryPicker) {
+        // Use File System Access API for web browsers
+        // Note: This API only provides folder name, not full path
+        const dirHandle = await window.showDirectoryPicker({
+          mode: 'read',
+        })
+        // Prepend the folder name to help user identify the selection
+        // User will need to complete the full path
+        const currentPath = projectPath.trim()
+        if (currentPath && !currentPath.endsWith('/')) {
+          setProjectPath(`${currentPath}/${dirHandle.name}`)
+        } else if (currentPath) {
+          setProjectPath(`${currentPath}${dirHandle.name}`)
+        } else {
+          // Show folder name as hint when no path is entered
+          setProjectPath(dirHandle.name)
+        }
       }
     } catch (err) {
       // User cancelled or error occurred
-      console.error('Failed to select folder:', err)
+      if ((err as Error).name !== 'AbortError') {
+        console.error('Failed to select folder:', err)
+      }
     }
-  }, [])
+  }, [isTauri, hasWebDirectoryPicker, projectPath])
 
   const handleQuickInit = useCallback(async () => {
     if (!projectPath.trim()) return
@@ -252,7 +277,7 @@ export function InitProject() {
                 onChange={e => setProjectPath(e.target.value)}
                 placeholder="/path/to/your/project"
               />
-              {supportsDirectoryPicker && (
+              {(isTauri || hasWebDirectoryPicker) && (
                 <button
                   type="button"
                   onClick={handleSelectFolder}
