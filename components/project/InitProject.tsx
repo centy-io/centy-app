@@ -28,6 +28,7 @@ export function InitProject() {
   const [loading, setLoading] = useState(false)
   const [isTauri, setIsTauri] = useState(false)
   const [hasWebDirectoryPicker, setHasWebDirectoryPicker] = useState(false)
+  const [showPathHint, setShowPathHint] = useState(false)
 
   useEffect(() => {
     // Check if running in Tauri (which supports full path directory picking)
@@ -56,17 +57,9 @@ export function InitProject() {
         const dirHandle = await window.showDirectoryPicker({
           mode: 'read',
         })
-        // Prepend the folder name to help user identify the selection
-        // User will need to complete the full path
-        const currentPath = projectPath.trim()
-        if (currentPath && !currentPath.endsWith('/')) {
-          setProjectPath(`${currentPath}/${dirHandle.name}`)
-        } else if (currentPath) {
-          setProjectPath(`${currentPath}${dirHandle.name}`)
-        } else {
-          // Show folder name as hint when no path is entered
-          setProjectPath(dirHandle.name)
-        }
+        // Show the folder name - user will need to provide the full path
+        setProjectPath(dirHandle.name)
+        setShowPathHint(true)
       }
     } catch (err) {
       // User cancelled or error occurred
@@ -274,7 +267,10 @@ export function InitProject() {
                 id="project-path"
                 type="text"
                 value={projectPath}
-                onChange={e => setProjectPath(e.target.value)}
+                onChange={e => {
+                  setProjectPath(e.target.value)
+                  setShowPathHint(false)
+                }}
                 placeholder="/path/to/your/project"
               />
               {(isTauri || hasWebDirectoryPicker) && (
@@ -287,6 +283,12 @@ export function InitProject() {
                 </button>
               )}
             </div>
+            {showPathHint && (
+              <p className="path-hint">
+                Enter the full path to your project folder (e.g.,
+                /Users/you/projects/{projectPath})
+              </p>
+            )}
           </div>
 
           <div className="actions">

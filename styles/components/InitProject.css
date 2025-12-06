@@ -80,6 +80,16 @@
   border-color: var(--color-gray-300);
 }
 
+.path-hint {
+  margin-top: var(--space-2);
+  font-size: 0.8125rem;
+  color: var(--color-gray-500);
+  background: var(--color-gray-50);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--color-primary);
+}
+
 /* Actions */
 .actions {
   display: flex;
