@@ -81,9 +81,9 @@ export function CreatePR() {
 
         if (response.success) {
           if (pendingAssets.length > 0 && assetUploaderRef.current) {
-            await assetUploaderRef.current.uploadAllPending(response.id)
+            await assetUploaderRef.current.uploadAllPending(response.id, true)
           }
-          router.push(`/pull-requests/${response.prNumber}`)
+          router.push(`/pull-requests/${response.id}`)
         } else {
           setError(response.error || 'Failed to create pull request')
         }

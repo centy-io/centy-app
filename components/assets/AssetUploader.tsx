@@ -39,12 +39,13 @@ export interface PendingAsset {
 }
 
 export interface AssetUploaderHandle {
-  uploadAllPending: (issueId: string) => Promise<boolean>
+  uploadAllPending: (targetId: string, isPrUpload?: boolean) => Promise<boolean>
 }
 
 interface AssetUploaderProps {
   projectPath: string
   issueId?: string
+  prId?: string
   onAssetsChange?: (assets: Asset[]) => void
   onPendingChange?: (pending: PendingAsset[]) => void
   initialAssets?: Asset[]
@@ -58,6 +59,7 @@ export const AssetUploader = forwardRef<
   {
     projectPath,
     issueId,
+    prId,
     onAssetsChange,
     onPendingChange,
     initialAssets = [],
@@ -65,6 +67,8 @@ export const AssetUploader = forwardRef<
   },
   ref
 ) {
+  // Determine which ID to use for uploads
+  const targetId = issueId || prId
   const [assets, setAssets] = useState<Asset[]>(initialAssets)
   const [pendingAssets, setPendingAssets] = useState<PendingAsset[]>([])
   const [isDragging, setIsDragging] = useState(false)
@@ -91,12 +95,17 @@ export const AssetUploader = forwardRef<
 
   // Upload single asset to server
   const uploadAsset = useCallback(
-    async (pending: PendingAsset, targetIssueId: string): Promise<boolean> => {
+    async (
+      pending: PendingAsset,
+      uploadTargetId: string,
+      isPr = false
+    ): Promise<boolean> => {
       try {
         const arrayBuffer = await pending.file.arrayBuffer()
         const request = create(AddAssetRequestSchema, {
           projectPath,
-          issueId: targetIssueId,
+          issueId: isPr ? '' : uploadTargetId,
+          prId: isPr ? uploadTargetId : '',
           filename: pending.file.name,
           data: new Uint8Array(arrayBuffer),
         })
@@ -171,7 +180,7 @@ export const AssetUploader = forwardRef<
           id: crypto.randomUUID(),
           file,
           preview,
-          status: mode === 'edit' && issueId ? 'uploading' : 'pending',
+          status: mode === 'edit' && targetId ? 'uploading' : 'pending',
         }
 
         setPendingAssets(prev => {
@@ -180,18 +189,18 @@ export const AssetUploader = forwardRef<
           return updated
         })
 
-        // If in edit mode with existing issue, upload immediately
-        if (mode === 'edit' && issueId) {
-          await uploadAsset(pending, issueId)
+        // If in edit mode with existing issue/PR, upload immediately
+        if (mode === 'edit' && targetId) {
+          await uploadAsset(pending, targetId, !!prId)
         }
       }
     },
-    [mode, issueId, onPendingChange, validateFile, uploadAsset]
+    [mode, targetId, prId, onPendingChange, validateFile, uploadAsset]
   )
 
-  // Upload all pending assets (called when issue is created in create mode)
+  // Upload all pending assets (called when issue/PR is created in create mode)
   const uploadAllPending = useCallback(
-    async (targetIssueId: string): Promise<boolean> => {
+    async (uploadTargetId: string, isPrUpload = false): Promise<boolean> => {
       let allSuccess = true
       const pendingToUpload = pendingAssets.filter(p => p.status === 'pending')
 
@@ -201,7 +210,7 @@ export const AssetUploader = forwardRef<
             p.id === pending.id ? { ...p, status: 'uploading' as const } : p
           )
         )
-        const success = await uploadAsset(pending, targetIssueId)
+        const success = await uploadAsset(pending, uploadTargetId, isPrUpload)
         if (!success) allSuccess = false
       }
       return allSuccess
@@ -217,12 +226,13 @@ export const AssetUploader = forwardRef<
   // Remove asset from server
   const removeAsset = useCallback(
     async (filename: string) => {
-      if (!issueId) return
+      if (!targetId) return
 
       try {
         const request = create(DeleteAssetRequestSchema, {
           projectPath,
-          issueId,
+          issueId: prId ? '' : targetId,
+          prId: prId ? targetId : '',
           filename,
         })
         const response = await centyClient.deleteAsset(request)

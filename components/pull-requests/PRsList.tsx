@@ -98,7 +98,7 @@ export function PRsList() {
       columnHelper.accessor('displayNumber', {
         header: '#',
         cell: info => {
-          const prId = info.row.original.prNumber
+          const prId = info.row.original.id
           const meta = info.table.options.meta as {
             copyToClipboard: (text: string, label?: string) => Promise<boolean>
           }
@@ -126,7 +126,7 @@ export function PRsList() {
         header: 'Title',
         cell: info => (
           <Link
-            href={`/pull-requests/${info.row.original.prNumber}`}
+            href={`/pull-requests/${info.row.original.id}`}
             className="pr-title-link"
           >
             {info.getValue()}
@@ -429,7 +429,7 @@ export function PRsList() {
                 </thead>
                 <tbody>
                   {table.getRowModel().rows.map(row => (
-                    <tr key={row.original.prNumber}>
+                    <tr key={row.original.id}>
                       {row.getVisibleCells().map(cell => (
                         <td
                           key={cell.id}
