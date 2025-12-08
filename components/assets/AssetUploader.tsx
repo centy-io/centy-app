@@ -250,7 +250,7 @@ export const AssetUploader = forwardRef<
         setError(err instanceof Error ? err.message : 'Failed to remove asset')
       }
     },
-    [projectPath, issueId, onAssetsChange]
+    [projectPath, targetId, prId, onAssetsChange]
   )
 
   // Remove pending asset
