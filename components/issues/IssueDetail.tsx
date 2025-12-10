@@ -18,6 +18,7 @@ import { useCopyToClipboard } from '@/hooks/useCopyToClipboard'
 import { useLastSeenIssues } from '@/hooks/useLastSeenIssues'
 import { AssetUploader } from '@/components/assets/AssetUploader'
 import { TextEditor } from '@/components/shared/TextEditor'
+import { useSaveShortcut } from '@/hooks/useSaveShortcut'
 
 const STATUS_OPTIONS = ['open', 'in-progress', 'closed'] as const
 
@@ -236,6 +237,11 @@ export function IssueDetail({ issueNumber }: IssueDetailProps) {
       setEditPriority(issue.metadata?.priority || 2)
     }
   }
+
+  useSaveShortcut({
+    onSave: handleSave,
+    enabled: isEditing && !saving && !!editTitle.trim(),
+  })
 
   const getPriorityClass = (priorityLabel: string) => {
     switch (priorityLabel.toLowerCase()) {

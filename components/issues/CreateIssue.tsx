@@ -16,6 +16,7 @@ import {
   type PendingAsset,
 } from '@/components/assets/AssetUploader'
 import { TextEditor } from '@/components/shared/TextEditor'
+import { useSaveShortcut } from '@/hooks/useSaveShortcut'
 
 export function CreateIssue() {
   const router = useRouter()
@@ -91,6 +92,17 @@ export function CreateIssue() {
     },
     [projectPath, title, description, priority, pendingAssets, router]
   )
+
+  const handleKeyboardSave = useCallback(() => {
+    if (!projectPath.trim() || !title.trim() || loading) return
+    const syntheticEvent = { preventDefault: () => {} } as React.FormEvent
+    handleSubmit(syntheticEvent)
+  }, [projectPath, title, loading, handleSubmit])
+
+  useSaveShortcut({
+    onSave: handleKeyboardSave,
+    enabled: !!projectPath.trim() && !!title.trim() && !loading,
+  })
 
   if (!projectPath) {
     return (
