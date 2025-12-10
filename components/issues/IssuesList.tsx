@@ -11,6 +11,7 @@ import {
 } from '@/gen/centy_pb'
 import { useProject } from '@/components/providers/ProjectProvider'
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard'
+import { useLastSeenIssues } from '@/hooks/useLastSeenIssues'
 import {
   useReactTable,
   getCoreRowModel,
@@ -81,6 +82,7 @@ export function IssuesList() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const { copyToClipboard } = useCopyToClipboard()
+  const { lastSeenMap } = useLastSeenIssues()
 
   // TanStack Table state - default sort by createdAt descending (newest first)
   const [sorting, setSorting] = useState<SortingState>([
@@ -213,8 +215,33 @@ export function IssuesList() {
           return new Date(a).getTime() - new Date(b).getTime()
         },
       }),
+      columnHelper.accessor(row => lastSeenMap[row.id] || 0, {
+        id: 'lastSeen',
+        header: 'Last Seen',
+        cell: info => {
+          const timestamp = info.getValue()
+          if (!timestamp) {
+            return <span className="issue-not-seen">Never</span>
+          }
+          return (
+            <span className="issue-date-text">
+              {new Date(timestamp).toLocaleDateString()}
+            </span>
+          )
+        },
+        enableColumnFilter: false,
+        sortingFn: (rowA, rowB) => {
+          const a = rowA.getValue('lastSeen') as number
+          const b = rowB.getValue('lastSeen') as number
+          // Never-seen issues (0) sort to bottom
+          if (a === 0 && b === 0) return 0
+          if (a === 0) return 1
+          if (b === 0) return -1
+          return a - b
+        },
+      }),
     ],
-    []
+    [lastSeenMap]
   )
 
   const table = useReactTable({

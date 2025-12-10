@@ -408,6 +408,13 @@ select.column-filter {
   white-space: nowrap;
 }
 
+/* Last Seen - Never viewed */
+.issue-not-seen {
+  color: var(--color-gray-400);
+  font-size: 0.875rem;
+  font-style: italic;
+}
+
 /* Status & Priority Badges */
 .status-badge,
 .priority-badge {
@@ -491,13 +498,17 @@ select.column-filter {
     justify-content: center;
   }
 
+  /* Hide Created (5th) and Last Seen (6th) columns on tablet */
   .issues-table th:nth-child(5),
-  .issues-table td:nth-child(5) {
+  .issues-table td:nth-child(5),
+  .issues-table th:nth-child(6),
+  .issues-table td:nth-child(6) {
     display: none;
   }
 }
 
 @media (max-width: 480px) {
+  /* Hide Priority (4th) column on mobile */
   .issues-table th:nth-child(4),
   .issues-table td:nth-child(4) {
     display: none;

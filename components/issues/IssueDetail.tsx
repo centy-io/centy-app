@@ -15,6 +15,7 @@ import {
 } from '@/gen/centy_pb'
 import { useProject } from '@/components/providers/ProjectProvider'
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard'
+import { useLastSeenIssues } from '@/hooks/useLastSeenIssues'
 import { AssetUploader } from '@/components/assets/AssetUploader'
 import { TextEditor } from '@/components/shared/TextEditor'
 
@@ -28,6 +29,7 @@ export function IssueDetail({ issueNumber }: IssueDetailProps) {
   const router = useRouter()
   const { projectPath } = useProject()
   const { copyToClipboard } = useCopyToClipboard()
+  const { recordLastSeen } = useLastSeenIssues()
 
   const [issue, setIssue] = useState<Issue | null>(null)
   const [loading, setLoading] = useState(true)
@@ -94,6 +96,13 @@ export function IssueDetail({ issueNumber }: IssueDetailProps) {
     fetchIssue()
     fetchAssets()
   }, [fetchIssue, fetchAssets])
+
+  // Record last seen timestamp when issue is viewed
+  useEffect(() => {
+    if (issue?.id) {
+      recordLastSeen(issue.id)
+    }
+  }, [issue?.id, recordLastSeen])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
