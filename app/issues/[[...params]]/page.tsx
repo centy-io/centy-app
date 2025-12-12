@@ -1,7 +1,7 @@
 import { IssuesPageClient } from './IssuesPageClient'
 
 export async function generateStaticParams() {
-  return [{ params: undefined }]
+  return [{ params: [] }]
 }
 
 export default function Page() {
