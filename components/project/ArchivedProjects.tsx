@@ -187,7 +187,9 @@ export function ArchivedProjects() {
             <li key={project.path} className="archived-item">
               <div className="archived-item-info">
                 <span className="archived-item-name">{project.name}</span>
-                <span className="archived-item-path">{project.path}</span>
+                <span className="archived-item-path">
+                  {project.displayPath}
+                </span>
                 <div className="archived-item-stats">
                   <span>Issues: {project.issueCount}</span>
                   <span>Docs: {project.docCount}</span>

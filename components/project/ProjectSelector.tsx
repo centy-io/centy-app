@@ -237,8 +237,11 @@ export function ProjectSelector() {
                     </button>
                   </div>
                   <div className="project-item-details">
-                    <span className="project-item-path" title={project.path}>
-                      {project.path}
+                    <span
+                      className="project-item-path"
+                      title={project.displayPath}
+                    >
+                      {project.displayPath}
                     </span>
                     <div className="project-item-stats">
                       {project.initialized && (
