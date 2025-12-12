@@ -8,6 +8,7 @@ export default tseslint.config(
     ignores: [
       'out',
       '.next',
+      '.open-next',
       'node_modules',
       'coverage',
       'gen',
