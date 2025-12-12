@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect, useMemo } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { centyClient } from '@/lib/grpc/client'
 import { create } from '@bufbuild/protobuf'
 import {
@@ -26,6 +27,12 @@ import {
   MultiSelect,
   type MultiSelectOption,
 } from '@/components/shared/MultiSelect'
+import {
+  ContextMenu,
+  type ContextMenuItem,
+} from '@/components/shared/ContextMenu'
+import { MoveModal } from '@/components/shared/MoveModal'
+import { DuplicateModal } from '@/components/shared/DuplicateModal'
 
 const STATUS_OPTIONS: MultiSelectOption[] = [
   { value: 'open', label: 'Open' },
@@ -77,12 +84,23 @@ const getStatusClass = (status: string) => {
 }
 
 export function IssuesList() {
+  const router = useRouter()
   const { projectPath, isInitialized, setIsInitialized } = useProject()
   const [issues, setIssues] = useState<Issue[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const { copyToClipboard } = useCopyToClipboard()
   const { lastSeenMap } = useLastSeenIssues()
+
+  // Context menu state
+  const [contextMenu, setContextMenu] = useState<{
+    x: number
+    y: number
+    issue: Issue
+  } | null>(null)
+  const [showMoveModal, setShowMoveModal] = useState(false)
+  const [showDuplicateModal, setShowDuplicateModal] = useState(false)
+  const [selectedIssue, setSelectedIssue] = useState<Issue | null>(null)
 
   // TanStack Table state - default sort by createdAt descending (newest first)
   const [sorting, setSorting] = useState<SortingState>([
@@ -315,6 +333,64 @@ export function IssuesList() {
     }
   }, [isInitialized, fetchIssues])
 
+  const handleContextMenu = useCallback((e: React.MouseEvent, issue: Issue) => {
+    e.preventDefault()
+    setContextMenu({ x: e.clientX, y: e.clientY, issue })
+  }, [])
+
+  const handleMoveIssue = useCallback((issue: Issue) => {
+    setSelectedIssue(issue)
+    setShowMoveModal(true)
+    setContextMenu(null)
+  }, [])
+
+  const handleDuplicateIssue = useCallback((issue: Issue) => {
+    setSelectedIssue(issue)
+    setShowDuplicateModal(true)
+    setContextMenu(null)
+  }, [])
+
+  const handleMoved = useCallback((targetProjectPath: string) => {
+    // Redirect to target project
+    window.location.href = `/?project=${encodeURIComponent(targetProjectPath)}`
+  }, [])
+
+  const handleDuplicated = useCallback(
+    (newIssueId: string, targetProjectPath: string) => {
+      if (targetProjectPath === projectPath) {
+        // Same project - refresh and navigate to new issue
+        fetchIssues()
+        router.push(`/issues/${newIssueId}`)
+      } else {
+        // Different project - redirect
+        window.location.href = `/?project=${encodeURIComponent(targetProjectPath)}`
+      }
+      setShowDuplicateModal(false)
+      setSelectedIssue(null)
+    },
+    [projectPath, router, fetchIssues]
+  )
+
+  const contextMenuItems: ContextMenuItem[] = contextMenu
+    ? [
+        {
+          label: 'View',
+          onClick: () => {
+            router.push(`/issues/${contextMenu.issue.id}`)
+            setContextMenu(null)
+          },
+        },
+        {
+          label: 'Move',
+          onClick: () => handleMoveIssue(contextMenu.issue),
+        },
+        {
+          label: 'Duplicate',
+          onClick: () => handleDuplicateIssue(contextMenu.issue),
+        },
+      ]
+    : []
+
   return (
     <div className="issues-list">
       <div className="issues-header">
@@ -437,7 +513,11 @@ export function IssuesList() {
                 </thead>
                 <tbody>
                   {table.getRowModel().rows.map(row => (
-                    <tr key={row.original.issueNumber}>
+                    <tr
+                      key={row.original.issueNumber}
+                      onContextMenu={e => handleContextMenu(e, row.original)}
+                      className="context-menu-row"
+                    >
                       {row.getVisibleCells().map(cell => (
                         <td
                           key={cell.id}
@@ -464,6 +544,43 @@ export function IssuesList() {
             </div>
           )}
         </>
+      )}
+
+      {contextMenu && (
+        <ContextMenu
+          items={contextMenuItems}
+          x={contextMenu.x}
+          y={contextMenu.y}
+          onClose={() => setContextMenu(null)}
+        />
+      )}
+
+      {showMoveModal && selectedIssue && (
+        <MoveModal
+          entityType="issue"
+          entityId={selectedIssue.id}
+          entityTitle={selectedIssue.title}
+          currentProjectPath={projectPath}
+          onClose={() => {
+            setShowMoveModal(false)
+            setSelectedIssue(null)
+          }}
+          onMoved={handleMoved}
+        />
+      )}
+
+      {showDuplicateModal && selectedIssue && (
+        <DuplicateModal
+          entityType="issue"
+          entityId={selectedIssue.id}
+          entityTitle={selectedIssue.title}
+          currentProjectPath={projectPath}
+          onClose={() => {
+            setShowDuplicateModal(false)
+            setSelectedIssue(null)
+          }}
+          onDuplicated={handleDuplicated}
+        />
       )}
     </div>
   )

@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { centyClient } from '@/lib/grpc/client'
 import { create } from '@bufbuild/protobuf'
 import {
@@ -12,8 +13,15 @@ import {
 } from '@/gen/centy_pb'
 import { useProject } from '@/components/providers/ProjectProvider'
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard'
+import {
+  ContextMenu,
+  type ContextMenuItem,
+} from '@/components/shared/ContextMenu'
+import { MoveModal } from '@/components/shared/MoveModal'
+import { DuplicateModal } from '@/components/shared/DuplicateModal'
 
 export function DocsList() {
+  const router = useRouter()
   const { projectPath, isInitialized, setIsInitialized } = useProject()
   const { copyToClipboard } = useCopyToClipboard()
   const [docs, setDocs] = useState<Doc[]>([])
@@ -21,6 +29,16 @@ export function DocsList() {
   const [error, setError] = useState<string | null>(null)
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)
   const [deleting, setDeleting] = useState(false)
+
+  // Context menu state
+  const [contextMenu, setContextMenu] = useState<{
+    x: number
+    y: number
+    doc: Doc
+  } | null>(null)
+  const [showMoveModal, setShowMoveModal] = useState(false)
+  const [showDuplicateModal, setShowDuplicateModal] = useState(false)
+  const [selectedDoc, setSelectedDoc] = useState<Doc | null>(null)
 
   const checkInitialized = useCallback(
     async (path: string) => {
@@ -107,6 +125,64 @@ export function DocsList() {
     }
   }, [isInitialized, fetchDocs])
 
+  const handleContextMenu = useCallback((e: React.MouseEvent, doc: Doc) => {
+    e.preventDefault()
+    setContextMenu({ x: e.clientX, y: e.clientY, doc })
+  }, [])
+
+  const handleMoveDoc = useCallback((doc: Doc) => {
+    setSelectedDoc(doc)
+    setShowMoveModal(true)
+    setContextMenu(null)
+  }, [])
+
+  const handleDuplicateDoc = useCallback((doc: Doc) => {
+    setSelectedDoc(doc)
+    setShowDuplicateModal(true)
+    setContextMenu(null)
+  }, [])
+
+  const handleMoved = useCallback((targetProjectPath: string) => {
+    // Redirect to target project
+    window.location.href = `/?project=${encodeURIComponent(targetProjectPath)}`
+  }, [])
+
+  const handleDuplicated = useCallback(
+    (newSlug: string, targetProjectPath: string) => {
+      if (targetProjectPath === projectPath) {
+        // Same project - refresh and navigate to new doc
+        fetchDocs()
+        router.push(`/docs/${newSlug}`)
+      } else {
+        // Different project - redirect
+        window.location.href = `/?project=${encodeURIComponent(targetProjectPath)}`
+      }
+      setShowDuplicateModal(false)
+      setSelectedDoc(null)
+    },
+    [projectPath, router, fetchDocs]
+  )
+
+  const contextMenuItems: ContextMenuItem[] = contextMenu
+    ? [
+        {
+          label: 'View',
+          onClick: () => {
+            router.push(`/docs/${contextMenu.doc.slug}`)
+            setContextMenu(null)
+          },
+        },
+        {
+          label: 'Move',
+          onClick: () => handleMoveDoc(contextMenu.doc),
+        },
+        {
+          label: 'Duplicate',
+          onClick: () => handleDuplicateDoc(contextMenu.doc),
+        },
+      ]
+    : []
+
   return (
     <div className="docs-list">
       <div className="docs-header">
@@ -154,7 +230,11 @@ export function DocsList() {
           ) : (
             <div className="docs-grid">
               {docs.map(doc => (
-                <div key={doc.slug} className="doc-card">
+                <div
+                  key={doc.slug}
+                  className="doc-card context-menu-row"
+                  onContextMenu={e => handleContextMenu(e, doc)}
+                >
                   <div className="doc-card-content">
                     <Link href={`/docs/${doc.slug}`} className="doc-card-link">
                       <h3 className="doc-title">{doc.title}</h3>
@@ -219,6 +299,44 @@ export function DocsList() {
             </div>
           )}
         </>
+      )}
+
+      {contextMenu && (
+        <ContextMenu
+          items={contextMenuItems}
+          x={contextMenu.x}
+          y={contextMenu.y}
+          onClose={() => setContextMenu(null)}
+        />
+      )}
+
+      {showMoveModal && selectedDoc && (
+        <MoveModal
+          entityType="doc"
+          entityId={selectedDoc.slug}
+          entityTitle={selectedDoc.title}
+          currentProjectPath={projectPath}
+          onClose={() => {
+            setShowMoveModal(false)
+            setSelectedDoc(null)
+          }}
+          onMoved={handleMoved}
+        />
+      )}
+
+      {showDuplicateModal && selectedDoc && (
+        <DuplicateModal
+          entityType="doc"
+          entityId={selectedDoc.slug}
+          entityTitle={selectedDoc.title}
+          entitySlug={selectedDoc.slug}
+          currentProjectPath={projectPath}
+          onClose={() => {
+            setShowDuplicateModal(false)
+            setSelectedDoc(null)
+          }}
+          onDuplicated={handleDuplicated}
+        />
       )}
     </div>
   )

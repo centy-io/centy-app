@@ -15,6 +15,8 @@ import { useProject } from '@/components/providers/ProjectProvider'
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard'
 import { TextEditor } from '@/components/shared/TextEditor'
 import { LinkSection } from '@/components/shared/LinkSection'
+import { MoveModal } from '@/components/shared/MoveModal'
+import { DuplicateModal } from '@/components/shared/DuplicateModal'
 
 interface DocDetailProps {
   slug: string
@@ -35,6 +37,8 @@ export function DocDetail({ slug }: DocDetailProps) {
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [showMoveModal, setShowMoveModal] = useState(false)
+  const [showDuplicateModal, setShowDuplicateModal] = useState(false)
 
   const fetchDoc = useCallback(async () => {
     if (!projectPath || !slug) {
@@ -141,6 +145,25 @@ export function DocDetail({ slug }: DocDetailProps) {
     }
   }
 
+  const handleMoved = useCallback((targetProjectPath: string) => {
+    // Redirect to the target project
+    window.location.href = `/?project=${encodeURIComponent(targetProjectPath)}`
+  }, [])
+
+  const handleDuplicated = useCallback(
+    (newSlug: string, targetProjectPath: string) => {
+      if (targetProjectPath === projectPath) {
+        // Same project - navigate to the new doc
+        router.push(`/docs/${newSlug}`)
+      } else {
+        // Different project - redirect to target project
+        window.location.href = `/?project=${encodeURIComponent(targetProjectPath)}`
+      }
+      setShowDuplicateModal(false)
+    },
+    [projectPath, router]
+  )
+
   if (!projectPath) {
     return (
       <div className="doc-detail">
@@ -194,6 +217,18 @@ export function DocDetail({ slug }: DocDetailProps) {
             <>
               <button onClick={() => setIsEditing(true)} className="edit-btn">
                 Edit
+              </button>
+              <button
+                onClick={() => setShowMoveModal(true)}
+                className="move-btn"
+              >
+                Move
+              </button>
+              <button
+                onClick={() => setShowDuplicateModal(true)}
+                className="duplicate-btn"
+              >
+                Duplicate
               </button>
               <button
                 onClick={() => setShowDeleteConfirm(true)}
@@ -317,6 +352,29 @@ export function DocDetail({ slug }: DocDetailProps) {
           </>
         )}
       </div>
+
+      {showMoveModal && doc && (
+        <MoveModal
+          entityType="doc"
+          entityId={doc.slug}
+          entityTitle={doc.title}
+          currentProjectPath={projectPath}
+          onClose={() => setShowMoveModal(false)}
+          onMoved={handleMoved}
+        />
+      )}
+
+      {showDuplicateModal && doc && (
+        <DuplicateModal
+          entityType="doc"
+          entityId={doc.slug}
+          entityTitle={doc.title}
+          entitySlug={doc.slug}
+          currentProjectPath={projectPath}
+          onClose={() => setShowDuplicateModal(false)}
+          onDuplicated={handleDuplicated}
+        />
+      )}
     </div>
   )
 }

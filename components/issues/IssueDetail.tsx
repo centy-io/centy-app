@@ -19,6 +19,8 @@ import { useLastSeenIssues } from '@/hooks/useLastSeenIssues'
 import { AssetUploader } from '@/components/assets/AssetUploader'
 import { TextEditor } from '@/components/shared/TextEditor'
 import { LinkSection } from '@/components/shared/LinkSection'
+import { MoveModal } from '@/components/shared/MoveModal'
+import { DuplicateModal } from '@/components/shared/DuplicateModal'
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
 
 const STATUS_OPTIONS = ['open', 'in-progress', 'closed'] as const
@@ -47,6 +49,8 @@ export function IssueDetail({ issueNumber }: IssueDetailProps) {
   const [showStatusDropdown, setShowStatusDropdown] = useState(false)
   const [updatingStatus, setUpdatingStatus] = useState(false)
   const [assets, setAssets] = useState<Asset[]>([])
+  const [showMoveModal, setShowMoveModal] = useState(false)
+  const [showDuplicateModal, setShowDuplicateModal] = useState(false)
   const statusDropdownRef = useRef<HTMLDivElement>(null)
 
   const fetchIssue = useCallback(async () => {
@@ -239,6 +243,25 @@ export function IssueDetail({ issueNumber }: IssueDetailProps) {
     }
   }
 
+  const handleMoved = useCallback((targetProjectPath: string) => {
+    // Redirect to the issue in the target project
+    window.location.href = `/?project=${encodeURIComponent(targetProjectPath)}`
+  }, [])
+
+  const handleDuplicated = useCallback(
+    (newIssueId: string, targetProjectPath: string) => {
+      if (targetProjectPath === projectPath) {
+        // Same project - navigate to the new issue
+        router.push(`/issues/${newIssueId}`)
+      } else {
+        // Different project - redirect to target project
+        window.location.href = `/?project=${encodeURIComponent(targetProjectPath)}`
+      }
+      setShowDuplicateModal(false)
+    },
+    [projectPath, router]
+  )
+
   useSaveShortcut({
     onSave: handleSave,
     enabled: isEditing && !saving && !!editTitle.trim(),
@@ -331,6 +354,18 @@ export function IssueDetail({ issueNumber }: IssueDetailProps) {
             <>
               <button onClick={() => setIsEditing(true)} className="edit-btn">
                 Edit
+              </button>
+              <button
+                onClick={() => setShowMoveModal(true)}
+                className="move-btn"
+              >
+                Move
+              </button>
+              <button
+                onClick={() => setShowDuplicateModal(true)}
+                className="duplicate-btn"
+              >
+                Duplicate
               </button>
               <button
                 onClick={() => setShowDeleteConfirm(true)}
@@ -550,6 +585,28 @@ export function IssueDetail({ issueNumber }: IssueDetailProps) {
           </>
         )}
       </div>
+
+      {showMoveModal && issue && (
+        <MoveModal
+          entityType="issue"
+          entityId={issue.id}
+          entityTitle={issue.title}
+          currentProjectPath={projectPath}
+          onClose={() => setShowMoveModal(false)}
+          onMoved={handleMoved}
+        />
+      )}
+
+      {showDuplicateModal && issue && (
+        <DuplicateModal
+          entityType="issue"
+          entityId={issue.id}
+          entityTitle={issue.title}
+          currentProjectPath={projectPath}
+          onClose={() => setShowDuplicateModal(false)}
+          onDuplicated={handleDuplicated}
+        />
+      )}
     </div>
   )
 }

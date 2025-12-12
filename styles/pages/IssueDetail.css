@@ -49,6 +49,8 @@
 
 .edit-btn,
 .delete-btn,
+.move-btn,
+.duplicate-btn,
 .cancel-btn,
 .save-btn,
 .confirm-delete-btn {
@@ -65,6 +67,17 @@
 }
 
 .edit-btn:hover {
+  background: var(--color-gray-200);
+}
+
+.move-btn,
+.duplicate-btn {
+  background: var(--color-gray-100);
+  color: var(--color-gray-700);
+}
+
+.move-btn:hover,
+.duplicate-btn:hover {
   background: var(--color-gray-200);
 }
 
