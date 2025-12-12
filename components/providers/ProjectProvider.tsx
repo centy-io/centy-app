@@ -6,6 +6,7 @@ import {
   useState,
   useCallback,
   useEffect,
+  useRef,
   type ReactNode,
 } from 'react'
 import { useSearchParams, useRouter, usePathname } from 'next/navigation'
@@ -40,6 +41,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
   const searchParams = useSearchParams()
   const router = useRouter()
   const pathname = usePathname()
+  const projectPathRef = useRef<string>('')
 
   const [projectPath, setProjectPathState] = useState(() => {
     // Priority: query string > localStorage > empty
@@ -69,17 +71,36 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     }
   }, [projectPath, searchParams, router, pathname])
 
-  const setProjectPath = useCallback((path: string) => {
-    setProjectPathState(path)
-    // Persist to localStorage
-    if (typeof window !== 'undefined') {
-      if (path) {
+  // Keep ref in sync for use in callback
+  useEffect(() => {
+    projectPathRef.current = projectPath
+  }, [projectPath])
+
+  const setProjectPath = useCallback(
+    (path: string) => {
+      // Navigate away from detail pages before changing project context
+      // This prevents race conditions where components fetch with wrong project
+      const isDetailPage = /^\/(issues|cycles|docs)\/[^/]+/.test(pathname)
+      if (isDetailPage && path !== projectPathRef.current && path) {
+        const basePath = pathname.split('/').slice(0, 2).join('/') // e.g., /issues
+        // Persist to localStorage and use window.location for immediate navigation
         localStorage.setItem(STORAGE_KEY, path)
-      } else {
-        localStorage.removeItem(STORAGE_KEY)
+        window.location.href = `${basePath}?${PROJECT_QUERY_PARAM}=${encodeURIComponent(path)}`
+        return
       }
-    }
-  }, [])
+
+      setProjectPathState(path)
+      // Persist to localStorage
+      if (typeof window !== 'undefined') {
+        if (path) {
+          localStorage.setItem(STORAGE_KEY, path)
+        } else {
+          localStorage.removeItem(STORAGE_KEY)
+        }
+      }
+    },
+    [pathname]
+  )
 
   return (
     <ProjectContext.Provider
