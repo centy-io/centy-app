@@ -1,6 +1,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { IssuesList } from './IssuesList'
+import type { Issue } from '@/gen/centy_pb'
 
 vi.mock('@/lib/grpc/client', () => ({
   centyClient: {
@@ -28,29 +29,30 @@ const createMockIssue = (
     priorityLabel?: string
     hasMetadata?: boolean
   } = {}
-) => ({
-  id: overrides.issueNumber || '0001',
-  displayNumber: overrides.displayNumber || 1,
-  issueNumber: overrides.issueNumber || '0001',
-  title: overrides.title || 'Test Issue',
-  description: overrides.description || 'Test description',
-  metadata:
-    overrides.hasMetadata === false
-      ? undefined
-      : {
-          displayNumber: overrides.displayNumber || 1,
-          status: overrides.status || 'open',
-          priority: overrides.priority || 2,
-          priorityLabel: overrides.priorityLabel || 'medium',
-          createdAt: '2024-01-15T10:00:00Z',
-          updatedAt: '2024-01-15T10:00:00Z',
-          customFields: {},
-          $typeName: 'centy.IssueMetadata' as const,
-          $unknown: undefined,
-        },
-  $typeName: 'centy.Issue' as const,
-  $unknown: undefined,
-})
+): Issue =>
+  ({
+    id: overrides.issueNumber || '0001',
+    displayNumber: overrides.displayNumber || 1,
+    issueNumber: overrides.issueNumber || '0001',
+    title: overrides.title || 'Test Issue',
+    description: overrides.description || 'Test description',
+    metadata:
+      overrides.hasMetadata === false
+        ? undefined
+        : {
+            displayNumber: overrides.displayNumber || 1,
+            status: overrides.status || 'open',
+            priority: overrides.priority || 2,
+            priorityLabel: overrides.priorityLabel || 'medium',
+            createdAt: '2024-01-15T10:00:00Z',
+            updatedAt: '2024-01-15T10:00:00Z',
+            customFields: {},
+            $typeName: 'centy.IssueMetadata' as const,
+            $unknown: undefined,
+          },
+    $typeName: 'centy.Issue' as const,
+    $unknown: undefined,
+  }) as Issue
 
 describe('IssuesList', () => {
   beforeEach(() => {
