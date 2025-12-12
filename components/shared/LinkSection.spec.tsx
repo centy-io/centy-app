@@ -57,6 +57,7 @@ describe('LinkSection', () => {
     const mockListLinks = vi.mocked(centyClient.listLinks)
     mockListLinks.mockResolvedValue({
       links: [],
+      totalCount: 0,
       $typeName: 'centy.ListLinksResponse',
       $unknown: undefined,
     })
@@ -80,6 +81,7 @@ describe('LinkSection', () => {
           targetType: LinkTargetType.DOC,
         }),
       ],
+      totalCount: 3,
       $typeName: 'centy.ListLinksResponse',
       $unknown: undefined,
     })
@@ -96,6 +98,7 @@ describe('LinkSection', () => {
     const mockListLinks = vi.mocked(centyClient.listLinks)
     mockListLinks.mockResolvedValue({
       links: [],
+      totalCount: 0,
       $typeName: 'centy.ListLinksResponse',
       $unknown: undefined,
     })
@@ -113,6 +116,7 @@ describe('LinkSection', () => {
     const mockListLinks = vi.mocked(centyClient.listLinks)
     mockListLinks.mockResolvedValue({
       links: [],
+      totalCount: 0,
       $typeName: 'centy.ListLinksResponse',
       $unknown: undefined,
     })
@@ -130,6 +134,7 @@ describe('LinkSection', () => {
     const mockListLinks = vi.mocked(centyClient.listLinks)
     mockListLinks.mockResolvedValue({
       links: [],
+      totalCount: 0,
       $typeName: 'centy.ListLinksResponse',
       $unknown: undefined,
     })
@@ -149,6 +154,7 @@ describe('LinkSection', () => {
     const mockListLinks = vi.mocked(centyClient.listLinks)
     mockListLinks.mockResolvedValue({
       links: [],
+      totalCount: 0,
       $typeName: 'centy.ListLinksResponse',
       $unknown: undefined,
     })
@@ -177,6 +183,7 @@ describe('LinkSection', () => {
 
     mockListLinks.mockResolvedValue({
       links: [createMockLink({ targetId: 'issue-1', linkType: 'blocks' })],
+      totalCount: 1,
       $typeName: 'centy.ListLinksResponse',
       $unknown: undefined,
     })
@@ -184,6 +191,7 @@ describe('LinkSection', () => {
     mockDeleteLink.mockResolvedValue({
       success: true,
       error: '',
+      deletedCount: 1,
       $typeName: 'centy.DeleteLinkResponse',
       $unknown: undefined,
     })
@@ -219,6 +227,7 @@ describe('LinkSection', () => {
 
     mockListLinks.mockResolvedValue({
       links: [createMockLink({ targetId: 'issue-1', linkType: 'blocks' })],
+      totalCount: 1,
       $typeName: 'centy.ListLinksResponse',
       $unknown: undefined,
     })
@@ -226,6 +235,7 @@ describe('LinkSection', () => {
     mockDeleteLink.mockResolvedValue({
       success: false,
       error: 'Cannot delete link',
+      deletedCount: 0,
       $typeName: 'centy.DeleteLinkResponse',
       $unknown: undefined,
     })
@@ -264,6 +274,7 @@ describe('LinkSection', () => {
           linkType: 'related',
         }),
       ],
+      totalCount: 3,
       $typeName: 'centy.ListLinksResponse',
       $unknown: undefined,
     })
@@ -305,6 +316,7 @@ describe('LinkSection', () => {
     const mockListLinks = vi.mocked(centyClient.listLinks)
     mockListLinks.mockResolvedValue({
       links: [createMockLink({ targetId: 'issue-1', linkType: 'blocks' })],
+      totalCount: 1,
       $typeName: 'centy.ListLinksResponse',
       $unknown: undefined,
     })

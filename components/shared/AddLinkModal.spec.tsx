@@ -73,14 +73,18 @@ describe('AddLinkModal', () => {
         {
           id: 'issue-1',
           displayNumber: 1,
+          issueNumber: 'issue-1',
           title: 'First Issue',
+          description: 'First issue description',
           $typeName: 'centy.Issue',
           $unknown: undefined,
         },
         {
           id: 'issue-2',
           displayNumber: 2,
+          issueNumber: 'issue-2',
           title: 'Second Issue',
+          description: 'Second issue description',
           $typeName: 'centy.Issue',
           $unknown: undefined,
         },
@@ -95,10 +99,12 @@ describe('AddLinkModal', () => {
         {
           slug: 'doc-1',
           title: 'First Doc',
+          content: 'First doc content',
           $typeName: 'centy.Doc',
           $unknown: undefined,
         },
       ],
+      totalCount: 1,
       $typeName: 'centy.ListDocsResponse',
       $unknown: undefined,
     })
@@ -109,10 +115,12 @@ describe('AddLinkModal', () => {
           id: 'pr-1',
           displayNumber: 100,
           title: 'First PR',
+          description: 'First PR description',
           $typeName: 'centy.PullRequest',
           $unknown: undefined,
         },
       ],
+      totalCount: 1,
       $typeName: 'centy.ListPrsResponse',
       $unknown: undefined,
     })
@@ -211,14 +219,18 @@ describe('AddLinkModal', () => {
         {
           id: 'entity-123', // Same as entityId
           displayNumber: 1,
+          issueNumber: 'entity-123',
           title: 'Self Issue',
+          description: 'Self issue description',
           $typeName: 'centy.Issue',
           $unknown: undefined,
         },
         {
           id: 'other-issue',
           displayNumber: 2,
+          issueNumber: 'other-issue',
           title: 'Other Issue',
+          description: 'Other issue description',
           $typeName: 'centy.Issue',
           $unknown: undefined,
         },
