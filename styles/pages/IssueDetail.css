@@ -487,6 +487,77 @@
   gap: var(--space-4);
 }
 
+/* Issue Assignees */
+.issue-assignees {
+  margin-top: var(--space-6);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-gray-200);
+}
+
+.issue-assignees h4 {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-gray-500);
+  margin: 0 0 var(--space-3);
+}
+
+/* Assignee Selector Component */
+.assignee-selector {
+  position: relative;
+}
+
+.assignee-selector.loading .loading-text,
+.assignee-selector.empty .empty-text {
+  color: var(--color-gray-500);
+  font-size: 0.875rem;
+  font-style: italic;
+}
+
+.assignee-selector.error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.assignee-selector.error .error-text {
+  color: var(--color-danger);
+  font-size: 0.875rem;
+}
+
+.assignee-selector.error .retry-btn {
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-bg-card);
+  color: var(--color-gray-600);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.assignee-selector.error .retry-btn:hover {
+  background: var(--color-gray-100);
+}
+
+.assignee-selector.updating {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.updating-indicator {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.75rem;
+  color: var(--color-gray-500);
+}
+
+.assignee-multi-select {
+  min-width: 200px;
+}
+
 /* Responsive */
 @media (max-width: 640px) {
   .issue-detail {

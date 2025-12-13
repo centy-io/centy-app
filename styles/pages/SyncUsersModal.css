@@ -1,0 +1,268 @@
+/* Sync Users Modal */
+.sync-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--space-4);
+}
+
+.sync-modal {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  max-width: 560px;
+  width: 100%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Header */
+.sync-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--color-gray-200);
+}
+
+.sync-modal-header h3 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-gray-900);
+}
+
+.close-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--color-gray-500);
+  font-size: 1.5rem;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.close-btn:hover {
+  background: var(--color-gray-100);
+  color: var(--color-gray-700);
+}
+
+/* Content */
+.sync-modal-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-5);
+}
+
+/* Loading State */
+.sync-loading {
+  text-align: center;
+  padding: var(--space-8);
+  color: var(--color-gray-500);
+}
+
+/* Error State */
+.sync-error {
+  text-align: center;
+  padding: var(--space-4);
+}
+
+.sync-error .error-message {
+  margin-bottom: var(--space-4);
+}
+
+.retry-btn {
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-bg-card);
+  color: var(--color-gray-700);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.retry-btn:hover {
+  background: var(--color-gray-100);
+}
+
+/* Preview States */
+.sync-empty,
+.sync-up-to-date {
+  text-align: center;
+  padding: var(--space-8);
+  color: var(--color-gray-500);
+}
+
+.sync-preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.sync-section h4 {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 var(--space-3);
+}
+
+.contributor-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.contributor-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+}
+
+.contributor-item.create {
+  background: var(--color-success-light);
+}
+
+.contributor-item.skip {
+  background: var(--color-gray-100);
+}
+
+.contributor-name {
+  font-weight: 500;
+  color: var(--color-gray-900);
+}
+
+.contributor-email {
+  font-size: 0.875rem;
+  color: var(--color-gray-500);
+  font-family: var(--font-mono);
+}
+
+/* Results */
+.sync-results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.sync-success-message {
+  text-align: center;
+  padding: var(--space-4);
+  background: var(--color-success-light);
+  color: var(--color-success-dark);
+  border-radius: var(--radius-lg);
+  font-weight: 500;
+}
+
+.result-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.result-item {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-family: var(--font-mono);
+}
+
+.result-item.created {
+  background: var(--color-success-light);
+  color: var(--color-success-dark);
+}
+
+.result-item.skipped {
+  background: var(--color-gray-100);
+  color: var(--color-gray-600);
+}
+
+.result-item.error {
+  background: var(--color-danger-light);
+  color: var(--color-danger-dark);
+}
+
+/* Actions */
+.sync-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border-top: 1px solid var(--color-gray-200);
+  background: var(--color-gray-50);
+}
+
+.sync-confirm-btn {
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.sync-confirm-btn:hover {
+  background: var(--color-primary-hover);
+}
+
+.done-btn {
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.done-btn:hover {
+  background: var(--color-primary-hover);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .sync-modal {
+    max-height: 90vh;
+  }
+
+  .contributor-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-1);
+  }
+
+  .sync-modal-actions {
+    flex-direction: column-reverse;
+  }
+
+  .sync-modal-actions button {
+    width: 100%;
+  }
+}

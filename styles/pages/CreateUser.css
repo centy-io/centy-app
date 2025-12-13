@@ -1,0 +1,221 @@
+/* Create User Page */
+.create-user {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: var(--space-8);
+}
+
+/* Header */
+.create-user-header {
+  margin-bottom: var(--space-6);
+}
+
+.create-user-header .back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-gray-600);
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+  margin-bottom: var(--space-4);
+}
+
+.create-user-header .back-link::before {
+  content: '\2190';
+}
+
+.create-user-header .back-link:hover {
+  color: var(--color-primary);
+}
+
+.create-user-header h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-gray-900);
+  margin: 0;
+}
+
+/* Form */
+.create-user-form {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-sm);
+}
+
+.create-user-form .form-group {
+  margin-bottom: var(--space-5);
+}
+
+.create-user-form label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-gray-700);
+  margin-bottom: var(--space-2);
+}
+
+.create-user-form label .required {
+  color: var(--color-danger);
+}
+
+.create-user-form input {
+  width: 100%;
+  padding: var(--space-3);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  font-size: 0.9375rem;
+  background: var(--color-bg-input);
+  color: var(--color-gray-900);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.create-user-form input::placeholder {
+  color: var(--color-gray-400);
+}
+
+.create-user-form input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.form-hint {
+  display: block;
+  margin-top: var(--space-1);
+  font-size: 0.8125rem;
+  color: var(--color-gray-500);
+}
+
+/* Git Usernames List in Create Form */
+.create-user-form .git-usernames-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.create-user-form .git-username-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.create-user-form .git-username-item input {
+  flex: 1;
+  padding: var(--space-2) var(--space-3);
+  font-size: 0.875rem;
+  font-family: var(--font-mono);
+}
+
+.create-user-form .remove-git-username-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-card);
+  color: var(--color-gray-500);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.create-user-form .remove-git-username-btn:hover {
+  background: var(--color-danger-light);
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+}
+
+.create-user-form .add-git-username-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-gray-50);
+  color: var(--color-gray-600);
+  border: 1px dashed var(--color-gray-300);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.create-user-form .add-git-username-btn:hover {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-gray-100);
+  margin-top: var(--space-6);
+}
+
+.form-actions .cancel-btn {
+  padding: var(--space-3) var(--space-5);
+  background: var(--color-bg-card);
+  color: var(--color-gray-700);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  text-decoration: none;
+  transition: all var(--transition-fast);
+}
+
+.form-actions .cancel-btn:hover {
+  background: var(--color-gray-100);
+}
+
+.form-actions .save-btn {
+  padding: var(--space-3) var(--space-5);
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.form-actions .save-btn:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+.form-actions .save-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .create-user {
+    padding: var(--space-5);
+  }
+
+  .create-user-form {
+    padding: var(--space-4);
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .form-actions .cancel-btn,
+  .form-actions .save-btn {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+}

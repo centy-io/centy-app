@@ -25,12 +25,16 @@
 @import './pages/ArchivedProjects.css';
 @import './pages/CreateDoc.css';
 @import './pages/CreateIssue.css';
+@import './pages/CreateUser.css';
 @import './pages/DocDetail.css';
 @import './pages/DocsList.css';
 @import './pages/IssueDetail.css';
 @import './pages/IssuesList.css';
 @import './pages/Settings.css';
 @import './pages/SharedAssets.css';
+@import './pages/SyncUsersModal.css';
+@import './pages/UserDetail.css';
+@import './pages/UsersList.css';
 
 /* Design System */
 :root {

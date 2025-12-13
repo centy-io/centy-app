@@ -98,6 +98,17 @@ service CentyDaemon {
   // List all shared assets
   rpc ListSharedAssets(ListSharedAssetsRequest) returns (ListAssetsResponse);
 
+  // ============ Plan RPCs ============
+
+  // Get an issue's plan
+  rpc GetPlan(GetPlanRequest) returns (GetPlanResponse);
+
+  // Update (or create) an issue's plan
+  rpc UpdatePlan(UpdatePlanRequest) returns (UpdatePlanResponse);
+
+  // Delete an issue's plan
+  rpc DeletePlan(DeletePlanRequest) returns (DeletePlanResponse);
+
   // ============ Project Registry RPCs ============
 
   // List all tracked projects
@@ -117,6 +128,32 @@ service CentyDaemon {
 
   // Set project archived status
   rpc SetProjectArchived(SetProjectArchivedRequest) returns (SetProjectArchivedResponse);
+
+  // Set project organization
+  rpc SetProjectOrganization(SetProjectOrganizationRequest) returns (SetProjectOrganizationResponse);
+
+  // Set project user-scope title (stored in ~/.centy/projects.json)
+  rpc SetProjectUserTitle(SetProjectUserTitleRequest) returns (SetProjectUserTitleResponse);
+
+  // Set project-scope title (stored in .centy/project.json)
+  rpc SetProjectTitle(SetProjectTitleRequest) returns (SetProjectTitleResponse);
+
+  // ============ Organization RPCs ============
+
+  // Create a new organization
+  rpc CreateOrganization(CreateOrganizationRequest) returns (CreateOrganizationResponse);
+
+  // List all organizations
+  rpc ListOrganizations(ListOrganizationsRequest) returns (ListOrganizationsResponse);
+
+  // Get a specific organization
+  rpc GetOrganization(GetOrganizationRequest) returns (GetOrganizationResponse);
+
+  // Update an organization
+  rpc UpdateOrganization(UpdateOrganizationRequest) returns (UpdateOrganizationResponse);
+
+  // Delete an organization
+  rpc DeleteOrganization(DeleteOrganizationRequest) returns (DeleteOrganizationResponse);
 
   // ============ Version RPCs ============
 
@@ -216,6 +253,34 @@ service CentyDaemon {
 
   // Get all available link types (builtin + custom)
   rpc GetAvailableLinkTypes(GetAvailableLinkTypesRequest) returns (GetAvailableLinkTypesResponse);
+
+  // ============ User RPCs ============
+
+  // Create a new user
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+
+  // Get a single user by ID
+  rpc GetUser(GetUserRequest) returns (User);
+
+  // List all users with optional filtering
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
+
+  // Update an existing user
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
+
+  // Delete a user
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
+
+  // Sync users from git history
+  rpc SyncUsers(SyncUsersRequest) returns (SyncUsersResponse);
+
+  // ============ Issue Assignee RPCs ============
+
+  // Assign users to an issue
+  rpc AssignIssue(AssignIssueRequest) returns (AssignIssueResponse);
+
+  // Unassign users from an issue
+  rpc UnassignIssue(UnassignIssueRequest) returns (UnassignIssueResponse);
 }
 
 // ============ Init Messages ============
@@ -229,6 +294,11 @@ message InitRequest {
 
   // Decisions for files that need user input (only used when force=false)
   ReconciliationDecisions decisions = 3;
+
+  // Optional: Initial configuration for the project
+  // If provided, config.json will be created with these settings merged with defaults
+  // Proto default values (0, "", []) mean "use CentyConfig default"
+  Config config = 4;
 }
 
 message InitResponse {
@@ -272,6 +342,10 @@ message ReconciliationPlan {
 message ExecuteReconciliationRequest {
   string project_path = 1;
   ReconciliationDecisions decisions = 2;
+
+  // Optional: Initial configuration for the project
+  // If provided, config.json will be created with these settings merged with defaults
+  Config config = 3;
 }
 
 message ReconciliationDecisions {
@@ -336,6 +410,7 @@ message Issue {
   string title = 4;
   string description = 5;
   IssueMetadata metadata = 6;
+  bool has_plan = 7;              // Whether issue has a plan.md file
 }
 
 message IssueMetadata {
@@ -349,6 +424,7 @@ message IssueMetadata {
   string priority_label = 7;      // Human-readable label (e.g., "high", "P1")
   bool compacted = 8;             // Whether issue has been compacted into features
   string compacted_at = 9;        // ISO timestamp when compacted (empty if not)
+  repeated string assignees = 10; // User IDs assigned to this issue
 }
 
 message GetIssueRequest {
@@ -689,7 +765,6 @@ message AddAssetRequest {
   string filename = 3;            // Filename to save as
   bytes data = 4;                 // Binary file data
   bool is_shared = 5;             // If true, store as shared asset (default: false)
-  string pr_id = 6;               // PR ID (for PR-specific assets)
 }
 
 message AddAssetResponse {
@@ -704,7 +779,6 @@ message ListAssetsRequest {
   string project_path = 1;
   string issue_id = 2;            // Issue ID to list assets for
   bool include_shared = 3;        // Include shared assets in result (default: false)
-  string pr_id = 4;               // PR ID to list assets for
 }
 
 message ListAssetsResponse {
@@ -717,7 +791,6 @@ message GetAssetRequest {
   string issue_id = 2;            // Issue ID (required for issue-specific assets)
   string filename = 3;            // Asset filename
   bool is_shared = 4;             // Whether to look for a shared asset
-  string pr_id = 5;               // PR ID (for PR-specific assets)
 }
 
 message GetAssetResponse {
@@ -732,7 +805,6 @@ message DeleteAssetRequest {
   string issue_id = 2;            // Issue ID (required for issue-specific assets)
   string filename = 3;            // Asset filename
   bool is_shared = 4;             // Whether to delete a shared asset
-  string pr_id = 5;               // PR ID (for PR-specific assets)
 }
 
 message DeleteAssetResponse {
@@ -747,6 +819,42 @@ message ListSharedAssetsRequest {
   string project_path = 1;
 }
 
+// ============ Plan Messages ============
+
+message GetPlanRequest {
+  string project_path = 1;
+  string issue_id = 2;            // Issue ID or display number
+}
+
+message GetPlanResponse {
+  bool exists = 1;                // Whether plan.md exists
+  string content = 2;             // Plan content (empty if not exists)
+  string updated_at = 3;          // ISO timestamp of last modification (empty if not exists)
+}
+
+message UpdatePlanRequest {
+  string project_path = 1;
+  string issue_id = 2;            // Issue ID or display number
+  string content = 3;             // New plan content
+}
+
+message UpdatePlanResponse {
+  bool success = 1;
+  string error = 2;
+  Manifest manifest = 3;
+}
+
+message DeletePlanRequest {
+  string project_path = 1;
+  string issue_id = 2;            // Issue ID or display number
+}
+
+message DeletePlanResponse {
+  bool success = 1;
+  string error = 2;
+  Manifest manifest = 3;
+}
+
 // ============ Project Registry Messages ============
 
 // Returned by API (enriched with live data from disk)
@@ -757,16 +865,22 @@ message ProjectInfo {
   uint32 issue_count = 4;         // Fetched live from .centy/issues/
   uint32 doc_count = 5;           // Fetched live from .centy/docs/
   bool initialized = 6;           // Fetched live (manifest exists)
-  string name = 7;                // Fetched live (directory name)
+  string name = 7;                // Resolved display name (user_title > project_title > directory name)
   bool is_favorite = 8;           // User-marked favorite status
   bool is_archived = 9;           // User-marked archived status
   string display_path = 10;       // Human-readable path with ~/ for home dir (use for display only)
+  string organization_slug = 11;  // Organization slug (empty if ungrouped)
+  string organization_name = 12;  // Organization display name (for convenience)
+  string user_title = 13;         // Custom title set by user (user-scope, from ~/.centy/projects.json)
+  string project_title = 14;      // Custom title set at project level (project-scope, from .centy/project.json)
 }
 
 message ListProjectsRequest {
   bool include_stale = 1;         // Include projects where path no longer exists
   bool include_uninitialized = 2; // Include projects without .centy manifest
   bool include_archived = 3;      // Include archived projects (default: false)
+  string organization_slug = 4;   // Filter by organization (empty = all)
+  bool ungrouped_only = 5;        // Only show projects without organization
 }
 
 message ListProjectsResponse {
@@ -822,6 +936,101 @@ message SetProjectArchivedResponse {
   bool success = 1;
   string error = 2;
   ProjectInfo project = 3;        // The updated project info
+}
+
+message SetProjectOrganizationRequest {
+  string project_path = 1;
+  string organization_slug = 2;   // Empty to remove from organization
+}
+
+message SetProjectOrganizationResponse {
+  bool success = 1;
+  string error = 2;
+  ProjectInfo project = 3;        // The updated project info
+}
+
+message SetProjectUserTitleRequest {
+  string project_path = 1;
+  string title = 2;               // Custom title (empty string to clear)
+}
+
+message SetProjectUserTitleResponse {
+  bool success = 1;
+  string error = 2;
+  ProjectInfo project = 3;        // The updated project info
+}
+
+message SetProjectTitleRequest {
+  string project_path = 1;
+  string title = 2;               // Custom title (empty string to clear)
+}
+
+message SetProjectTitleResponse {
+  bool success = 1;
+  string error = 2;
+  ProjectInfo project = 3;        // The updated project info
+}
+
+// ============ Organization Messages ============
+
+message Organization {
+  string slug = 1;                // Unique identifier (kebab-case)
+  string name = 2;                // Display name
+  string description = 3;         // Optional description
+  string created_at = 4;          // ISO timestamp
+  string updated_at = 5;          // ISO timestamp
+  uint32 project_count = 6;       // Number of projects in this org
+}
+
+message CreateOrganizationRequest {
+  string slug = 1;                // Unique slug (auto-generated from name if empty)
+  string name = 2;                // Display name (required)
+  string description = 3;         // Optional description
+}
+
+message CreateOrganizationResponse {
+  bool success = 1;
+  string error = 2;
+  Organization organization = 3;
+}
+
+message ListOrganizationsRequest {}
+
+message ListOrganizationsResponse {
+  repeated Organization organizations = 1;
+  int32 total_count = 2;
+}
+
+message GetOrganizationRequest {
+  string slug = 1;
+}
+
+message GetOrganizationResponse {
+  bool found = 1;
+  Organization organization = 2;
+}
+
+message UpdateOrganizationRequest {
+  string slug = 1;                // Current slug
+  string name = 2;                // New name (empty = don't change)
+  string description = 3;         // New description (empty = don't change)
+  string new_slug = 4;            // Rename slug (empty = keep current)
+}
+
+message UpdateOrganizationResponse {
+  bool success = 1;
+  string error = 2;
+  Organization organization = 3;
+}
+
+message DeleteOrganizationRequest {
+  string slug = 1;
+}
+
+message DeleteOrganizationResponse {
+  bool success = 1;
+  string error = 2;
+  uint32 unassigned_projects = 3; // Projects that are now ungrouped (should be 0 if block deletion)
 }
 
 // ============ Version Messages ============
@@ -1221,6 +1430,7 @@ enum LinkTargetType {
   LINK_TARGET_TYPE_ISSUE = 1;
   LINK_TARGET_TYPE_DOC = 2;
   LINK_TARGET_TYPE_PR = 3;
+  LINK_TARGET_TYPE_USER = 4;
 }
 
 // A link between two entities
@@ -1291,4 +1501,122 @@ message LinkTypeInfo {
 
 message GetAvailableLinkTypesResponse {
   repeated LinkTypeInfo link_types = 1;
+}
+
+// ============ User Messages ============
+
+// A project user/team member
+message User {
+  string id = 1;                        // Unique identifier (slug format, e.g., "john-doe")
+  string name = 2;                      // Display name
+  string email = 3;                     // Email address (optional)
+  repeated string git_usernames = 4;    // Git usernames (e.g., GitHub handles)
+  string created_at = 5;                // ISO timestamp
+  string updated_at = 6;                // ISO timestamp
+}
+
+message CreateUserRequest {
+  string project_path = 1;
+  string id = 2;                        // User ID (slug format)
+  string name = 3;                      // Display name (required)
+  string email = 4;                     // Email address (optional)
+  repeated string git_usernames = 5;    // Git usernames (optional)
+}
+
+message CreateUserResponse {
+  bool success = 1;
+  string error = 2;
+  User user = 3;                        // The created user
+  Manifest manifest = 4;
+}
+
+message GetUserRequest {
+  string project_path = 1;
+  string user_id = 2;                   // User ID (slug format)
+}
+
+message ListUsersRequest {
+  string project_path = 1;
+  string git_username = 2;              // Optional: filter by git username
+}
+
+message ListUsersResponse {
+  repeated User users = 1;
+  int32 total_count = 2;
+}
+
+message UpdateUserRequest {
+  string project_path = 1;
+  string user_id = 2;                   // User ID (slug format)
+  string name = 3;                      // Empty = don't update
+  string email = 4;                     // Empty = don't update
+  repeated string git_usernames = 5;    // Empty array = don't update
+}
+
+message UpdateUserResponse {
+  bool success = 1;
+  string error = 2;
+  User user = 3;                        // The updated user
+  Manifest manifest = 4;
+}
+
+message DeleteUserRequest {
+  string project_path = 1;
+  string user_id = 2;                   // User ID (slug format)
+}
+
+message DeleteUserResponse {
+  bool success = 1;
+  string error = 2;
+  Manifest manifest = 3;
+}
+
+// Git contributor found in history
+message GitContributor {
+  string name = 1;
+  string email = 2;
+}
+
+message SyncUsersRequest {
+  string project_path = 1;
+  bool dry_run = 2;                     // If true, don't create users, just show what would be created
+}
+
+message SyncUsersResponse {
+  bool success = 1;
+  string error = 2;
+  repeated string created = 3;          // User IDs that were created
+  repeated string skipped = 4;          // Emails that were skipped (already exist)
+  repeated string errors = 5;           // Errors during creation
+  repeated GitContributor would_create = 6;  // For dry run: users that would be created
+  repeated GitContributor would_skip = 7;    // For dry run: users that would be skipped
+  Manifest manifest = 8;
+}
+
+// ============ Issue Assignee Messages ============
+
+message AssignIssueRequest {
+  string project_path = 1;
+  string issue_id = 2;                  // Issue ID (UUID)
+  repeated string user_ids = 3;         // User IDs to assign
+}
+
+message AssignIssueResponse {
+  bool success = 1;
+  string error = 2;
+  Issue issue = 3;                      // The updated issue
+  Manifest manifest = 4;
+}
+
+message UnassignIssueRequest {
+  string project_path = 1;
+  string issue_id = 2;                  // Issue ID (UUID)
+  repeated string user_ids = 3;         // User IDs to unassign
+}
+
+message UnassignIssueResponse {
+  bool success = 1;
+  string error = 2;
+  Issue issue = 3;                      // The updated issue
+  Manifest manifest = 4;
 }

@@ -45,6 +45,12 @@ export function Header() {
           Assets
         </Link>
         <Link
+          href="/users"
+          className={pathname.startsWith('/users') ? 'active' : ''}
+        >
+          Users
+        </Link>
+        <Link
           href="/project/config"
           className={pathname === '/project/config' ? 'active' : ''}
         >
