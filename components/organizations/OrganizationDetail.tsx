@@ -49,7 +49,7 @@ export function OrganizationDetail({ orgSlug }: OrganizationDetailProps) {
       const request = create(GetOrganizationRequestSchema, { slug: orgSlug })
       const response = await centyClient.getOrganization(request)
 
-      if (!response.success || !response.organization) {
+      if (!response.found || !response.organization) {
         setError('Organization not found')
         setLoading(false)
         return
