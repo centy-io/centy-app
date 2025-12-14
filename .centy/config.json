@@ -3,7 +3,7 @@
   "priorityLevels": 3,
   "customFields": [],
   "defaults": {},
-  "allowedStates": ["open", "in-progress", "closed"],
+  "allowedStates": ["open", "in-progress", "closed", "for-validation"],
   "defaultState": "open",
   "stateColors": {},
   "priorityColors": {},
