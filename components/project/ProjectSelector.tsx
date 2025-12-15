@@ -354,7 +354,7 @@ export function ProjectSelector() {
                                 {project.isFavorite ? '★' : '☆'}
                               </button>
                               <span className="project-item-name">
-                                {getProjectDisplayName(project)}
+                                {project.name}
                               </span>
                               {!project.initialized && (
                                 <span className="project-badge not-initialized">
@@ -420,9 +420,7 @@ export function ProjectSelector() {
                     >
                       {project.isFavorite ? '★' : '☆'}
                     </button>
-                    <span className="project-item-name">
-                      {getProjectDisplayName(project)}
-                    </span>
+                    <span className="project-item-name">{project.name}</span>
                     {!project.initialized && (
                       <span className="project-badge not-initialized">
                         Not initialized
