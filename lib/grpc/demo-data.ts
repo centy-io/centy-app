@@ -20,6 +20,9 @@ import {
 // Demo project path - virtual path for demo mode
 export const DEMO_PROJECT_PATH = '/demo/centy-showcase'
 
+// Demo organization slug
+export const DEMO_ORG_SLUG = 'demo-org'
+
 // Demo organization
 export const DEMO_ORGANIZATION: Organization = {
   $typeName: 'centy.Organization',

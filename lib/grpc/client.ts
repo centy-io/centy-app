@@ -4,6 +4,7 @@ import { createClient, Client } from '@connectrpc/connect'
 import { createGrpcWebTransport } from '@connectrpc/connect-web'
 import { CentyDaemon } from '@/gen/centy_pb'
 import { mockHandlers } from './mock-handlers'
+import { DEMO_ORG_SLUG, DEMO_PROJECT_PATH } from './demo-data'
 
 const DEFAULT_DAEMON_URL = 'http://localhost:50051'
 const DAEMON_URL_STORAGE_KEY = 'centy_daemon_url'
@@ -22,6 +23,9 @@ export function enableDemoMode(): void {
   demoModeEnabled = true
   if (typeof window !== 'undefined') {
     sessionStorage.setItem(DEMO_MODE_STORAGE_KEY, 'true')
+    // Auto-navigate to demo org and project
+    localStorage.setItem('centy-selected-org', DEMO_ORG_SLUG)
+    localStorage.setItem('centy-project-path', DEMO_PROJECT_PATH)
   }
 }
 

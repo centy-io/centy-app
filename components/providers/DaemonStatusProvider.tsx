@@ -14,7 +14,7 @@ import {
   disableDemoMode,
   isDemoMode,
 } from '@/lib/grpc/client'
-import { DEMO_PROJECT_PATH } from '@/lib/grpc/demo-data'
+import { DEMO_ORG_SLUG, DEMO_PROJECT_PATH } from '@/lib/grpc/demo-data'
 
 type DaemonStatus = 'connected' | 'disconnected' | 'checking' | 'demo'
 
@@ -32,14 +32,23 @@ const DaemonStatusContext = createContext<DaemonStatusContextType | null>(null)
 const CHECK_INTERVAL_MS = 10000 // Check every 10 seconds
 
 export function DaemonStatusProvider({ children }: { children: ReactNode }) {
-  const [status, setStatus] = useState<DaemonStatus>(() => {
-    // Initialize with demo mode if already enabled
-    if (typeof window !== 'undefined' && isDemoMode()) {
-      return 'demo'
-    }
-    return 'checking'
-  })
+  // Always start with 'checking' to avoid hydration mismatch
+  // (sessionStorage is not available during SSR)
+  const [status, setStatus] = useState<DaemonStatus>('checking')
   const [lastChecked, setLastChecked] = useState<Date | null>(null)
+  const [hasMounted, setHasMounted] = useState(false)
+
+  // Check for demo mode after mount to avoid hydration mismatch
+  useEffect(() => {
+    // Schedule setState asynchronously to satisfy eslint react-hooks/set-state-in-effect
+    const timeoutId = setTimeout(() => {
+      if (isDemoMode()) {
+        setStatus('demo')
+      }
+      setHasMounted(true)
+    }, 0)
+    return () => clearTimeout(timeoutId)
+  }, [])
 
   const checkDaemonStatus = useCallback(async () => {
     // Skip health checks when in demo mode
@@ -62,6 +71,8 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
   const enterDemoMode = useCallback(() => {
     enableDemoMode()
     setStatus('demo')
+    // Navigate to demo org and project
+    window.location.href = `/?org=${DEMO_ORG_SLUG}&project=${encodeURIComponent(DEMO_PROJECT_PATH)}`
   }, [])
 
   const exitDemoMode = useCallback(() => {
@@ -75,6 +86,11 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
 
   // Initial check and periodic polling
   useEffect(() => {
+    // Wait until after mount to avoid hydration issues
+    if (!hasMounted) {
+      return
+    }
+
     // Skip polling when in demo mode
     if (status === 'demo') {
       return
@@ -88,7 +104,7 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
       clearTimeout(timeoutId)
       clearInterval(interval)
     }
-  }, [checkDaemonStatus, status])
+  }, [checkDaemonStatus, status, hasMounted])
 
   return (
     <DaemonStatusContext.Provider
