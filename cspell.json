@@ -38,6 +38,7 @@
     "codegenv",
     "commitlint",
     "commitlintrc",
+    "connectionfailed",
     "connectrpc",
     "contenteditable",
     "dockerhub",

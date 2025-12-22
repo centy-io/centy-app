@@ -15,8 +15,6 @@ export function DaemonDisconnectedOverlay() {
       <div className="daemon-disconnected-content">
         <div className="daemon-disconnected-icon">
           <svg
-            width="64"
-            height="64"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
