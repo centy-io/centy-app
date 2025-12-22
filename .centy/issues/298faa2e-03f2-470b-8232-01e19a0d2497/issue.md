@@ -1,0 +1,34 @@
+# Make Daemon Not Connected Dialog Mobile-Friendly
+
+## Overview
+
+The DaemonDisconnectedOverlay component needs to be made responsive for mobile devices.
+
+## Current Issues
+
+- Fixed 48px padding is too large on mobile screens
+- 480px max-width may exceed narrow device widths
+- 64x64px icon is too large for mobile
+- Buttons may not have adequate touch targets (44px minimum)
+- Font sizes not optimized for small screens
+
+## Files to Modify
+
+- `components/layout/DaemonDisconnectedOverlay.tsx`
+- `styles/components/DaemonDisconnectedOverlay.css`
+
+## Implementation Tasks
+
+- [ ] Add responsive padding (reduce on mobile)
+- [ ] Make max-width adaptive for narrow screens
+- [ ] Scale down icon size on mobile viewports
+- [ ] Ensure buttons meet 44px minimum touch target
+- [ ] Adjust font sizes for mobile readability
+- [ ] Add media queries for mobile breakpoints
+
+## Screenshot Testing
+
+- [ ] Add visual tests in `e2e/tests/visual/` for the overlay
+- [ ] Test mobile viewport (375x667) following existing patterns
+- [ ] Test tablet viewport (768x1024)
+- [ ] Verify overlay renders correctly in demo mode (daemon disconnected state)
