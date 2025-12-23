@@ -27,39 +27,24 @@ export function InitProject() {
   const [selectedReset, setSelectedReset] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(false)
   const [isTauri, setIsTauri] = useState(false)
-  const [hasWebDirectoryPicker, setHasWebDirectoryPicker] = useState(false)
-  const [showPathHint, setShowPathHint] = useState(false)
 
   useEffect(() => {
     // Check if running in Tauri (which supports full path directory picking)
     setIsTauri(typeof window !== 'undefined' && '__TAURI__' in window)
-    // Check if browser supports File System Access API
-    setHasWebDirectoryPicker(
-      typeof window !== 'undefined' && 'showDirectoryPicker' in window
-    )
   }, [])
 
   const handleSelectFolder = useCallback(async () => {
+    if (!isTauri) return
+
     try {
-      if (isTauri) {
-        // Use Tauri's native file picker (provides full path)
-        const selected = await open({
-          directory: true,
-          multiple: false,
-          title: 'Select Project Folder',
-        })
-        if (selected) {
-          setProjectPath(selected as string)
-        }
-      } else if (hasWebDirectoryPicker) {
-        // Use File System Access API for web browsers
-        // Note: This API only provides folder name, not full path
-        const dirHandle = await window.showDirectoryPicker({
-          mode: 'read',
-        })
-        // Show the folder name - user will need to provide the full path
-        setProjectPath(dirHandle.name)
-        setShowPathHint(true)
+      // Use Tauri's native file picker (provides full path)
+      const selected = await open({
+        directory: true,
+        multiple: false,
+        title: 'Select Project Folder',
+      })
+      if (selected) {
+        setProjectPath(selected as string)
       }
     } catch (err) {
       // User cancelled or error occurred
@@ -67,7 +52,7 @@ export function InitProject() {
         console.error('Failed to select folder:', err)
       }
     }
-  }, [isTauri, hasWebDirectoryPicker])
+  }, [isTauri])
 
   const handleQuickInit = useCallback(async () => {
     if (!projectPath.trim()) return
@@ -267,13 +252,10 @@ export function InitProject() {
                 id="project-path"
                 type="text"
                 value={projectPath}
-                onChange={e => {
-                  setProjectPath(e.target.value)
-                  setShowPathHint(false)
-                }}
+                onChange={e => setProjectPath(e.target.value)}
                 placeholder="/path/to/your/project"
               />
-              {(isTauri || hasWebDirectoryPicker) && (
+              {isTauri && (
                 <button
                   type="button"
                   onClick={handleSelectFolder}
@@ -283,12 +265,6 @@ export function InitProject() {
                 </button>
               )}
             </div>
-            {showPathHint && (
-              <p className="path-hint">
-                Enter the full path to your project folder (e.g.,
-                /Users/you/projects/{projectPath})
-              </p>
-            )}
           </div>
 
           <div className="actions">
