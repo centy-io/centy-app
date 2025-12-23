@@ -25,6 +25,7 @@ interface DaemonStatusContextType {
   enterDemoMode: () => void
   exitDemoMode: () => void
   demoProjectPath: string
+  vscodeAvailable: boolean | null // null = not yet checked
 }
 
 const DaemonStatusContext = createContext<DaemonStatusContextType | null>(null)
@@ -37,6 +38,7 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<DaemonStatus>('checking')
   const [lastChecked, setLastChecked] = useState<Date | null>(null)
   const [hasMounted, setHasMounted] = useState(false)
+  const [vscodeAvailable, setVscodeAvailable] = useState<boolean | null>(null)
 
   // Check for demo mode after mount to avoid hydration mismatch
   // Also check for ?demo=true URL param to auto-enable demo mode
@@ -63,16 +65,19 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
     // Skip health checks when in demo mode
     if (isDemoMode()) {
       setStatus('demo')
+      setVscodeAvailable(true) // Demo mode assumes VS Code is available
       return
     }
 
     setStatus('checking')
     try {
-      // Use listProjects as a health check - it's a lightweight call
-      await centyClient.listProjects({})
+      // Use getDaemonInfo as a health check - it also provides VS Code availability
+      const daemonInfo = await centyClient.getDaemonInfo({})
       setStatus('connected')
+      setVscodeAvailable(daemonInfo.vscodeAvailable)
     } catch {
       setStatus('disconnected')
+      setVscodeAvailable(null)
     }
     setLastChecked(new Date())
   }, [])
@@ -125,6 +130,7 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
         enterDemoMode,
         exitDemoMode,
         demoProjectPath: DEMO_PROJECT_PATH,
+        vscodeAvailable,
       }}
     >
       {children}

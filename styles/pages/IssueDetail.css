@@ -119,6 +119,18 @@
   transform: none;
 }
 
+.vscode-unavailable-hint {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-4);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-warning-dark, #92400e);
+  background-color: var(--color-warning-light, #fef3c7);
+  border-radius: var(--radius-md);
+  cursor: help;
+}
+
 .delete-btn {
   background: var(--color-danger-light);
   color: var(--color-danger-dark);

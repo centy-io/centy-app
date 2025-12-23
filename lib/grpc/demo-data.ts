@@ -593,6 +593,7 @@ export const DEMO_DAEMON_INFO: DaemonInfo = {
   version: '0.1.5 (Demo)',
   availableVersions: ['0.1.5'],
   binaryPath: '/demo/centy-daemon',
+  vscodeAvailable: true,
 }
 
 // Demo links (relationships between entities)

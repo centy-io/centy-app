@@ -19,6 +19,7 @@ import {
   type LlmWorkSession,
 } from '@/gen/centy_pb'
 import { useProject } from '@/components/providers/ProjectProvider'
+import { useDaemonStatus } from '@/components/providers/DaemonStatusProvider'
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard'
 import { useLastSeenIssues } from '@/hooks/useLastSeenIssues'
 import { useStateManager } from '@/lib/state'
@@ -37,6 +38,7 @@ interface IssueDetailProps {
 export function IssueDetail({ issueNumber }: IssueDetailProps) {
   const router = useRouter()
   const { projectPath } = useProject()
+  const { vscodeAvailable } = useDaemonStatus()
   const { copyToClipboard } = useCopyToClipboard()
   const { recordLastSeen } = useLastSeenIssues()
   const stateManager = useStateManager()
@@ -443,14 +445,23 @@ export function IssueDetail({ issueNumber }: IssueDetailProps) {
               >
                 {spawningAgent ? 'Spawning...' : 'AI Plan'}
               </button>
-              <button
-                onClick={handleOpenInVscode}
-                disabled={openingInVscode}
-                className="vscode-btn"
-                title="Open in a temporary VS Code workspace with AI agent"
-              >
-                {openingInVscode ? 'Opening...' : 'Open in VS Code'}
-              </button>
+              {vscodeAvailable ? (
+                <button
+                  onClick={handleOpenInVscode}
+                  disabled={openingInVscode}
+                  className="vscode-btn"
+                  title="Open in a temporary VS Code workspace with AI agent"
+                >
+                  {openingInVscode ? 'Opening...' : 'Open in VS Code'}
+                </button>
+              ) : vscodeAvailable === false ? (
+                <span
+                  className="vscode-unavailable-hint"
+                  title="VS Code workspace feature requires code command in PATH"
+                >
+                  VS Code not found
+                </span>
+              ) : null}
               <button onClick={() => setIsEditing(true)} className="edit-btn">
                 Edit
               </button>
