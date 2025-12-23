@@ -29,6 +29,7 @@ import { MoveModal } from '@/components/shared/MoveModal'
 import { DuplicateModal } from '@/components/shared/DuplicateModal'
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
 import { AssigneeSelector } from '@/components/users/AssigneeSelector'
+import { useDaemonStatus } from '@/components/providers/DaemonStatusProvider'
 
 interface IssueDetailProps {
   issueNumber: string
@@ -41,6 +42,7 @@ export function IssueDetail({ issueNumber }: IssueDetailProps) {
   const { recordLastSeen } = useLastSeenIssues()
   const stateManager = useStateManager()
   const stateOptions = stateManager.getStateOptions()
+  const { vscodeAvailable } = useDaemonStatus()
 
   const [issue, setIssue] = useState<Issue | null>(null)
   const [loading, setLoading] = useState(true)
@@ -443,14 +445,34 @@ export function IssueDetail({ issueNumber }: IssueDetailProps) {
               >
                 {spawningAgent ? 'Spawning...' : 'AI Plan'}
               </button>
-              <button
-                onClick={handleOpenInVscode}
-                disabled={openingInVscode}
-                className="vscode-btn"
-                title="Open in a temporary VS Code workspace with AI agent"
-              >
-                {openingInVscode ? 'Opening...' : 'Open in VS Code'}
-              </button>
+              {vscodeAvailable ? (
+                <button
+                  onClick={handleOpenInVscode}
+                  disabled={openingInVscode}
+                  className="vscode-btn"
+                  title="Open in a temporary VS Code workspace with AI agent"
+                >
+                  {openingInVscode ? 'Opening...' : 'Open in VS Code'}
+                </button>
+              ) : (
+                <div
+                  className="vscode-unavailable-info"
+                  title="VS Code's 'code' command is not available in PATH"
+                >
+                  <span className="info-icon">i</span>
+                  <span className="info-text">
+                    VS Code workspace feature requires{' '}
+                    <a
+                      href="https://code.visualstudio.com/docs/setup/mac#_launching-from-the-command-line"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="info-link"
+                    >
+                      code command in PATH
+                    </a>
+                  </span>
+                </div>
+              )}
               <button onClick={() => setIsEditing(true)} className="edit-btn">
                 Edit
               </button>

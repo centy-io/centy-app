@@ -119,6 +119,40 @@
   transform: none;
 }
 
+.vscode-unavailable-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background-color: var(--color-warning-bg, #fef3c7);
+  border: 1px solid var(--color-warning-border, #f59e0b);
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  color: var(--color-warning-text, #92400e);
+}
+
+.vscode-unavailable-info .info-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  background-color: var(--color-warning-icon, #f59e0b);
+  color: white;
+  border-radius: 50%;
+  font-size: 0.625rem;
+  font-weight: bold;
+}
+
+.vscode-unavailable-info .info-link {
+  color: var(--color-warning-link, #b45309);
+  text-decoration: underline;
+}
+
+.vscode-unavailable-info .info-link:hover {
+  color: var(--color-warning-link-hover, #92400e);
+}
+
 .delete-btn {
   background: var(--color-danger-light);
   color: var(--color-danger-dark);

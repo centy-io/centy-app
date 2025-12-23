@@ -8,6 +8,7 @@ import {
   useCallback,
   type ReactNode,
 } from 'react'
+import { create } from '@bufbuild/protobuf'
 import {
   centyClient,
   enableDemoMode,
@@ -15,6 +16,7 @@ import {
   isDemoMode,
 } from '@/lib/grpc/client'
 import { DEMO_ORG_SLUG, DEMO_PROJECT_PATH } from '@/lib/grpc/demo-data'
+import { GetDaemonInfoRequestSchema, type DaemonInfo } from '@/gen/centy_pb'
 
 type DaemonStatus = 'connected' | 'disconnected' | 'checking' | 'demo'
 
@@ -25,6 +27,8 @@ interface DaemonStatusContextType {
   enterDemoMode: () => void
   exitDemoMode: () => void
   demoProjectPath: string
+  daemonInfo: DaemonInfo | null
+  vscodeAvailable: boolean
 }
 
 const DaemonStatusContext = createContext<DaemonStatusContextType | null>(null)
@@ -37,6 +41,7 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<DaemonStatus>('checking')
   const [lastChecked, setLastChecked] = useState<Date | null>(null)
   const [hasMounted, setHasMounted] = useState(false)
+  const [daemonInfo, setDaemonInfo] = useState<DaemonInfo | null>(null)
 
   // Check for demo mode after mount to avoid hydration mismatch
   // Also check for ?demo=true URL param to auto-enable demo mode
@@ -59,10 +64,23 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
     return () => clearTimeout(timeoutId)
   }, [])
 
+  const fetchDaemonInfo = useCallback(async () => {
+    try {
+      const request = create(GetDaemonInfoRequestSchema, {})
+      const response = await centyClient.getDaemonInfo(request)
+      setDaemonInfo(response)
+    } catch (err) {
+      console.error('Failed to fetch daemon info:', err)
+      setDaemonInfo(null)
+    }
+  }, [])
+
   const checkDaemonStatus = useCallback(async () => {
     // Skip health checks when in demo mode
     if (isDemoMode()) {
       setStatus('demo')
+      // Still fetch daemon info in demo mode (uses mock data)
+      fetchDaemonInfo()
       return
     }
 
@@ -71,11 +89,14 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
       // Use listProjects as a health check - it's a lightweight call
       await centyClient.listProjects({})
       setStatus('connected')
+      // Fetch daemon info when connected
+      fetchDaemonInfo()
     } catch {
       setStatus('disconnected')
+      setDaemonInfo(null)
     }
     setLastChecked(new Date())
-  }, [])
+  }, [fetchDaemonInfo])
 
   const enterDemoMode = useCallback(() => {
     enableDemoMode()
@@ -125,6 +146,8 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
         enterDemoMode,
         exitDemoMode,
         demoProjectPath: DEMO_PROJECT_PATH,
+        daemonInfo,
+        vscodeAvailable: daemonInfo?.vscodeAvailable ?? false,
       }}
     >
       {children}
