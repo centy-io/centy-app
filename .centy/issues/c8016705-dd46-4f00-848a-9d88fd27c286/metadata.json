@@ -1,9 +1,9 @@
 {
   "displayNumber": 78,
-  "status": "open",
+  "status": "in-progress",
   "priority": 2,
   "createdAt": "2025-12-23T19:52:29.962241+00:00",
-  "updatedAt": "2025-12-23T19:52:29.962241+00:00",
+  "updatedAt": "2025-12-24T16:38:14.639384+00:00",
   "compacted": false,
   "draft": false
 }
