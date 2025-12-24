@@ -13,17 +13,20 @@ test.describe('Demo Mode Visual Tests @visual', () => {
     await page.goto('/?org=demo-org&project=%2Fdemo%2Fcenty-showcase')
     await page.waitForLoadState('domcontentloaded')
 
+    // Handle mobile not supported overlay if present
+    const continueBtn = page.getByRole('button', { name: 'Continue Anyway' })
+    if (await continueBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
+      await continueBtn.click()
+    }
+
     // Verify demo mode indicator is visible
     await expect(page.locator('.demo-mode-indicator')).toBeVisible({
       timeout: 10000,
     })
 
-    // Verify org selector shows demo org (use .first() since there are desktop and mobile)
+    // Verify demo org is shown (check button text which works on both desktop and mobile)
     await expect(
-      page
-        .locator('.org-label')
-        .filter({ hasText: 'Demo Organization' })
-        .first()
+      page.getByRole('button', { name: /Demo Organization/ })
     ).toBeVisible({ timeout: 10000 })
 
     // Wait for page to stabilize before screenshot

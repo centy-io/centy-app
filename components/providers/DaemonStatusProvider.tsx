@@ -55,8 +55,8 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
           window as Window & { __TEST_VSCODE_AVAILABLE__?: boolean }
         ).__TEST_VSCODE_AVAILABLE__
         setVscodeAvailable(testOverride ?? true)
-        // Clean up URL by removing demo param and adding org/project
-        const newUrl = `/?org=${DEMO_ORG_SLUG}&project=${encodeURIComponent(DEMO_PROJECT_PATH)}`
+        // Clean up URL by removing demo param and adding org/project (preserve current path)
+        const newUrl = `${window.location.pathname}?org=${DEMO_ORG_SLUG}&project=${encodeURIComponent(DEMO_PROJECT_PATH)}`
         window.history.replaceState({}, '', newUrl)
       } else if (isDemoMode()) {
         setStatus('demo')

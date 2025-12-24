@@ -1,14 +1,12 @@
 import { test, expect } from '@playwright/test'
+import { setupDemoMode, navigateToDemoProject } from '../../utils/test-helpers'
 
 test.describe('VS Code Button Visual Tests @visual', () => {
   test.describe('VS Code Available (Demo Mode)', () => {
     test('button visible - light theme', async ({ page }) => {
       await page.emulateMedia({ colorScheme: 'light' })
-
-      // Enable demo mode and navigate directly to issue detail in one step
-      // This avoids navigation race conditions from the demo mode URL redirect
-      await page.goto('/issues/demo-issue-1?demo=true')
-      await page.waitForLoadState('domcontentloaded')
+      await setupDemoMode(page)
+      await navigateToDemoProject(page, '/issues/demo-issue-1')
 
       // Verify button is visible
       await expect(page.locator('.vscode-btn')).toBeVisible({ timeout: 10000 })
@@ -22,9 +20,8 @@ test.describe('VS Code Button Visual Tests @visual', () => {
 
     test('button visible - dark theme', async ({ page }) => {
       await page.emulateMedia({ colorScheme: 'dark' })
-
-      await page.goto('/issues/demo-issue-1?demo=true')
-      await page.waitForLoadState('domcontentloaded')
+      await setupDemoMode(page)
+      await navigateToDemoProject(page, '/issues/demo-issue-1')
 
       await expect(page.locator('.vscode-btn')).toBeVisible({ timeout: 10000 })
       await page.waitForTimeout(500)
@@ -46,9 +43,8 @@ test.describe('VS Code Button Visual Tests @visual', () => {
         ).__TEST_VSCODE_AVAILABLE__ = false
       })
 
-      // Enable demo mode and navigate directly to issue detail
-      await page.goto('/issues/demo-issue-1?demo=true')
-      await page.waitForLoadState('domcontentloaded')
+      await setupDemoMode(page)
+      await navigateToDemoProject(page, '/issues/demo-issue-1')
 
       // Verify button is hidden and info message is shown
       await expect(page.locator('.vscode-btn')).not.toBeVisible()
@@ -75,8 +71,8 @@ test.describe('VS Code Button Visual Tests @visual', () => {
         ).__TEST_VSCODE_AVAILABLE__ = false
       })
 
-      await page.goto('/issues/demo-issue-1?demo=true')
-      await page.waitForLoadState('domcontentloaded')
+      await setupDemoMode(page)
+      await navigateToDemoProject(page, '/issues/demo-issue-1')
 
       await expect(page.locator('.vscode-unavailable-hint')).toBeVisible({
         timeout: 10000,
