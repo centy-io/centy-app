@@ -32,10 +32,13 @@ export default defineConfig({
 
   projects: process.env.CI
     ? [
-        // CI: Chromium only for faster builds (using self-hosted fonts for consistent rendering)
+        // CI: Chromium only for faster builds, skip visual tests
+        // Visual tests are skipped in CI due to OS-level font rendering differences
+        // (macOS vs Linux produce different page heights even with identical fonts)
         {
           name: 'chromium',
           use: { ...devices['Desktop Chrome'] },
+          testIgnore: '**/*.visual.spec.ts',
         },
       ]
     : [
