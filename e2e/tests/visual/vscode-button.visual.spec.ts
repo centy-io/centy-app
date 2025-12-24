@@ -8,12 +8,12 @@ test.describe('VS Code Button Visual Tests @visual', () => {
       // Enable demo mode and navigate directly to issue detail in one step
       // This avoids navigation race conditions from the demo mode URL redirect
       await page.goto('/issues/demo-issue-1?demo=true')
-      await page.waitForLoadState('networkidle')
-      await page.waitForTimeout(500)
+      await page.waitForLoadState('domcontentloaded')
 
       // Verify button is visible
-      await expect(page.locator('.vscode-btn')).toBeVisible()
+      await expect(page.locator('.vscode-btn')).toBeVisible({ timeout: 10000 })
       await expect(page.locator('.vscode-unavailable-hint')).not.toBeVisible()
+      await page.waitForTimeout(500)
 
       await expect(page).toHaveScreenshot('vscode-button-visible-light.png', {
         fullPage: true,
@@ -24,10 +24,10 @@ test.describe('VS Code Button Visual Tests @visual', () => {
       await page.emulateMedia({ colorScheme: 'dark' })
 
       await page.goto('/issues/demo-issue-1?demo=true')
-      await page.waitForLoadState('networkidle')
-      await page.waitForTimeout(500)
+      await page.waitForLoadState('domcontentloaded')
 
-      await expect(page.locator('.vscode-btn')).toBeVisible()
+      await expect(page.locator('.vscode-btn')).toBeVisible({ timeout: 10000 })
+      await page.waitForTimeout(500)
 
       await expect(page).toHaveScreenshot('vscode-button-visible-dark.png', {
         fullPage: true,
@@ -48,12 +48,14 @@ test.describe('VS Code Button Visual Tests @visual', () => {
 
       // Enable demo mode and navigate directly to issue detail
       await page.goto('/issues/demo-issue-1?demo=true')
-      await page.waitForLoadState('networkidle')
-      await page.waitForTimeout(500)
+      await page.waitForLoadState('domcontentloaded')
 
       // Verify button is hidden and info message is shown
       await expect(page.locator('.vscode-btn')).not.toBeVisible()
-      await expect(page.locator('.vscode-unavailable-hint')).toBeVisible()
+      await expect(page.locator('.vscode-unavailable-hint')).toBeVisible({
+        timeout: 10000,
+      })
+      await page.waitForTimeout(500)
 
       await expect(page).toHaveScreenshot(
         'vscode-button-hidden-info-light.png',
@@ -74,10 +76,12 @@ test.describe('VS Code Button Visual Tests @visual', () => {
       })
 
       await page.goto('/issues/demo-issue-1?demo=true')
-      await page.waitForLoadState('networkidle')
-      await page.waitForTimeout(500)
+      await page.waitForLoadState('domcontentloaded')
 
-      await expect(page.locator('.vscode-unavailable-hint')).toBeVisible()
+      await expect(page.locator('.vscode-unavailable-hint')).toBeVisible({
+        timeout: 10000,
+      })
+      await page.waitForTimeout(500)
 
       await expect(page).toHaveScreenshot(
         'vscode-button-hidden-info-dark.png',

@@ -19,7 +19,21 @@ export interface SetupOptions {
 }
 
 /**
+ * Sets up demo mode for the page. Demo mode uses built-in mock handlers
+ * and is more reliable than GrpcMocker for e2e tests.
+ */
+export async function setupDemoMode(page: Page): Promise<void> {
+  // Set demo mode in sessionStorage before navigation
+  await page.addInitScript(() => {
+    sessionStorage.setItem('centy_demo_mode', 'true')
+    localStorage.setItem('centy-selected-org', 'demo-org')
+    localStorage.setItem('centy-project-path', '/demo/centy-showcase')
+  })
+}
+
+/**
  * Sets up a fully mocked GrpcMocker with all handlers configured.
+ * @deprecated Use setupDemoMode for more reliable e2e tests
  */
 export async function setupMockedPage(
   page: Page,
@@ -53,8 +67,8 @@ export async function setupMockedPage(
  * Waits for the app to be fully loaded and daemon connected.
  */
 export async function waitForAppReady(page: Page): Promise<void> {
-  // Wait for any loading indicators to disappear
-  await page.waitForLoadState('networkidle')
+  // Use domcontentloaded instead of networkidle to avoid timeout with gRPC streaming
+  await page.waitForLoadState('domcontentloaded')
 
   // Wait for the main content to be visible
   await page

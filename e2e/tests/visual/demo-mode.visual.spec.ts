@@ -11,14 +11,23 @@ test.describe('Demo Mode Visual Tests @visual', () => {
 
     // Navigate to demo mode URL
     await page.goto('/?org=demo-org&project=%2Fdemo%2Fcenty-showcase')
-    await page.waitForLoadState('networkidle')
-    await page.waitForTimeout(500)
+    await page.waitForLoadState('domcontentloaded')
 
     // Verify demo mode indicator is visible
-    await expect(page.locator('.demo-mode-indicator')).toBeVisible()
+    await expect(page.locator('.demo-mode-indicator')).toBeVisible({
+      timeout: 10000,
+    })
 
-    // Verify org selector shows demo org
-    await expect(page.locator('text=Demo Organization')).toBeVisible()
+    // Verify org selector shows demo org (use .first() since there are desktop and mobile)
+    await expect(
+      page
+        .locator('.org-label')
+        .filter({ hasText: 'Demo Organization' })
+        .first()
+    ).toBeVisible({ timeout: 10000 })
+
+    // Wait for page to stabilize before screenshot
+    await page.waitForTimeout(500)
 
     // Take screenshot of demo mode homepage
     await expect(page).toHaveScreenshot('demo-mode-homepage.png', {
@@ -36,14 +45,20 @@ test.describe('Demo Mode Visual Tests @visual', () => {
 
     // Navigate directly to issues page in demo mode
     await page.goto('/issues?org=demo-org&project=%2Fdemo%2Fcenty-showcase')
-    await page.waitForLoadState('networkidle')
-    await page.waitForTimeout(500)
+    await page.waitForLoadState('domcontentloaded')
 
     // Verify demo mode indicator is visible
-    await expect(page.locator('.demo-mode-indicator')).toBeVisible()
+    await expect(page.locator('.demo-mode-indicator')).toBeVisible({
+      timeout: 10000,
+    })
 
     // Verify demo issues are displayed
-    await expect(page.locator('text=Implement dark mode toggle')).toBeVisible()
+    await expect(page.locator('text=Implement dark mode toggle')).toBeVisible({
+      timeout: 10000,
+    })
+
+    // Wait for page to stabilize before screenshot
+    await page.waitForTimeout(500)
 
     // Take screenshot
     await expect(page).toHaveScreenshot('demo-mode-issues.png', {
