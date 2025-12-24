@@ -15,7 +15,10 @@ export default defineConfig({
   expect: {
     timeout: 10000,
     toHaveScreenshot: {
-      maxDiffPixels: 100,
+      // Allow 3% pixel difference for cross-platform font rendering variations
+      // (macOS Core Text vs Linux FreeType produce slightly different anti-aliasing)
+      maxDiffPixelRatio: 0.03,
+      // Per-pixel color threshold (0-1 scale, 0.2 = 20% color tolerance)
       threshold: 0.2,
     },
   },
