@@ -50,11 +50,21 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
       if (urlParams.get('demo') === 'true' && !isDemoMode()) {
         enableDemoMode()
         setStatus('demo')
+        // Set vscodeAvailable for demo mode (check for test override)
+        const testOverride = (
+          window as Window & { __TEST_VSCODE_AVAILABLE__?: boolean }
+        ).__TEST_VSCODE_AVAILABLE__
+        setVscodeAvailable(testOverride ?? true)
         // Clean up URL by removing demo param and adding org/project
         const newUrl = `/?org=${DEMO_ORG_SLUG}&project=${encodeURIComponent(DEMO_PROJECT_PATH)}`
         window.history.replaceState({}, '', newUrl)
       } else if (isDemoMode()) {
         setStatus('demo')
+        // Set vscodeAvailable for demo mode (check for test override)
+        const testOverride = (
+          window as Window & { __TEST_VSCODE_AVAILABLE__?: boolean }
+        ).__TEST_VSCODE_AVAILABLE__
+        setVscodeAvailable(testOverride ?? true)
       }
       setHasMounted(true)
     }, 0)
@@ -65,7 +75,11 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
     // Skip health checks when in demo mode
     if (isDemoMode()) {
       setStatus('demo')
-      setVscodeAvailable(true) // Demo mode assumes VS Code is available
+      // Check for test override first, then default to true for demo mode
+      const testOverride = (
+        window as Window & { __TEST_VSCODE_AVAILABLE__?: boolean }
+      ).__TEST_VSCODE_AVAILABLE__
+      setVscodeAvailable(testOverride ?? true)
       return
     }
 

@@ -3,6 +3,7 @@ import { GrpcMocker } from './mock-grpc'
 import { addProjectHandlers } from '../mocks/handlers/project'
 import { addIssueHandlers } from '../mocks/handlers/issues'
 import { addDocHandlers } from '../mocks/handlers/docs'
+import { addDaemonHandlers } from '../mocks/handlers/daemon'
 import type { Issue } from '@/gen/centy_pb'
 import type { Doc } from '@/gen/centy_pb'
 import type { ProjectInfo } from '@/gen/centy_pb'
@@ -14,6 +15,7 @@ export interface SetupOptions {
   docs?: Doc[]
   projects?: ProjectInfo[]
   isInitialized?: boolean
+  vscodeAvailable?: boolean
 }
 
 /**
@@ -32,6 +34,9 @@ export async function setupMockedPage(
   })
   addIssueHandlers(mocker, { issues: options.issues })
   addDocHandlers(mocker, { docs: options.docs })
+  addDaemonHandlers(mocker, {
+    vscodeAvailable: options.vscodeAvailable ?? true,
+  })
 
   // Setup route interception
   await mocker.setup()
