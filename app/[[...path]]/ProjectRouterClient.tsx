@@ -1,7 +1,7 @@
 'use client'
 
 import { useParams, useRouter, usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { PathContextProvider } from '@/components/providers/PathContextProvider'
 import { resolveProjectPath } from '@/lib/project-resolver'
 
@@ -96,7 +96,18 @@ export function ProjectRouterClient() {
   const [loading, setLoading] = useState(true)
   const [showSelector, setShowSelector] = useState(false)
 
-  const pathSegments = params.path as string[] | undefined
+  // Use pathname to parse segments - more reliable than params with static export
+  const pathSegments = useMemo(() => {
+    // Filter out empty segments and decode URI components
+    const segments = pathname
+      .split('/')
+      .filter(Boolean)
+      .map(s => decodeURIComponent(s))
+    return segments.length > 0
+      ? segments
+      : (params.path as string[] | undefined)
+  }, [pathname, params.path])
+
   const parsed = parsePath(pathSegments)
 
   // Handle root path - redirect to last project or show selector
