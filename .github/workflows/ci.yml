@@ -79,10 +79,18 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Install Playwright browsers
-        run: pnpm exec playwright install chromium --with-deps
+        run: pnpm exec playwright install --with-deps
 
-      - name: Run e2e tests
+      - name: Run e2e tests (including visual tests)
         run: pnpm e2e
+
+      - name: Upload visual test snapshots on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-snapshots-diff
+          path: screenshots/
+          retention-days: 7
 
       - name: Upload test artifacts
         if: failure()
