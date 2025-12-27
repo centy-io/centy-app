@@ -8,6 +8,7 @@ import { ListIssuesRequestSchema, type Issue } from '@/gen/centy_pb'
 import { getProjects } from '@/lib/project-resolver'
 import { useAppLink } from '@/hooks/useAppLink'
 import { useStateManager } from '@/lib/state'
+import { useOrganization } from '@/components/providers/OrganizationProvider'
 import {
   useReactTable,
   getCoreRowModel,
@@ -59,6 +60,7 @@ const getPriorityClass = (priorityLabel: string) => {
 export function AggregateIssuesList() {
   const stateManager = useStateManager()
   const { createProjectLink } = useAppLink()
+  const { selectedOrgSlug, organizations } = useOrganization()
   const [issues, setIssues] = useState<AggregateIssue[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -68,6 +70,28 @@ export function AggregateIssuesList() {
   const [columnFilters, setColumnFilters] = useState<
     { id: string; value: unknown }[]
   >([])
+
+  // Filter issues based on selected organization
+  const filteredIssues = useMemo(() => {
+    if (selectedOrgSlug === null) {
+      // Show all issues
+      return issues
+    }
+    if (selectedOrgSlug === '') {
+      // Show only ungrouped projects (projects with no organization)
+      return issues.filter(issue => !issue.orgSlug)
+    }
+    // Show issues from the selected organization
+    return issues.filter(issue => issue.orgSlug === selectedOrgSlug)
+  }, [issues, selectedOrgSlug])
+
+  // Get display name for the current organization filter
+  const getOrgDisplayName = () => {
+    if (selectedOrgSlug === null) return 'All Issues'
+    if (selectedOrgSlug === '') return 'Ungrouped Issues'
+    const org = organizations.find(o => o.slug === selectedOrgSlug)
+    return org?.name ? `${org.name} Issues` : `${selectedOrgSlug} Issues`
+  }
 
   const statusOptions: MultiSelectOption[] = useMemo(
     () =>
@@ -215,7 +239,7 @@ export function AggregateIssuesList() {
   )
 
   const table = useReactTable({
-    data: issues,
+    data: filteredIssues,
     columns,
     state: {
       sorting,
@@ -275,7 +299,7 @@ export function AggregateIssuesList() {
   return (
     <div className="issues-list">
       <div className="issues-header">
-        <h2>All Issues</h2>
+        <h2>{getOrgDisplayName()}</h2>
         <div className="header-actions">
           <button
             onClick={fetchAllIssues}
@@ -288,16 +312,26 @@ export function AggregateIssuesList() {
       </div>
 
       <p className="aggregate-note">
-        Showing issues from all projects. Select a project to create new issues.
+        {selectedOrgSlug === null
+          ? 'Showing issues from all projects. Select a project to create new issues.'
+          : selectedOrgSlug === ''
+            ? 'Showing issues from ungrouped projects. Select a project to create new issues.'
+            : `Showing issues from ${organizations.find(o => o.slug === selectedOrgSlug)?.name || selectedOrgSlug} organization. Select a project to create new issues.`}
       </p>
 
       {error && <div className="error-message">{error}</div>}
 
-      {loading && issues.length === 0 ? (
-        <div className="loading">Loading issues from all projects...</div>
-      ) : issues.length === 0 ? (
+      {loading && filteredIssues.length === 0 ? (
+        <div className="loading">Loading issues...</div>
+      ) : filteredIssues.length === 0 ? (
         <div className="empty-state">
-          <p>No issues found across any projects</p>
+          <p>
+            {selectedOrgSlug === null
+              ? 'No issues found across any projects'
+              : selectedOrgSlug === ''
+                ? 'No issues found in ungrouped projects'
+                : `No issues found in ${organizations.find(o => o.slug === selectedOrgSlug)?.name || selectedOrgSlug} organization`}
+          </p>
         </div>
       ) : (
         <div className="issues-table">
