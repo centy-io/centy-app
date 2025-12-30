@@ -26,18 +26,14 @@ test.describe('Demo Mode URL Activation', () => {
   })
 
   test('should show demo issues after URL activation', async ({ page }) => {
-    // Navigate with ?demo=true
-    await page.goto('/?demo=true')
+    // Navigate directly with demo mode and project path
+    await page.goto('/demo-org/centy-showcase/issues/?demo=true')
     await page.waitForLoadState('domcontentloaded')
 
     // Wait for demo mode to be active
     await expect(page.locator('.demo-mode-indicator')).toBeVisible({
       timeout: 10000,
     })
-
-    // Navigate to issues page
-    await page.click('a[href*="/issues"]')
-    await page.waitForLoadState('domcontentloaded')
 
     // Verify demo issues are displayed
     await expect(page.locator('text=Implement dark mode toggle')).toBeVisible({
@@ -46,8 +42,8 @@ test.describe('Demo Mode URL Activation', () => {
   })
 
   test('should persist demo mode after navigation', async ({ page }) => {
-    // Activate demo mode via URL
-    await page.goto('/?demo=true')
+    // Activate demo mode via URL and navigate to issues
+    await page.goto('/demo-org/centy-showcase/issues/?demo=true')
     await page.waitForLoadState('domcontentloaded')
 
     // Wait for demo mode to be active
@@ -55,8 +51,13 @@ test.describe('Demo Mode URL Activation', () => {
       timeout: 10000,
     })
 
-    // Navigate to another page
-    await page.click('a[href*="/issues"]')
+    // Wait for issues to load
+    await expect(page.locator('text=Implement dark mode toggle')).toBeVisible({
+      timeout: 10000,
+    })
+
+    // Navigate to Docs using in-app navigation
+    await page.click('a[href*="/docs"]')
     await page.waitForLoadState('domcontentloaded')
 
     // Demo mode indicator should still be visible
@@ -64,7 +65,7 @@ test.describe('Demo Mode URL Activation', () => {
       timeout: 10000,
     })
 
-    // Navigate back to home
+    // Navigate back to home by clicking the Centy logo
     await page.click('a[href="/"]')
     await page.waitForLoadState('domcontentloaded')
 
