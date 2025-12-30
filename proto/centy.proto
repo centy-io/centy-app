@@ -1438,6 +1438,7 @@ message OpenInTempVscodeResponse {
   uint32 display_number = 5;            // Issue display number
   string expires_at = 6;                // ISO timestamp when workspace expires
   bool vscode_opened = 7;               // Whether VS Code was successfully opened
+  bool requires_status_config = 8;      // True if user must configure update_status_on_start setting
 }
 
 // A temporary workspace entry

@@ -1,0 +1,180 @@
+/* Status Config Dialog Component */
+.status-config-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.status-config-dialog {
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.status-config-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--color-border-default);
+}
+
+.status-config-dialog-header h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.status-config-dialog-close {
+  padding: var(--space-1) var(--space-2);
+  font-size: 0.875rem;
+  color: var(--color-gray-500);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.status-config-dialog-close:hover {
+  color: var(--color-gray-700);
+  background: var(--color-gray-100);
+}
+
+.status-config-dialog-body {
+  padding: var(--space-4);
+  overflow-y: auto;
+  flex: 1;
+}
+
+.status-config-dialog-error {
+  font-size: 0.8125rem;
+  color: var(--color-danger);
+  padding: var(--space-2);
+  background: var(--color-danger-light);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-3);
+}
+
+.status-config-dialog-loading {
+  padding: var(--space-4);
+  text-align: center;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.status-config-dialog-description {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-4);
+  line-height: 1.5;
+}
+
+.status-config-dialog-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.status-config-option {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.status-config-option:hover {
+  border-color: var(--color-primary);
+  background: var(--color-gray-50);
+}
+
+.status-config-option.selected {
+  border-color: var(--color-primary);
+  background: rgba(99, 102, 241, 0.05);
+}
+
+.status-config-option input[type='radio'] {
+  margin-top: 2px;
+  accent-color: var(--color-primary);
+}
+
+.status-config-option-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.status-config-option-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.status-config-option-description {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.status-config-dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border-top: 1px solid var(--color-border-default);
+}
+
+.status-config-dialog-cancel {
+  padding: var(--space-2) var(--space-4);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.status-config-dialog-cancel:hover {
+  background: var(--color-gray-50);
+  border-color: var(--color-gray-300);
+}
+
+.status-config-dialog-submit {
+  padding: var(--space-2) var(--space-4);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: white;
+  background: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.status-config-dialog-submit:hover {
+  background: var(--color-primary-hover);
+}
+
+.status-config-dialog-submit:disabled {
+  background: var(--color-gray-300);
+  cursor: not-allowed;
+}

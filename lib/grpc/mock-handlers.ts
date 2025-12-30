@@ -648,6 +648,29 @@ export const mockHandlers: MockHandlers = {
     return { success: false, message: 'Not available in demo mode' }
   },
 
+  async openInTempVscode(): Promise<{
+    success: boolean
+    error: string
+    workspacePath: string
+    issueId: string
+    displayNumber: number
+    expiresAt: string
+    vscodeOpened: boolean
+  }> {
+    console.warn(
+      '[Demo Mode] openInTempVscode called - not available in demo mode'
+    )
+    return {
+      success: false,
+      error: 'Opening VS Code workspaces is not available in demo mode',
+      workspacePath: '',
+      issueId: '',
+      displayNumber: 0,
+      expiresAt: '',
+      vscodeOpened: false,
+    }
+  },
+
   async getLlmWork(): Promise<{ hasWork: boolean }> {
     return { hasWork: false }
   },

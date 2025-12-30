@@ -28,6 +28,7 @@ import { TextEditor } from '@/components/shared/TextEditor'
 import { LinkSection } from '@/components/shared/LinkSection'
 import { MoveModal } from '@/components/shared/MoveModal'
 import { DuplicateModal } from '@/components/shared/DuplicateModal'
+import { StatusConfigDialog } from '@/components/shared/StatusConfigDialog'
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
 import { AssigneeSelector } from '@/components/users/AssigneeSelector'
 
@@ -71,6 +72,7 @@ export function IssueDetail({ issueNumber }: IssueDetailProps) {
   const [assets, setAssets] = useState<Asset[]>([])
   const [showMoveModal, setShowMoveModal] = useState(false)
   const [showDuplicateModal, setShowDuplicateModal] = useState(false)
+  const [showStatusConfigDialog, setShowStatusConfigDialog] = useState(false)
   const [spawningAgent, setSpawningAgent] = useState(false)
   const [openingInVscode, setOpeningInVscode] = useState(false)
   const [activeWork, setActiveWork] = useState<LlmWorkSession | null>(null)
@@ -337,6 +339,8 @@ export function IssueDetail({ issueNumber }: IssueDetailProps) {
             `Workspace created at ${response.workspacePath} but VS Code could not be opened automatically`
           )
         }
+      } else if (response.requiresStatusConfig) {
+        setShowStatusConfigDialog(true)
       } else {
         setError(response.error || 'Failed to open in VS Code')
       }
@@ -367,6 +371,12 @@ export function IssueDetail({ issueNumber }: IssueDetailProps) {
     },
     [projectPath, router]
   )
+
+  const handleStatusConfigured = useCallback(() => {
+    setShowStatusConfigDialog(false)
+    // Retry opening VS Code after config is saved
+    handleOpenInVscode()
+  }, [handleOpenInVscode])
 
   useSaveShortcut({
     onSave: handleSave,
@@ -740,6 +750,14 @@ export function IssueDetail({ issueNumber }: IssueDetailProps) {
           currentProjectPath={projectPath}
           onClose={() => setShowDuplicateModal(false)}
           onDuplicated={handleDuplicated}
+        />
+      )}
+
+      {showStatusConfigDialog && projectPath && (
+        <StatusConfigDialog
+          projectPath={projectPath}
+          onClose={() => setShowStatusConfigDialog(false)}
+          onConfigured={handleStatusConfigured}
         />
       )}
     </div>
