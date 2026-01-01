@@ -331,8 +331,11 @@ export function IssueDetail({ issueNumber }: IssueDetailProps) {
 
       if (response.success) {
         if (!response.vscodeOpened) {
+          const actionWord = response.workspaceReused
+            ? 'Reopened workspace'
+            : 'Workspace created'
           setError(
-            `Workspace created at ${response.workspacePath} but VS Code could not be opened automatically`
+            `${actionWord} at ${response.workspacePath} but VS Code could not be opened automatically`
           )
         }
       } else if (response.requiresStatusConfig) {

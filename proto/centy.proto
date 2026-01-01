@@ -1439,6 +1439,8 @@ message OpenInTempVscodeResponse {
   string expires_at = 6;                // ISO timestamp when workspace expires
   bool vscode_opened = 7;               // Whether VS Code was successfully opened
   bool requires_status_config = 8;      // True if user must configure update_status_on_start setting
+  bool workspace_reused = 9;            // True if an existing workspace was reopened instead of creating new
+  string original_created_at = 10;      // Original creation timestamp (only set if workspace_reused is true)
 }
 
 // A temporary workspace entry
