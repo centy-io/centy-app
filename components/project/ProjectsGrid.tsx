@@ -142,7 +142,8 @@ export function ProjectsGrid() {
       <div className="projects-grid-empty">
         <h2>No projects found</h2>
         <p>
-          Initialize a project with Centy to see it here, or{' '}
+          <Link href="/project/init">Initialize a project</Link> with Centy to
+          see it here, or{' '}
           <Link href="/organizations/new">create an organization</Link> to get
           started.
         </p>
@@ -158,6 +159,9 @@ export function ProjectsGrid() {
           <button onClick={fetchData} className="refresh-btn">
             Refresh
           </button>
+          <Link href="/project/init" className="init-project-btn">
+            + Init Project
+          </Link>
           <Link href="/organizations/new" className="create-org-btn">
             + New Organization
           </Link>
