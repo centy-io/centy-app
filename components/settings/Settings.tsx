@@ -382,7 +382,7 @@ export function Settings() {
       {projectPath && isInitialized === false && (
         <div className="not-initialized-message">
           <p>Centy is not initialized in this directory</p>
-          <Link href="/">Initialize Project</Link>
+          <Link href="/project/init">Initialize Project</Link>
         </div>
       )}
 
