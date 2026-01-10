@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" width="1280" height="640">
+  <!-- Background -->
+  <rect width="1280" height="640" fill="#6366f1"/>
+
+  <!-- Checkbox Icon -->
+  <g transform="translate(340, 240)">
+    <!-- Checkbox outer rectangle with rounded corners -->
+    <rect x="0" y="0" width="60" height="60" rx="8" ry="8" fill="white"/>
+    <!-- Checkmark -->
+    <path d="M15 32 L25 42 L45 18" stroke="#6366f1" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Centy Text -->
+  <text x="420" y="295" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="56" font-weight="700" fill="white">Centy</text>
+
+  <!-- Separator slash -->
+  <text x="590" y="295" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="40" font-weight="400" fill="rgba(255,255,255,0.7)">/</text>
+
+  <!-- Repository badge -->
+  <g transform="translate(620, 250)">
+    <!-- Badge background -->
+    <rect x="0" y="0" width="280" height="50" rx="25" ry="25" fill="rgba(255,255,255,0.2)"/>
+    <!-- Small checkbox icon in badge -->
+    <g transform="translate(15, 10)">
+      <rect x="0" y="0" width="30" height="30" rx="4" ry="4" fill="white"/>
+      <path d="M7 16 L12 21 L23 9" stroke="#6366f1" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <!-- Repository path text -->
+    <text x="55" y="33" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="500" fill="white">centy-io / centy-app</text>
+  </g>
+
+  <!-- Tagline -->
+  <text x="640" y="380" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="28" font-weight="400" fill="rgba(255,255,255,0.85)" text-anchor="middle">Local first issue and documentation tracker</text>
+</svg>
