@@ -27,10 +27,8 @@
   ],
   "ignoreDependencies": [
     "@bufbuild/protoc-gen-es",
+    "@centy-io/assets",
     "@cspell/dict-he",
-    "@opennextjs/cloudflare",
-    "wrangler",
-    "eslint-config-next",
     "msw"
   ],
   "ignoreExportsUsedInFile": true,
