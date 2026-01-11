@@ -68,7 +68,7 @@ export function UsersList() {
         header: 'Name',
         cell: info => (
           <Link
-            href={`/users/${info.row.original.id}`}
+            href={`${usersBaseUrl}/${info.row.original.id}`}
             className="user-name-link"
           >
             {info.getValue()}
@@ -114,7 +114,7 @@ export function UsersList() {
         },
       }),
     ],
-    []
+    [usersBaseUrl]
   )
 
   const table = useReactTable({
@@ -243,14 +243,14 @@ export function UsersList() {
         {
           label: 'View',
           onClick: () => {
-            router.push(`/users/${contextMenu.user.id}`)
+            router.push(`${usersBaseUrl}/${contextMenu.user.id}`)
             setContextMenu(null)
           },
         },
         {
           label: 'Edit',
           onClick: () => {
-            router.push(`/users/${contextMenu.user.id}`)
+            router.push(`${usersBaseUrl}/${contextMenu.user.id}`)
             setContextMenu(null)
           },
         },
