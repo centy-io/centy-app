@@ -13,8 +13,8 @@ test.describe('Demo Mode URL Activation', () => {
       timeout: 15000,
     })
 
-    // Verify the URL shows org param (project param may or may not be present)
-    await expect(page).toHaveURL(/org=demo-org/, { timeout: 15000 })
+    // Verify the URL shows demo-org in path (app now uses path-based routing)
+    await expect(page).toHaveURL(/demo-org/, { timeout: 15000 })
 
     // Verify demo org is selected
     await expect(
