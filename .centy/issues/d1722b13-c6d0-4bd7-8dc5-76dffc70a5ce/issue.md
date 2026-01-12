@@ -1,0 +1,51 @@
+# Support GetSupportedEditors RPC and provide editor selection in workspace actions
+
+## Overview
+
+The daemon now supports a `GetSupportedEditors` RPC that returns available workspace editors (VS Code, Terminal) with their availability status.
+
+## Requirements
+
+1. **Fetch available editors** - call `GetSupportedEditors` RPC and cache results
+1. **Update workspace actions** - modify Plan/Implement action buttons to offer editor selection
+1. **Editor selector component** - create a dropdown or button group for editor selection
+1. **Availability indicators** - visually indicate which editors are available
+1. **Graceful fallback** - handle case where no editors are available
+
+## API Reference
+
+```protobuf
+rpc GetSupportedEditors(GetSupportedEditorsRequest) returns (GetSupportedEditorsResponse);
+
+message EditorInfo {
+  EditorType editor_type = 1;  // VSCODE or TERMINAL
+  string name = 2;             // "VS Code" or "Terminal"
+  string description = 3;      // Brief description
+  bool available = 4;          // Whether available on system
+}
+```
+
+## UI/UX Considerations
+
+- Add editor selector to issue detail page workspace actions
+- Consider split-button design: primary action (default editor) + dropdown for alternatives
+- Show icons for each editor type (VS Code icon, Terminal icon)
+- Tooltip with description for each option
+- Disable unavailable editors with explanation
+- Store user preference in local storage
+
+## Implementation Notes
+
+- Add new gRPC client method for `GetSupportedEditors`
+- Create EditorSelector component
+- Update IssueActions component to include editor selection
+- Modify `openInTempVscode` and `openInTempTerminal` calls based on selection
+
+## Acceptance Criteria
+
+- [ ] Editor selector appears in issue workspace actions
+- [ ] Available editors fetched from daemon
+- [ ] Unavailable editors shown as disabled
+- [ ] User can select VS Code or Terminal
+- [ ] Correct RPC called based on selection (`OpenInTempVscode` vs `OpenInTempTerminal`)
+- [ ] User preference persisted across sessions
