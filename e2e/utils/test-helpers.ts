@@ -75,11 +75,9 @@ export async function waitForAppReady(page: Page): Promise<void> {
   await page.waitForLoadState('domcontentloaded')
 
   // Wait for the main content to be visible
-  await page
-    .waitForSelector('[data-testid="app-content"], main')
-    .catch(() => {
-      // Fallback - just wait for body to be ready
-    })
+  await page.waitForSelector('[data-testid="app-content"], main').catch(() => {
+    // Fallback - just wait for body to be ready
+  })
 }
 
 /**
