@@ -5,6 +5,7 @@
       "Bash(pnpm install)",
       "Bash(pnpm build)",
       "Bash(pnpm lint)",
+      "Bash(pnpm format)",
       "Bash(pnpm dlx centy:*)",
       "Bash(centy --help:*)",
       "Bash(centy create:*)",
