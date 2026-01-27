@@ -6,35 +6,63 @@ import { create } from '@bufbuild/protobuf'
 import { GetConfigRequestSchema, type Config } from '@/gen/centy_pb'
 import { useProject } from '@/components/providers/ProjectProvider'
 
-// Cache config per project path
-const configCache = new Map<
-  string,
-  {
-    config: Config | null
-    loading: boolean
-    error: string | null
-    listeners: Set<() => void>
-  }
->()
+// Snapshot type for useSyncExternalStore - must be immutable and cached
+interface ConfigSnapshot {
+  config: Config | null
+  loading: boolean
+  error: string | null
+}
 
-// Default cache for server-side rendering - must be a constant to avoid infinite loops
-const DEFAULT_CACHE = {
+// Internal cache state per project path
+interface CacheState {
+  config: Config | null
+  loading: boolean
+  error: string | null
+  listeners: Set<() => void>
+  // Cached snapshot - only recreated when state changes
+  snapshot: ConfigSnapshot
+}
+
+// Cache config per project path
+const configCache = new Map<string, CacheState>()
+
+// Default snapshot for server-side rendering - must be a constant to avoid infinite loops
+const DEFAULT_SNAPSHOT: ConfigSnapshot = {
   config: null,
   loading: false,
   error: null,
-  listeners: new Set<() => void>(),
 }
 
-function getOrCreateCache(projectPath: string) {
+function createSnapshot(cache: CacheState): ConfigSnapshot {
+  return {
+    config: cache.config,
+    loading: cache.loading,
+    error: cache.error,
+  }
+}
+
+function getOrCreateCache(projectPath: string): CacheState {
   if (!configCache.has(projectPath)) {
+    const initialSnapshot: ConfigSnapshot = {
+      config: null,
+      loading: false,
+      error: null,
+    }
     configCache.set(projectPath, {
       config: null,
       loading: false,
       error: null,
       listeners: new Set(),
+      snapshot: initialSnapshot,
     })
   }
   return configCache.get(projectPath)!
+}
+
+// Return the cached snapshot - must return same reference if state hasn't changed
+function getSnapshot(projectPath: string): ConfigSnapshot {
+  const cache = getOrCreateCache(projectPath)
+  return cache.snapshot
 }
 
 function subscribe(projectPath: string, listener: () => void) {
@@ -46,17 +74,19 @@ function subscribe(projectPath: string, listener: () => void) {
 function notifyListeners(projectPath: string) {
   const cache = configCache.get(projectPath)
   if (cache) {
+    // Create a new snapshot object so useSyncExternalStore detects the change
+    cache.snapshot = createSnapshot(cache)
     cache.listeners.forEach(listener => listener())
   }
 }
 
-async function fetchConfig(projectPath: string): Promise<void> {
+async function fetchConfig(projectPath: string, force = false): Promise<void> {
   if (!projectPath) return
 
   const cache = getOrCreateCache(projectPath)
 
-  // Skip if already loading or has data
-  if (cache.loading || cache.config) return
+  // Skip if already loading, or if has data and not forcing reload
+  if (cache.loading || (cache.config && !force)) return
 
   cache.loading = true
   cache.error = null
@@ -80,20 +110,16 @@ async function fetchConfig(projectPath: string): Promise<void> {
 export function useConfig() {
   const { projectPath, isInitialized } = useProject()
 
-  const cache = useSyncExternalStore(
+  const snapshot = useSyncExternalStore(
     useCallback(listener => subscribe(projectPath, listener), [projectPath]),
-    useCallback(() => getOrCreateCache(projectPath), [projectPath]),
-    () => DEFAULT_CACHE
+    useCallback(() => getSnapshot(projectPath), [projectPath]),
+    () => DEFAULT_SNAPSHOT
   )
 
   const reload = useCallback(async () => {
     if (!projectPath) return
-    // Clear cache to force reload
-    const cache = configCache.get(projectPath)
-    if (cache) {
-      cache.config = null
-    }
-    await fetchConfig(projectPath)
+    // Force refetch config from daemon
+    await fetchConfig(projectPath, true)
   }, [projectPath])
 
   // Fetch config when project is initialized
@@ -104,9 +130,9 @@ export function useConfig() {
   }, [projectPath, isInitialized])
 
   return {
-    config: cache.config,
-    loading: cache.loading,
-    error: cache.error,
+    config: snapshot.config,
+    loading: snapshot.loading,
+    error: snapshot.error,
     reload,
   }
 }
