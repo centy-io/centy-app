@@ -10,7 +10,7 @@ const nextConfig = {
   },
 }
 
-export default withSentryConfig(withRoutes(nextConfig), {
+export default withSentryConfig(withRoutes()(nextConfig), {
   // For all available options, see:
   // https://www.npmjs.com/package/@sentry/webpack-plugin#options
 
