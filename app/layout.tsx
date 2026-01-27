@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
+import { Noto_Sans } from 'next/font/google'
 import { Providers } from '@/components/providers/Providers'
 import { DaemonDisconnectedOverlay } from '@/components/layout/DaemonDisconnectedOverlay'
 import { DemoModeIndicator } from '@/components/layout/DemoModeIndicator'
@@ -7,11 +8,14 @@ import { LegacyUrlRedirect } from '@/components/layout/LegacyUrlRedirect'
 import { MobileNotSupportedOverlay } from '@/components/layout/MobileNotSupportedOverlay'
 import { Header } from '@/components/layout/Header'
 import { ClientRouteHandler } from '@/components/layout/ClientRouteHandler'
-import '@fontsource/noto-sans/400.css'
-import '@fontsource/noto-sans/500.css'
-import '@fontsource/noto-sans/600.css'
-import '@fontsource/noto-sans/700.css'
 import '@/styles/globals.css'
+
+const notoSans = Noto_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+  variable: '--font-sans',
+})
 
 export const metadata: Metadata = {
   title: 'Centy',
@@ -28,7 +32,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={notoSans.variable}>
       <head>
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-ZV5SD70Z2D"
