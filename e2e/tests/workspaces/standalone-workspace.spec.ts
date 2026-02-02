@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { setupDemoMode, navigateToDemoProject } from '../../utils/test-helpers'
 
-test.describe('Standalone Workspace Modal', () => {
+test.describe.serial('Standalone Workspace Modal', () => {
   test('should display New Workspace button on issues list page', async ({
     page,
   }) => {

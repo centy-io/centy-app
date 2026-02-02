@@ -34,6 +34,7 @@ import {
 } from '@/components/shared/ContextMenu'
 import { MoveModal } from '@/components/shared/MoveModal'
 import { DuplicateModal } from '@/components/shared/DuplicateModal'
+import { StandaloneWorkspaceModal } from '@/components/shared/StandaloneWorkspaceModal'
 
 const PRIORITY_OPTIONS: MultiSelectOption[] = [
   { value: 'high', label: 'High' },
@@ -85,6 +86,7 @@ export function IssuesList() {
   } | null>(null)
   const [showMoveModal, setShowMoveModal] = useState(false)
   const [showDuplicateModal, setShowDuplicateModal] = useState(false)
+  const [showStandaloneModal, setShowStandaloneModal] = useState(false)
   const [selectedIssue, setSelectedIssue] = useState<Issue | null>(null)
 
   // TanStack Table state - persisted per-project
@@ -409,6 +411,13 @@ export function IssuesList() {
               {loading ? 'Loading...' : 'Refresh'}
             </button>
           )}
+          <button
+            onClick={() => setShowStandaloneModal(true)}
+            className="workspace-btn"
+            title="Create a standalone workspace without an issue"
+          >
+            + New Workspace
+          </button>
           <Link href={createLink('/issues/new')} className="create-btn">
             + New Issue
           </Link>
@@ -586,6 +595,13 @@ export function IssuesList() {
             setSelectedIssue(null)
           }}
           onDuplicated={handleDuplicated}
+        />
+      )}
+
+      {showStandaloneModal && projectPath && (
+        <StandaloneWorkspaceModal
+          projectPath={projectPath}
+          onClose={() => setShowStandaloneModal(false)}
         />
       )}
     </div>
