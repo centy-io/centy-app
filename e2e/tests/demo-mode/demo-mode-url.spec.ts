@@ -17,9 +17,9 @@ test.describe('Demo Mode URL Activation', () => {
     // Verify the URL shows demo-org in path (app now uses path-based routing)
     await expect(page).toHaveURL(/demo-org/)
 
-    // Verify demo org is selected
+    // Verify demo org is selected by checking the header shows demo-org
     await expect(
-      page.getByText('Demo Organization', { exact: false }).first()
+      page.getByRole('heading', { level: 1 }).getByText('demo-org')
     ).toBeVisible()
   })
 
