@@ -15,9 +15,7 @@ Sentry.init({
   tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.2 : 1.0,
 
   // Enable logs to be sent to Sentry
-  _experiments: {
-    metricsAggregator: true,
-  },
+  enableLogs: true,
 
   // Enable sending user PII (Personally Identifiable Information)
   sendDefaultPii: true,
