@@ -30,9 +30,9 @@ pnpm test --run || {
   exit 1
 }
 
-# Run e2e tests (this will start the dev server)
-echo "Running e2e tests..."
-pnpm e2e || {
+# Run e2e tests (chromium only to reduce resource usage; full browser suite runs in CI)
+echo "Running e2e tests (chromium only)..."
+pnpm exec playwright test --project=chromium || {
   echo "E2E tests failed. Please fix failing tests before pushing."
   exit 1
 }
