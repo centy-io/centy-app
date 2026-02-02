@@ -16,6 +16,7 @@ import {
 } from '@/lib/grpc/client'
 import { DEMO_ORG_SLUG, DEMO_PROJECT_PATH } from '@/lib/grpc/demo-data'
 import { EditorType, type EditorInfo } from '@/gen/centy_pb'
+import { trackDaemonConnection } from '@/lib/metrics'
 
 type DaemonStatus = 'connected' | 'disconnected' | 'checking' | 'demo'
 
@@ -115,6 +116,7 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
       const daemonInfo = await centyClient.getDaemonInfo({})
       setStatus('connected')
       setVscodeAvailable(daemonInfo.vscodeAvailable)
+      trackDaemonConnection(true, false)
 
       // Fetch supported editors for the editor selector
       try {
@@ -143,6 +145,7 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
       setStatus('disconnected')
       setVscodeAvailable(null)
       setEditors([])
+      trackDaemonConnection(false, false)
     }
     setLastChecked(new Date())
   }, [])
@@ -150,6 +153,7 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
   const enterDemoMode = useCallback(() => {
     enableDemoMode()
     setStatus('demo')
+    trackDaemonConnection(true, true)
     // Navigate to demo org and project
     window.location.href = `/?org=${DEMO_ORG_SLUG}&project=${encodeURIComponent(DEMO_PROJECT_PATH)}`
   }, [])
