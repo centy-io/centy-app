@@ -10,14 +10,11 @@ import {
   UpdateIssueRequestSchema,
   DeleteIssueRequestSchema,
   ListAssetsRequestSchema,
-  SpawnAgentRequestSchema,
-  GetLlmWorkRequestSchema,
   OpenInTempVscodeRequestSchema,
   OpenInTempWorkspaceRequestSchema,
   LlmAction,
   type Issue,
   type Asset,
-  type LlmWorkSession,
 } from '@/gen/centy_pb'
 import {
   usePathContext,
@@ -73,9 +70,7 @@ export function IssueDetail({ issueNumber }: IssueDetailProps) {
   const [showMoveModal, setShowMoveModal] = useState(false)
   const [showDuplicateModal, setShowDuplicateModal] = useState(false)
   const [showStatusConfigDialog, setShowStatusConfigDialog] = useState(false)
-  const [spawningAgent, setSpawningAgent] = useState(false)
   const [openingInVscode, setOpeningInVscode] = useState(false)
-  const [activeWork, setActiveWork] = useState<LlmWorkSession | null>(null)
   const [assignees, setAssignees] = useState<string[]>([])
   const statusDropdownRef = useRef<HTMLDivElement>(null)
 
@@ -124,25 +119,9 @@ export function IssueDetail({ issueNumber }: IssueDetailProps) {
     }
   }, [projectPath, issueNumber])
 
-  const fetchActiveWork = useCallback(async () => {
-    if (!projectPath) return
-
-    try {
-      const request = create(GetLlmWorkRequestSchema, {
-        projectPath,
-      })
-      const response = await centyClient.getLlmWork(request)
-      setActiveWork(response.hasActiveWork ? (response.session ?? null) : null)
-    } catch (err) {
-      // Silently fail - not critical if we can't check active work
-      console.error('Failed to check active work:', err)
-    }
-  }, [projectPath])
-
   useEffect(() => {
     fetchIssue()
     fetchAssets()
-    fetchActiveWork()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectPath, issueNumber])
 
@@ -286,36 +265,6 @@ export function IssueDetail({ issueNumber }: IssueDetailProps) {
       setEditPriority(issue.metadata?.priority || 2)
     }
   }
-
-  const handleSpawnPlan = useCallback(async () => {
-    if (!projectPath || !issue) return
-
-    setSpawningAgent(true)
-    setError(null)
-
-    try {
-      const request = create(SpawnAgentRequestSchema, {
-        projectPath,
-        issueId: issue.id,
-        action: LlmAction.PLAN,
-        agentName: '',
-        extraArgs: [],
-      })
-      const response = await centyClient.spawnAgent(request)
-
-      if (response.success) {
-        await fetchActiveWork()
-      } else {
-        setError(response.error || 'Failed to spawn AI agent')
-      }
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to connect to daemon'
-      )
-    } finally {
-      setSpawningAgent(false)
-    }
-  }, [projectPath, issue, fetchActiveWork])
 
   const handleOpenInVscode = useCallback(async () => {
     if (!projectPath || !issue) return
@@ -529,19 +478,6 @@ export function IssueDetail({ issueNumber }: IssueDetailProps) {
         <div className="issue-actions">
           {!isEditing ? (
             <>
-              <button
-                onClick={handleSpawnPlan}
-                disabled={spawningAgent || !!activeWork}
-                className="ai-plan-btn"
-                style={{ display: 'none' }}
-                title={
-                  activeWork
-                    ? `Agent running on #${activeWork.displayNumber}`
-                    : 'Generate AI plan'
-                }
-              >
-                {spawningAgent ? 'Spawning...' : 'AI Plan'}
-              </button>
               <EditorSelector
                 onOpenInVscode={handleOpenInVscode}
                 onOpenInTerminal={handleOpenInTerminal}
