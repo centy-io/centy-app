@@ -69,13 +69,17 @@ export function PRDetail({ prNumber }: PRDetailProps) {
         prId: prNumber,
       })
       const response = await centyClient.getPr(request)
-      setPr(response)
-      setEditTitle(response.title)
-      setEditDescription(response.description)
-      setEditStatus(response.metadata?.status || 'draft')
-      setEditPriority(response.metadata?.priority || 2)
-      setEditSourceBranch(response.metadata?.sourceBranch || '')
-      setEditTargetBranch(response.metadata?.targetBranch || '')
+      if (response.pr) {
+        setPr(response.pr)
+        setEditTitle(response.pr.title)
+        setEditDescription(response.pr.description)
+        setEditStatus(response.pr.metadata?.status || 'draft')
+        setEditPriority(response.pr.metadata?.priority || 2)
+        setEditSourceBranch(response.pr.metadata?.sourceBranch || '')
+        setEditTargetBranch(response.pr.metadata?.targetBranch || '')
+      } else {
+        setError(response.error || 'Pull request not found')
+      }
     } catch (err) {
       setError(
         err instanceof Error ? err.message : 'Failed to connect to daemon'

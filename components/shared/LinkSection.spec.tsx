@@ -32,7 +32,7 @@ const createMockLink = (overrides: Partial<LinkType> = {}): LinkType =>
     targetType: LinkTargetType.ISSUE,
     linkType: 'blocks',
     ...overrides,
-    $typeName: 'centy.Link' as const,
+    $typeName: 'centy.v1.Link' as const,
     $unknown: undefined,
   }) as LinkType
 
@@ -58,7 +58,7 @@ describe('LinkSection', () => {
     mockListLinks.mockResolvedValue({
       links: [],
       totalCount: 0,
-      $typeName: 'centy.ListLinksResponse',
+      $typeName: 'centy.v1.ListLinksResponse',
       $unknown: undefined,
     })
 
@@ -82,7 +82,7 @@ describe('LinkSection', () => {
         }),
       ],
       totalCount: 3,
-      $typeName: 'centy.ListLinksResponse',
+      $typeName: 'centy.v1.ListLinksResponse',
       $unknown: undefined,
     })
 
@@ -99,7 +99,7 @@ describe('LinkSection', () => {
     mockListLinks.mockResolvedValue({
       links: [],
       totalCount: 0,
-      $typeName: 'centy.ListLinksResponse',
+      $typeName: 'centy.v1.ListLinksResponse',
       $unknown: undefined,
     })
 
@@ -117,7 +117,7 @@ describe('LinkSection', () => {
     mockListLinks.mockResolvedValue({
       links: [],
       totalCount: 0,
-      $typeName: 'centy.ListLinksResponse',
+      $typeName: 'centy.v1.ListLinksResponse',
       $unknown: undefined,
     })
 
@@ -135,7 +135,7 @@ describe('LinkSection', () => {
     mockListLinks.mockResolvedValue({
       links: [],
       totalCount: 0,
-      $typeName: 'centy.ListLinksResponse',
+      $typeName: 'centy.v1.ListLinksResponse',
       $unknown: undefined,
     })
 
@@ -155,7 +155,7 @@ describe('LinkSection', () => {
     mockListLinks.mockResolvedValue({
       links: [],
       totalCount: 0,
-      $typeName: 'centy.ListLinksResponse',
+      $typeName: 'centy.v1.ListLinksResponse',
       $unknown: undefined,
     })
 
@@ -184,7 +184,7 @@ describe('LinkSection', () => {
     mockListLinks.mockResolvedValue({
       links: [createMockLink({ targetId: 'issue-1', linkType: 'blocks' })],
       totalCount: 1,
-      $typeName: 'centy.ListLinksResponse',
+      $typeName: 'centy.v1.ListLinksResponse',
       $unknown: undefined,
     })
 
@@ -192,7 +192,7 @@ describe('LinkSection', () => {
       success: true,
       error: '',
       deletedCount: 1,
-      $typeName: 'centy.DeleteLinkResponse',
+      $typeName: 'centy.v1.DeleteLinkResponse',
       $unknown: undefined,
     })
 
@@ -228,7 +228,7 @@ describe('LinkSection', () => {
     mockListLinks.mockResolvedValue({
       links: [createMockLink({ targetId: 'issue-1', linkType: 'blocks' })],
       totalCount: 1,
-      $typeName: 'centy.ListLinksResponse',
+      $typeName: 'centy.v1.ListLinksResponse',
       $unknown: undefined,
     })
 
@@ -236,7 +236,7 @@ describe('LinkSection', () => {
       success: false,
       error: 'Cannot delete link',
       deletedCount: 0,
-      $typeName: 'centy.DeleteLinkResponse',
+      $typeName: 'centy.v1.DeleteLinkResponse',
       $unknown: undefined,
     })
 
@@ -275,7 +275,7 @@ describe('LinkSection', () => {
         }),
       ],
       totalCount: 3,
-      $typeName: 'centy.ListLinksResponse',
+      $typeName: 'centy.v1.ListLinksResponse',
       $unknown: undefined,
     })
 
@@ -317,7 +317,7 @@ describe('LinkSection', () => {
     mockListLinks.mockResolvedValue({
       links: [createMockLink({ targetId: 'issue-1', linkType: 'blocks' })],
       totalCount: 1,
-      $typeName: 'centy.ListLinksResponse',
+      $typeName: 'centy.v1.ListLinksResponse',
       $unknown: undefined,
     })
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { type LlmConfig } from '@/gen/centy_pb'
+import { type LlmConfig, WorkspaceMode } from '@/gen/centy_pb'
 
 interface LlmSettingsEditorProps {
   value: LlmConfig | undefined

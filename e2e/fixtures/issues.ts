@@ -18,10 +18,12 @@ export function createMockIssue(overrides: Partial<Issue> = {}): Issue {
     createdAt: now,
     updatedAt: now,
     customFields: {},
-    compacted: false,
-    compactedAt: '',
     draft: false,
-    $typeName: 'centy.IssueMetadata',
+    deletedAt: '',
+    isOrgIssue: false,
+    orgSlug: '',
+    orgDisplayNumber: 0,
+    $typeName: 'centy.v1.IssueMetadata',
   }
 
   return {
@@ -35,7 +37,7 @@ export function createMockIssue(overrides: Partial<Issue> = {}): Issue {
       ...defaultMetadata,
       ...overrides.metadata,
     },
-    $typeName: 'centy.Issue',
+    $typeName: 'centy.v1.Issue',
   }
 }
 
@@ -55,10 +57,12 @@ export function createMockIssueMetadata(
     createdAt: overrides.createdAt ?? now,
     updatedAt: overrides.updatedAt ?? now,
     customFields: overrides.customFields ?? {},
-    compacted: overrides.compacted ?? false,
-    compactedAt: overrides.compactedAt ?? '',
     draft: overrides.draft ?? false,
-    $typeName: 'centy.IssueMetadata',
+    deletedAt: overrides.deletedAt ?? '',
+    isOrgIssue: overrides.isOrgIssue ?? false,
+    orgSlug: overrides.orgSlug ?? '',
+    orgDisplayNumber: overrides.orgDisplayNumber ?? 0,
+    $typeName: 'centy.v1.IssueMetadata',
   }
 }
 

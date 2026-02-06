@@ -42,7 +42,7 @@ export function StatusConfigDialog({
           setConfig(response.config)
           // Pre-select current value if it exists
           if (response.config.llm) {
-            setSelectedOption(response.config.llm.updateStatusOnStart)
+            setSelectedOption(response.config.llm.updateStatusOnStart ?? false)
           }
         } else {
           setError(response.error || 'Failed to load project configuration')

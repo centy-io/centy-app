@@ -63,10 +63,14 @@ export function DocDetail({ slug }: DocDetailProps) {
         slug,
       })
       const response = await centyClient.getDoc(request)
-      setDoc(response)
-      setEditTitle(response.title)
-      setEditContent(response.content)
-      setEditSlug('')
+      if (response.doc) {
+        setDoc(response.doc)
+        setEditTitle(response.doc.title)
+        setEditContent(response.doc.content)
+        setEditSlug('')
+      } else {
+        setError(response.error || 'Document not found')
+      }
     } catch (err) {
       setError(
         err instanceof Error ? err.message : 'Failed to connect to daemon'

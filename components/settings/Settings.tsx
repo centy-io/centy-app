@@ -8,8 +8,6 @@ import {
   GetConfigRequestSchema,
   GetManifestRequestSchema,
   GetDaemonInfoRequestSchema,
-  GetProjectVersionRequestSchema,
-  UpdateVersionRequestSchema,
   UpdateConfigRequestSchema,
   ShutdownRequestSchema,
   RestartRequestSchema,
@@ -17,7 +15,6 @@ import {
   type Config,
   type Manifest,
   type DaemonInfo,
-  type ProjectVersionInfo,
   type CustomFieldDefinition,
   type LlmConfig,
 } from '@/gen/centy_pb'
@@ -37,16 +34,10 @@ export function Settings() {
   const [originalConfig, setOriginalConfig] = useState<Config | null>(null)
   const [manifest, setManifest] = useState<Manifest | null>(null)
   const [daemonInfo, setDaemonInfo] = useState<DaemonInfo | null>(null)
-  const [versionInfo, setVersionInfo] = useState<ProjectVersionInfo | null>(
-    null
-  )
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
-
-  const [targetVersion, setTargetVersion] = useState('')
-  const [updating, setUpdating] = useState(false)
 
   const [shuttingDown, setShuttingDown] = useState(false)
   const [restarting, setRestarting] = useState(false)
@@ -110,21 +101,20 @@ export function Settings() {
         projectPath: projectPath.trim(),
       })
       const configResponse = await centyClient.getConfig(configRequest)
-      setConfig(configResponse)
-      setOriginalConfig(structuredClone(configResponse))
+      if (configResponse.config) {
+        setConfig(configResponse.config)
+        setOriginalConfig(structuredClone(configResponse.config))
+      } else {
+        setError(configResponse.error || 'Failed to load configuration')
+      }
 
       const manifestRequest = create(GetManifestRequestSchema, {
         projectPath: projectPath.trim(),
       })
       const manifestResponse = await centyClient.getManifest(manifestRequest)
-      setManifest(manifestResponse)
-
-      const versionRequest = create(GetProjectVersionRequestSchema, {
-        projectPath: projectPath.trim(),
-      })
-      const versionResponse =
-        await centyClient.getProjectVersion(versionRequest)
-      setVersionInfo(versionResponse)
+      if (manifestResponse.manifest) {
+        setManifest(manifestResponse.manifest)
+      }
     } catch (err) {
       setError(
         err instanceof Error ? err.message : 'Failed to connect to daemon'
@@ -169,43 +159,6 @@ export function Settings() {
       setConfig(structuredClone(originalConfig))
     }
   }, [originalConfig])
-
-  const handleUpdateVersion = useCallback(async () => {
-    if (!projectPath || !targetVersion) return
-
-    setUpdating(true)
-    setError(null)
-    setSuccess(null)
-
-    try {
-      const request = create(UpdateVersionRequestSchema, {
-        projectPath,
-        targetVersion,
-      })
-      const response = await centyClient.updateVersion(request)
-
-      if (response.success) {
-        setSuccess(
-          `Updated from ${response.fromVersion} to ${response.toVersion}. Migrations applied: ${response.migrationsApplied.join(', ') || 'none'}`
-        )
-        setTargetVersion('')
-        const versionRequest = create(GetProjectVersionRequestSchema, {
-          projectPath,
-        })
-        const versionResponse =
-          await centyClient.getProjectVersion(versionRequest)
-        setVersionInfo(versionResponse)
-      } else {
-        setError(response.error || 'Failed to update version')
-      }
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to connect to daemon'
-      )
-    } finally {
-      setUpdating(false)
-    }
-  }, [projectPath, targetVersion])
 
   const handleShutdown = useCallback(async () => {
     setShuttingDown(true)
@@ -297,14 +250,6 @@ export function Settings() {
                 <span className="info-label">Version</span>
                 <span className="info-value">{daemonInfo.version}</span>
               </div>
-              <div className="info-item">
-                <span className="info-label">Available Versions</span>
-                <span className="info-value">
-                  {daemonInfo.availableVersions.length > 0
-                    ? daemonInfo.availableVersions.join(', ')
-                    : 'None'}
-                </span>
-              </div>
             </div>
           ) : (
             <div className="loading-inline">Loading daemon info...</div>
@@ -392,80 +337,6 @@ export function Settings() {
             <div className="loading">Loading project settings...</div>
           ) : (
             <>
-              <section className="settings-section">
-                <h3>Version Management</h3>
-                <div className="settings-card">
-                  {versionInfo && (
-                    <>
-                      <div className="info-grid">
-                        <div className="info-item">
-                          <span className="info-label">Project Version</span>
-                          <span className="info-value">
-                            {versionInfo.projectVersion}
-                          </span>
-                        </div>
-                        <div className="info-item">
-                          <span className="info-label">Daemon Version</span>
-                          <span className="info-value">
-                            {versionInfo.daemonVersion}
-                          </span>
-                        </div>
-                        <div className="info-item">
-                          <span className="info-label">Status</span>
-                          <span
-                            className={`info-value status-${versionInfo.comparison}`}
-                          >
-                            {versionInfo.comparison === 'equal'
-                              ? 'Up to date'
-                              : versionInfo.comparison === 'project_behind'
-                                ? 'Update available'
-                                : 'Project ahead of daemon'}
-                          </span>
-                        </div>
-                        {versionInfo.degradedMode && (
-                          <div className="info-item warning">
-                            <span className="info-label">Warning</span>
-                            <span className="info-value">
-                              Running in degraded mode (project version ahead of
-                              daemon)
-                            </span>
-                          </div>
-                        )}
-                      </div>
-
-                      {versionInfo.comparison === 'project_behind' &&
-                        daemonInfo?.availableVersions &&
-                        daemonInfo.availableVersions.length > 0 && (
-                          <div className="version-update">
-                            <label htmlFor="target-version">
-                              Update to version:
-                            </label>
-                            <select
-                              id="target-version"
-                              value={targetVersion}
-                              onChange={e => setTargetVersion(e.target.value)}
-                            >
-                              <option value="">Select version...</option>
-                              {daemonInfo.availableVersions.map(v => (
-                                <option key={v} value={v}>
-                                  {v}
-                                </option>
-                              ))}
-                            </select>
-                            <button
-                              onClick={handleUpdateVersion}
-                              disabled={!targetVersion || updating}
-                              className="update-btn"
-                            >
-                              {updating ? 'Updating...' : 'Update'}
-                            </button>
-                          </div>
-                        )}
-                    </>
-                  )}
-                </div>
-              </section>
-
               <section className="settings-section">
                 <h3>Project Title</h3>
                 <div className="settings-card">

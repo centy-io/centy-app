@@ -10,7 +10,6 @@ import {
   UpdateIssueRequestSchema,
   DeleteIssueRequestSchema,
   ListAssetsRequestSchema,
-  OpenInTempVscodeRequestSchema,
   OpenInTempWorkspaceRequestSchema,
   LlmAction,
   type Issue,
@@ -90,11 +89,15 @@ export function IssueDetail({ issueNumber }: IssueDetailProps) {
         issueId: issueNumber,
       })
       const response = await centyClient.getIssue(request)
-      setIssue(response)
-      setEditTitle(response.title)
-      setEditDescription(response.description)
-      setEditStatus(response.metadata?.status || 'open')
-      setEditPriority(response.metadata?.priority || 2)
+      if (response.issue) {
+        setIssue(response.issue)
+        setEditTitle(response.issue.title)
+        setEditDescription(response.issue.description)
+        setEditStatus(response.issue.metadata?.status || 'open')
+        setEditPriority(response.issue.metadata?.priority || 2)
+      } else {
+        setError(response.error || 'Issue not found')
+      }
     } catch (err) {
       setError(
         err instanceof Error ? err.message : 'Failed to connect to daemon'
@@ -273,7 +276,7 @@ export function IssueDetail({ issueNumber }: IssueDetailProps) {
     setError(null)
 
     try {
-      const request = create(OpenInTempVscodeRequestSchema, {
+      const request = create(OpenInTempWorkspaceRequestSchema, {
         projectPath,
         issueId: issue.id,
         action: LlmAction.PLAN,
@@ -283,7 +286,7 @@ export function IssueDetail({ issueNumber }: IssueDetailProps) {
       const response = await centyClient.openInTempVscode(request)
 
       if (response.success) {
-        if (!response.vscodeOpened) {
+        if (!response.editorOpened) {
           const actionWord = response.workspaceReused
             ? 'Reopened workspace'
             : 'Workspace created'

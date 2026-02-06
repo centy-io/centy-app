@@ -68,10 +68,14 @@ export function UserDetail({ userId }: UserDetailProps) {
         userId,
       })
       const response = await centyClient.getUser(request)
-      setUser(response)
-      setEditName(response.name)
-      setEditEmail(response.email || '')
-      setEditGitUsernames([...response.gitUsernames])
+      if (response.user) {
+        setUser(response.user)
+        setEditName(response.user.name)
+        setEditEmail(response.user.email || '')
+        setEditGitUsernames([...response.user.gitUsernames])
+      } else {
+        setError(response.error || 'User not found')
+      }
     } catch (err) {
       const message =
         err instanceof Error ? err.message : 'Failed to connect to daemon'

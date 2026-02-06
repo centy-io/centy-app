@@ -3,7 +3,7 @@ import {
   ListIssuesRequestSchema,
   ListIssuesResponseSchema,
   GetIssueRequestSchema,
-  IssueSchema,
+  GetIssueResponseSchema,
   GetIssueByDisplayNumberRequestSchema,
   CreateIssueRequestSchema,
   CreateIssueResponseSchema,
@@ -17,6 +17,7 @@ import {
 import type {
   Issue,
   ListIssuesResponse,
+  GetIssueResponse,
   CreateIssueResponse,
   UpdateIssueResponse,
   DeleteIssueResponse,
@@ -72,7 +73,7 @@ export function addIssueHandlers(
       return {
         issues: filteredIssues,
         totalCount: filteredIssues.length,
-        $typeName: 'centy.ListIssuesResponse',
+        $typeName: 'centy.v1.ListIssuesResponse',
       }
     }
   )
@@ -81,13 +82,22 @@ export function addIssueHandlers(
   mocker.addHandler(
     'GetIssue',
     GetIssueRequestSchema,
-    IssueSchema,
-    (request: GetIssueRequest): Issue => {
+    GetIssueResponseSchema,
+    (request: GetIssueRequest): GetIssueResponse => {
       const issue = issues.find(i => i.id === request.issueId)
       if (!issue) {
-        throw new Error(`Issue not found: ${request.issueId}`)
+        return {
+          success: false,
+          error: `Issue not found: ${request.issueId}`,
+          $typeName: 'centy.v1.GetIssueResponse',
+        }
       }
-      return issue
+      return {
+        success: true,
+        error: '',
+        issue,
+        $typeName: 'centy.v1.GetIssueResponse',
+      }
     }
   )
 
@@ -95,13 +105,22 @@ export function addIssueHandlers(
   mocker.addHandler(
     'GetIssueByDisplayNumber',
     GetIssueByDisplayNumberRequestSchema,
-    IssueSchema,
-    (request: GetIssueByDisplayNumberRequest): Issue => {
+    GetIssueResponseSchema,
+    (request: GetIssueByDisplayNumberRequest): GetIssueResponse => {
       const issue = issues.find(i => i.displayNumber === request.displayNumber)
       if (!issue) {
-        throw new Error(`Issue not found: #${request.displayNumber}`)
+        return {
+          success: false,
+          error: `Issue not found: #${request.displayNumber}`,
+          $typeName: 'centy.v1.GetIssueResponse',
+        }
       }
-      return issue
+      return {
+        success: true,
+        error: '',
+        issue,
+        $typeName: 'centy.v1.GetIssueResponse',
+      }
     }
   )
 
@@ -112,7 +131,7 @@ export function addIssueHandlers(
     GetNextIssueNumberResponseSchema,
     (): GetNextIssueNumberResponse => ({
       issueNumber: String(nextDisplayNumber),
-      $typeName: 'centy.GetNextIssueNumberResponse',
+      $typeName: 'centy.v1.GetNextIssueNumberResponse',
     })
   )
 
@@ -141,7 +160,9 @@ export function addIssueHandlers(
         issueNumber: newIssue.issueNumber,
         createdFiles: [],
         manifest: mockManifest,
-        $typeName: 'centy.CreateIssueResponse',
+        orgDisplayNumber: 0,
+        syncResults: [],
+        $typeName: 'centy.v1.CreateIssueResponse',
       }
     }
   )
@@ -159,7 +180,8 @@ export function addIssueHandlers(
           error: `Issue not found: ${request.issueId}`,
           issue: undefined,
           manifest: mockManifest,
-          $typeName: 'centy.UpdateIssueResponse',
+          syncResults: [],
+          $typeName: 'centy.v1.UpdateIssueResponse',
         }
       }
 
@@ -188,7 +210,8 @@ export function addIssueHandlers(
         error: '',
         issue: updatedIssue,
         manifest: mockManifest,
-        $typeName: 'centy.UpdateIssueResponse',
+        syncResults: [],
+        $typeName: 'centy.v1.UpdateIssueResponse',
       }
     }
   )
@@ -205,7 +228,7 @@ export function addIssueHandlers(
           success: false,
           error: `Issue not found: ${request.issueId}`,
           manifest: mockManifest,
-          $typeName: 'centy.DeleteIssueResponse',
+          $typeName: 'centy.v1.DeleteIssueResponse',
         }
       }
 
@@ -214,7 +237,7 @@ export function addIssueHandlers(
           success: false,
           error: 'Delete cancelled',
           manifest: mockManifest,
-          $typeName: 'centy.DeleteIssueResponse',
+          $typeName: 'centy.v1.DeleteIssueResponse',
         }
       }
 
@@ -224,7 +247,7 @@ export function addIssueHandlers(
         success: true,
         error: '',
         manifest: mockManifest,
-        $typeName: 'centy.DeleteIssueResponse',
+        $typeName: 'centy.v1.DeleteIssueResponse',
       }
     }
   )

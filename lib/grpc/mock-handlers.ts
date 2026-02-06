@@ -662,7 +662,7 @@ export const mockHandlers: MockHandlers = {
 
   async listUncompactedIssues(): Promise<{ issues: Issue[] }> {
     return {
-      issues: DEMO_ISSUES.filter(i => !i.metadata?.compacted),
+      issues: DEMO_ISSUES,
     }
   },
 

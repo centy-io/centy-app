@@ -13,7 +13,10 @@ export function createMockDoc(overrides: Partial<Doc> = {}): Doc {
   const defaultMetadata: DocMetadata = {
     createdAt: now,
     updatedAt: now,
-    $typeName: 'centy.DocMetadata',
+    deletedAt: '',
+    isOrgDoc: false,
+    orgSlug: '',
+    $typeName: 'centy.v1.DocMetadata',
   }
 
   return {
@@ -24,7 +27,7 @@ export function createMockDoc(overrides: Partial<Doc> = {}): Doc {
       ...defaultMetadata,
       ...overrides.metadata,
     },
-    $typeName: 'centy.Doc',
+    $typeName: 'centy.v1.Doc',
   }
 }
 
@@ -39,7 +42,10 @@ export function createMockDocMetadata(
   return {
     createdAt: overrides.createdAt ?? now,
     updatedAt: overrides.updatedAt ?? now,
-    $typeName: 'centy.DocMetadata',
+    deletedAt: overrides.deletedAt ?? '',
+    isOrgDoc: overrides.isOrgDoc ?? false,
+    orgSlug: overrides.orgSlug ?? '',
+    $typeName: 'centy.v1.DocMetadata',
   }
 }
 

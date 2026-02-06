@@ -59,10 +59,10 @@ const createMockIssue = (
             createdAt: '2024-01-15T10:00:00Z',
             updatedAt: '2024-01-15T10:00:00Z',
             customFields: {},
-            $typeName: 'centy.IssueMetadata' as const,
+            $typeName: 'centy.v1.IssueMetadata' as const,
             $unknown: undefined,
           },
-    $typeName: 'centy.Issue' as const,
+    $typeName: 'centy.v1.Issue' as const,
     $unknown: undefined,
   }) as Issue
 
@@ -129,7 +129,7 @@ describe('IssuesList', () => {
     mockListIssues.mockResolvedValue({
       issues: [],
       totalCount: 0,
-      $typeName: 'centy.ListIssuesResponse',
+      $typeName: 'centy.v1.ListIssuesResponse',
       $unknown: undefined,
     })
 
@@ -175,7 +175,7 @@ describe('IssuesList', () => {
         }),
       ],
       totalCount: 2,
-      $typeName: 'centy.ListIssuesResponse',
+      $typeName: 'centy.v1.ListIssuesResponse',
       $unknown: undefined,
     })
 
@@ -206,7 +206,7 @@ describe('IssuesList', () => {
     mockListIssues.mockResolvedValue({
       issues: [],
       totalCount: 0,
-      $typeName: 'centy.ListIssuesResponse',
+      $typeName: 'centy.v1.ListIssuesResponse',
       $unknown: undefined,
     })
 
@@ -257,7 +257,7 @@ describe('IssuesList', () => {
     mockListIssues.mockResolvedValue({
       issues: [],
       totalCount: 0,
-      $typeName: 'centy.ListIssuesResponse',
+      $typeName: 'centy.v1.ListIssuesResponse',
       $unknown: undefined,
     })
 
@@ -300,7 +300,7 @@ describe('IssuesList', () => {
         }),
       ],
       totalCount: 1,
-      $typeName: 'centy.ListIssuesResponse',
+      $typeName: 'centy.v1.ListIssuesResponse',
       $unknown: undefined,
     })
 

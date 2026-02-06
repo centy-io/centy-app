@@ -7,22 +7,14 @@ import { create } from '@bufbuild/protobuf'
 import {
   GetConfigRequestSchema,
   GetManifestRequestSchema,
-  GetDaemonInfoRequestSchema,
-  GetProjectVersionRequestSchema,
-  UpdateVersionRequestSchema,
   UpdateConfigRequestSchema,
   IsInitializedRequestSchema,
-  GetLocalLlmConfigRequestSchema,
-  UpdateLocalLlmConfigRequestSchema,
   GetProjectInfoRequestSchema,
   SetProjectOrganizationRequestSchema,
   type Config,
   type Manifest,
-  type DaemonInfo,
-  type ProjectVersionInfo,
   type CustomFieldDefinition,
   type LlmConfig,
-  type LocalLlmConfig,
 } from '@/gen/centy_pb'
 import { useProject } from '@/components/providers/ProjectProvider'
 import { useOrganization } from '@/components/providers/OrganizationProvider'
@@ -43,35 +35,10 @@ export function ProjectConfig() {
   const [savingOrg, setSavingOrg] = useState(false)
   const [originalConfig, setOriginalConfig] = useState<Config | null>(null)
   const [manifest, setManifest] = useState<Manifest | null>(null)
-  const [daemonInfo, setDaemonInfo] = useState<DaemonInfo | null>(null)
-  const [versionInfo, setVersionInfo] = useState<ProjectVersionInfo | null>(
-    null
-  )
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
-
-  const [targetVersion, setTargetVersion] = useState('')
-  const [updating, setUpdating] = useState(false)
-
-  // LLM Config state for project-level agent configuration
-  const [projectLlmConfig, setProjectLlmConfig] = useState<
-    LocalLlmConfig | undefined
-  >(undefined)
-  const [originalProjectLlmConfig, setOriginalProjectLlmConfig] = useState<
-    LocalLlmConfig | undefined
-  >(undefined)
-  const [globalLlmConfig, setGlobalLlmConfig] = useState<
-    LocalLlmConfig | undefined
-  >(undefined)
-  const [savingLlmConfig, setSavingLlmConfig] = useState(false)
-
-  const isLlmConfigDirty =
-    projectLlmConfig && originalProjectLlmConfig
-      ? JSON.stringify(projectLlmConfig) !==
-        JSON.stringify(originalProjectLlmConfig)
-      : false
 
   const isDirty =
     config && originalConfig
@@ -109,16 +76,6 @@ export function ProjectConfig() {
     [setIsInitialized]
   )
 
-  const fetchDaemonInfo = useCallback(async () => {
-    try {
-      const request = create(GetDaemonInfoRequestSchema, {})
-      const response = await centyClient.getDaemonInfo(request)
-      setDaemonInfo(response)
-    } catch (err) {
-      console.error('Failed to fetch daemon info:', err)
-    }
-  }, [])
-
   const fetchProjectData = useCallback(async () => {
     if (!projectPath.trim() || isInitialized !== true) return
 
@@ -130,21 +87,20 @@ export function ProjectConfig() {
         projectPath: projectPath.trim(),
       })
       const configResponse = await centyClient.getConfig(configRequest)
-      setConfig(configResponse)
-      setOriginalConfig(structuredClone(configResponse))
+      if (configResponse.config) {
+        setConfig(configResponse.config)
+        setOriginalConfig(structuredClone(configResponse.config))
+      } else {
+        setError(configResponse.error || 'Failed to load configuration')
+      }
 
       const manifestRequest = create(GetManifestRequestSchema, {
         projectPath: projectPath.trim(),
       })
       const manifestResponse = await centyClient.getManifest(manifestRequest)
-      setManifest(manifestResponse)
-
-      const versionRequest = create(GetProjectVersionRequestSchema, {
-        projectPath: projectPath.trim(),
-      })
-      const versionResponse =
-        await centyClient.getProjectVersion(versionRequest)
-      setVersionInfo(versionResponse)
+      if (manifestResponse.manifest) {
+        setManifest(manifestResponse.manifest)
+      }
     } catch (err) {
       setError(
         err instanceof Error ? err.message : 'Failed to connect to daemon'
@@ -190,43 +146,6 @@ export function ProjectConfig() {
     }
   }, [originalConfig])
 
-  const handleUpdateVersion = useCallback(async () => {
-    if (!projectPath || !targetVersion) return
-
-    setUpdating(true)
-    setError(null)
-    setSuccess(null)
-
-    try {
-      const request = create(UpdateVersionRequestSchema, {
-        projectPath,
-        targetVersion,
-      })
-      const response = await centyClient.updateVersion(request)
-
-      if (response.success) {
-        setSuccess(
-          `Updated from ${response.fromVersion} to ${response.toVersion}. Migrations applied: ${response.migrationsApplied.join(', ') || 'none'}`
-        )
-        setTargetVersion('')
-        const versionRequest = create(GetProjectVersionRequestSchema, {
-          projectPath,
-        })
-        const versionResponse =
-          await centyClient.getProjectVersion(versionRequest)
-        setVersionInfo(versionResponse)
-      } else {
-        setError(response.error || 'Failed to update version')
-      }
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to connect to daemon'
-      )
-    } finally {
-      setUpdating(false)
-    }
-  }, [projectPath, targetVersion])
-
   const updateConfig = useCallback(
     (updates: Partial<Config>) => {
       if (!config) return
@@ -234,70 +153,6 @@ export function ProjectConfig() {
     },
     [config]
   )
-
-  const fetchLlmConfigs = useCallback(async () => {
-    if (!projectPath.trim()) return
-
-    try {
-      // Fetch global config first
-      const globalRequest = create(GetLocalLlmConfigRequestSchema, {
-        projectPath: '',
-      })
-      const globalResponse = await centyClient.getLocalLlmConfig(globalRequest)
-      setGlobalLlmConfig(globalResponse.config)
-
-      // Fetch project config
-      const projectRequest = create(GetLocalLlmConfigRequestSchema, {
-        projectPath: projectPath.trim(),
-      })
-      const projectResponse =
-        await centyClient.getLocalLlmConfig(projectRequest)
-      setProjectLlmConfig(projectResponse.config)
-      setOriginalProjectLlmConfig(
-        projectResponse.config
-          ? structuredClone(projectResponse.config)
-          : undefined
-      )
-    } catch (err) {
-      console.error('Failed to fetch LLM configs:', err)
-    }
-  }, [projectPath])
-
-  const handleSaveLlmConfig = useCallback(async () => {
-    if (!projectPath || !projectLlmConfig) return
-
-    setSavingLlmConfig(true)
-    setError(null)
-    setSuccess(null)
-
-    try {
-      const request = create(UpdateLocalLlmConfigRequestSchema, {
-        projectPath: projectPath.trim(),
-        config: projectLlmConfig,
-      })
-      const response = await centyClient.updateLocalLlmConfig(request)
-
-      if (response.success && response.config) {
-        setSuccess('Agent configuration saved successfully')
-        setProjectLlmConfig(response.config)
-        setOriginalProjectLlmConfig(structuredClone(response.config))
-      } else {
-        setError(response.error || 'Failed to save agent configuration')
-      }
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to connect to daemon'
-      )
-    } finally {
-      setSavingLlmConfig(false)
-    }
-  }, [projectPath, projectLlmConfig])
-
-  const handleResetLlmConfig = useCallback(() => {
-    if (originalProjectLlmConfig) {
-      setProjectLlmConfig(structuredClone(originalProjectLlmConfig))
-    }
-  }, [originalProjectLlmConfig])
 
   const fetchProjectOrg = useCallback(async () => {
     if (!projectPath.trim()) return
@@ -353,10 +208,6 @@ export function ProjectConfig() {
   )
 
   useEffect(() => {
-    fetchDaemonInfo()
-  }, [fetchDaemonInfo])
-
-  useEffect(() => {
     const timeoutId = setTimeout(() => {
       checkInitialized(projectPath)
     }, 300)
@@ -366,10 +217,9 @@ export function ProjectConfig() {
   useEffect(() => {
     if (isInitialized === true) {
       fetchProjectData()
-      fetchLlmConfigs()
       fetchProjectOrg()
     }
-  }, [isInitialized, fetchProjectData, fetchLlmConfigs, fetchProjectOrg])
+  }, [isInitialized, fetchProjectData, fetchProjectOrg])
 
   return (
     <div className="settings-page">
@@ -437,80 +287,6 @@ export function ProjectConfig() {
                 <h3>Project Title</h3>
                 <div className="settings-card">
                   <ProjectTitleEditor projectPath={projectPath} />
-                </div>
-              </section>
-
-              <section className="settings-section">
-                <h3>Version Management</h3>
-                <div className="settings-card">
-                  {versionInfo && (
-                    <>
-                      <div className="info-grid">
-                        <div className="info-item">
-                          <span className="info-label">Project Version</span>
-                          <span className="info-value">
-                            {versionInfo.projectVersion}
-                          </span>
-                        </div>
-                        <div className="info-item">
-                          <span className="info-label">Daemon Version</span>
-                          <span className="info-value">
-                            {versionInfo.daemonVersion}
-                          </span>
-                        </div>
-                        <div className="info-item">
-                          <span className="info-label">Status</span>
-                          <span
-                            className={`info-value status-${versionInfo.comparison}`}
-                          >
-                            {versionInfo.comparison === 'equal'
-                              ? 'Up to date'
-                              : versionInfo.comparison === 'project_behind'
-                                ? 'Update available'
-                                : 'Project ahead of daemon'}
-                          </span>
-                        </div>
-                        {versionInfo.degradedMode && (
-                          <div className="info-item warning">
-                            <span className="info-label">Warning</span>
-                            <span className="info-value">
-                              Running in degraded mode (project version ahead of
-                              daemon)
-                            </span>
-                          </div>
-                        )}
-                      </div>
-
-                      {versionInfo.comparison === 'project_behind' &&
-                        daemonInfo?.availableVersions &&
-                        daemonInfo.availableVersions.length > 0 && (
-                          <div className="version-update">
-                            <label htmlFor="target-version">
-                              Update to version:
-                            </label>
-                            <select
-                              id="target-version"
-                              value={targetVersion}
-                              onChange={e => setTargetVersion(e.target.value)}
-                            >
-                              <option value="">Select version...</option>
-                              {daemonInfo.availableVersions.map(v => (
-                                <option key={v} value={v}>
-                                  {v}
-                                </option>
-                              ))}
-                            </select>
-                            <button
-                              onClick={handleUpdateVersion}
-                              disabled={!targetVersion || updating}
-                              className="update-btn"
-                            >
-                              {updating ? 'Updating...' : 'Update'}
-                            </button>
-                          </div>
-                        )}
-                    </>
-                  )}
                 </div>
               </section>
 
@@ -607,39 +383,9 @@ export function ProjectConfig() {
               )}
 
               <section className="settings-section">
-                <h3>Agent Configuration (Project Override)</h3>
-                {isLlmConfigDirty && (
-                  <span className="unsaved-indicator">Unsaved changes</span>
-                )}
-                <p className="section-description">
-                  Configure agents for this project. Leave empty to use global
-                  settings.
-                </p>
+                <h3>Agent Configuration</h3>
                 <div className="settings-card">
-                  <AgentConfigEditor
-                    config={projectLlmConfig}
-                    onChange={setProjectLlmConfig}
-                    scope="project"
-                    globalConfig={globalLlmConfig}
-                  />
-                </div>
-                <div className="settings-actions">
-                  <button
-                    type="button"
-                    onClick={handleResetLlmConfig}
-                    disabled={!isLlmConfigDirty || savingLlmConfig}
-                    className="reset-btn"
-                  >
-                    Reset Changes
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleSaveLlmConfig}
-                    disabled={!isLlmConfigDirty || savingLlmConfig}
-                    className="save-btn"
-                  >
-                    {savingLlmConfig ? 'Saving...' : 'Save Agent Configuration'}
-                  </button>
+                  <AgentConfigEditor />
                 </div>
               </section>
 

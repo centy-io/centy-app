@@ -21,9 +21,8 @@ export function addDaemonHandlers(
     GetDaemonInfoRequestSchema,
     DaemonInfoSchema,
     (): DaemonInfo => ({
-      $typeName: 'centy.DaemonInfo',
+      $typeName: 'centy.v1.DaemonInfo',
       version: '1.0.0 (Test)',
-      availableVersions: ['1.0.0'],
       binaryPath: '/test/centy-daemon',
       vscodeAvailable,
     })

@@ -3,7 +3,7 @@ import {
   ListDocsRequestSchema,
   ListDocsResponseSchema,
   GetDocRequestSchema,
-  DocSchema,
+  GetDocResponseSchema,
   CreateDocRequestSchema,
   CreateDocResponseSchema,
   UpdateDocRequestSchema,
@@ -14,6 +14,7 @@ import {
 import type {
   Doc,
   ListDocsResponse,
+  GetDocResponse,
   CreateDocResponse,
   UpdateDocResponse,
   DeleteDocResponse,
@@ -48,7 +49,7 @@ export function addDocHandlers(
     (): ListDocsResponse => ({
       docs,
       totalCount: docs.length,
-      $typeName: 'centy.ListDocsResponse',
+      $typeName: 'centy.v1.ListDocsResponse',
     })
   )
 
@@ -56,13 +57,22 @@ export function addDocHandlers(
   mocker.addHandler(
     'GetDoc',
     GetDocRequestSchema,
-    DocSchema,
-    (request: GetDocRequest): Doc => {
+    GetDocResponseSchema,
+    (request: GetDocRequest): GetDocResponse => {
       const doc = docs.find(d => d.slug === request.slug)
       if (!doc) {
-        throw new Error(`Doc not found: ${request.slug}`)
+        return {
+          success: false,
+          error: `Doc not found: ${request.slug}`,
+          $typeName: 'centy.v1.GetDocResponse',
+        }
       }
-      return doc
+      return {
+        success: true,
+        error: '',
+        doc,
+        $typeName: 'centy.v1.GetDocResponse',
+      }
     }
   )
 
@@ -80,7 +90,8 @@ export function addDocHandlers(
           slug: '',
           createdFile: '',
           manifest: mockManifest,
-          $typeName: 'centy.CreateDocResponse',
+          syncResults: [],
+          $typeName: 'centy.v1.CreateDocResponse',
         }
       }
 
@@ -100,7 +111,8 @@ export function addDocHandlers(
         slug: newDoc.slug,
         createdFile: `.centy/docs/${newDoc.slug}.md`,
         manifest: mockManifest,
-        $typeName: 'centy.CreateDocResponse',
+        syncResults: [],
+        $typeName: 'centy.v1.CreateDocResponse',
       }
     }
   )
@@ -118,7 +130,8 @@ export function addDocHandlers(
           error: `Doc not found: ${request.slug}`,
           doc: undefined,
           manifest: mockManifest,
-          $typeName: 'centy.UpdateDocResponse',
+          syncResults: [],
+          $typeName: 'centy.v1.UpdateDocResponse',
         }
       }
 
@@ -143,7 +156,8 @@ export function addDocHandlers(
         error: '',
         doc: updatedDoc,
         manifest: mockManifest,
-        $typeName: 'centy.UpdateDocResponse',
+        syncResults: [],
+        $typeName: 'centy.v1.UpdateDocResponse',
       }
     }
   )
@@ -160,7 +174,7 @@ export function addDocHandlers(
           success: false,
           error: `Doc not found: ${request.slug}`,
           manifest: mockManifest,
-          $typeName: 'centy.DeleteDocResponse',
+          $typeName: 'centy.v1.DeleteDocResponse',
         }
       }
 
@@ -169,7 +183,7 @@ export function addDocHandlers(
           success: false,
           error: 'Delete cancelled',
           manifest: mockManifest,
-          $typeName: 'centy.DeleteDocResponse',
+          $typeName: 'centy.v1.DeleteDocResponse',
         }
       }
 
@@ -179,7 +193,7 @@ export function addDocHandlers(
         success: true,
         error: '',
         manifest: mockManifest,
-        $typeName: 'centy.DeleteDocResponse',
+        $typeName: 'centy.v1.DeleteDocResponse',
       }
     }
   )

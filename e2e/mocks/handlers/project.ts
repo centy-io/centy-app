@@ -5,9 +5,9 @@ import {
   IsInitializedRequestSchema,
   IsInitializedResponseSchema,
   GetConfigRequestSchema,
-  ConfigSchema,
+  GetConfigResponseSchema,
   GetManifestRequestSchema,
-  ManifestSchema,
+  GetManifestResponseSchema,
   GetProjectInfoRequestSchema,
   GetProjectInfoResponseSchema,
 } from '@/gen/centy_pb'
@@ -16,6 +16,8 @@ import type {
   IsInitializedResponse,
   Config,
   Manifest,
+  GetConfigResponse,
+  GetManifestResponse,
   GetProjectInfoResponse,
   ProjectInfo,
 } from '@/gen/centy_pb'
@@ -54,7 +56,7 @@ export function addProjectHandlers(
     (): ListProjectsResponse => ({
       projects,
       totalCount: projects.length,
-      $typeName: 'centy.ListProjectsResponse',
+      $typeName: 'centy.v1.ListProjectsResponse',
     })
   )
 
@@ -66,7 +68,7 @@ export function addProjectHandlers(
     (): IsInitializedResponse => ({
       initialized: isInitialized,
       centyPath: isInitialized ? '/test/project/.centy' : '',
-      $typeName: 'centy.IsInitializedResponse',
+      $typeName: 'centy.v1.IsInitializedResponse',
     })
   )
 
@@ -74,16 +76,26 @@ export function addProjectHandlers(
   mocker.addHandler(
     'GetConfig',
     GetConfigRequestSchema,
-    ConfigSchema,
-    (): Config => config
+    GetConfigResponseSchema,
+    (): GetConfigResponse => ({
+      success: true,
+      error: '',
+      config,
+      $typeName: 'centy.v1.GetConfigResponse',
+    })
   )
 
   // GetManifest
   mocker.addHandler(
     'GetManifest',
     GetManifestRequestSchema,
-    ManifestSchema,
-    (): Manifest => manifest
+    GetManifestResponseSchema,
+    (): GetManifestResponse => ({
+      success: true,
+      error: '',
+      manifest,
+      $typeName: 'centy.v1.GetManifestResponse',
+    })
   )
 
   // GetProjectInfo
@@ -94,7 +106,7 @@ export function addProjectHandlers(
     (): GetProjectInfoResponse => ({
       found: projects.length > 0,
       project: projects[0],
-      $typeName: 'centy.GetProjectInfoResponse',
+      $typeName: 'centy.v1.GetProjectInfoResponse',
     })
   )
 

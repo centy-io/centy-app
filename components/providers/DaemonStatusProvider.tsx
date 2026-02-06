@@ -39,18 +39,22 @@ const CHECK_INTERVAL_MS = 10000 // Check every 10 seconds
 function createDemoEditors(): EditorInfo[] {
   return [
     {
-      $typeName: 'centy.EditorInfo',
+      $typeName: 'centy.v1.EditorInfo',
       editorType: EditorType.VSCODE,
       name: 'VS Code',
       description: 'Open in temporary VS Code workspace with AI agent',
       available: true,
+      editorId: 'vscode',
+      terminalWrapper: false,
     },
     {
-      $typeName: 'centy.EditorInfo',
+      $typeName: 'centy.v1.EditorInfo',
       editorType: EditorType.TERMINAL,
       name: 'Terminal',
       description: 'Open in terminal with AI agent',
       available: true,
+      editorId: 'terminal',
+      terminalWrapper: true,
     },
   ]
 }
@@ -126,18 +130,22 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
         // Fallback: create basic editor list based on vscodeAvailable
         setEditors([
           {
-            $typeName: 'centy.EditorInfo',
+            $typeName: 'centy.v1.EditorInfo',
             editorType: EditorType.VSCODE,
             name: 'VS Code',
             description: 'Open in temporary VS Code workspace with AI agent',
             available: daemonInfo.vscodeAvailable,
+            editorId: 'vscode',
+            terminalWrapper: false,
           },
           {
-            $typeName: 'centy.EditorInfo',
+            $typeName: 'centy.v1.EditorInfo',
             editorType: EditorType.TERMINAL,
             name: 'Terminal',
             description: 'Open in terminal with AI agent',
             available: true, // Terminal is always available
+            editorId: 'terminal',
+            terminalWrapper: true,
           },
         ])
       }

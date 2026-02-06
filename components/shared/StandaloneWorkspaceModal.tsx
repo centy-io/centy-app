@@ -4,10 +4,9 @@ import { useState, useCallback, useEffect, useRef } from 'react'
 import { centyClient } from '@/lib/grpc/client'
 import { create } from '@bufbuild/protobuf'
 import {
-  OpenStandaloneVscodeRequestSchema,
-  OpenStandaloneTerminalRequestSchema,
+  OpenStandaloneWorkspaceRequestSchema,
+  EditorType,
 } from '@/gen/centy_pb'
-import { EditorType } from '@/gen/centy_pb'
 import { useDaemonStatus } from '@/components/providers/DaemonStatusProvider'
 import '@/styles/components/StandaloneWorkspaceModal.css'
 
@@ -99,14 +98,15 @@ export function StandaloneWorkspaceModal({
 
     try {
       if (selectedEditor === EditorType.VSCODE) {
-        const request = create(OpenStandaloneVscodeRequestSchema, {
+        const request = create(OpenStandaloneWorkspaceRequestSchema, {
           projectPath,
           name: name.trim() || undefined,
           description: description.trim() || undefined,
           agentName: '',
           ttlHours,
         })
-        const response = await centyClient.openStandaloneVscode(request)
+        const response =
+          await centyClient.openStandaloneWorkspaceVscode(request)
 
         if (response.success) {
           onCreated?.(response.workspacePath)
@@ -115,14 +115,15 @@ export function StandaloneWorkspaceModal({
           setError(response.error || 'Failed to create workspace')
         }
       } else {
-        const request = create(OpenStandaloneTerminalRequestSchema, {
+        const request = create(OpenStandaloneWorkspaceRequestSchema, {
           projectPath,
           name: name.trim() || undefined,
           description: description.trim() || undefined,
           agentName: '',
           ttlHours,
         })
-        const response = await centyClient.openStandaloneTerminal(request)
+        const response =
+          await centyClient.openStandaloneWorkspaceTerminal(request)
 
         if (response.success) {
           onCreated?.(response.workspacePath)

@@ -25,7 +25,7 @@ export const DEMO_ORG_SLUG = 'demo-org'
 
 // Demo organization
 export const DEMO_ORGANIZATION: Organization = {
-  $typeName: 'centy.Organization',
+  $typeName: 'centy.v1.Organization',
   slug: 'demo-org',
   name: 'Demo Organization',
   description: 'A sample organization for demonstration purposes',
@@ -36,7 +36,7 @@ export const DEMO_ORGANIZATION: Organization = {
 
 // Demo project
 export const DEMO_PROJECT: ProjectInfo = {
-  $typeName: 'centy.ProjectInfo',
+  $typeName: 'centy.v1.ProjectInfo',
   path: DEMO_PROJECT_PATH,
   firstAccessed: '2024-01-15T10:00:00Z',
   lastAccessed: new Date().toISOString(),
@@ -56,31 +56,34 @@ export const DEMO_PROJECT: ProjectInfo = {
 // Demo users
 export const DEMO_USERS: User[] = [
   {
-    $typeName: 'centy.User',
+    $typeName: 'centy.v1.User',
     id: 'alice-developer',
     name: 'Alice Developer',
     email: 'alice@example.com',
     gitUsernames: ['alice-dev', 'alicedev'],
     createdAt: '2024-01-15T10:00:00Z',
     updatedAt: '2024-12-01T14:30:00Z',
+    deletedAt: '',
   },
   {
-    $typeName: 'centy.User',
+    $typeName: 'centy.v1.User',
     id: 'bob-engineer',
     name: 'Bob Engineer',
     email: 'bob@example.com',
     gitUsernames: ['bob-eng'],
     createdAt: '2024-02-20T09:00:00Z',
     updatedAt: '2024-11-15T11:00:00Z',
+    deletedAt: '',
   },
   {
-    $typeName: 'centy.User',
+    $typeName: 'centy.v1.User',
     id: 'charlie-designer',
     name: 'Charlie Designer',
     email: 'charlie@example.com',
     gitUsernames: ['charlie-design'],
     createdAt: '2024-03-10T08:00:00Z',
     updatedAt: '2024-10-20T16:00:00Z',
+    deletedAt: '',
   },
 ]
 
@@ -92,11 +95,10 @@ function createIssueMetadata(
   createdAt: string,
   updatedAt: string,
   customFields: Record<string, string> = {},
-  draft = false,
-  compacted = false
+  draft = false
 ): IssueMetadata {
   return {
-    $typeName: 'centy.IssueMetadata',
+    $typeName: 'centy.v1.IssueMetadata',
     displayNumber,
     status,
     priority,
@@ -105,15 +107,17 @@ function createIssueMetadata(
     updatedAt,
     customFields,
     draft,
-    compacted,
-    compactedAt: compacted ? updatedAt : '',
+    deletedAt: '',
+    isOrgIssue: false,
+    orgSlug: '',
+    orgDisplayNumber: 0,
   }
 }
 
 // Demo issues
 export const DEMO_ISSUES: Issue[] = [
   {
-    $typeName: 'centy.Issue',
+    $typeName: 'centy.v1.Issue',
     id: 'demo-issue-1',
     displayNumber: 1,
     issueNumber: 'demo-issue-1',
@@ -141,7 +145,7 @@ Add a dark mode toggle to the application settings that allows users to switch b
     ),
   },
   {
-    $typeName: 'centy.Issue',
+    $typeName: 'centy.v1.Issue',
     id: 'demo-issue-2',
     displayNumber: 2,
     issueNumber: 'demo-issue-2',
@@ -170,7 +174,7 @@ Investigating the session management middleware...`,
     ),
   },
   {
-    $typeName: 'centy.Issue',
+    $typeName: 'centy.v1.Issue',
     id: 'demo-issue-3',
     displayNumber: 3,
     issueNumber: 'demo-issue-3',
@@ -193,12 +197,11 @@ Include example requests and responses for each endpoint.`,
       '2024-11-20T14:00:00Z',
       '2024-12-01T16:00:00Z',
       { component: 'docs', effort: 'medium' },
-      false,
-      true
+      false
     ),
   },
   {
-    $typeName: 'centy.Issue',
+    $typeName: 'centy.v1.Issue',
     id: 'demo-issue-4',
     displayNumber: 4,
     issueNumber: 'demo-issue-4',
@@ -222,7 +225,7 @@ Implement a search bar in the project list view that allows users to quickly fin
     ),
   },
   {
-    $typeName: 'centy.Issue',
+    $typeName: 'centy.v1.Issue',
     id: 'demo-issue-5',
     displayNumber: 5,
     issueNumber: 'demo-issue-5',
@@ -249,7 +252,7 @@ This is still in the planning phase. Need to profile the application first.`,
     ),
   },
   {
-    $typeName: 'centy.Issue',
+    $typeName: 'centy.v1.Issue',
     id: 'demo-issue-6',
     displayNumber: 6,
     issueNumber: 'demo-issue-6',
@@ -273,7 +276,7 @@ Add keyboard shortcuts for common actions to improve productivity.
     ),
   },
   {
-    $typeName: 'centy.Issue',
+    $typeName: 'centy.v1.Issue',
     id: 'demo-issue-7',
     displayNumber: 7,
     issueNumber: 'demo-issue-7',
@@ -301,16 +304,19 @@ Allow users to configure webhooks to receive notifications when issues are creat
 // Helper to create doc metadata
 function createDocMetadata(createdAt: string, updatedAt: string): DocMetadata {
   return {
-    $typeName: 'centy.DocMetadata',
+    $typeName: 'centy.v1.DocMetadata',
     createdAt,
     updatedAt,
+    deletedAt: '',
+    isOrgDoc: false,
+    orgSlug: '',
   }
 }
 
 // Demo docs
 export const DEMO_DOCS: Doc[] = [
   {
-    $typeName: 'centy.Doc',
+    $typeName: 'centy.v1.Doc',
     slug: 'getting-started',
     title: 'Getting Started',
     content: `# Getting Started with Centy
@@ -348,7 +354,7 @@ centy list issues
     metadata: createDocMetadata('2024-01-15T10:00:00Z', '2024-12-01T14:00:00Z'),
   },
   {
-    $typeName: 'centy.Doc',
+    $typeName: 'centy.v1.Doc',
     slug: 'api-reference',
     title: 'API Reference',
     content: `# API Reference
@@ -397,7 +403,7 @@ Returns details for a specific project.
     metadata: createDocMetadata('2024-02-01T09:00:00Z', '2024-11-15T11:00:00Z'),
   },
   {
-    $typeName: 'centy.Doc',
+    $typeName: 'centy.v1.Doc',
     slug: 'contributing',
     title: 'Contributing Guide',
     content: `# Contributing to Centy
@@ -447,7 +453,7 @@ function createPrMetadata(
   closedAt = ''
 ): PrMetadata {
   return {
-    $typeName: 'centy.PrMetadata',
+    $typeName: 'centy.v1.PrMetadata',
     displayNumber,
     status,
     priority,
@@ -460,13 +466,14 @@ function createPrMetadata(
     mergedAt,
     closedAt,
     customFields,
+    deletedAt: '',
   }
 }
 
 // Demo PRs
 export const DEMO_PRS: PullRequest[] = [
   {
-    $typeName: 'centy.PullRequest',
+    $typeName: 'centy.v1.PullRequest',
     id: 'demo-pr-1',
     displayNumber: 1,
     title: 'feat: Add dark mode support',
@@ -494,7 +501,7 @@ This PR implements dark mode support for the application.
     ),
   },
   {
-    $typeName: 'centy.PullRequest',
+    $typeName: 'centy.v1.PullRequest',
     id: 'demo-pr-2',
     displayNumber: 2,
     title: 'fix: Resolve login timeout issue',
@@ -523,7 +530,7 @@ Fixed the timeout calculation in the session configuration.
     ),
   },
   {
-    $typeName: 'centy.PullRequest',
+    $typeName: 'centy.v1.PullRequest',
     id: 'demo-pr-3',
     displayNumber: 3,
     title: 'docs: Update README with new features',
@@ -546,10 +553,10 @@ Fixed the timeout calculation in the session configuration.
 
 // Demo config
 export const DEMO_CONFIG: Config = {
-  $typeName: 'centy.Config',
+  $typeName: 'centy.v1.Config',
   customFields: [
     {
-      $typeName: 'centy.CustomFieldDefinition',
+      $typeName: 'centy.v1.CustomFieldDefinition',
       name: 'component',
       fieldType: 'enum',
       required: false,
@@ -557,7 +564,7 @@ export const DEMO_CONFIG: Config = {
       enumValues: ['ui', 'auth', 'docs', 'performance', 'integrations'],
     },
     {
-      $typeName: 'centy.CustomFieldDefinition',
+      $typeName: 'centy.v1.CustomFieldDefinition',
       name: 'effort',
       fieldType: 'enum',
       required: false,
@@ -585,13 +592,14 @@ export const DEMO_CONFIG: Config = {
     '3': '#6b7280',
   },
   customLinkTypes: [],
+  defaultEditor: '',
+  hooks: [],
 }
 
 // Demo daemon info
 export const DEMO_DAEMON_INFO: DaemonInfo = {
-  $typeName: 'centy.DaemonInfo',
+  $typeName: 'centy.v1.DaemonInfo',
   version: '0.1.5 (Demo)',
-  availableVersions: ['0.1.5'],
   binaryPath: '/demo/centy-daemon',
   vscodeAvailable: true,
 }
@@ -599,21 +607,21 @@ export const DEMO_DAEMON_INFO: DaemonInfo = {
 // Demo links (relationships between entities)
 export const DEMO_LINKS: Link[] = [
   {
-    $typeName: 'centy.Link',
+    $typeName: 'centy.v1.Link',
     targetId: 'demo-pr-1',
     targetType: LinkTargetType.PR,
     linkType: 'implements',
     createdAt: '2024-12-16T10:00:00Z',
   },
   {
-    $typeName: 'centy.Link',
+    $typeName: 'centy.v1.Link',
     targetId: 'demo-pr-2',
     targetType: LinkTargetType.PR,
     linkType: 'fixes',
     createdAt: '2024-12-10T14:00:00Z',
   },
   {
-    $typeName: 'centy.Link',
+    $typeName: 'centy.v1.Link',
     targetId: 'demo-issue-4',
     targetType: LinkTargetType.ISSUE,
     linkType: 'blocks',
@@ -624,7 +632,7 @@ export const DEMO_LINKS: Link[] = [
 // Demo assets
 export const DEMO_ASSETS: Asset[] = [
   {
-    $typeName: 'centy.Asset',
+    $typeName: 'centy.v1.Asset',
     filename: 'screenshot.png',
     hash: 'demo-hash-1',
     size: BigInt(102400),
@@ -633,7 +641,7 @@ export const DEMO_ASSETS: Asset[] = [
     createdAt: '2024-12-15T10:00:00Z',
   },
   {
-    $typeName: 'centy.Asset',
+    $typeName: 'centy.v1.Asset',
     filename: 'diagram.svg',
     hash: 'demo-hash-2',
     size: BigInt(8192),

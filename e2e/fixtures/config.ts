@@ -34,10 +34,13 @@ export function createMockConfig(overrides: Partial<Config> = {}): Config {
       autoCloseOnComplete: false,
       updateStatusOnStart: false,
       allowDirectEdits: true,
-      $typeName: 'centy.LlmConfig',
+      defaultWorkspaceMode: 0,
+      $typeName: 'centy.v1.LlmConfig',
     },
     customLinkTypes: overrides.customLinkTypes ?? [],
-    $typeName: 'centy.Config',
+    defaultEditor: overrides.defaultEditor ?? '',
+    hooks: overrides.hooks ?? [],
+    $typeName: 'centy.v1.Config',
   }
 }
 
@@ -64,7 +67,7 @@ export function createMockProjectInfo(
     organizationName: overrides.organizationName ?? '',
     userTitle: overrides.userTitle ?? '',
     projectTitle: overrides.projectTitle ?? '',
-    $typeName: 'centy.ProjectInfo',
+    $typeName: 'centy.v1.ProjectInfo',
   }
 }
 
@@ -81,7 +84,7 @@ export function createMockManifest(
     centyVersion: overrides.centyVersion ?? '1.0.0',
     createdAt: overrides.createdAt ?? now,
     updatedAt: overrides.updatedAt ?? now,
-    $typeName: 'centy.Manifest',
+    $typeName: 'centy.v1.Manifest',
   }
 }
 

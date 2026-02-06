@@ -97,8 +97,12 @@ async function fetchConfig(projectPath: string, force = false): Promise<void> {
       projectPath: projectPath.trim(),
     })
     const response = await centyClient.getConfig(request)
-    cache.config = response
-    cache.error = null
+    if (response.config) {
+      cache.config = response.config
+      cache.error = null
+    } else {
+      cache.error = response.error || 'Failed to load config'
+    }
   } catch (err) {
     cache.error = err instanceof Error ? err.message : 'Failed to load config'
   } finally {

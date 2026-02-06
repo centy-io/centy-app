@@ -241,7 +241,7 @@ function CustomFieldForm({
       required,
       defaultValue: defaultValue || '',
       enumValues: fieldType === 'enum' ? enumValues : [],
-      $typeName: 'centy.CustomFieldDefinition',
+      $typeName: 'centy.v1.CustomFieldDefinition',
     })
   }
 

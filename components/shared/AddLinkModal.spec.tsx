@@ -33,7 +33,7 @@ const createMockLinkTypeInfo = (
     name,
     inverse,
     description,
-    $typeName: 'centy.LinkTypeInfo' as const,
+    $typeName: 'centy.v1.LinkTypeInfo' as const,
     $unknown: undefined,
   }) as LinkTypeInfo
 
@@ -64,7 +64,7 @@ describe('AddLinkModal', () => {
         ),
         createMockLinkTypeInfo('related-to', 'related-to', 'Related items'),
       ],
-      $typeName: 'centy.GetAvailableLinkTypesResponse',
+      $typeName: 'centy.v1.GetAvailableLinkTypesResponse',
       $unknown: undefined,
     })
 
@@ -76,7 +76,7 @@ describe('AddLinkModal', () => {
           issueNumber: 'issue-1',
           title: 'First Issue',
           description: 'First issue description',
-          $typeName: 'centy.Issue',
+          $typeName: 'centy.v1.Issue',
           $unknown: undefined,
         },
         {
@@ -85,12 +85,12 @@ describe('AddLinkModal', () => {
           issueNumber: 'issue-2',
           title: 'Second Issue',
           description: 'Second issue description',
-          $typeName: 'centy.Issue',
+          $typeName: 'centy.v1.Issue',
           $unknown: undefined,
         },
       ],
       totalCount: 2,
-      $typeName: 'centy.ListIssuesResponse',
+      $typeName: 'centy.v1.ListIssuesResponse',
       $unknown: undefined,
     })
 
@@ -100,12 +100,12 @@ describe('AddLinkModal', () => {
           slug: 'doc-1',
           title: 'First Doc',
           content: 'First doc content',
-          $typeName: 'centy.Doc',
+          $typeName: 'centy.v1.Doc',
           $unknown: undefined,
         },
       ],
       totalCount: 1,
-      $typeName: 'centy.ListDocsResponse',
+      $typeName: 'centy.v1.ListDocsResponse',
       $unknown: undefined,
     })
 
@@ -116,12 +116,12 @@ describe('AddLinkModal', () => {
           displayNumber: 100,
           title: 'First PR',
           description: 'First PR description',
-          $typeName: 'centy.PullRequest',
+          $typeName: 'centy.v1.PullRequest',
           $unknown: undefined,
         },
       ],
       totalCount: 1,
-      $typeName: 'centy.ListPrsResponse',
+      $typeName: 'centy.v1.ListPrsResponse',
       $unknown: undefined,
     })
   })
@@ -222,7 +222,7 @@ describe('AddLinkModal', () => {
           issueNumber: 'entity-123',
           title: 'Self Issue',
           description: 'Self issue description',
-          $typeName: 'centy.Issue',
+          $typeName: 'centy.v1.Issue',
           $unknown: undefined,
         },
         {
@@ -231,12 +231,12 @@ describe('AddLinkModal', () => {
           issueNumber: 'other-issue',
           title: 'Other Issue',
           description: 'Other issue description',
-          $typeName: 'centy.Issue',
+          $typeName: 'centy.v1.Issue',
           $unknown: undefined,
         },
       ],
       totalCount: 2,
-      $typeName: 'centy.ListIssuesResponse',
+      $typeName: 'centy.v1.ListIssuesResponse',
       $unknown: undefined,
     })
 
@@ -303,7 +303,7 @@ describe('AddLinkModal', () => {
     vi.mocked(centyClient.createLink).mockResolvedValue({
       success: true,
       error: '',
-      $typeName: 'centy.CreateLinkResponse',
+      $typeName: 'centy.v1.CreateLinkResponse',
       $unknown: undefined,
     })
 
@@ -331,7 +331,7 @@ describe('AddLinkModal', () => {
     vi.mocked(centyClient.createLink).mockResolvedValue({
       success: false,
       error: 'Link already exists',
-      $typeName: 'centy.CreateLinkResponse',
+      $typeName: 'centy.v1.CreateLinkResponse',
       $unknown: undefined,
     })
 
@@ -362,7 +362,7 @@ describe('AddLinkModal', () => {
     vi.mocked(centyClient.listIssues).mockResolvedValue({
       issues: [],
       totalCount: 0,
-      $typeName: 'centy.ListIssuesResponse',
+      $typeName: 'centy.v1.ListIssuesResponse',
       $unknown: undefined,
     })
 
@@ -393,7 +393,7 @@ describe('AddLinkModal', () => {
         targetId: 'issue-1',
         targetType: LinkTargetType.ISSUE,
         linkType: 'blocks',
-        $typeName: 'centy.Link',
+        $typeName: 'centy.v1.Link',
         $unknown: undefined,
       } as LinkType,
     ]
