@@ -114,7 +114,7 @@
       "Bash(centy:*)",
       "Bash(gh pr merge:*)"
     ],
-    "deny": ["Bash(npm install)"]
+    "deny": ["Bash(npm install)", "Bash(gh issue create:*)"]
   },
   "hooks": {
     "PreToolUse": [
