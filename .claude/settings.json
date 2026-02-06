@@ -112,7 +112,10 @@
       "Bash(npm ls:*)",
       "Bash(pnpm ls:*)",
       "Bash(centy:*)",
-      "Bash(gh pr merge:*)"
+      "Bash(gh pr merge:*)",
+      "Bash(gh issue list:*)",
+      "Bash(gh issue view:*)",
+      "Bash(ls:*)"
     ],
     "deny": ["Bash(npm install)", "Bash(gh issue create:*)"]
   },
