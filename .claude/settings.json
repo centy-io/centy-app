@@ -115,7 +115,15 @@
       "Bash(gh pr merge:*)",
       "Bash(gh issue list:*)",
       "Bash(gh issue view:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(pnpm test:*)",
+      "Bash(pnpm install:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx prettier:*)",
+      "Bash(pnpm format:check:*)",
+      "Bash(PLAYWRIGHT_VISUAL=1 npx playwright test:*)",
+      "Bash(gh pr checks:*)",
+      "Bash(git rebase:*)"
     ],
     "deny": ["Bash(npm install)", "Bash(gh issue create:*)"]
   },
