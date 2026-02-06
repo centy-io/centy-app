@@ -38,8 +38,12 @@ export function DaemonDisconnectedOverlay() {
           Please start the daemon to use the application.
         </p>
         <div className="daemon-disconnected-instructions">
-          <p>If you haven't installed Centy yet, run:</p>
-          <code>npm install -g centy</code>
+          <p>If you haven't installed the daemon yet, run:</p>
+          <code>
+            curl -fsSL
+            https://github.com/centy-io/installer/releases/latest/download/install.sh
+            | sh
+          </code>
           <p>Then start the daemon:</p>
           <code>pnpm dlx centy start</code>
         </div>
