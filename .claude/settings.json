@@ -89,7 +89,16 @@
       "WebSearch",
       "Bash(lsof:*)",
       "Bash(centy issue --help:*)",
-      "Bash(gh repo view:*)"
+      "Bash(gh repo view:*)",
+      "Bash(centy start:*)",
+      "Bash(centy info:*)",
+      "Bash(python3:*)",
+      "Bash(centy install:*)",
+      "Bash(centy restart:*)",
+      "Bash(pkill:*)",
+      "Bash(centy version:*)",
+      "Bash(centy update:*)",
+      "Bash(pnpm dlx:*)"
     ],
     "deny": ["Bash(npm install)"]
   },
