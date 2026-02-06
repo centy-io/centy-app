@@ -1,5 +1,14 @@
+import { execSync } from 'node:child_process'
 import { withSentryConfig } from '@sentry/nextjs'
 import withRoutes from 'nextjs-routes/config'
+
+function getCommitSha() {
+  try {
+    return execSync('git rev-parse HEAD').toString().trim()
+  } catch {
+    return ''
+  }
+}
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -7,6 +16,9 @@ const nextConfig = {
   trailingSlash: true,
   images: {
     unoptimized: true,
+  },
+  env: {
+    NEXT_PUBLIC_COMMIT_SHA: process.env.COMMIT_SHA || getCommitSha(),
   },
 }
 

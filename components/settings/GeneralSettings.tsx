@@ -161,6 +161,22 @@ export function GeneralSettings() {
         </div>
       </section>
 
+      {process.env.NEXT_PUBLIC_COMMIT_SHA && (
+        <section className="settings-section">
+          <h3>App Information</h3>
+          <div className="settings-card">
+            <div className="info-grid">
+              <div className="info-item">
+                <span className="info-label">Commit SHA</span>
+                <span className="info-value commit-sha">
+                  {process.env.NEXT_PUBLIC_COMMIT_SHA.slice(0, 7)}
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       <section className="settings-section">
         <h3>Daemon Connection</h3>
         <div className="settings-card">
