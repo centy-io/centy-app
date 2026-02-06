@@ -1,6 +1,6 @@
 'use client'
 
-import type { LlmConfig } from '@/gen/centy_pb'
+import { type LlmConfig } from '@/gen/centy_pb'
 
 interface LlmSettingsEditorProps {
   value: LlmConfig | undefined
@@ -12,7 +12,8 @@ export function LlmSettingsEditor({ value, onChange }: LlmSettingsEditorProps) {
     autoCloseOnComplete: false,
     updateStatusOnStart: false,
     allowDirectEdits: false,
-    $typeName: 'centy.LlmConfig',
+    defaultWorkspaceMode: WorkspaceMode.UNSPECIFIED,
+    $typeName: 'centy.v1.LlmConfig',
   }
 
   const handleChange = (field: keyof LlmConfig, checked: boolean) => {

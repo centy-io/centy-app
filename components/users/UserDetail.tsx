@@ -175,7 +175,7 @@ export function UserDetail({ userId }: UserDetailProps) {
     } finally {
       setDeleting(false)
     }
-  }, [projectPath, userId, router])
+  }, [projectPath, userId, router, usersListUrl])
 
   const handleCancelEdit = () => {
     setIsEditing(false)

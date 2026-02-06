@@ -123,7 +123,7 @@ export function CreateUser() {
     } finally {
       setSaving(false)
     }
-  }, [projectPath, name, userId, email, gitUsernames, router])
+  }, [projectPath, name, userId, email, gitUsernames, router, projectContext])
 
   useSaveShortcut({
     onSave: handleSubmit,
