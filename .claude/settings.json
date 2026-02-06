@@ -98,7 +98,21 @@
       "Bash(pkill:*)",
       "Bash(centy version:*)",
       "Bash(centy update:*)",
-      "Bash(pnpm dlx:*)"
+      "Bash(pnpm dlx:*)",
+      "Bash(command:*)",
+      "Bash(centy issue show:*)",
+      "Bash(centy start:*)",
+      "Bash(centy info:*)",
+      "Bash(centy install:*)",
+      "Bash(centy restart:*)",
+      "Bash(centy shutdown:*)",
+      "Bash(centy llm:*)",
+      "Bash(kill:*)",
+      "Bash(centy version:*)",
+      "Bash(npm ls:*)",
+      "Bash(pnpm ls:*)",
+      "Bash(centy:*)",
+      "Bash(gh pr merge:*)"
     ],
     "deny": ["Bash(npm install)"]
   },
