@@ -124,7 +124,7 @@ export const mockHandlers: MockHandlers = {
     _request: ListProjectsRequest
   ): Promise<ListProjectsResponse> {
     return {
-      $typeName: 'centy.ListProjectsResponse',
+      $typeName: 'centy.v1.ListProjectsResponse',
       projects: [DEMO_PROJECT],
       totalCount: 1,
     }
@@ -135,13 +135,13 @@ export const mockHandlers: MockHandlers = {
   ): Promise<GetProjectInfoResponse> {
     if (request.projectPath === DEMO_PROJECT_PATH) {
       return {
-        $typeName: 'centy.GetProjectInfoResponse',
+        $typeName: 'centy.v1.GetProjectInfoResponse',
         found: true,
         project: DEMO_PROJECT,
       }
     }
     return {
-      $typeName: 'centy.GetProjectInfoResponse',
+      $typeName: 'centy.v1.GetProjectInfoResponse',
       found: false,
       project: undefined,
     }
@@ -151,7 +151,7 @@ export const mockHandlers: MockHandlers = {
     request: IsInitializedRequest
   ): Promise<IsInitializedResponse> {
     return {
-      $typeName: 'centy.IsInitializedResponse',
+      $typeName: 'centy.v1.IsInitializedResponse',
       initialized: request.projectPath === DEMO_PROJECT_PATH,
       centyPath:
         request.projectPath === DEMO_PROJECT_PATH
@@ -164,7 +164,7 @@ export const mockHandlers: MockHandlers = {
   async listIssues(request: ListIssuesRequest): Promise<ListIssuesResponse> {
     if (request.projectPath !== DEMO_PROJECT_PATH) {
       return {
-        $typeName: 'centy.ListIssuesResponse',
+        $typeName: 'centy.v1.ListIssuesResponse',
         issues: [],
         totalCount: 0,
       }
@@ -172,62 +172,69 @@ export const mockHandlers: MockHandlers = {
 
     const filtered = filterIssues(DEMO_ISSUES, request)
     return {
-      $typeName: 'centy.ListIssuesResponse',
+      $typeName: 'centy.v1.ListIssuesResponse',
       issues: filtered,
       totalCount: filtered.length,
     }
   },
 
-  async getIssue(request: GetIssueRequest): Promise<Issue> {
+  async getIssue(
+    request: GetIssueRequest
+  ): Promise<{ success: boolean; error: string; issue?: Issue }> {
     const issue = DEMO_ISSUES.find(i => i.id === request.issueId)
     if (issue) {
-      return issue
+      return { success: true, error: '', issue }
     }
-    throw new Error(`Issue ${request.issueId} not found`)
+    return { success: false, error: `Issue ${request.issueId} not found` }
   },
 
   async getIssueByDisplayNumber(
     request: GetIssueByDisplayNumberRequest
-  ): Promise<Issue> {
+  ): Promise<{ success: boolean; error: string; issue?: Issue }> {
     const issue = DEMO_ISSUES.find(
       i => i.displayNumber === request.displayNumber
     )
     if (issue) {
-      return issue
+      return { success: true, error: '', issue }
     }
-    throw new Error(`Issue #${request.displayNumber} not found`)
+    return {
+      success: false,
+      error: `Issue #${request.displayNumber} not found`,
+    }
   },
 
   // Doc methods
   async listDocs(request: ListDocsRequest): Promise<ListDocsResponse> {
     if (request.projectPath !== DEMO_PROJECT_PATH) {
       return {
-        $typeName: 'centy.ListDocsResponse',
+        $typeName: 'centy.v1.ListDocsResponse',
         docs: [],
         totalCount: 0,
       }
     }
 
     return {
-      $typeName: 'centy.ListDocsResponse',
+      $typeName: 'centy.v1.ListDocsResponse',
       docs: DEMO_DOCS,
       totalCount: DEMO_DOCS.length,
     }
   },
 
-  async getDoc(request: GetDocRequest): Promise<Doc> {
+  async getDoc(
+    request: GetDocRequest
+  ): Promise<{ success: boolean; error: string; doc?: Doc }> {
     const doc = DEMO_DOCS.find(d => d.slug === request.slug)
     if (doc) {
-      return doc
+      return { success: true, error: '', doc }
     }
-    throw new Error(`Doc ${request.slug} not found`)
+    return { success: false, error: `Doc ${request.slug} not found` }
   },
 
   // PR methods
   async listPrs(request: ListPrsRequest): Promise<ListPrsResponse> {
     if (request.projectPath !== DEMO_PROJECT_PATH) {
       return {
-        $typeName: 'centy.ListPrsResponse',
+        $typeName: 'centy.v1.ListPrsResponse',
         prs: [],
         totalCount: 0,
       }
@@ -235,42 +242,44 @@ export const mockHandlers: MockHandlers = {
 
     const filtered = filterPrs(DEMO_PRS, request)
     return {
-      $typeName: 'centy.ListPrsResponse',
+      $typeName: 'centy.v1.ListPrsResponse',
       prs: filtered,
       totalCount: filtered.length,
     }
   },
 
-  async getPr(request: GetPrRequest): Promise<PullRequest> {
+  async getPr(
+    request: GetPrRequest
+  ): Promise<{ success: boolean; error: string; pr?: PullRequest }> {
     const pr = DEMO_PRS.find(p => p.id === request.prId)
     if (pr) {
-      return pr
+      return { success: true, error: '', pr }
     }
-    throw new Error(`PR ${request.prId} not found`)
+    return { success: false, error: `PR ${request.prId} not found` }
   },
 
   async getPrByDisplayNumber(
     request: GetPrByDisplayNumberRequest
-  ): Promise<PullRequest> {
+  ): Promise<{ success: boolean; error: string; pr?: PullRequest }> {
     const pr = DEMO_PRS.find(p => p.displayNumber === request.displayNumber)
     if (pr) {
-      return pr
+      return { success: true, error: '', pr }
     }
-    throw new Error(`PR #${request.displayNumber} not found`)
+    return { success: false, error: `PR #${request.displayNumber} not found` }
   },
 
   // User methods
   async listUsers(request: ListUsersRequest): Promise<ListUsersResponse> {
     if (request.projectPath !== DEMO_PROJECT_PATH) {
       return {
-        $typeName: 'centy.ListUsersResponse',
+        $typeName: 'centy.v1.ListUsersResponse',
         users: [],
         totalCount: 0,
       }
     }
 
     return {
-      $typeName: 'centy.ListUsersResponse',
+      $typeName: 'centy.v1.ListUsersResponse',
       users: DEMO_USERS,
       totalCount: DEMO_USERS.length,
     }
@@ -290,7 +299,7 @@ export const mockHandlers: MockHandlers = {
     _request: ListOrganizationsRequest
   ): Promise<ListOrganizationsResponse> {
     return {
-      $typeName: 'centy.ListOrganizationsResponse',
+      $typeName: 'centy.v1.ListOrganizationsResponse',
       organizations: [DEMO_ORGANIZATION],
       totalCount: 1,
     }
@@ -306,12 +315,14 @@ export const mockHandlers: MockHandlers = {
   },
 
   // Config methods
-  async getConfig(request: GetConfigRequest): Promise<Config> {
+  async getConfig(
+    request: GetConfigRequest
+  ): Promise<{ success: boolean; error: string; config: Config }> {
     if (request.projectPath === DEMO_PROJECT_PATH) {
-      return DEMO_CONFIG
+      return { success: true, error: '', config: DEMO_CONFIG }
     }
     // Return default config for other projects
-    return DEMO_CONFIG
+    return { success: true, error: '', config: DEMO_CONFIG }
   },
 
   // Daemon info
@@ -327,7 +338,7 @@ export const mockHandlers: MockHandlers = {
     const links = DEMO_LINKS.filter(link => link.targetId === request.entityId)
 
     return {
-      $typeName: 'centy.ListLinksResponse',
+      $typeName: 'centy.v1.ListLinksResponse',
       links,
       totalCount: links.length,
     }
@@ -338,38 +349,38 @@ export const mockHandlers: MockHandlers = {
     _request: GetAvailableLinkTypesRequest
   ): Promise<GetAvailableLinkTypesResponse> {
     return {
-      $typeName: 'centy.GetAvailableLinkTypesResponse',
+      $typeName: 'centy.v1.GetAvailableLinkTypesResponse',
       linkTypes: [
         {
-          $typeName: 'centy.LinkTypeInfo',
+          $typeName: 'centy.v1.LinkTypeInfo',
           name: 'blocks',
           inverse: 'blocked-by',
           description: 'Blocks another issue from being worked on',
           isBuiltin: true,
         },
         {
-          $typeName: 'centy.LinkTypeInfo',
+          $typeName: 'centy.v1.LinkTypeInfo',
           name: 'fixes',
           inverse: 'fixed-by',
           description: 'Fixes the linked issue',
           isBuiltin: true,
         },
         {
-          $typeName: 'centy.LinkTypeInfo',
+          $typeName: 'centy.v1.LinkTypeInfo',
           name: 'implements',
           inverse: 'implemented-by',
           description: 'Implements a feature or requirement',
           isBuiltin: true,
         },
         {
-          $typeName: 'centy.LinkTypeInfo',
+          $typeName: 'centy.v1.LinkTypeInfo',
           name: 'relates-to',
           inverse: 'relates-to',
           description: 'Related to another issue',
           isBuiltin: true,
         },
         {
-          $typeName: 'centy.LinkTypeInfo',
+          $typeName: 'centy.v1.LinkTypeInfo',
           name: 'duplicates',
           inverse: 'duplicated-by',
           description: 'Duplicates another issue',
@@ -383,14 +394,14 @@ export const mockHandlers: MockHandlers = {
   async listAssets(request: ListAssetsRequest): Promise<ListAssetsResponse> {
     if (request.projectPath !== DEMO_PROJECT_PATH) {
       return {
-        $typeName: 'centy.ListAssetsResponse',
+        $typeName: 'centy.v1.ListAssetsResponse',
         assets: [],
         totalCount: 0,
       }
     }
 
     return {
-      $typeName: 'centy.ListAssetsResponse',
+      $typeName: 'centy.v1.ListAssetsResponse',
       assets: DEMO_ASSETS,
       totalCount: DEMO_ASSETS.length,
     }
@@ -401,14 +412,14 @@ export const mockHandlers: MockHandlers = {
   ): Promise<ListAssetsResponse> {
     if (request.projectPath !== DEMO_PROJECT_PATH) {
       return {
-        $typeName: 'centy.ListAssetsResponse',
+        $typeName: 'centy.v1.ListAssetsResponse',
         assets: [],
         totalCount: 0,
       }
     }
 
     return {
-      $typeName: 'centy.ListAssetsResponse',
+      $typeName: 'centy.v1.ListAssetsResponse',
       assets: DEMO_ASSETS,
       totalCount: DEMO_ASSETS.length,
     }
@@ -606,8 +617,28 @@ export const mockHandlers: MockHandlers = {
   },
 
   // Stub handlers for other methods
-  async getManifest(): Promise<{ version: string }> {
-    return { version: '0.1.5' }
+  async getManifest(): Promise<{
+    success: boolean
+    error: string
+    manifest: {
+      schemaVersion: number
+      centyVersion: string
+      createdAt: string
+      updatedAt: string
+      $typeName: 'centy.v1.Manifest'
+    }
+  }> {
+    return {
+      success: true,
+      error: '',
+      manifest: {
+        schemaVersion: 1,
+        centyVersion: '0.1.5',
+        createdAt: '2024-01-01T00:00:00.000Z',
+        updatedAt: '2024-01-01T00:00:00.000Z',
+        $typeName: 'centy.v1.Manifest',
+      },
+    }
   },
 
   async getNextIssueNumber(): Promise<{ nextNumber: number }> {
@@ -655,7 +686,7 @@ export const mockHandlers: MockHandlers = {
     issueId: string
     displayNumber: number
     expiresAt: string
-    vscodeOpened: boolean
+    editorOpened: boolean
   }> {
     console.warn(
       '[Demo Mode] openInTempVscode called - not available in demo mode'
@@ -667,7 +698,7 @@ export const mockHandlers: MockHandlers = {
       issueId: '',
       displayNumber: 0,
       expiresAt: '',
-      vscodeOpened: false,
+      editorOpened: false,
     }
   },
 
@@ -696,28 +727,34 @@ export const mockHandlers: MockHandlers = {
 
   async getSupportedEditors(): Promise<{
     editors: Array<{
-      $typeName: 'centy.EditorInfo'
+      $typeName: 'centy.v1.EditorInfo'
       editorType: number
       name: string
       description: string
       available: boolean
+      editorId: string
+      terminalWrapper: boolean
     }>
   }> {
     return {
       editors: [
         {
-          $typeName: 'centy.EditorInfo',
+          $typeName: 'centy.v1.EditorInfo',
           editorType: 1, // VSCODE
           name: 'VS Code',
           description: 'Open in temporary VS Code workspace with AI agent',
           available: true,
+          editorId: 'vscode',
+          terminalWrapper: false,
         },
         {
-          $typeName: 'centy.EditorInfo',
+          $typeName: 'centy.v1.EditorInfo',
           editorType: 2, // TERMINAL
           name: 'Terminal',
           description: 'Open in terminal with AI agent',
           available: true,
+          editorId: 'terminal',
+          terminalWrapper: true,
         },
       ],
     }
