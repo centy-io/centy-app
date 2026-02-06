@@ -80,7 +80,16 @@
       "WebFetch(domain:git-scm.com)",
       "WebFetch(domain:cli.github.com)",
       "WebSearch",
-      "Skill(tupe:ultrathink)"
+      "Bash(find:*)",
+      "Bash(xargs:*)",
+      "Bash(cat:*)",
+      "Bash(sort:*)",
+      "Bash(centy --help:*)",
+      "Bash(node bin/run.js:*)",
+      "WebSearch",
+      "Bash(lsof:*)",
+      "Bash(centy issue --help:*)",
+      "Bash(gh repo view:*)"
     ],
     "deny": ["Bash(npm install)"]
   },
