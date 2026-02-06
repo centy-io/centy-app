@@ -32,6 +32,8 @@ jobs:
 
       - name: Build
         run: pnpm build
+        env:
+          COMMIT_SHA: ${{ github.sha }}
 
       - name: Deploy to Cloudflare Pages
         run: pnpm exec wrangler pages deploy out --project-name=centy-app
