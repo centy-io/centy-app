@@ -9,6 +9,7 @@ import {
   DuplicateDocRequestSchema,
   type ProjectInfo,
 } from '@/gen/centy_pb'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import '@/styles/components/MoveModal.css'
 
 interface DuplicateModalProps {
@@ -158,7 +159,9 @@ export function DuplicateModal({
         </div>
 
         <div className="move-modal-body">
-          {error && <div className="move-modal-error">{error}</div>}
+          {error && (
+            <DaemonErrorMessage error={error} className="move-modal-error" />
+          )}
 
           <div className="move-modal-info">
             <span className="move-modal-label">Duplicating:</span>

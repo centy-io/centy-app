@@ -9,6 +9,7 @@ import {
   WorkspaceMode,
   type Config,
 } from '@/gen/centy_pb'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import '@/styles/components/StatusConfigDialog.css'
 
 interface StatusConfigDialogProps {
@@ -133,7 +134,12 @@ export function StatusConfigDialog({
         </div>
 
         <div className="status-config-dialog-body">
-          {error && <div className="status-config-dialog-error">{error}</div>}
+          {error && (
+            <DaemonErrorMessage
+              error={error}
+              className="status-config-dialog-error"
+            />
+          )}
 
           {loading ? (
             <div className="status-config-dialog-loading">

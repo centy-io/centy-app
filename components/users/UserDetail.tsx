@@ -14,6 +14,8 @@ import {
 } from '@/gen/centy_pb'
 import { useProject } from '@/components/providers/ProjectProvider'
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
+import { isDaemonUnimplemented } from '@/lib/daemon-error'
 
 interface UserDetailProps {
   userId: string
@@ -79,7 +81,7 @@ export function UserDetail({ userId }: UserDetailProps) {
     } catch (err) {
       const message =
         err instanceof Error ? err.message : 'Failed to connect to daemon'
-      if (message.includes('unimplemented')) {
+      if (isDaemonUnimplemented(message)) {
         setError(
           'User management is not yet available. Please update your daemon to the latest version.'
         )
@@ -116,7 +118,7 @@ export function UserDetail({ userId }: UserDetailProps) {
         setIsEditing(false)
       } else {
         const errorMsg = response.error || 'Failed to update user'
-        if (errorMsg.includes('unimplemented')) {
+        if (isDaemonUnimplemented(errorMsg)) {
           setError(
             'User management is not yet available. Please update your daemon to the latest version.'
           )
@@ -127,7 +129,7 @@ export function UserDetail({ userId }: UserDetailProps) {
     } catch (err) {
       const message =
         err instanceof Error ? err.message : 'Failed to connect to daemon'
-      if (message.includes('unimplemented')) {
+      if (isDaemonUnimplemented(message)) {
         setError(
           'User management is not yet available. Please update your daemon to the latest version.'
         )
@@ -156,7 +158,7 @@ export function UserDetail({ userId }: UserDetailProps) {
         router.push(usersListUrl)
       } else {
         const errorMsg = response.error || 'Failed to delete user'
-        if (errorMsg.includes('unimplemented')) {
+        if (isDaemonUnimplemented(errorMsg)) {
           setError(
             'User management is not yet available. Please update your daemon to the latest version.'
           )
@@ -168,7 +170,7 @@ export function UserDetail({ userId }: UserDetailProps) {
     } catch (err) {
       const message =
         err instanceof Error ? err.message : 'Failed to connect to daemon'
-      if (message.includes('unimplemented')) {
+      if (isDaemonUnimplemented(message)) {
         setError(
           'User management is not yet available. Please update your daemon to the latest version.'
         )
@@ -231,7 +233,7 @@ export function UserDetail({ userId }: UserDetailProps) {
   if (error && !user) {
     return (
       <div className="user-detail">
-        <div className="error-message">{error}</div>
+        <DaemonErrorMessage error={error} />
         <Link href={usersListUrl} className="back-link">
           Back to Users
         </Link>
@@ -287,7 +289,7 @@ export function UserDetail({ userId }: UserDetailProps) {
         </div>
       </div>
 
-      {error && <div className="error-message">{error}</div>}
+      {error && <DaemonErrorMessage error={error} />}
 
       {showDeleteConfirm && (
         <div className="delete-confirm">

@@ -25,6 +25,7 @@ import { DefaultsEditor } from '@/components/settings/DefaultsEditor'
 import { LlmSettingsEditor } from '@/components/settings/LlmSettingsEditor'
 import { AgentConfigEditor } from '@/components/settings/AgentConfigEditor'
 import { ProjectTitleEditor } from '@/components/settings/ProjectTitleEditor'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 export function ProjectConfig() {
   const { projectPath, isInitialized, setIsInitialized } = useProject()
@@ -228,7 +229,7 @@ export function ProjectConfig() {
         {isDirty && <span className="unsaved-indicator">Unsaved changes</span>}
       </div>
 
-      {error && <div className="error-message">{error}</div>}
+      {error && <DaemonErrorMessage error={error} />}
       {success && <div className="success-message">{success}</div>}
 
       {!projectPath && (

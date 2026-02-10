@@ -18,6 +18,7 @@ import {
   type PendingAsset,
 } from '@/components/assets/AssetUploader'
 import { TextEditor } from '@/components/shared/TextEditor'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import '@/styles/pages/CreatePR.css'
 
 export function CreatePR() {
@@ -252,7 +253,7 @@ export function CreatePR() {
           />
         </div>
 
-        {error && <div className="error-message">{error}</div>}
+        {error && <DaemonErrorMessage error={error} />}
 
         <div className="actions">
           <button

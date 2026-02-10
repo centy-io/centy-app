@@ -9,6 +9,7 @@ import {
   SetProjectTitleRequestSchema,
   type ProjectInfo,
 } from '@/gen/centy_pb'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import '@/styles/components/ProjectTitleEditor.css'
 
 interface ProjectTitleEditorProps {
@@ -192,7 +193,7 @@ export function ProjectTitleEditor({ projectPath }: ProjectTitleEditorProps) {
         />
       </div>
 
-      {error && <div className="title-error">{error}</div>}
+      {error && <DaemonErrorMessage error={error} className="title-error" />}
 
       {success && <div className="title-success">{success}</div>}
 

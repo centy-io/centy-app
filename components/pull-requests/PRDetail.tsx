@@ -18,6 +18,7 @@ import { useAppLink } from '@/hooks/useAppLink'
 import { AssetUploader } from '@/components/assets/AssetUploader'
 import { TextEditor } from '@/components/shared/TextEditor'
 import { LinkSection } from '@/components/shared/LinkSection'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import '@/styles/pages/PRDetail.css'
 
 const STATUS_OPTIONS = ['draft', 'open', 'merged', 'closed'] as const
@@ -278,10 +279,7 @@ export function PRDetail({ prNumber }: PRDetailProps) {
   if (!projectPath) {
     return (
       <div className="pr-detail">
-        <div className="error-message">
-          No project path specified. Please go to the{' '}
-          <Link href={prListUrl}>pull requests list</Link> and select a project.
-        </div>
+        <DaemonErrorMessage error="No project path specified. Please go to the pull requests list and select a project." />
       </div>
     )
   }
@@ -297,7 +295,7 @@ export function PRDetail({ prNumber }: PRDetailProps) {
   if (error && !pr) {
     return (
       <div className="pr-detail">
-        <div className="error-message">{error}</div>
+        <DaemonErrorMessage error={error} />
         <Link href={prListUrl} className="back-link">
           Back to Pull Requests
         </Link>
@@ -353,7 +351,7 @@ export function PRDetail({ prNumber }: PRDetailProps) {
         </div>
       </div>
 
-      {error && <div className="error-message">{error}</div>}
+      {error && <DaemonErrorMessage error={error} />}
 
       {showDeleteConfirm && (
         <div className="delete-confirm">

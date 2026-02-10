@@ -25,6 +25,8 @@ import {
   ContextMenu,
   type ContextMenuItem,
 } from '@/components/shared/ContextMenu'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
+import { isDaemonUnimplemented } from '@/lib/daemon-error'
 
 const columnHelper = createColumnHelper<Organization>()
 
@@ -136,7 +138,7 @@ export function OrganizationsList() {
     } catch (err) {
       const message =
         err instanceof Error ? err.message : 'Failed to connect to daemon'
-      if (message.includes('unimplemented')) {
+      if (isDaemonUnimplemented(message)) {
         setError(
           'Organizations feature is not available. Please update your daemon.'
         )
@@ -238,7 +240,7 @@ export function OrganizationsList() {
         </div>
       </div>
 
-      {error && <div className="error-message">{error}</div>}
+      {error && <DaemonErrorMessage error={error} />}
 
       {showDeleteConfirm && (
         <div className="delete-confirm">

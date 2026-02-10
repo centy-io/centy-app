@@ -8,6 +8,8 @@ import { centyClient } from '@/lib/grpc/client'
 import { create } from '@bufbuild/protobuf'
 import { CreateOrganizationRequestSchema } from '@/gen/centy_pb'
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
+import { isDaemonUnimplemented } from '@/lib/daemon-error'
 
 function generateSlug(name: string): string {
   return name
@@ -61,7 +63,7 @@ export function CreateOrganization() {
         )
       } else {
         const errorMsg = response.error || 'Failed to create organization'
-        if (errorMsg.includes('unimplemented')) {
+        if (isDaemonUnimplemented(errorMsg)) {
           setError(
             'Organizations feature is not available. Please update your daemon.'
           )
@@ -72,7 +74,7 @@ export function CreateOrganization() {
     } catch (err) {
       const message =
         err instanceof Error ? err.message : 'Failed to connect to daemon'
-      if (message.includes('unimplemented')) {
+      if (isDaemonUnimplemented(message)) {
         setError(
           'Organizations feature is not available. Please update your daemon.'
         )
@@ -98,7 +100,7 @@ export function CreateOrganization() {
         <h2>Create New Organization</h2>
       </div>
 
-      {error && <div className="error-message">{error}</div>}
+      {error && <DaemonErrorMessage error={error} />}
 
       <form
         onSubmit={e => {

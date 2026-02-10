@@ -17,6 +17,7 @@ import {
   type PullRequest,
 } from '@/gen/centy_pb'
 import { useProject } from '@/components/providers/ProjectProvider'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 interface AddLinkModalProps {
   entityId: string
@@ -276,7 +277,9 @@ export function AddLinkModal({
         </div>
 
         <div className="link-modal-body">
-          {error && <div className="link-modal-error">{error}</div>}
+          {error && (
+            <DaemonErrorMessage error={error} className="link-modal-error" />
+          )}
 
           <div className="link-modal-field">
             <label>Link Type</label>

@@ -14,6 +14,7 @@ import {
   ListOrganizationsRequestSchema,
   type Organization,
 } from '@/gen/centy_pb'
+import { isDaemonUnimplemented } from '@/lib/daemon-error'
 
 interface OrganizationContextType {
   /** Selected org filter: null = all, '' = ungrouped only, slug = specific org */
@@ -68,7 +69,7 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
     } catch (err) {
       const message =
         err instanceof Error ? err.message : 'Failed to load organizations'
-      if (message.includes('unimplemented')) {
+      if (isDaemonUnimplemented(message)) {
         setError(
           'Organizations feature is not available. Please update your daemon.'
         )

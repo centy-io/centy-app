@@ -13,6 +13,7 @@ import {
 import { useProject } from '@/components/providers/ProjectProvider'
 import { useProjectPathToUrl } from '@/components/providers/PathContextProvider'
 import { TextEditor } from '@/components/shared/TextEditor'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 export function CreateDoc() {
   const router = useRouter()
@@ -186,7 +187,7 @@ export function CreateDoc() {
           />
         </div>
 
-        {error && <div className="error-message">{error}</div>}
+        {error && <DaemonErrorMessage error={error} />}
 
         <div className="actions">
           <button

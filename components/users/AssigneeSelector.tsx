@@ -8,6 +8,7 @@ import {
   MultiSelect,
   type MultiSelectOption,
 } from '@/components/shared/MultiSelect'
+import { isDaemonUnimplemented } from '@/lib/daemon-error'
 
 interface AssigneeSelectorProps {
   projectPath: string
@@ -40,7 +41,7 @@ export function AssigneeSelector({
     } catch (err) {
       const message =
         err instanceof Error ? err.message : 'Failed to load users'
-      if (message.includes('unimplemented')) {
+      if (isDaemonUnimplemented(message)) {
         setError('User management not available')
       } else {
         setError(message)

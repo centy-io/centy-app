@@ -7,6 +7,7 @@ import { create } from '@bufbuild/protobuf'
 import { ListDocsRequestSchema, type Doc } from '@/gen/centy_pb'
 import { getProjects } from '@/lib/project-resolver'
 import { useAppLink } from '@/hooks/useAppLink'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 interface AggregateDoc extends Doc {
   projectName: string
@@ -95,7 +96,7 @@ export function AggregateDocsList() {
         Showing docs from all projects. Select a project to create new docs.
       </p>
 
-      {error && <div className="error-message">{error}</div>}
+      {error && <DaemonErrorMessage error={error} />}
 
       {loading && docs.length === 0 ? (
         <div className="loading">Loading docs from all projects...</div>

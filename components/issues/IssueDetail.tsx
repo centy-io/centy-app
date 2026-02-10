@@ -33,6 +33,7 @@ import { EditorSelector } from '@/components/shared/EditorSelector'
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
 import { useAppLink } from '@/hooks/useAppLink'
 import { AssigneeSelector } from '@/components/users/AssigneeSelector'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 interface IssueDetailProps {
   issueNumber: string
@@ -433,10 +434,7 @@ export function IssueDetail({ issueNumber }: IssueDetailProps) {
   if (!projectPath) {
     return (
       <div className="issue-detail">
-        <div className="error-message">
-          No project path specified. Please go to the{' '}
-          <Link href={issuesListUrl}>issues list</Link> and select a project.
-        </div>
+        <DaemonErrorMessage error="No project path specified. Please go to the issues list and select a project." />
       </div>
     )
   }
@@ -452,7 +450,7 @@ export function IssueDetail({ issueNumber }: IssueDetailProps) {
   if (error && !issue) {
     return (
       <div className="issue-detail">
-        <div className="error-message">{error}</div>
+        <DaemonErrorMessage error={error} />
         <Link href={issuesListUrl} className="back-link">
           Back to Issues
         </Link>
@@ -525,7 +523,7 @@ export function IssueDetail({ issueNumber }: IssueDetailProps) {
         </div>
       </div>
 
-      {error && <div className="error-message">{error}</div>}
+      {error && <DaemonErrorMessage error={error} />}
 
       {showDeleteConfirm && (
         <div className="delete-confirm">

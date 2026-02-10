@@ -11,6 +11,7 @@ import {
 } from '@/gen/centy_pb'
 import { DaemonSettings } from '@/components/settings/DaemonSettings'
 import { AgentConfigEditor } from '@/components/settings/AgentConfigEditor'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 export function GeneralSettings() {
   const [daemonInfo, setDaemonInfo] = useState<DaemonInfo | null>(null)
@@ -88,7 +89,7 @@ export function GeneralSettings() {
         <h2>General Settings</h2>
       </div>
 
-      {error && <div className="error-message">{error}</div>}
+      {error && <DaemonErrorMessage error={error} />}
       {success && <div className="success-message">{success}</div>}
 
       <section className="settings-section">
