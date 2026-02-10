@@ -1,15 +1,15 @@
 {
-  "version": "0.1.0",
-  "priorityLevels": 3,
-  "customFields": [],
-  "defaults": {},
   "allowedStates": ["open", "in-progress", "closed", "for-validation"],
+  "customFields": [],
   "defaultState": "open",
-  "stateColors": {},
+  "defaults": {},
+  "hooks": [],
+  "llm.allowDirectEdits": false,
+  "llm.autoCloseOnComplete": true,
+  "llm.defaultWorkspaceMode": 0,
+  "llm.updateStatusOnStart": true,
   "priorityColors": {},
-  "llm": {
-    "autoCloseOnComplete": true,
-    "updateStatusOnStart": true,
-    "allowDirectEdits": false
-  }
+  "priorityLevels": 3,
+  "stateColors": {},
+  "version": "0.1.0"
 }
