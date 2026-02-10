@@ -13,6 +13,7 @@ import {
   useArchivedProjects,
   useProject,
 } from '@/components/providers/ProjectProvider'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 export function ArchivedProjects() {
   const { archivedPaths, unarchiveProject, removeArchivedProject } =
@@ -166,7 +167,7 @@ export function ArchivedProjects() {
         </div>
       </div>
 
-      {error && <div className="error-message">{error}</div>}
+      {error && <DaemonErrorMessage error={error} />}
 
       {loading ? (
         <div className="loading">Loading projects...</div>

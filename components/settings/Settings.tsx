@@ -26,6 +26,7 @@ import { DefaultsEditor } from '@/components/settings/DefaultsEditor'
 import { LlmSettingsEditor } from '@/components/settings/LlmSettingsEditor'
 import { DaemonSettings } from '@/components/settings/DaemonSettings'
 import { ProjectTitleEditor } from '@/components/settings/ProjectTitleEditor'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 export function Settings() {
   const { projectPath, isInitialized, setIsInitialized } = useProject()
@@ -238,7 +239,7 @@ export function Settings() {
         {isDirty && <span className="unsaved-indicator">Unsaved changes</span>}
       </div>
 
-      {error && <div className="error-message">{error}</div>}
+      {error && <DaemonErrorMessage error={error} />}
       {success && <div className="success-message">{success}</div>}
 
       <section className="settings-section">

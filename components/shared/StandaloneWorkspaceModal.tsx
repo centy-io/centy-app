@@ -8,6 +8,7 @@ import {
   EditorType,
 } from '@/gen/centy_pb'
 import { useDaemonStatus } from '@/components/providers/DaemonStatusProvider'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import '@/styles/components/StandaloneWorkspaceModal.css'
 
 interface StandaloneWorkspaceModalProps {
@@ -164,7 +165,12 @@ export function StandaloneWorkspaceModal({
         </div>
 
         <div className="standalone-modal-body">
-          {error && <div className="standalone-modal-error">{error}</div>}
+          {error && (
+            <DaemonErrorMessage
+              error={error}
+              className="standalone-modal-error"
+            />
+          )}
 
           <div className="standalone-modal-description">
             Create a temporary workspace without associating it with an issue.

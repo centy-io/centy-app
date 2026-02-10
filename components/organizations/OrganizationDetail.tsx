@@ -15,6 +15,8 @@ import {
   type ProjectInfo,
 } from '@/gen/centy_pb'
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
+import { isDaemonUnimplemented } from '@/lib/daemon-error'
 
 interface OrganizationDetailProps {
   orgSlug: string
@@ -71,7 +73,7 @@ export function OrganizationDetail({ orgSlug }: OrganizationDetailProps) {
     } catch (err) {
       const message =
         err instanceof Error ? err.message : 'Failed to connect to daemon'
-      if (message.includes('unimplemented')) {
+      if (isDaemonUnimplemented(message)) {
         setError(
           'Organizations feature is not available. Please update your daemon.'
         )
@@ -175,7 +177,7 @@ export function OrganizationDetail({ orgSlug }: OrganizationDetailProps) {
   if (error && !organization) {
     return (
       <div className="organization-detail">
-        <div className="error-message">{error}</div>
+        <DaemonErrorMessage error={error} />
         <Link href="/organizations" className="back-link">
           Back to Organizations
         </Link>
@@ -231,7 +233,7 @@ export function OrganizationDetail({ orgSlug }: OrganizationDetailProps) {
         </div>
       </div>
 
-      {error && <div className="error-message">{error}</div>}
+      {error && <DaemonErrorMessage error={error} />}
 
       {showDeleteConfirm && (
         <div className="delete-confirm">

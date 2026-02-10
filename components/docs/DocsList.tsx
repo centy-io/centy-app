@@ -22,6 +22,7 @@ import {
 } from '@/components/shared/ContextMenu'
 import { MoveModal } from '@/components/shared/MoveModal'
 import { DuplicateModal } from '@/components/shared/DuplicateModal'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 export function DocsList() {
   const router = useRouter()
@@ -226,7 +227,7 @@ export function DocsList() {
 
       {projectPath && isInitialized === true && (
         <>
-          {error && <div className="error-message">{error}</div>}
+          {error && <DaemonErrorMessage error={error} />}
 
           {loading && docs.length === 0 ? (
             <div className="loading">Loading documentation...</div>

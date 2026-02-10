@@ -14,6 +14,7 @@ import {
   type FileInfo,
   FileType,
 } from '@/gen/centy_pb'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 type InitStep = 'input' | 'plan' | 'executing' | 'success' | 'error'
 
@@ -385,7 +386,7 @@ export function InitProject() {
       {step === 'error' && (
         <div className="error-step">
           <h3>Error</h3>
-          <p className="error-message">{error}</p>
+          {error && <DaemonErrorMessage error={error} />}
           <button onClick={handleReset} className="primary">
             Try Again
           </button>

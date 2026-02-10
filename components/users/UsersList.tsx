@@ -28,6 +28,8 @@ import {
   type ContextMenuItem,
 } from '@/components/shared/ContextMenu'
 import { SyncUsersModal } from './SyncUsersModal'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
+import { isDaemonUnimplemented } from '@/lib/daemon-error'
 
 const columnHelper = createColumnHelper<User>()
 
@@ -201,7 +203,7 @@ export function UsersList() {
       const message =
         err instanceof Error ? err.message : 'Failed to connect to daemon'
       // Check if this is an unimplemented API error
-      if (message.includes('unimplemented')) {
+      if (isDaemonUnimplemented(message)) {
         setError(
           'User management is not yet available. Please update your daemon to the latest version.'
         )
@@ -342,7 +344,7 @@ export function UsersList() {
 
       {projectPath && isInitialized === true && (
         <>
-          {error && <div className="error-message">{error}</div>}
+          {error && <DaemonErrorMessage error={error} />}
 
           {showDeleteConfirm && (
             <div className="delete-confirm">

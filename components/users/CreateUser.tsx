@@ -9,6 +9,8 @@ import { create } from '@bufbuild/protobuf'
 import { CreateUserRequestSchema } from '@/gen/centy_pb'
 import { useProject } from '@/components/providers/ProjectProvider'
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
+import { isDaemonUnimplemented } from '@/lib/daemon-error'
 
 function generateSlug(name: string): string {
   return name
@@ -102,7 +104,7 @@ export function CreateUser() {
         }
       } else {
         const errorMsg = response.error || 'Failed to create user'
-        if (errorMsg.includes('unimplemented')) {
+        if (isDaemonUnimplemented(errorMsg)) {
           setError(
             'User management is not yet available. Please update your daemon to the latest version.'
           )
@@ -113,7 +115,7 @@ export function CreateUser() {
     } catch (err) {
       const message =
         err instanceof Error ? err.message : 'Failed to connect to daemon'
-      if (message.includes('unimplemented')) {
+      if (isDaemonUnimplemented(message)) {
         setError(
           'User management is not yet available. Please update your daemon to the latest version.'
         )
@@ -161,7 +163,7 @@ export function CreateUser() {
         <h2>Create New User</h2>
       </div>
 
-      {error && <div className="error-message">{error}</div>}
+      {error && <DaemonErrorMessage error={error} />}
 
       <form
         onSubmit={e => {

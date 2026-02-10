@@ -14,6 +14,7 @@ import {
 } from '@/gen/centy_pb'
 import { useProject } from '@/components/providers/ProjectProvider'
 import { AddLinkModal } from './AddLinkModal'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 interface LinkSectionProps {
   entityId: string
@@ -207,7 +208,9 @@ export function LinkSection({
         )}
       </div>
 
-      {error && <div className="link-section-error">{error}</div>}
+      {error && (
+        <DaemonErrorMessage error={error} className="link-section-error" />
+      )}
 
       {links.length === 0 ? (
         <p className="link-section-empty">No linked items</p>

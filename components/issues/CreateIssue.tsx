@@ -20,6 +20,7 @@ import {
 import { TextEditor } from '@/components/shared/TextEditor'
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
 import { useStateManager } from '@/lib/state'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 export function CreateIssue() {
   const router = useRouter()
@@ -247,7 +248,7 @@ export function CreateIssue() {
           />
         </div>
 
-        {error && <div className="error-message">{error}</div>}
+        {error && <DaemonErrorMessage error={error} />}
 
         <div className="actions">
           <button

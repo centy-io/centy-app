@@ -5,6 +5,8 @@ import { centyClient } from '@/lib/grpc/client'
 import { create } from '@bufbuild/protobuf'
 import { SyncUsersRequestSchema, type GitContributor } from '@/gen/centy_pb'
 import { useProject } from '@/components/providers/ProjectProvider'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
+import { isDaemonUnimplemented } from '@/lib/daemon-error'
 
 interface SyncUsersModalProps {
   onClose: () => void
@@ -43,7 +45,7 @@ export function SyncUsersModal({ onClose, onSynced }: SyncUsersModalProps) {
         setState('preview')
       } else {
         const errorMsg = response.error || 'Failed to fetch git contributors'
-        if (errorMsg.includes('unimplemented')) {
+        if (isDaemonUnimplemented(errorMsg)) {
           setError(
             'User sync is not yet available. Please update your daemon to the latest version.'
           )
@@ -55,7 +57,7 @@ export function SyncUsersModal({ onClose, onSynced }: SyncUsersModalProps) {
     } catch (err) {
       const message =
         err instanceof Error ? err.message : 'Failed to connect to daemon'
-      if (message.includes('unimplemented')) {
+      if (isDaemonUnimplemented(message)) {
         setError(
           'User sync is not yet available. Please update your daemon to the latest version.'
         )
@@ -92,7 +94,7 @@ export function SyncUsersModal({ onClose, onSynced }: SyncUsersModalProps) {
         setState('success')
       } else {
         const errorMsg = response.error || 'Failed to sync users'
-        if (errorMsg.includes('unimplemented')) {
+        if (isDaemonUnimplemented(errorMsg)) {
           setError(
             'User sync is not yet available. Please update your daemon to the latest version.'
           )
@@ -104,7 +106,7 @@ export function SyncUsersModal({ onClose, onSynced }: SyncUsersModalProps) {
     } catch (err) {
       const message =
         err instanceof Error ? err.message : 'Failed to connect to daemon'
-      if (message.includes('unimplemented')) {
+      if (isDaemonUnimplemented(message)) {
         setError(
           'User sync is not yet available. Please update your daemon to the latest version.'
         )
@@ -153,8 +155,8 @@ export function SyncUsersModal({ onClose, onSynced }: SyncUsersModalProps) {
 
           {state === 'error' && (
             <div className="sync-error">
-              <p className="error-message">{error}</p>
-              {!error?.includes('not yet available') && (
+              <DaemonErrorMessage error={error || ''} />
+              {error && !isDaemonUnimplemented(error) && (
                 <button onClick={fetchPreview} className="retry-btn">
                   Retry
                 </button>

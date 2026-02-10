@@ -21,6 +21,7 @@ import {
   MultiSelect,
   type MultiSelectOption,
 } from '@/components/shared/MultiSelect'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 const PRIORITY_OPTIONS: MultiSelectOption[] = [
   { value: 'high', label: 'High' },
@@ -320,7 +321,7 @@ export function AggregateIssuesList() {
             : `Showing issues from ${organizations.find(o => o.slug === selectedOrgSlug)?.name || selectedOrgSlug} organization. Select a project to create new issues.`}
       </p>
 
-      {error && <div className="error-message">{error}</div>}
+      {error && <DaemonErrorMessage error={error} />}
 
       {loading && filteredIssues.length === 0 ? (
         <div className="loading">Loading issues...</div>

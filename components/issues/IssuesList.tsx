@@ -35,6 +35,7 @@ import {
 import { MoveModal } from '@/components/shared/MoveModal'
 import { DuplicateModal } from '@/components/shared/DuplicateModal'
 import { StandaloneWorkspaceModal } from '@/components/shared/StandaloneWorkspaceModal'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 const PRIORITY_OPTIONS: MultiSelectOption[] = [
   { value: 'high', label: 'High' },
@@ -439,7 +440,7 @@ export function IssuesList() {
 
       {projectPath && isInitialized === true && (
         <>
-          {error && <div className="error-message">{error}</div>}
+          {error && <DaemonErrorMessage error={error} />}
 
           {loading && issues.length === 0 ? (
             <div className="loading">Loading issues...</div>

@@ -19,6 +19,7 @@ import { TextEditor } from '@/components/shared/TextEditor'
 import { LinkSection } from '@/components/shared/LinkSection'
 import { MoveModal } from '@/components/shared/MoveModal'
 import { DuplicateModal } from '@/components/shared/DuplicateModal'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 interface DocDetailProps {
   slug: string
@@ -230,7 +231,7 @@ export function DocDetail({ slug }: DocDetailProps) {
   if (error && !doc) {
     return (
       <div className="doc-detail">
-        <div className="error-message">{error}</div>
+        <DaemonErrorMessage error={error} />
         <Link href={docsListUrl} className="back-link">
           Back to Documentation
         </Link>
@@ -298,7 +299,7 @@ export function DocDetail({ slug }: DocDetailProps) {
         </div>
       </div>
 
-      {error && <div className="error-message">{error}</div>}
+      {error && <DaemonErrorMessage error={error} />}
 
       {showDeleteConfirm && (
         <div className="delete-confirm">

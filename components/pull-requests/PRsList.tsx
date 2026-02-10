@@ -27,6 +27,7 @@ import {
   MultiSelect,
   type MultiSelectOption,
 } from '@/components/shared/MultiSelect'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import '@/styles/pages/PRsList.css'
 
 const STATUS_OPTIONS: MultiSelectOption[] = [
@@ -386,7 +387,7 @@ export function PRsList() {
 
       {projectPath && isInitialized === true && (
         <>
-          {error && <div className="error-message">{error}</div>}
+          {error && <DaemonErrorMessage error={error} />}
 
           {loading && prs.length === 0 ? (
             <div className="loading">Loading pull requests...</div>

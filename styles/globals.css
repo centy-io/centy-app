@@ -1207,3 +1207,28 @@ main {
   color: #fff;
   border-color: #555;
 }
+
+/* Daemon Error Message Content */
+.daemon-error-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.daemon-error-tip {
+  font-size: 0.8125rem;
+  opacity: 0.85;
+  font-style: italic;
+}
+
+.daemon-error-logs {
+  font-size: 0.75rem;
+  opacity: 0.7;
+  margin-top: var(--space-1);
+}
+
+.daemon-error-logs code {
+  background: rgba(0, 0, 0, 0.1);
+  color: inherit;
+  font-size: 0.875em;
+}

@@ -12,6 +12,7 @@ import {
   type Asset,
 } from '@/gen/centy_pb'
 import { useProject } from '@/components/providers/ProjectProvider'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 export function SharedAssets() {
   const { projectPath, isInitialized, setIsInitialized } = useProject()
@@ -190,7 +191,7 @@ export function SharedAssets() {
 
       {projectPath && isInitialized === true && (
         <>
-          {error && <div className="error-message">{error}</div>}
+          {error && <DaemonErrorMessage error={error} />}
 
           {loading && assets.length === 0 ? (
             <div className="loading">Loading shared assets...</div>
