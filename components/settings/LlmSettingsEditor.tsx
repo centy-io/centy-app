@@ -1,26 +1,15 @@
 'use client'
 
-import { type LlmConfig, WorkspaceMode } from '@/gen/centy_pb'
+import { type WorkspaceConfig } from '@/gen/centy_pb'
 
 interface LlmSettingsEditorProps {
-  value: LlmConfig | undefined
-  onChange: (config: LlmConfig) => void
+  value: WorkspaceConfig | undefined
+  onChange: (config: WorkspaceConfig) => void
 }
 
 export function LlmSettingsEditor({ value, onChange }: LlmSettingsEditorProps) {
-  const config: LlmConfig = value || {
-    autoCloseOnComplete: false,
-    updateStatusOnStart: false,
-    allowDirectEdits: false,
-    defaultWorkspaceMode: WorkspaceMode.UNSPECIFIED,
-    $typeName: 'centy.v1.LlmConfig',
-  }
-
-  const handleChange = (field: keyof LlmConfig, checked: boolean) => {
-    onChange({
-      ...config,
-      [field]: checked,
-    })
+  const config: WorkspaceConfig = value || {
+    $typeName: 'centy.v1.WorkspaceConfig',
   }
 
   return (
@@ -28,41 +17,18 @@ export function LlmSettingsEditor({ value, onChange }: LlmSettingsEditorProps) {
       <label className="llm-checkbox">
         <input
           type="checkbox"
-          checked={config.autoCloseOnComplete || false}
-          onChange={e => handleChange('autoCloseOnComplete', e.target.checked)}
+          checked={config.updateStatusOnOpen || false}
+          onChange={e =>
+            onChange({
+              ...config,
+              updateStatusOnOpen: e.target.checked,
+            })
+          }
         />
         <span className="llm-checkbox-label">
-          <strong>Auto-close on complete</strong>
+          <strong>Update status on open</strong>
           <span className="llm-checkbox-description">
-            Automatically close issues when marked complete by LLM
-          </span>
-        </span>
-      </label>
-
-      <label className="llm-checkbox">
-        <input
-          type="checkbox"
-          checked={config.updateStatusOnStart || false}
-          onChange={e => handleChange('updateStatusOnStart', e.target.checked)}
-        />
-        <span className="llm-checkbox-label">
-          <strong>Update status on start</strong>
-          <span className="llm-checkbox-description">
-            Update status to in-progress when LLM starts work
-          </span>
-        </span>
-      </label>
-
-      <label className="llm-checkbox">
-        <input
-          type="checkbox"
-          checked={config.allowDirectEdits || false}
-          onChange={e => handleChange('allowDirectEdits', e.target.checked)}
-        />
-        <span className="llm-checkbox-label">
-          <strong>Allow direct edits</strong>
-          <span className="llm-checkbox-description">
-            Allow LLM to directly edit issue files instead of using CLI
+            Update status to in-progress when a workspace is opened
           </span>
         </span>
       </label>

@@ -123,7 +123,15 @@
       "Bash(pnpm format:check:*)",
       "Bash(PLAYWRIGHT_VISUAL=1 npx playwright test:*)",
       "Bash(gh pr checks:*)",
-      "Bash(git rebase:*)"
+      "Bash(git rebase:*)",
+      "Bash(npx centy:*)",
+      "Bash(curl:*)",
+      "mcp__playwright__browser_navigate",
+      "Bash(grpcurl:*)",
+      "Bash(npm run proto:*)",
+      "Bash(npx next lint:*)",
+      "Bash(npm run lint:*)",
+      "Bash(npm run build:*)"
     ],
     "deny": ["Bash(npm install)", "Bash(gh issue create:*)"]
   },

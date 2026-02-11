@@ -16,7 +16,7 @@ import {
   type Manifest,
   type DaemonInfo,
   type CustomFieldDefinition,
-  type LlmConfig,
+  type WorkspaceConfig,
 } from '@/gen/centy_pb'
 import { useProject } from '@/components/providers/ProjectProvider'
 import { StateListEditor } from '@/components/settings/StateListEditor'
@@ -407,11 +407,11 @@ export function Settings() {
                   </section>
 
                   <section className="settings-section">
-                    <h3>LLM Settings</h3>
+                    <h3>Workspace Settings</h3>
                     <div className="settings-card">
                       <LlmSettingsEditor
-                        value={config.llm as LlmConfig | undefined}
-                        onChange={llm => updateConfig({ llm })}
+                        value={config.workspace as WorkspaceConfig | undefined}
+                        onChange={workspace => updateConfig({ workspace })}
                       />
                     </div>
                   </section>

@@ -14,7 +14,7 @@ import {
   type Config,
   type Manifest,
   type CustomFieldDefinition,
-  type LlmConfig,
+  type WorkspaceConfig,
 } from '@/gen/centy_pb'
 import { useProject } from '@/components/providers/ProjectProvider'
 import { useOrganization } from '@/components/providers/OrganizationProvider'
@@ -353,11 +353,11 @@ export function ProjectConfig() {
                   </section>
 
                   <section className="settings-section">
-                    <h3>LLM Settings</h3>
+                    <h3>Workspace Settings</h3>
                     <div className="settings-card">
                       <LlmSettingsEditor
-                        value={config.llm as LlmConfig | undefined}
-                        onChange={llm => updateConfig({ llm })}
+                        value={config.workspace as WorkspaceConfig | undefined}
+                        onChange={workspace => updateConfig({ workspace })}
                       />
                     </div>
                   </section>

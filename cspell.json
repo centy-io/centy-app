@@ -40,6 +40,7 @@
     "functionals",
     "gitops",
     "grpc",
+    "grpcurl",
     "hotspots",
     "HSTS",
     "husky",

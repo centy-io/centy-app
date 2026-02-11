@@ -6,7 +6,6 @@ import { create } from '@bufbuild/protobuf'
 import {
   GetConfigRequestSchema,
   UpdateConfigRequestSchema,
-  WorkspaceMode,
   type Config,
 } from '@/gen/centy_pb'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
@@ -42,8 +41,10 @@ export function StatusConfigDialog({
         if (response.config) {
           setConfig(response.config)
           // Pre-select current value if it exists
-          if (response.config.llm) {
-            setSelectedOption(response.config.llm.updateStatusOnStart ?? false)
+          if (response.config.workspace) {
+            setSelectedOption(
+              response.config.workspace.updateStatusOnOpen ?? false
+            )
           }
         } else {
           setError(response.error || 'Failed to load project configuration')
@@ -95,13 +96,9 @@ export function StatusConfigDialog({
     try {
       const updatedConfig = {
         ...config,
-        llm: {
-          autoCloseOnComplete: config.llm?.autoCloseOnComplete ?? false,
-          updateStatusOnStart: selectedOption,
-          allowDirectEdits: config.llm?.allowDirectEdits ?? false,
-          defaultWorkspaceMode:
-            config.llm?.defaultWorkspaceMode ?? WorkspaceMode.UNSPECIFIED,
-          $typeName: 'centy.v1.LlmConfig' as const,
+        workspace: {
+          updateStatusOnOpen: selectedOption,
+          $typeName: 'centy.v1.WorkspaceConfig' as const,
         },
       }
 

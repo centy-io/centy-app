@@ -30,12 +30,8 @@ export function createMockConfig(overrides: Partial<Config> = {}): Config {
       medium: '#f59e0b',
       low: '#22c55e',
     },
-    llm: overrides.llm ?? {
-      autoCloseOnComplete: false,
-      updateStatusOnStart: false,
-      allowDirectEdits: true,
-      defaultWorkspaceMode: 0,
-      $typeName: 'centy.v1.LlmConfig',
+    workspace: overrides.workspace ?? {
+      $typeName: 'centy.v1.WorkspaceConfig',
     },
     customLinkTypes: overrides.customLinkTypes ?? [],
     defaultEditor: overrides.defaultEditor ?? '',
