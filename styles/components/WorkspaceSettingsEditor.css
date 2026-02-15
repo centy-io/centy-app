@@ -1,10 +1,10 @@
-.llm-settings-editor {
+.workspace-settings-editor {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
 }
 
-.llm-checkbox {
+.workspace-settings-checkbox {
   display: flex;
   align-items: flex-start;
   gap: var(--space-3);
@@ -14,11 +14,11 @@
   transition: background-color var(--transition-fast);
 }
 
-.llm-checkbox:hover {
+.workspace-settings-checkbox:hover {
   background-color: var(--color-gray-50);
 }
 
-.llm-checkbox input[type='checkbox'] {
+.workspace-settings-checkbox input[type='checkbox'] {
   width: 18px;
   height: 18px;
   margin-top: 2px;
@@ -27,18 +27,18 @@
   flex-shrink: 0;
 }
 
-.llm-checkbox-label {
+.workspace-settings-checkbox-label {
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
 }
 
-.llm-checkbox-label strong {
+.workspace-settings-checkbox-label strong {
   font-weight: 600;
   color: var(--color-gray-900);
 }
 
-.llm-checkbox-description {
+.workspace-settings-checkbox-description {
   font-size: 0.875rem;
   color: var(--color-gray-600);
 }

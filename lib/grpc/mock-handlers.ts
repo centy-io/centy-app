@@ -661,14 +661,6 @@ export const mockHandlers: MockHandlers = {
     }
   },
 
-  async getLlmWork(): Promise<{ hasWork: boolean }> {
-    return { hasWork: false }
-  },
-
-  async getLocalLlmConfig(): Promise<{ config: Record<string, unknown> }> {
-    return { config: {} }
-  },
-
   async moveIssue(): Promise<{ success: boolean }> {
     console.warn('[Demo Mode] moveIssue called - not available in demo mode')
     return { success: true }

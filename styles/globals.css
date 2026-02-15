@@ -14,7 +14,7 @@
 @import './components/DefaultsEditor.css';
 @import './components/InitProject.css';
 @import './components/LinkSection.css';
-@import './components/LlmSettingsEditor.css';
+@import './components/WorkspaceSettingsEditor.css';
 @import './components/MarkdownEditor.css';
 @import './components/MultiSelect.css';
 @import './components/PriorityEditor.css';
