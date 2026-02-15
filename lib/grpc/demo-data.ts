@@ -6,8 +6,6 @@ import {
   type IssueMetadata,
   type Doc,
   type DocMetadata,
-  type PullRequest,
-  type PrMetadata,
   type User,
   type Organization,
   type Config,
@@ -439,118 +437,6 @@ Please use the issue tracker to report bugs or request features.
   },
 ]
 
-// Helper to create PR metadata
-function createPrMetadata(
-  displayNumber: number,
-  status: string,
-  priority: number,
-  sourceBranch: string,
-  targetBranch: string,
-  createdAt: string,
-  updatedAt: string,
-  customFields: Record<string, string> = {},
-  mergedAt = '',
-  closedAt = ''
-): PrMetadata {
-  return {
-    $typeName: 'centy.v1.PrMetadata',
-    displayNumber,
-    status,
-    priority,
-    priorityLabel: priority === 1 ? 'high' : priority === 2 ? 'medium' : 'low',
-    sourceBranch,
-    targetBranch,
-    reviewers: [],
-    createdAt,
-    updatedAt,
-    mergedAt,
-    closedAt,
-    customFields,
-    deletedAt: '',
-  }
-}
-
-// Demo PRs
-export const DEMO_PRS: PullRequest[] = [
-  {
-    $typeName: 'centy.v1.PullRequest',
-    id: 'demo-pr-1',
-    displayNumber: 1,
-    title: 'feat: Add dark mode support',
-    description: `## Summary
-This PR implements dark mode support for the application.
-
-## Changes
-- Added theme toggle component
-- Implemented CSS variables for theming
-- Added localStorage persistence
-- Updated all components to use theme variables
-
-## Testing
-- Tested in Chrome, Firefox, Safari
-- Verified persistence across reloads
-- Checked accessibility contrast ratios`,
-    metadata: createPrMetadata(
-      1,
-      'open',
-      1,
-      'feature/dark-mode',
-      'main',
-      '2024-12-16T10:00:00Z',
-      '2024-12-18T09:00:00Z'
-    ),
-  },
-  {
-    $typeName: 'centy.v1.PullRequest',
-    id: 'demo-pr-2',
-    displayNumber: 2,
-    title: 'fix: Resolve login timeout issue',
-    description: `## Problem
-Users were being logged out after 5 minutes instead of 30.
-
-## Root Cause
-The session middleware was using milliseconds instead of minutes.
-
-## Solution
-Fixed the timeout calculation in the session configuration.
-
-## Testing
-- Verified session persists for 30 minutes
-- Added unit tests for session management`,
-    metadata: createPrMetadata(
-      2,
-      'merged',
-      2,
-      'fix/session-timeout',
-      'main',
-      '2024-12-10T14:00:00Z',
-      '2024-12-12T16:00:00Z',
-      {},
-      '2024-12-12T16:00:00Z'
-    ),
-  },
-  {
-    $typeName: 'centy.v1.PullRequest',
-    id: 'demo-pr-3',
-    displayNumber: 3,
-    title: 'docs: Update README with new features',
-    description: `## Changes
-- Updated installation instructions
-- Added new configuration options
-- Fixed typos and formatting
-- Added screenshots`,
-    metadata: createPrMetadata(
-      3,
-      'open',
-      3,
-      'docs/update-readme',
-      'main',
-      '2024-12-17T11:00:00Z',
-      '2024-12-18T08:00:00Z'
-    ),
-  },
-]
-
 // Demo config
 export const DEMO_CONFIG: Config = {
   $typeName: 'centy.v1.Config',
@@ -606,20 +492,6 @@ export const DEMO_DAEMON_INFO: DaemonInfo = {
 
 // Demo links (relationships between entities)
 export const DEMO_LINKS: Link[] = [
-  {
-    $typeName: 'centy.v1.Link',
-    targetId: 'demo-pr-1',
-    targetType: LinkTargetType.PR,
-    linkType: 'implements',
-    createdAt: '2024-12-16T10:00:00Z',
-  },
-  {
-    $typeName: 'centy.v1.Link',
-    targetId: 'demo-pr-2',
-    targetType: LinkTargetType.PR,
-    linkType: 'fixes',
-    createdAt: '2024-12-10T14:00:00Z',
-  },
   {
     $typeName: 'centy.v1.Link',
     targetId: 'demo-issue-4',

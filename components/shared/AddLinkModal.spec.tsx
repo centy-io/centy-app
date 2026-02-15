@@ -12,7 +12,6 @@ vi.mock('@/lib/grpc/client', () => ({
     getAvailableLinkTypes: vi.fn(),
     listIssues: vi.fn(),
     listDocs: vi.fn(),
-    listPrs: vi.fn(),
     createLink: vi.fn(),
   },
 }))
@@ -108,22 +107,6 @@ describe('AddLinkModal', () => {
       $typeName: 'centy.v1.ListDocsResponse',
       $unknown: undefined,
     })
-
-    vi.mocked(centyClient.listPrs).mockResolvedValue({
-      prs: [
-        {
-          id: 'pr-1',
-          displayNumber: 100,
-          title: 'First PR',
-          description: 'First PR description',
-          $typeName: 'centy.v1.PullRequest',
-          $unknown: undefined,
-        },
-      ],
-      totalCount: 1,
-      $typeName: 'centy.v1.ListPrsResponse',
-      $unknown: undefined,
-    })
   })
 
   it('should render modal with header and close button', async () => {
@@ -162,7 +145,6 @@ describe('AddLinkModal', () => {
     await waitFor(() => {
       expect(screen.getByText('Issues')).toBeInTheDocument()
       expect(screen.getByText('Docs')).toBeInTheDocument()
-      expect(screen.getByText('PRs')).toBeInTheDocument()
     })
   })
 
@@ -177,20 +159,6 @@ describe('AddLinkModal', () => {
 
     await waitFor(() => {
       expect(centyClient.listDocs).toHaveBeenCalled()
-    })
-  })
-
-  it('should switch to PRs tab and load PRs', async () => {
-    render(<AddLinkModal {...defaultProps} />)
-
-    await waitFor(() => {
-      expect(screen.getByText('PRs')).toBeInTheDocument()
-    })
-
-    fireEvent.click(screen.getByText('PRs'))
-
-    await waitFor(() => {
-      expect(centyClient.listPrs).toHaveBeenCalled()
     })
   })
 

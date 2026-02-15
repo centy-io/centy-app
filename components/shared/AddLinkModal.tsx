@@ -8,20 +8,18 @@ import {
   GetAvailableLinkTypesRequestSchema,
   ListIssuesRequestSchema,
   ListDocsRequestSchema,
-  ListPrsRequestSchema,
   LinkTargetType,
   type Link as LinkType,
   type LinkTypeInfo,
   type Issue,
   type Doc,
-  type PullRequest,
 } from '@/gen/centy_pb'
 import { useProject } from '@/components/providers/ProjectProvider'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 interface AddLinkModalProps {
   entityId: string
-  entityType: 'issue' | 'doc' | 'pr'
+  entityType: 'issue' | 'doc'
   existingLinks: LinkType[]
   onClose: () => void
   onLinkCreated: () => void
@@ -31,13 +29,12 @@ type EntityItem = {
   id: string
   displayNumber?: number
   title: string
-  type: 'issue' | 'doc' | 'pr'
+  type: 'issue' | 'doc'
 }
 
 const targetTypeToProto: Record<string, LinkTargetType> = {
   issue: LinkTargetType.ISSUE,
   doc: LinkTargetType.DOC,
-  pr: LinkTargetType.PR,
 }
 
 export function AddLinkModal({
@@ -53,9 +50,9 @@ export function AddLinkModal({
   const [linkTypes, setLinkTypes] = useState<LinkTypeInfo[]>([])
   const [selectedLinkType, setSelectedLinkType] = useState('')
   const [selectedTarget, setSelectedTarget] = useState<EntityItem | null>(null)
-  const [targetTypeFilter, setTargetTypeFilter] = useState<
-    'issue' | 'doc' | 'pr'
-  >('issue')
+  const [targetTypeFilter, setTargetTypeFilter] = useState<'issue' | 'doc'>(
+    'issue'
+  )
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<EntityItem[]>([])
   const [loading, setLoading] = useState(false)
@@ -143,31 +140,6 @@ export function AddLinkModal({
               id: d.slug,
               title: d.title,
               type: 'doc' as const,
-            }))
-        )
-      } else if (targetTypeFilter === 'pr') {
-        const request = create(ListPrsRequestSchema, { projectPath })
-        const response = await centyClient.listPrs(request)
-        results.push(
-          ...response.prs
-            .filter((p: PullRequest) => p.id !== entityId) // Exclude self
-            .filter(
-              (p: PullRequest) =>
-                !existingLinks.some(
-                  l => l.targetId === p.id && l.linkType === selectedLinkType
-                )
-            )
-            .filter(
-              (p: PullRequest) =>
-                !searchQuery ||
-                p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                String(p.displayNumber).includes(searchQuery)
-            )
-            .map((p: PullRequest) => ({
-              id: p.id,
-              displayNumber: p.displayNumber,
-              title: p.title,
-              type: 'pr' as const,
             }))
         )
       }
@@ -316,12 +288,6 @@ export function AddLinkModal({
               >
                 Docs
               </button>
-              <button
-                className={`link-modal-tab ${targetTypeFilter === 'pr' ? 'active' : ''}`}
-                onClick={() => setTargetTypeFilter('pr')}
-              >
-                PRs
-              </button>
             </div>
           </div>
 
@@ -352,11 +318,7 @@ export function AddLinkModal({
                       onClick={() => setSelectedTarget(item)}
                     >
                       <span className={`link-type-icon link-type-${item.type}`}>
-                        {item.type === 'issue'
-                          ? '!'
-                          : item.type === 'doc'
-                            ? 'D'
-                            : 'PR'}
+                        {item.type === 'issue' ? '!' : 'D'}
                       </span>
                       <span className="link-modal-item-label">
                         {getEntityLabel(item)}
