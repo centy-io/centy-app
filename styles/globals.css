@@ -20,6 +20,7 @@
 @import './components/PriorityEditor.css';
 @import './components/ProjectSelector.css';
 @import './components/OrgSwitcher.css';
+@import './components/PinnedItemsSection.css';
 @import './components/StateListEditor.css';
 @import './components/TextEditor/TextEditor.css';
 @import './components/ThemeToggle.css';
@@ -41,6 +42,7 @@
 @import './pages/UsersList.css';
 @import './pages/OrganizationsList.css';
 @import './pages/OrganizationDetail.css';
+@import './pages/ProjectDashboard.css';
 @import './pages/CreateOrganization.css';
 
 /* Design System */

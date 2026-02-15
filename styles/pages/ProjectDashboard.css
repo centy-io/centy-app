@@ -1,0 +1,119 @@
+/* Project Dashboard */
+.project-dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-8);
+}
+
+.project-dashboard-header {
+  margin-bottom: var(--space-8);
+}
+
+.project-dashboard-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-gray-900);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.project-dashboard-path {
+  font-size: 0.875rem;
+  color: var(--color-gray-500);
+  font-family: var(--font-mono);
+}
+
+/* Quick Links */
+.dashboard-quick-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-4);
+  margin-top: var(--space-8);
+}
+
+.dashboard-quick-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-xl);
+  text-decoration: none;
+  color: var(--color-gray-900);
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+
+.dashboard-quick-link:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.dashboard-quick-link-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.dashboard-quick-link-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.dashboard-quick-link-title {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.dashboard-quick-link-desc {
+  font-size: 0.8125rem;
+  color: var(--color-gray-500);
+}
+
+/* Loading/Error States */
+.project-dashboard-loading {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--space-12);
+  text-align: center;
+  color: var(--color-gray-500);
+}
+
+.project-dashboard-not-initialized {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--space-12);
+  text-align: center;
+}
+
+.project-dashboard-not-initialized p {
+  font-size: 1rem;
+  color: var(--color-gray-500);
+  margin-bottom: var(--space-4);
+}
+
+.project-dashboard-not-initialized a {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.project-dashboard-not-initialized a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .project-dashboard {
+    padding: var(--space-6);
+  }
+
+  .project-dashboard-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .dashboard-quick-links {
+    grid-template-columns: 1fr;
+  }
+}
