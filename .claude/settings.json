@@ -142,7 +142,8 @@
       "Bash(fi)",
       "Bash(done)",
       "Bash(node -e:*)",
-      "Bash(pnpm proto:*)"
+      "Bash(pnpm proto:*)",
+      "Bash(git diff:*)"
     ],
     "deny": ["Bash(npm install)", "Bash(gh issue create:*)"]
   },
