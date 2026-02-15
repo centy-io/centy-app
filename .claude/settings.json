@@ -132,7 +132,8 @@
       "Bash(npx next lint:*)",
       "Bash(npm run lint:*)",
       "Bash(npm run build:*)",
-      "Bash(gh pr list:*)"
+      "Bash(gh pr list:*)",
+      "Bash(gh label:*)"
     ],
     "deny": ["Bash(npm install)", "Bash(gh issue create:*)"]
   },
