@@ -134,7 +134,15 @@
       "Bash(npm run build:*)",
       "Bash(gh pr list:*)",
       "Bash(gh label:*)",
-      "Bash(uuidgen:*)"
+      "Bash(uuidgen:*)",
+      "Bash(do)",
+      "Bash(then)",
+      "Bash(echo:*)",
+      "Bash(break)",
+      "Bash(fi)",
+      "Bash(done)",
+      "Bash(node -e:*)",
+      "Bash(pnpm proto:*)"
     ],
     "deny": ["Bash(npm install)", "Bash(gh issue create:*)"]
   },
