@@ -23,7 +23,7 @@ import { StateListEditor } from '@/components/settings/StateListEditor'
 import { PriorityEditor } from '@/components/settings/PriorityEditor'
 import { CustomFieldsEditor } from '@/components/settings/CustomFieldsEditor'
 import { DefaultsEditor } from '@/components/settings/DefaultsEditor'
-import { LlmSettingsEditor } from '@/components/settings/LlmSettingsEditor'
+import { WorkspaceSettingsEditor } from '@/components/settings/WorkspaceSettingsEditor'
 import { DaemonSettings } from '@/components/settings/DaemonSettings'
 import { ProjectTitleEditor } from '@/components/settings/ProjectTitleEditor'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
@@ -409,7 +409,7 @@ export function Settings() {
                   <section className="settings-section">
                     <h3>Workspace Settings</h3>
                     <div className="settings-card">
-                      <LlmSettingsEditor
+                      <WorkspaceSettingsEditor
                         value={config.workspace as WorkspaceConfig | undefined}
                         onChange={workspace => updateConfig({ workspace })}
                       />
