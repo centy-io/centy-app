@@ -150,7 +150,8 @@
       "Bash(gh workflow run:*)",
       "Bash(gh run rerun:*)",
       "Bash(gh run list:*)",
-      "Bash(gh search issues:*)"
+      "Bash(gh search issues:*)",
+      "Bash(pnpm prettier:*)"
     ],
     "deny": ["Bash(npm install)", "Bash(gh issue create:*)"]
   },
