@@ -133,7 +133,8 @@
       "Bash(npm run lint:*)",
       "Bash(npm run build:*)",
       "Bash(gh pr list:*)",
-      "Bash(gh label:*)"
+      "Bash(gh label:*)",
+      "Bash(uuidgen:*)"
     ],
     "deny": ["Bash(npm install)", "Bash(gh issue create:*)"]
   },
