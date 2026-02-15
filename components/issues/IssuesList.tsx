@@ -15,6 +15,7 @@ import { useCopyToClipboard } from '@/hooks/useCopyToClipboard'
 import { useAppLink } from '@/hooks/useAppLink'
 import { useLastSeenIssues } from '@/hooks/useLastSeenIssues'
 import { useIssueTableSettings } from '@/hooks/useIssueTableSettings'
+import { usePinnedItems } from '@/hooks/usePinnedItems'
 import { useStateManager } from '@/lib/state'
 import {
   useReactTable,
@@ -78,6 +79,7 @@ export function IssuesList() {
   const { copyToClipboard } = useCopyToClipboard()
   const { createLink, createProjectLink } = useAppLink()
   const { lastSeenMap } = useLastSeenIssues()
+  const { pinItem, unpinItem, isPinned } = usePinnedItems()
 
   // Context menu state
   const [contextMenu, setContextMenu] = useState<{
@@ -380,6 +382,22 @@ export function IssuesList() {
 
   const contextMenuItems: ContextMenuItem[] = contextMenu
     ? [
+        {
+          label: isPinned(contextMenu.issue.issueNumber) ? 'Unpin' : 'Pin',
+          onClick: () => {
+            if (isPinned(contextMenu.issue.issueNumber)) {
+              unpinItem(contextMenu.issue.issueNumber)
+            } else {
+              pinItem({
+                id: contextMenu.issue.issueNumber,
+                type: 'issue',
+                title: contextMenu.issue.title,
+                displayNumber: contextMenu.issue.displayNumber,
+              })
+            }
+            setContextMenu(null)
+          },
+        },
         {
           label: 'View',
           onClick: () => {

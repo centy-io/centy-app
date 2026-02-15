@@ -1,14 +1,9 @@
-import { redirect } from 'next/navigation'
+import { ProjectDashboard } from '@/components/project/ProjectDashboard'
 
 export async function generateStaticParams() {
   return [{ organization: '_placeholder', project: '_placeholder' }]
 }
 
-export default async function ProjectPage({
-  params,
-}: {
-  params: Promise<{ organization: string; project: string }>
-}) {
-  const { organization, project } = await params
-  redirect(`/${organization}/${project}/issues`)
+export default function ProjectPage() {
+  return <ProjectDashboard />
 }

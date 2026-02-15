@@ -16,6 +16,7 @@ import {
 } from '@/components/providers/PathContextProvider'
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard'
 import { useAppLink } from '@/hooks/useAppLink'
+import { usePinnedItems } from '@/hooks/usePinnedItems'
 import {
   ContextMenu,
   type ContextMenuItem,
@@ -30,6 +31,7 @@ export function DocsList() {
   const resolvePathToUrl = useProjectPathToUrl()
   const { copyToClipboard } = useCopyToClipboard()
   const { createLink, createProjectLink } = useAppLink()
+  const { pinItem, unpinItem, isPinned } = usePinnedItems()
   const [docs, setDocs] = useState<Doc[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -174,6 +176,21 @@ export function DocsList() {
 
   const contextMenuItems: ContextMenuItem[] = contextMenu
     ? [
+        {
+          label: isPinned(contextMenu.doc.slug) ? 'Unpin' : 'Pin',
+          onClick: () => {
+            if (isPinned(contextMenu.doc.slug)) {
+              unpinItem(contextMenu.doc.slug)
+            } else {
+              pinItem({
+                id: contextMenu.doc.slug,
+                type: 'doc',
+                title: contextMenu.doc.title,
+              })
+            }
+            setContextMenu(null)
+          },
+        },
         {
           label: 'View',
           onClick: () => {
