@@ -63,10 +63,6 @@ export function Header() {
           pathname: '/[organization]/[project]/issues',
           query: { organization: effectiveOrg, project: effectiveProject },
         }),
-        pullRequests: route({
-          pathname: '/[organization]/[project]/pull-requests',
-          query: { organization: effectiveOrg, project: effectiveProject },
-        }),
         docs: route({
           pathname: '/[organization]/[project]/docs',
           query: { organization: effectiveOrg, project: effectiveProject },
@@ -201,12 +197,6 @@ export function Header() {
                 Issues
               </Link>
               <Link
-                href={navLinks.pullRequests}
-                className={isActive(navLinks.pullRequests) ? 'active' : ''}
-              >
-                Pull Requests
-              </Link>
-              <Link
                 href={navLinks.docs}
                 className={isActive(navLinks.docs) ? 'active' : ''}
               >
@@ -289,12 +279,6 @@ export function Header() {
                   className={isActive(navLinks.issues) ? 'active' : ''}
                 >
                   Issues
-                </Link>
-                <Link
-                  href={navLinks.pullRequests}
-                  className={isActive(navLinks.pullRequests) ? 'active' : ''}
-                >
-                  Pull Requests
                 </Link>
                 <Link
                   href={navLinks.docs}

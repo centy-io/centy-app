@@ -268,13 +268,8 @@ describe('LinkSection', () => {
           targetType: LinkTargetType.DOC,
           linkType: 'related',
         }),
-        createMockLink({
-          targetId: 'pr-1',
-          targetType: LinkTargetType.PR,
-          linkType: 'related',
-        }),
       ],
-      totalCount: 3,
+      totalCount: 2,
       $typeName: 'centy.v1.ListLinksResponse',
       $unknown: undefined,
     })
@@ -284,7 +279,6 @@ describe('LinkSection', () => {
     await waitFor(() => {
       expect(screen.getByText('!')).toBeInTheDocument() // Issue icon
       expect(screen.getByText('D')).toBeInTheDocument() // Doc icon
-      expect(screen.getByText('PR')).toBeInTheDocument() // PR icon
     })
   })
 

@@ -16,19 +16,11 @@ import { CreateDoc } from '@/components/docs/CreateDoc'
 import { UsersList } from '@/components/users/UsersList'
 import { UserDetail } from '@/components/users/UserDetail'
 import { CreateUser } from '@/components/users/CreateUser'
-import { PRsList } from '@/components/pull-requests/PRsList'
-import { PRDetail } from '@/components/pull-requests/PRDetail'
-import { CreatePR } from '@/components/pull-requests/CreatePR'
 import { SharedAssets } from '@/components/assets/SharedAssets'
 import { ProjectConfig } from '@/components/settings/ProjectConfig'
 
 // Routes that require project context (no longer accessible at root level)
-const PROJECT_SCOPED_ROUTES = new Set([
-  'issues',
-  'docs',
-  'pull-requests',
-  'users',
-])
+const PROJECT_SCOPED_ROUTES = new Set(['issues', 'docs', 'users'])
 
 /**
  * Component displayed when a project-scoped route is accessed without project context
@@ -39,11 +31,9 @@ function ProjectContextRequired({ requestedPage }: { requestedPage: string }) {
       ? 'Issues'
       : requestedPage === 'docs'
         ? 'Docs'
-        : requestedPage === 'pull-requests'
-          ? 'Pull Requests'
-          : requestedPage === 'users'
-            ? 'Users'
-            : requestedPage
+        : requestedPage === 'users'
+          ? 'Users'
+          : requestedPage
 
   return (
     <div className="project-context-required">
@@ -65,7 +55,7 @@ function ProjectContextRequired({ requestedPage }: { requestedPage: string }) {
  * Parses the pathname and renders the appropriate component for
  * [organization]/[project]/... paths that don't match explicit routes.
  *
- * Routes like /issues, /docs, /pull-requests, /users require project context
+ * Routes like /issues, /docs, /users require project context
  * and will show a message directing users to select a project.
  */
 export function CatchAllRouter() {
@@ -160,23 +150,6 @@ export function CatchAllRouter() {
           shouldRedirect: false,
           redirectTo: null,
         }
-
-      case 'pull-requests':
-        if (rest[0] === 'new') {
-          return {
-            content: <CreatePR />,
-            shouldRedirect: false,
-            redirectTo: null,
-          }
-        }
-        if (rest[0]) {
-          return {
-            content: <PRDetail prNumber={rest[0]} />,
-            shouldRedirect: false,
-            redirectTo: null,
-          }
-        }
-        return { content: <PRsList />, shouldRedirect: false, redirectTo: null }
 
       case 'assets':
         return {

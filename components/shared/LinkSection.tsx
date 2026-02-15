@@ -18,7 +18,7 @@ import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 interface LinkSectionProps {
   entityId: string
-  entityType: 'issue' | 'doc' | 'pr'
+  entityType: 'issue' | 'doc'
   /** Whether the user can add/remove links (edit mode) */
   editable?: boolean
 }
@@ -26,14 +26,12 @@ interface LinkSectionProps {
 const targetTypeToProto: Record<string, LinkTargetType> = {
   issue: LinkTargetType.ISSUE,
   doc: LinkTargetType.DOC,
-  pr: LinkTargetType.PR,
 }
 
 const protoToTargetType: Record<LinkTargetType, string> = {
   [LinkTargetType.UNSPECIFIED]: 'unknown',
   [LinkTargetType.ISSUE]: 'issue',
   [LinkTargetType.DOC]: 'doc',
-  [LinkTargetType.PR]: 'pr',
 }
 
 export function LinkSection({
@@ -72,11 +70,6 @@ export function LinkSection({
           return route({
             pathname: '/[organization]/[project]/docs/[slug]',
             query: { ...projectContext, slug: targetId },
-          })
-        case 'pr':
-          return route({
-            pathname: '/[organization]/[project]/pull-requests/[prNumber]',
-            query: { ...projectContext, prNumber: targetId },
           })
         default:
           return '/'
@@ -177,8 +170,6 @@ export function LinkSection({
         return '!'
       case LinkTargetType.DOC:
         return 'D'
-      case LinkTargetType.PR:
-        return 'PR'
       default:
         return '?'
     }

@@ -6,7 +6,6 @@ import {
   DEMO_ORGANIZATION,
   DEMO_ISSUES,
   DEMO_DOCS,
-  DEMO_PRS,
   DEMO_USERS,
   DEMO_CONFIG,
   DEMO_DAEMON_INFO,
@@ -28,11 +27,6 @@ import type {
   ListDocsResponse,
   GetDocRequest,
   Doc,
-  ListPrsRequest,
-  ListPrsResponse,
-  GetPrRequest,
-  GetPrByDisplayNumberRequest,
-  PullRequest,
   ListUsersRequest,
   ListUsersResponse,
   GetUserRequest,
@@ -77,39 +71,6 @@ function filterIssues(
   if (request.priority && request.priority > 0) {
     filtered = filtered.filter(
       issue => issue.metadata && issue.metadata.priority === request.priority
-    )
-  }
-
-  return filtered
-}
-
-// Helper to filter PRs by request parameters
-function filterPrs(
-  prs: typeof DEMO_PRS,
-  request: ListPrsRequest
-): typeof DEMO_PRS {
-  let filtered = [...prs]
-
-  // status is a single string
-  if (request.status) {
-    filtered = filtered.filter(
-      pr => pr.metadata && pr.metadata.status === request.status
-    )
-  }
-
-  // sourceBranch is a single string
-  if (request.sourceBranch) {
-    filtered = filtered.filter(
-      pr =>
-        pr.metadata && pr.metadata.sourceBranch.includes(request.sourceBranch)
-    )
-  }
-
-  // targetBranch is a single string
-  if (request.targetBranch) {
-    filtered = filtered.filter(
-      pr =>
-        pr.metadata && pr.metadata.targetBranch.includes(request.targetBranch)
     )
   }
 
@@ -228,44 +189,6 @@ export const mockHandlers: MockHandlers = {
       return { success: true, error: '', doc }
     }
     return { success: false, error: `Doc ${request.slug} not found` }
-  },
-
-  // PR methods
-  async listPrs(request: ListPrsRequest): Promise<ListPrsResponse> {
-    if (request.projectPath !== DEMO_PROJECT_PATH) {
-      return {
-        $typeName: 'centy.v1.ListPrsResponse',
-        prs: [],
-        totalCount: 0,
-      }
-    }
-
-    const filtered = filterPrs(DEMO_PRS, request)
-    return {
-      $typeName: 'centy.v1.ListPrsResponse',
-      prs: filtered,
-      totalCount: filtered.length,
-    }
-  },
-
-  async getPr(
-    request: GetPrRequest
-  ): Promise<{ success: boolean; error: string; pr?: PullRequest }> {
-    const pr = DEMO_PRS.find(p => p.id === request.prId)
-    if (pr) {
-      return { success: true, error: '', pr }
-    }
-    return { success: false, error: `PR ${request.prId} not found` }
-  },
-
-  async getPrByDisplayNumber(
-    request: GetPrByDisplayNumberRequest
-  ): Promise<{ success: boolean; error: string; pr?: PullRequest }> {
-    const pr = DEMO_PRS.find(p => p.displayNumber === request.displayNumber)
-    if (pr) {
-      return { success: true, error: '', pr }
-    }
-    return { success: false, error: `PR #${request.displayNumber} not found` }
   },
 
   // User methods
@@ -464,24 +387,6 @@ export const mockHandlers: MockHandlers = {
     return { success: true }
   },
 
-  async createPr(): Promise<{ success: boolean; pr: PullRequest }> {
-    console.warn('[Demo Mode] createPr called - changes not persisted')
-    return {
-      success: true,
-      pr: DEMO_PRS[0],
-    }
-  },
-
-  async updatePr(): Promise<{ success: boolean }> {
-    console.warn('[Demo Mode] updatePr called - changes not persisted')
-    return { success: true }
-  },
-
-  async deletePr(): Promise<{ success: boolean }> {
-    console.warn('[Demo Mode] deletePr called - changes not persisted')
-    return { success: true }
-  },
-
   // Operations that don't make sense in demo mode
   async shutdown(): Promise<{ success: boolean; message: string }> {
     console.warn('[Demo Mode] shutdown called - not available in demo mode')
@@ -645,10 +550,6 @@ export const mockHandlers: MockHandlers = {
     return { nextNumber: DEMO_ISSUES.length + 1 }
   },
 
-  async getNextPrNumber(): Promise<{ nextNumber: number }> {
-    return { nextNumber: DEMO_PRS.length + 1 }
-  },
-
   async getProjectVersion(): Promise<{
     projectVersion: string
     daemonVersion: string
@@ -800,9 +701,5 @@ export const mockHandlers: MockHandlers = {
 
   async getDocsBySlug(): Promise<{ docs: Doc[] }> {
     return { docs: [] }
-  },
-
-  async getPrsByUuid(): Promise<{ prs: PullRequest[] }> {
-    return { prs: [] }
   },
 }
