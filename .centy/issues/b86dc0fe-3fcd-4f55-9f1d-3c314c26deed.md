@@ -1,9 +1,9 @@
 ---
 displayNumber: 147
-status: open
+status: in-progress
 priority: 1
 createdAt: 2026-02-11T17:54:06.433334+00:00
-updatedAt: 2026-02-11T17:54:06.433334+00:00
+updatedAt: 2026-02-15T17:35:08.493483+00:00
 ---
 
 # StatusConfigDialog broken: daemon replaced LlmConfig with WorkspaceConfig
