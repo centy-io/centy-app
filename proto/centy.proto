@@ -325,6 +325,9 @@ message ReconciliationPlan {
 
   // Whether user decisions are needed
   bool needs_decisions = 6;
+
+  bool success = 7;
+  string error = 8;
 }
 
 message ExecuteReconciliationRequest {
@@ -386,6 +389,8 @@ message GetNextIssueNumberRequest {
 
 message GetNextIssueNumberResponse {
   string issue_number = 1;
+  bool success = 2;
+  string error = 3;
 }
 
 // Issue represents a full issue with all its data
@@ -456,6 +461,8 @@ message GetIssuesByUuidResponse {
   repeated IssueWithProject issues = 1;
   int32 total_count = 2;
   repeated string errors = 3;     // Non-fatal errors (e.g., projects that couldn't be accessed)
+  bool success = 4;
+  string error = 5;
 }
 
 message ListIssuesRequest {
@@ -471,6 +478,8 @@ message ListIssuesRequest {
 message ListIssuesResponse {
   repeated Issue issues = 1;
   int32 total_count = 2;
+  bool success = 3;
+  string error = 4;
 }
 
 // Advanced search request
@@ -644,11 +653,16 @@ message Config {
   string version = 6;                  // Project version (semver, empty = daemon default)
   map<string, string> state_colors = 7;     // State name → hex color (e.g., "open" → "#10b981")
   map<string, string> priority_colors = 8;  // Priority level → hex color (e.g., "1" → "#ef4444")
+  reserved 9;  // Previously: LlmConfig llm (removed)
   repeated LinkTypeDefinition custom_link_types = 10;  // Custom link types (in addition to built-in)
   string default_editor = 11;                // Default editor ID for this project (e.g., "vscode", "terminal", "zed")
   repeated HookDefinition hooks = 12;                  // Lifecycle hooks
-  WorkspaceConfig workspace = 13;            // Workspace configuration section
-  reserved 9;                                // Was LlmConfig llm
+  WorkspaceConfig workspace = 13;            // Workspace settings
+}
+
+// Workspace configuration section
+message WorkspaceConfig {
+  optional bool update_status_on_open = 1;   // Auto-update issue status to "in-progress" when opening a temp workspace
 }
 
 message CustomFieldDefinition {
@@ -657,11 +671,6 @@ message CustomFieldDefinition {
   bool required = 3;
   string default_value = 4;
   repeated string enum_values = 5;  // For enum type
-}
-
-// Workspace configuration section
-message WorkspaceConfig {
-  optional bool update_status_on_open = 1;   // Update status to in-progress when workspace opens (null = prompt user)
 }
 
 // Lifecycle hook definition (bash scripts to run before/after operations)
@@ -759,6 +768,8 @@ message GetDocsBySlugResponse {
   repeated DocWithProject docs = 1;
   int32 total_count = 2;
   repeated string errors = 3;         // Non-fatal errors (e.g., projects that couldn't be accessed)
+  bool success = 4;
+  string error = 5;
 }
 
 message ListDocsRequest {
@@ -769,6 +780,8 @@ message ListDocsRequest {
 message ListDocsResponse {
   repeated Doc docs = 1;
   int32 total_count = 2;
+  bool success = 3;
+  string error = 4;
 }
 
 // Doc represents a documentation file
@@ -913,6 +926,8 @@ message ListAssetsRequest {
 message ListAssetsResponse {
   repeated Asset assets = 1;
   int32 total_count = 2;
+  bool success = 3;
+  string error = 4;
 }
 
 message GetAssetRequest {
@@ -980,6 +995,8 @@ message ListProjectsRequest {
 message ListProjectsResponse {
   repeated ProjectInfo projects = 1;
   int32 total_count = 2;
+  bool success = 3;
+  string error = 4;
 }
 
 message RegisterProjectRequest {
@@ -1009,6 +1026,8 @@ message GetProjectInfoRequest {
 message GetProjectInfoResponse {
   bool found = 1;
   ProjectInfo project = 2;
+  bool success = 3;
+  string error = 4;
 }
 
 message SetProjectFavoriteRequest {
@@ -1104,6 +1123,8 @@ message ListOrganizationsRequest {}
 message ListOrganizationsResponse {
   repeated Organization organizations = 1;
   int32 total_count = 2;
+  bool success = 3;
+  string error = 4;
 }
 
 message GetOrganizationRequest {
@@ -1113,6 +1134,8 @@ message GetOrganizationRequest {
 message GetOrganizationResponse {
   bool found = 1;
   Organization organization = 2;
+  bool success = 3;
+  string error = 4;
 }
 
 message UpdateOrganizationRequest {
@@ -1325,6 +1348,8 @@ message ListTempWorkspacesResponse {
   repeated TempWorkspace workspaces = 1;
   uint32 total_count = 2;
   uint32 expired_count = 3;             // Number of expired workspaces (not included unless include_expired)
+  bool success = 4;
+  string error = 5;
 }
 
 message CloseTempWorkspaceRequest {
@@ -1356,6 +1381,7 @@ enum LinkTargetType {
   LINK_TARGET_TYPE_UNSPECIFIED = 0;
   LINK_TARGET_TYPE_ISSUE = 1;
   LINK_TARGET_TYPE_DOC = 2;
+  reserved 3;                         // Removed: LINK_TARGET_TYPE_PR
 }
 
 // A link between two entities
@@ -1409,6 +1435,8 @@ message ListLinksRequest {
 message ListLinksResponse {
   repeated Link links = 1;
   int32 total_count = 2;
+  bool success = 3;
+  string error = 4;
 }
 
 // Get all available link types (builtin + custom)
@@ -1477,6 +1505,8 @@ message ListUsersRequest {
 message ListUsersResponse {
   repeated User users = 1;
   int32 total_count = 2;
+  bool success = 3;
+  string error = 4;
 }
 
 message UpdateUserRequest {
@@ -1559,6 +1589,7 @@ message SyncUsersResponse {
 enum EntityType {
   ENTITY_TYPE_UNSPECIFIED = 0;
   ENTITY_TYPE_ISSUE = 1;
+  reserved 2;                         // Removed: ENTITY_TYPE_PR
   ENTITY_TYPE_DOC = 3;
 }
 
@@ -1585,7 +1616,7 @@ message EntityAction {
 // Request to get available actions for an entity
 message GetEntityActionsRequest {
   string project_path = 1;              // Project path for config/state lookup
-  EntityType entity_type = 2;           // Type of entity (issue, PR, doc)
+  EntityType entity_type = 2;           // Type of entity (issue, doc)
   string entity_id = 3;                 // Optional: entity ID for contextual actions (empty = general actions like "create")
 }
 
@@ -1601,7 +1632,7 @@ message GetEntityActionsResponse {
 // Sync conflict information
 message SyncConflict {
   string id = 1;                        // Unique conflict ID
-  string item_type = 2;                 // Type of item (issue, doc, pr)
+  string item_type = 2;                 // Type of item (issue, doc)
   string item_id = 3;                   // ID of the item with conflict
   string file_path = 4;                 // Relative file path within .centy
   string created_at = 5;                // When the conflict was detected
