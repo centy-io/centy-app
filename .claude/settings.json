@@ -144,7 +144,8 @@
       "Bash(node -e:*)",
       "Bash(pnpm proto:*)",
       "Bash(git diff:*)",
-      "Bash(pnpm tsc:*)"
+      "Bash(pnpm tsc:*)",
+      "Bash(gh run view:*)"
     ],
     "deny": ["Bash(npm install)", "Bash(gh issue create:*)"]
   },
