@@ -156,7 +156,11 @@
       "Bash(gh repo list:*)",
       "WebFetch(domain:www.npmjs.com)",
       "Bash(npm view:*)",
-      "mcp__playwright__browser_install"
+      "mcp__playwright__browser_install",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm remove:*)",
+      "Bash(pnpm lint:fix:*)",
+      "Bash(pnpm knip:*)"
     ],
     "deny": ["Bash(npm install)", "Bash(gh issue create:*)"]
   },
