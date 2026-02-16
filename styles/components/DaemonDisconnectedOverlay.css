@@ -13,8 +13,8 @@
 }
 
 .daemon-disconnected-content {
-  background: #1a1a1a;
-  border: 1px solid #333;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
   border-radius: 12px;
   padding: 48px;
   max-width: 480px;
@@ -23,7 +23,7 @@
 }
 
 .daemon-disconnected-icon {
-  color: #e74c3c;
+  color: var(--color-danger);
   margin-bottom: 24px;
 }
 
@@ -31,18 +31,18 @@
   margin: 0 0 16px 0;
   font-size: 24px;
   font-weight: 600;
-  color: #fff;
+  color: var(--color-text-primary);
 }
 
 .daemon-disconnected-content p {
   margin: 0 0 24px 0;
-  color: #888;
+  color: var(--color-text-muted);
   line-height: 1.6;
 }
 
 .daemon-disconnected-instructions {
-  background: #0d0d0d;
-  border: 1px solid #333;
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-border-default);
   border-radius: 8px;
   padding: 16px;
   margin-bottom: 24px;
@@ -51,21 +51,21 @@
 .daemon-disconnected-instructions p {
   margin: 0 0 8px 0;
   font-size: 14px;
-  color: #666;
+  color: var(--color-text-muted);
 }
 
 .daemon-code-block {
   position: relative;
   display: flex;
   align-items: center;
-  background: #1a1a1a;
+  background: var(--color-bg-surface);
   border-radius: 4px;
 }
 
 .daemon-disconnected-instructions code {
   display: block;
-  background: #1a1a1a;
-  color: #4ade80;
+  background: var(--color-bg-surface);
+  color: var(--color-success);
   padding: 12px 16px;
   border-radius: 4px;
   font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
@@ -84,7 +84,7 @@
   flex-shrink: 0;
   background: transparent;
   border: none;
-  color: #666;
+  color: var(--color-text-muted);
   cursor: pointer;
   padding: 8px;
   margin-right: 8px;
@@ -93,7 +93,7 @@
 }
 
 .daemon-copy-button:hover {
-  color: #4ade80;
+  color: var(--color-success);
 }
 
 .daemon-copy-button svg {
@@ -103,7 +103,7 @@
 
 .daemon-retry-button {
   background: #3b82f6;
-  color: #fff;
+  color: var(--color-text-primary);
   border: none;
   border-radius: 8px;
   padding: 12px 32px;
@@ -124,13 +124,13 @@
 .daemon-disconnected-demo-section {
   margin-top: 24px;
   padding-top: 24px;
-  border-top: 1px solid #333;
+  border-top: 1px solid var(--color-border-default);
 }
 
 .daemon-disconnected-demo-section p {
   margin: 0 0 12px 0;
   font-size: 14px;
-  color: #666;
+  color: var(--color-text-muted);
 }
 
 .daemon-demo-button {

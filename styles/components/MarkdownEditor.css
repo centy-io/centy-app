@@ -133,7 +133,7 @@
   border-radius: 4px;
   font-family: 'Fira Code', 'Consolas', monospace;
   font-size: 0.9em;
-  color: #e5e7eb;
+  color: var(--color-gray-700);
 }
 
 .editor-content .tiptap pre {
@@ -149,7 +149,7 @@
   padding: 0;
   font-size: 0.875em;
   line-height: 1.6;
-  color: #e5e7eb;
+  color: var(--color-gray-700);
 }
 
 .editor-content .tiptap a {

@@ -761,8 +761,8 @@ main {
 }
 
 .daemon-disconnected-content {
-  background: #1a1a1a;
-  border: 1px solid #333;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
   border-radius: 12px;
   padding: 48px;
   max-width: 480px;
@@ -771,7 +771,7 @@ main {
 }
 
 .daemon-disconnected-icon {
-  color: #e74c3c;
+  color: var(--color-danger);
   margin-bottom: 24px;
 }
 
@@ -779,18 +779,18 @@ main {
   margin: 0 0 16px 0;
   font-size: 24px;
   font-weight: 600;
-  color: #fff;
+  color: var(--color-text-primary);
 }
 
 .daemon-disconnected-content p {
   margin: 0 0 24px 0;
-  color: #888;
+  color: var(--color-text-muted);
   line-height: 1.6;
 }
 
 .daemon-disconnected-instructions {
-  background: #0d0d0d;
-  border: 1px solid #333;
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-border-default);
   border-radius: 8px;
   padding: 16px;
   margin-bottom: 24px;
@@ -799,13 +799,13 @@ main {
 .daemon-disconnected-instructions p {
   margin: 0 0 8px 0;
   font-size: 14px;
-  color: #666;
+  color: var(--color-text-muted);
 }
 
 .daemon-disconnected-instructions code {
   display: block;
-  background: #1a1a1a;
-  color: #4ade80;
+  background: var(--color-bg-surface);
+  color: var(--color-success);
   padding: 12px 16px;
   border-radius: 4px;
   font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
@@ -814,7 +814,7 @@ main {
 
 .daemon-retry-button {
   background: #3b82f6;
-  color: #fff;
+  color: var(--color-text-primary);
   border: none;
   border-radius: 8px;
   padding: 12px 32px;
@@ -838,10 +838,10 @@ main {
   align-items: center;
   gap: 6px;
   padding: 6px 10px;
-  background: #2a2a2a;
-  border: 1px solid #444;
+  background: var(--color-bg-input);
+  border: 1px solid var(--color-border-default);
   border-radius: 6px;
-  color: #888;
+  color: var(--color-text-muted);
   cursor: pointer;
   font-size: 0.8em;
   transition: all 0.2s;
@@ -860,17 +860,17 @@ main {
 }
 
 .daemon-status-indicator.connected .daemon-status-dot {
-  background-color: #4ade80;
+  background-color: var(--color-success);
   box-shadow: 0 0 6px rgba(74, 222, 128, 0.5);
 }
 
 .daemon-status-indicator.disconnected .daemon-status-dot {
-  background-color: #ef4444;
+  background-color: var(--color-danger);
   box-shadow: 0 0 6px rgba(239, 68, 68, 0.5);
 }
 
 .daemon-status-indicator.checking .daemon-status-dot {
-  background-color: #fbbf24;
+  background-color: var(--color-warning);
   animation: pulse 1s infinite;
 }
 
@@ -910,10 +910,10 @@ main {
   align-items: center;
   gap: 8px;
   padding: 8px 12px;
-  background: #2a2a2a;
-  border: 1px solid #444;
+  background: var(--color-bg-input);
+  border: 1px solid var(--color-border-default);
   border-radius: 6px;
-  color: #fff;
+  color: var(--color-text-primary);
   cursor: pointer;
   min-width: 200px;
   transition: all 0.2s;
@@ -938,14 +938,14 @@ main {
 
 .dropdown-arrow {
   font-size: 0.7em;
-  color: #888;
+  color: var(--color-text-muted);
 }
 
 .project-selector-dropdown {
   width: 350px;
   max-height: min(70vh, 600px);
-  background: #2a2a2a;
-  border: 1px solid #444;
+  background: var(--color-bg-input);
+  border: 1px solid var(--color-border-default);
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   z-index: 1000;
@@ -959,13 +959,13 @@ main {
   justify-content: space-between;
   align-items: center;
   padding: 12px 16px;
-  border-bottom: 1px solid #444;
+  border-bottom: 1px solid var(--color-border-default);
 }
 
 .project-selector-header h3 {
   margin: 0;
   font-size: 0.9em;
-  color: #888;
+  color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -973,7 +973,7 @@ main {
 .project-selector-header .refresh-btn {
   background: none;
   border: none;
-  color: #888;
+  color: var(--color-text-muted);
   cursor: pointer;
   font-size: 1.2em;
   padding: 4px 8px;
@@ -983,7 +983,7 @@ main {
 
 .project-selector-header .refresh-btn:hover {
   background: #333;
-  color: #fff;
+  color: var(--color-text-primary);
 }
 
 .project-selector-header .refresh-btn:disabled {
@@ -993,7 +993,7 @@ main {
 
 .project-selector-error {
   padding: 12px 16px;
-  color: #ff6b6b;
+  color: var(--color-danger);
   font-size: 0.9em;
   background: rgba(255, 107, 107, 0.1);
 }
@@ -1001,13 +1001,13 @@ main {
 .project-selector-loading {
   padding: 24px 16px;
   text-align: center;
-  color: #888;
+  color: var(--color-text-muted);
 }
 
 .project-selector-empty {
   padding: 24px 16px;
   text-align: center;
-  color: #888;
+  color: var(--color-text-muted);
 }
 
 .project-selector-empty p {
@@ -1042,7 +1042,7 @@ main {
 
 .project-item.selected {
   background: #2d4a3e;
-  border-left: 3px solid #4ade80;
+  border-left: 3px solid var(--color-success);
 }
 
 .project-item:last-child {
@@ -1058,7 +1058,7 @@ main {
 
 .project-item-name {
   font-weight: 500;
-  color: #fff;
+  color: var(--color-text-primary);
 }
 
 .project-badge {
@@ -1068,8 +1068,8 @@ main {
 }
 
 .project-badge.not-initialized {
-  background: #4a3a2d;
-  color: #fbbf24;
+  background: var(--color-warning-light);
+  color: var(--color-warning);
 }
 
 .project-item-details {
@@ -1081,7 +1081,7 @@ main {
 
 .project-item-path {
   font-size: 0.8em;
-  color: #666;
+  color: var(--color-text-muted);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1092,20 +1092,20 @@ main {
   display: flex;
   gap: 12px;
   font-size: 0.8em;
-  color: #888;
+  color: var(--color-text-muted);
 }
 
 .project-selector-actions {
   padding: 12px 16px;
-  border-top: 1px solid #444;
+  border-top: 1px solid var(--color-border-default);
 }
 
 .init-project-btn {
   display: block;
   width: 100%;
   padding: 10px 16px;
-  background: #4ade80;
-  color: #1a1a1a;
+  background: var(--color-success);
+  color: var(--color-gray-50);
   border: none;
   border-radius: 6px;
   font-weight: 600;
@@ -1121,8 +1121,8 @@ main {
 
 .project-selector-manual {
   padding: 12px 16px;
-  border-top: 1px solid #444;
-  background: #252525;
+  border-top: 1px solid var(--color-border-default);
+  background: var(--color-bg-elevated);
 }
 
 .project-selector-manual form {
@@ -1134,9 +1134,9 @@ main {
   flex: 1;
   padding: 8px 12px;
   background: #333;
-  border: 1px solid #444;
+  border: 1px solid var(--color-border-default);
   border-radius: 4px;
-  color: #fff;
+  color: var(--color-text-primary);
   font-size: 0.9em;
 }
 
@@ -1146,13 +1146,13 @@ main {
 }
 
 .manual-path-input::placeholder {
-  color: #666;
+  color: var(--color-text-muted);
 }
 
 .manual-path-submit {
   padding: 8px 16px;
-  background: #646cff;
-  color: #fff;
+  background: var(--color-primary);
+  color: var(--color-text-primary);
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -1174,7 +1174,7 @@ main {
   margin-left: auto;
   background: transparent;
   border: 1px solid #555;
-  color: #888;
+  color: var(--color-text-muted);
   padding: 4px 8px;
   border-radius: 4px;
   font-size: 0.75em;
@@ -1183,9 +1183,9 @@ main {
 }
 
 .archive-btn:hover {
-  background: #4a3a2d;
-  border-color: #fbbf24;
-  color: #fbbf24;
+  background: var(--color-warning-light);
+  border-color: var(--color-warning);
+  color: var(--color-warning);
 }
 
 /* View Archived link */
@@ -1195,8 +1195,8 @@ main {
   padding: 8px 16px;
   margin-top: 8px;
   background: transparent;
-  color: #888;
-  border: 1px solid #444;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border-default);
   border-radius: 6px;
   text-align: center;
   text-decoration: none;
@@ -1206,7 +1206,7 @@ main {
 
 .view-archived-link:hover {
   background: #333;
-  color: #fff;
+  color: var(--color-text-primary);
   border-color: #555;
 }
 
