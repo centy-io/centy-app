@@ -131,6 +131,8 @@ describe('IssuesList', () => {
       totalCount: 0,
       $typeName: 'centy.v1.ListIssuesResponse',
       $unknown: undefined,
+      success: true,
+      error: '',
     })
 
     mockUsePathContext.mockReturnValue({
@@ -177,6 +179,8 @@ describe('IssuesList', () => {
       totalCount: 2,
       $typeName: 'centy.v1.ListIssuesResponse',
       $unknown: undefined,
+      success: true,
+      error: '',
     })
 
     mockUsePathContext.mockReturnValue({
@@ -208,6 +212,8 @@ describe('IssuesList', () => {
       totalCount: 0,
       $typeName: 'centy.v1.ListIssuesResponse',
       $unknown: undefined,
+      success: true,
+      error: '',
     })
 
     mockUsePathContext.mockReturnValue({
@@ -259,6 +265,8 @@ describe('IssuesList', () => {
       totalCount: 0,
       $typeName: 'centy.v1.ListIssuesResponse',
       $unknown: undefined,
+      success: true,
+      error: '',
     })
 
     mockUsePathContext.mockReturnValue({
@@ -302,6 +310,8 @@ describe('IssuesList', () => {
       totalCount: 1,
       $typeName: 'centy.v1.ListIssuesResponse',
       $unknown: undefined,
+      success: true,
+      error: '',
     })
 
     mockUsePathContext.mockReturnValue({

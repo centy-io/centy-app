@@ -88,6 +88,8 @@ export const mockHandlers: MockHandlers = {
       $typeName: 'centy.v1.ListProjectsResponse',
       projects: [DEMO_PROJECT],
       totalCount: 1,
+      success: true,
+      error: '',
     }
   },
 
@@ -99,12 +101,16 @@ export const mockHandlers: MockHandlers = {
         $typeName: 'centy.v1.GetProjectInfoResponse',
         found: true,
         project: DEMO_PROJECT,
+        success: true,
+        error: '',
       }
     }
     return {
       $typeName: 'centy.v1.GetProjectInfoResponse',
       found: false,
       project: undefined,
+      success: true,
+      error: '',
     }
   },
 
@@ -128,6 +134,8 @@ export const mockHandlers: MockHandlers = {
         $typeName: 'centy.v1.ListIssuesResponse',
         issues: [],
         totalCount: 0,
+        success: true,
+        error: '',
       }
     }
 
@@ -136,6 +144,8 @@ export const mockHandlers: MockHandlers = {
       $typeName: 'centy.v1.ListIssuesResponse',
       issues: filtered,
       totalCount: filtered.length,
+      success: true,
+      error: '',
     }
   },
 
@@ -171,6 +181,8 @@ export const mockHandlers: MockHandlers = {
         $typeName: 'centy.v1.ListDocsResponse',
         docs: [],
         totalCount: 0,
+        success: true,
+        error: '',
       }
     }
 
@@ -178,6 +190,8 @@ export const mockHandlers: MockHandlers = {
       $typeName: 'centy.v1.ListDocsResponse',
       docs: DEMO_DOCS,
       totalCount: DEMO_DOCS.length,
+      success: true,
+      error: '',
     }
   },
 
@@ -198,6 +212,8 @@ export const mockHandlers: MockHandlers = {
         $typeName: 'centy.v1.ListUsersResponse',
         users: [],
         totalCount: 0,
+        success: true,
+        error: '',
       }
     }
 
@@ -205,6 +221,8 @@ export const mockHandlers: MockHandlers = {
       $typeName: 'centy.v1.ListUsersResponse',
       users: DEMO_USERS,
       totalCount: DEMO_USERS.length,
+      success: true,
+      error: '',
     }
   },
 
@@ -225,6 +243,8 @@ export const mockHandlers: MockHandlers = {
       $typeName: 'centy.v1.ListOrganizationsResponse',
       organizations: [DEMO_ORGANIZATION],
       totalCount: 1,
+      success: true,
+      error: '',
     }
   },
 
@@ -264,6 +284,8 @@ export const mockHandlers: MockHandlers = {
       $typeName: 'centy.v1.ListLinksResponse',
       links,
       totalCount: links.length,
+      success: true,
+      error: '',
     }
   },
 
@@ -320,6 +342,8 @@ export const mockHandlers: MockHandlers = {
         $typeName: 'centy.v1.ListAssetsResponse',
         assets: [],
         totalCount: 0,
+        success: true,
+        error: '',
       }
     }
 
@@ -327,6 +351,8 @@ export const mockHandlers: MockHandlers = {
       $typeName: 'centy.v1.ListAssetsResponse',
       assets: DEMO_ASSETS,
       totalCount: DEMO_ASSETS.length,
+      success: true,
+      error: '',
     }
   },
 
@@ -338,6 +364,8 @@ export const mockHandlers: MockHandlers = {
         $typeName: 'centy.v1.ListAssetsResponse',
         assets: [],
         totalCount: 0,
+        success: true,
+        error: '',
       }
     }
 
@@ -345,6 +373,8 @@ export const mockHandlers: MockHandlers = {
       $typeName: 'centy.v1.ListAssetsResponse',
       assets: DEMO_ASSETS,
       totalCount: DEMO_ASSETS.length,
+      success: true,
+      error: '',
     }
   },
 

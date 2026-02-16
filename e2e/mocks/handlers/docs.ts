@@ -49,6 +49,8 @@ export function addDocHandlers(
     (): ListDocsResponse => ({
       docs,
       totalCount: docs.length,
+      success: true,
+      error: '',
       $typeName: 'centy.v1.ListDocsResponse',
     })
   )

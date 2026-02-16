@@ -60,6 +60,8 @@ describe('LinkSection', () => {
       totalCount: 0,
       $typeName: 'centy.v1.ListLinksResponse',
       $unknown: undefined,
+      success: true,
+      error: '',
     })
 
     render(<LinkSection entityId="entity-1" entityType="issue" />)
@@ -84,6 +86,8 @@ describe('LinkSection', () => {
       totalCount: 3,
       $typeName: 'centy.v1.ListLinksResponse',
       $unknown: undefined,
+      success: true,
+      error: '',
     })
 
     render(<LinkSection entityId="entity-1" entityType="issue" />)
@@ -101,6 +105,8 @@ describe('LinkSection', () => {
       totalCount: 0,
       $typeName: 'centy.v1.ListLinksResponse',
       $unknown: undefined,
+      success: true,
+      error: '',
     })
 
     render(
@@ -119,6 +125,8 @@ describe('LinkSection', () => {
       totalCount: 0,
       $typeName: 'centy.v1.ListLinksResponse',
       $unknown: undefined,
+      success: true,
+      error: '',
     })
 
     render(
@@ -137,6 +145,8 @@ describe('LinkSection', () => {
       totalCount: 0,
       $typeName: 'centy.v1.ListLinksResponse',
       $unknown: undefined,
+      success: true,
+      error: '',
     })
 
     render(<LinkSection entityId="entity-1" entityType="issue" />)
@@ -157,6 +167,8 @@ describe('LinkSection', () => {
       totalCount: 0,
       $typeName: 'centy.v1.ListLinksResponse',
       $unknown: undefined,
+      success: true,
+      error: '',
     })
 
     render(<LinkSection entityId="entity-1" entityType="issue" />)
@@ -186,6 +198,8 @@ describe('LinkSection', () => {
       totalCount: 1,
       $typeName: 'centy.v1.ListLinksResponse',
       $unknown: undefined,
+      success: true,
+      error: '',
     })
 
     mockDeleteLink.mockResolvedValue({
@@ -230,6 +244,8 @@ describe('LinkSection', () => {
       totalCount: 1,
       $typeName: 'centy.v1.ListLinksResponse',
       $unknown: undefined,
+      success: true,
+      error: '',
     })
 
     mockDeleteLink.mockResolvedValue({
@@ -272,6 +288,8 @@ describe('LinkSection', () => {
       totalCount: 2,
       $typeName: 'centy.v1.ListLinksResponse',
       $unknown: undefined,
+      success: true,
+      error: '',
     })
 
     render(<LinkSection entityId="entity-1" entityType="issue" />)
@@ -313,6 +331,8 @@ describe('LinkSection', () => {
       totalCount: 1,
       $typeName: 'centy.v1.ListLinksResponse',
       $unknown: undefined,
+      success: true,
+      error: '',
     })
 
     render(

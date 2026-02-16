@@ -73,6 +73,8 @@ export function addIssueHandlers(
       return {
         issues: filteredIssues,
         totalCount: filteredIssues.length,
+        success: true,
+        error: '',
         $typeName: 'centy.v1.ListIssuesResponse',
       }
     }
@@ -131,6 +133,8 @@ export function addIssueHandlers(
     GetNextIssueNumberResponseSchema,
     (): GetNextIssueNumberResponse => ({
       issueNumber: String(nextDisplayNumber),
+      success: true,
+      error: '',
       $typeName: 'centy.v1.GetNextIssueNumberResponse',
     })
   )
