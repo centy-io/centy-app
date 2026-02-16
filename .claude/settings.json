@@ -151,7 +151,12 @@
       "Bash(gh run rerun:*)",
       "Bash(gh run list:*)",
       "Bash(gh search issues:*)",
-      "Bash(pnpm prettier:*)"
+      "Bash(pnpm prettier:*)",
+      "mcp__playwright__browser_wait_for",
+      "Bash(gh repo list:*)",
+      "WebFetch(domain:www.npmjs.com)",
+      "Bash(npm view:*)",
+      "mcp__playwright__browser_install"
     ],
     "deny": ["Bash(npm install)", "Bash(gh issue create:*)"]
   },
