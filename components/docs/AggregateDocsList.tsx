@@ -2,8 +2,8 @@
 
 import { useState, useCallback, useEffect } from 'react'
 import Link from 'next/link'
-import { centyClient } from '@/lib/grpc/client'
 import { create } from '@bufbuild/protobuf'
+import { centyClient } from '@/lib/grpc/client'
 import { ListDocsRequestSchema, type Doc } from '@/gen/centy_pb'
 import { getProjects } from '@/lib/project-resolver'
 import { useAppLink } from '@/hooks/useAppLink'

@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useCallback, useEffect, useRef } from 'react'
-import { centyClient } from '@/lib/grpc/client'
 import { create } from '@bufbuild/protobuf'
+import { centyClient } from '@/lib/grpc/client'
 import {
   ListProjectsRequestSchema,
   DuplicateIssueRequestSchema,

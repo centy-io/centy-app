@@ -1,4 +1,6 @@
 import type { GrpcMocker } from '../../utils/mock-grpc'
+import { createMockIssue, mockIssues } from '../../fixtures/issues'
+import { mockManifest } from '../../fixtures/config'
 import {
   ListIssuesRequestSchema,
   ListIssuesResponseSchema,
@@ -28,8 +30,6 @@ import type {
   CreateIssueRequest,
   UpdateIssueRequest,
 } from '@/gen/centy_pb'
-import { createMockIssue, mockIssues } from '../../fixtures/issues'
-import { mockManifest } from '../../fixtures/config'
 
 interface IssueHandlerOptions {
   issues?: Issue[]

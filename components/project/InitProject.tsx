@@ -2,8 +2,8 @@
 
 import { useState, useCallback, useEffect } from 'react'
 import { open } from '@tauri-apps/plugin-dialog'
-import { centyClient } from '@/lib/grpc/client'
 import { create } from '@bufbuild/protobuf'
+import { centyClient } from '@/lib/grpc/client'
 import {
   InitRequestSchema,
   GetReconciliationPlanRequestSchema,

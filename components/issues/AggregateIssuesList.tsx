@@ -2,13 +2,7 @@
 
 import { useState, useCallback, useEffect, useMemo } from 'react'
 import Link from 'next/link'
-import { centyClient } from '@/lib/grpc/client'
 import { create } from '@bufbuild/protobuf'
-import { ListIssuesRequestSchema, type Issue } from '@/gen/centy_pb'
-import { getProjects } from '@/lib/project-resolver'
-import { useAppLink } from '@/hooks/useAppLink'
-import { useStateManager } from '@/lib/state'
-import { useOrganization } from '@/components/providers/OrganizationProvider'
 import {
   useReactTable,
   getCoreRowModel,
@@ -17,6 +11,12 @@ import {
   flexRender,
   createColumnHelper,
 } from '@tanstack/react-table'
+import { centyClient } from '@/lib/grpc/client'
+import { ListIssuesRequestSchema, type Issue } from '@/gen/centy_pb'
+import { getProjects } from '@/lib/project-resolver'
+import { useAppLink } from '@/hooks/useAppLink'
+import { useStateManager } from '@/lib/state'
+import { useOrganization } from '@/components/providers/OrganizationProvider'
 import {
   MultiSelect,
   type MultiSelectOption,

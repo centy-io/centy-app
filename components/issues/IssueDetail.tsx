@@ -3,8 +3,8 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { centyClient } from '@/lib/grpc/client'
 import { create } from '@bufbuild/protobuf'
+import { centyClient } from '@/lib/grpc/client'
 import {
   GetIssueRequestSchema,
   UpdateIssueRequestSchema,

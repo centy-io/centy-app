@@ -9,7 +9,7 @@ export function ThemeToggle() {
 
   useEffect(() => {
     // This pattern is recommended by next-themes to prevent hydration mismatch
-    setMounted(true) // eslint-disable-line react-hooks/set-state-in-effect
+    setMounted(true)
   }, [])
 
   if (!mounted) {

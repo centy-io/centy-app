@@ -108,7 +108,6 @@ export function MultiSelect({
       {isOpen && (
         <FloatingPortal>
           <div
-            // eslint-disable-next-line react-hooks/refs
             ref={refs.setFloating}
             style={floatingStyles}
             className="multi-select-dropdown"

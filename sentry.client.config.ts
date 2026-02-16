@@ -2,9 +2,13 @@
 // The config you add here will be used whenever a user loads a page in their browser.
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
-import * as Sentry from '@sentry/nextjs'
+import {
+  init,
+  browserTracingIntegration,
+  replayIntegration,
+} from '@sentry/nextjs'
 
-Sentry.init({
+init({
   dsn: 'https://98aef6a0676becdbe5b6a8a8ee14b8d3@o4510682522976256.ingest.de.sentry.io/4510682527367248',
 
   // Set environment for filtering in Sentry dashboard
@@ -22,8 +26,8 @@ Sentry.init({
 
   // Enable automatic instrumentation for browser performance
   integrations: [
-    Sentry.browserTracingIntegration(),
-    Sentry.replayIntegration({
+    browserTracingIntegration(),
+    replayIntegration({
       // Capture 10% of sessions, 100% of sessions with errors
       maskAllText: false,
       blockAllMedia: false,

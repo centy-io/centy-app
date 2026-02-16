@@ -6,6 +6,7 @@ import {
   type Link as LinkType,
   type LinkTypeInfo,
 } from '@/gen/centy_pb'
+import { centyClient } from '@/lib/grpc/client'
 
 vi.mock('@/lib/grpc/client', () => ({
   centyClient: {
@@ -20,8 +21,6 @@ const mockUseProject = vi.fn()
 vi.mock('@/components/providers/ProjectProvider', () => ({
   useProject: () => mockUseProject(),
 }))
-
-import { centyClient } from '@/lib/grpc/client'
 
 const createMockLinkTypeInfo = (
   name: string,

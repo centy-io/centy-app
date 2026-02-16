@@ -4,8 +4,9 @@ import { useState, useCallback, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { route, type RouteLiteral } from 'nextjs-routes'
-import { centyClient } from '@/lib/grpc/client'
 import { create } from '@bufbuild/protobuf'
+import { AddLinkModal } from './AddLinkModal'
+import { centyClient } from '@/lib/grpc/client'
 import {
   ListLinksRequestSchema,
   DeleteLinkRequestSchema,
@@ -13,7 +14,6 @@ import {
   type Link as LinkType,
 } from '@/gen/centy_pb'
 import { useProject } from '@/components/providers/ProjectProvider'
-import { AddLinkModal } from './AddLinkModal'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 interface LinkSectionProps {

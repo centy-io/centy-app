@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useCallback, useEffect } from 'react'
-import { centyClient } from '@/lib/grpc/client'
 import { create } from '@bufbuild/protobuf'
+import { centyClient } from '@/lib/grpc/client'
 import { SyncUsersRequestSchema, type GitContributor } from '@/gen/centy_pb'
 import { useProject } from '@/components/providers/ProjectProvider'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'

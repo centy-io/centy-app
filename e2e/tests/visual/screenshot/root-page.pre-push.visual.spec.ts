@@ -1,6 +1,6 @@
+import os from 'os'
 import { test, expect } from '@playwright/test'
 import { setupDemoMode, navigateTo } from '../../../utils/test-helpers'
-import os from 'os'
 
 /**
  * Pre-push visual smoke test for the root page.

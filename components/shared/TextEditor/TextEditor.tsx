@@ -7,7 +7,6 @@ import TiptapLink from '@tiptap/extension-link'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import Placeholder from '@tiptap/extension-placeholder'
 import { common, createLowlight } from 'lowlight'
-
 import type { TextEditorProps, EditorMode } from './TextEditor.types'
 import { useAsciidocConverter } from './hooks/useAsciidocConverter'
 import { markdownToHtml, htmlToMarkdown } from './utils/markdownParser'

@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useCallback, useEffect, useMemo } from 'react'
-import { centyClient } from '@/lib/grpc/client'
 import { create } from '@bufbuild/protobuf'
+import { centyClient } from '@/lib/grpc/client'
 import { ListUsersRequestSchema, type User } from '@/gen/centy_pb'
 import {
   MultiSelect,

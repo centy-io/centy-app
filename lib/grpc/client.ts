@@ -2,9 +2,9 @@
 
 import { createClient, Client } from '@connectrpc/connect'
 import { createGrpcWebTransport } from '@connectrpc/connect-web'
-import { CentyDaemon } from '@/gen/centy_pb'
 import { mockHandlers } from './mock-handlers'
 import { DEMO_ORG_SLUG, DEMO_PROJECT_PATH } from './demo-data'
+import { CentyDaemon } from '@/gen/centy_pb'
 import { trackGrpcCall } from '@/lib/metrics'
 
 const DEFAULT_DAEMON_URL = 'http://localhost:50051'

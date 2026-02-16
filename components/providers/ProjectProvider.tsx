@@ -36,7 +36,6 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY)
     if (stored) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setProjectPathState(stored)
     }
   }, [])
@@ -76,7 +75,6 @@ export function useArchivedProjects() {
   useEffect(() => {
     const stored = localStorage.getItem(ARCHIVED_STORAGE_KEY)
     if (stored) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setArchivedPathsState(JSON.parse(stored))
     }
   }, [])

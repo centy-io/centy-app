@@ -8,8 +8,8 @@ import {
   useImperativeHandle,
   useEffect,
 } from 'react'
-import { centyClient } from '@/lib/grpc/client'
 import { create } from '@bufbuild/protobuf'
+import { centyClient } from '@/lib/grpc/client'
 import {
   AddAssetRequestSchema,
   DeleteAssetRequestSchema,
