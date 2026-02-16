@@ -4,13 +4,7 @@ import { useState, useCallback, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { route } from 'nextjs-routes'
-import { centyClient } from '@/lib/grpc/client'
 import { create } from '@bufbuild/protobuf'
-import {
-  ListOrganizationsRequestSchema,
-  DeleteOrganizationRequestSchema,
-  type Organization,
-} from '@/gen/centy_pb'
 import {
   useReactTable,
   getCoreRowModel,
@@ -21,6 +15,12 @@ import {
   type SortingState,
   type ColumnFiltersState,
 } from '@tanstack/react-table'
+import { centyClient } from '@/lib/grpc/client'
+import {
+  ListOrganizationsRequestSchema,
+  DeleteOrganizationRequestSchema,
+  type Organization,
+} from '@/gen/centy_pb'
 import {
   ContextMenu,
   type ContextMenuItem,

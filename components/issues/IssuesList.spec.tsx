@@ -2,6 +2,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { IssuesList } from './IssuesList'
 import type { Issue } from '@/gen/centy_pb'
+import { centyClient } from '@/lib/grpc/client'
 
 vi.mock('@/lib/grpc/client', () => ({
   centyClient: {
@@ -26,8 +27,6 @@ vi.mock('@/components/providers/ProjectProvider', () => ({
     setIsInitialized: vi.fn(),
   }),
 }))
-
-import { centyClient } from '@/lib/grpc/client'
 
 // Helper to create mock Issue data
 const createMockIssue = (

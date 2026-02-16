@@ -4,8 +4,16 @@ import { useState, useCallback, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import type { RouteLiteral } from 'nextjs-routes'
-import { centyClient } from '@/lib/grpc/client'
 import { create } from '@bufbuild/protobuf'
+import {
+  useReactTable,
+  getCoreRowModel,
+  getSortedRowModel,
+  getFilteredRowModel,
+  flexRender,
+  createColumnHelper,
+} from '@tanstack/react-table'
+import { centyClient } from '@/lib/grpc/client'
 import { ListIssuesRequestSchema, type Issue } from '@/gen/centy_pb'
 import {
   usePathContext,
@@ -17,14 +25,6 @@ import { useLastSeenIssues } from '@/hooks/useLastSeenIssues'
 import { useIssueTableSettings } from '@/hooks/useIssueTableSettings'
 import { usePinnedItems } from '@/hooks/usePinnedItems'
 import { useStateManager } from '@/lib/state'
-import {
-  useReactTable,
-  getCoreRowModel,
-  getSortedRowModel,
-  getFilteredRowModel,
-  flexRender,
-  createColumnHelper,
-} from '@tanstack/react-table'
 import {
   MultiSelect,
   type MultiSelectOption,

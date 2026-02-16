@@ -5,8 +5,8 @@ import Link from 'next/link'
 import { useRouter, useParams, usePathname } from 'next/navigation'
 import { route } from 'nextjs-routes'
 import * as Popover from '@radix-ui/react-popover'
-import { centyClient } from '@/lib/grpc/client'
 import { create } from '@bufbuild/protobuf'
+import { centyClient } from '@/lib/grpc/client'
 import {
   ListProjectsRequestSchema,
   RegisterProjectRequestSchema,

@@ -1,5 +1,10 @@
 import type { GrpcMocker } from '../../utils/mock-grpc'
 import {
+  mockConfig,
+  mockManifest,
+  mockProjectInfo,
+} from '../../fixtures/config'
+import {
   ListProjectsRequestSchema,
   ListProjectsResponseSchema,
   IsInitializedRequestSchema,
@@ -21,11 +26,6 @@ import type {
   GetProjectInfoResponse,
   ProjectInfo,
 } from '@/gen/centy_pb'
-import {
-  mockConfig,
-  mockManifest,
-  mockProjectInfo,
-} from '../../fixtures/config'
 
 interface ProjectHandlerOptions {
   projects?: ProjectInfo[]

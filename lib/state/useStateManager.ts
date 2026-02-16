@@ -1,8 +1,8 @@
 'use client'
 
 import { useMemo } from 'react'
-import { useConfig } from '@/hooks/useConfig'
 import { StateManager } from './StateManager'
+import { useConfig } from '@/hooks/useConfig'
 
 /**
  * React hook that provides a StateManager instance with current config.

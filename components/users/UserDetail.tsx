@@ -4,8 +4,8 @@ import { useState, useCallback, useEffect, useMemo } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
 import { route, type RouteLiteral } from 'nextjs-routes'
-import { centyClient } from '@/lib/grpc/client'
 import { create } from '@bufbuild/protobuf'
+import { centyClient } from '@/lib/grpc/client'
 import {
   GetUserRequestSchema,
   UpdateUserRequestSchema,

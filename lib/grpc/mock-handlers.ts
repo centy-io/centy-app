@@ -12,7 +12,6 @@ import {
   DEMO_LINKS,
   DEMO_ASSETS,
 } from './demo-data'
-
 import type {
   ListProjectsRequest,
   ListProjectsResponse,
@@ -81,7 +80,6 @@ function filterIssues(
 export const mockHandlers: MockHandlers = {
   // Project methods
   async listProjects(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _request: ListProjectsRequest
   ): Promise<ListProjectsResponse> {
     return {
@@ -218,7 +216,6 @@ export const mockHandlers: MockHandlers = {
 
   // Organization methods
   async listOrganizations(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _request: ListOrganizationsRequest
   ): Promise<ListOrganizationsResponse> {
     return {
@@ -249,10 +246,7 @@ export const mockHandlers: MockHandlers = {
   },
 
   // Daemon info
-  async getDaemonInfo(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _request: GetDaemonInfoRequest
-  ): Promise<DaemonInfo> {
+  async getDaemonInfo(_request: GetDaemonInfoRequest): Promise<DaemonInfo> {
     return DEMO_DAEMON_INFO
   },
 
@@ -268,7 +262,6 @@ export const mockHandlers: MockHandlers = {
   },
 
   async getAvailableLinkTypes(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _request: GetAvailableLinkTypesRequest
   ): Promise<GetAvailableLinkTypesResponse> {
     return {

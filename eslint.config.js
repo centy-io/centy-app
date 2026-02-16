@@ -1,9 +1,7 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import tseslint from 'typescript-eslint'
+import config from 'eslint-config-agent'
 
-export default tseslint.config(
+export default [
+  ...config,
   {
     ignores: [
       'out',
@@ -16,17 +14,37 @@ export default tseslint.config(
     ],
   },
   {
-    extends: [js.configs.recommended, ...tseslint.configs.recommended],
-    files: ['**/*.{ts,tsx}'],
-    languageOptions: {
-      ecmaVersion: 2022,
-      globals: globals.browser,
-    },
-    plugins: {
-      'react-hooks': reactHooks,
-    },
+    files: ['**/*.{ts,tsx,js,jsx}'],
     rules: {
-      ...reactHooks.configs.recommended.rules,
+      'import/order': 'off',
+      'import/no-namespace': 'off',
+      'no-optional-chaining/no-optional-chaining': 'off',
+      'single-export/single-export': 'off',
+      'max-lines': 'off',
+      'max-lines-per-function': 'off',
+      'default/no-default-params': 'off',
+      'security/detect-object-injection': 'off',
+      'ddd/require-spec-file': 'off',
+      'early-return/prefer-early-return': 'off',
+      'default/no-hardcoded-urls': 'off',
+      'default/no-localhost': 'off',
+      'error/no-literal-error-message': 'off',
+      'error/require-custom-error': 'off',
+      'error/no-generic-error': 'off',
+      'error/no-throw-literal': 'off',
+      'no-restricted-syntax': 'off',
+      'custom/jsx-classname-required': 'off',
     },
-  }
-)
+  },
+  {
+    files: ['**/*.cjs'],
+    languageOptions: {
+      globals: {
+        module: 'readonly',
+        require: 'readonly',
+        __dirname: 'readonly',
+        __filename: 'readonly',
+      },
+    },
+  },
+]

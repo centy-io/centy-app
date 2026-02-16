@@ -1,8 +1,8 @@
 'use client'
 
 import { useCallback, useSyncExternalStore } from 'react'
-import { useProject } from '@/components/providers/ProjectProvider'
 import type { SortingState, ColumnFiltersState } from '@tanstack/react-table'
+import { useProject } from '@/components/providers/ProjectProvider'
 
 const STORAGE_KEY_PREFIX = 'centy-issues-table-settings'
 

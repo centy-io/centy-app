@@ -1,4 +1,6 @@
 import type { GrpcMocker } from '../../utils/mock-grpc'
+import { createMockDoc, mockDocs } from '../../fixtures/docs'
+import { mockManifest } from '../../fixtures/config'
 import {
   ListDocsRequestSchema,
   ListDocsResponseSchema,
@@ -22,8 +24,6 @@ import type {
   CreateDocRequest,
   UpdateDocRequest,
 } from '@/gen/centy_pb'
-import { createMockDoc, mockDocs } from '../../fixtures/docs'
-import { mockManifest } from '../../fixtures/config'
 
 interface DocHandlerOptions {
   docs?: Doc[]

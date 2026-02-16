@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useCallback, useSyncExternalStore } from 'react'
-import { centyClient } from '@/lib/grpc/client'
 import { create } from '@bufbuild/protobuf'
+import { centyClient } from '@/lib/grpc/client'
 import { GetConfigRequestSchema, type Config } from '@/gen/centy_pb'
 import { usePathContext } from '@/components/providers/PathContextProvider'
 

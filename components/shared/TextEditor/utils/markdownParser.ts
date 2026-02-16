@@ -57,7 +57,8 @@ export function markdownToHtml(markdown: string): string {
 
   // Unordered lists
   html = html.replace(/^- (.+)$/gm, '<li>$1</li>')
-  html = html.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>')
+  // eslint-disable-next-line security/detect-unsafe-regex
+  html = html.replace(/<li>[^<]*<\/li>(?:\n<li>[^<]*<\/li>)*/g, '<ul>$&</ul>')
 
   // Ordered lists
   html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>')

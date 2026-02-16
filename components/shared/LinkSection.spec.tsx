@@ -2,6 +2,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { LinkSection } from './LinkSection'
 import { LinkTargetType, type Link as LinkType } from '@/gen/centy_pb'
+import { centyClient } from '@/lib/grpc/client'
 
 vi.mock('@/lib/grpc/client', () => ({
   centyClient: {
@@ -23,8 +24,6 @@ vi.mock('./AddLinkModal', () => ({
     </div>
   )),
 }))
-
-import { centyClient } from '@/lib/grpc/client'
 
 const createMockLink = (overrides: Partial<LinkType> = {}): LinkType =>
   ({

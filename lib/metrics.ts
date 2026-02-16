@@ -1,6 +1,6 @@
 'use client'
 
-import * as Sentry from '@sentry/nextjs'
+import { startSpan, addBreadcrumb, captureException } from '@sentry/nextjs'
 
 /**
  * Metrics tracking utility for Sentry
@@ -13,7 +13,7 @@ export async function measureAsync<T>(
   operation: () => Promise<T>,
   tags?: Record<string, string>
 ): Promise<T> {
-  return Sentry.startSpan(
+  return startSpan(
     {
       op: 'custom',
       name,
@@ -39,7 +39,7 @@ export function trackGrpcCall(
   success: boolean
 ) {
   // Use breadcrumbs for tracking as they're reliable across Sentry versions
-  Sentry.addBreadcrumb({
+  addBreadcrumb({
     category: 'grpc.call',
     message: `gRPC ${method}: ${success ? 'success' : 'error'}`,
     level: success ? 'info' : 'error',
@@ -51,7 +51,7 @@ export function trackGrpcCall(
   })
 
   // Also create a span for performance monitoring
-  Sentry.startSpan(
+  startSpan(
     {
       op: 'grpc.call',
       name: method,
@@ -73,7 +73,7 @@ export function trackGrpcCall(
 
 // Page navigation metrics using breadcrumbs
 export function trackPageView(page: string, loadTime?: number) {
-  Sentry.addBreadcrumb({
+  addBreadcrumb({
     category: 'navigation',
     message: `Page view: ${page}`,
     level: 'info',
@@ -90,7 +90,7 @@ export function trackUserAction(
   category: string,
   label?: string
 ) {
-  Sentry.addBreadcrumb({
+  addBreadcrumb({
     category: 'user.action',
     message: `${category}: ${action}`,
     level: 'info',
@@ -104,7 +104,7 @@ export function trackUserAction(
 
 // Feature usage metrics using breadcrumbs
 export function trackFeatureUsage(feature: string, details?: string) {
-  Sentry.addBreadcrumb({
+  addBreadcrumb({
     category: 'feature.usage',
     message: `Feature used: ${feature}`,
     level: 'info',
@@ -120,7 +120,7 @@ export function trackIssueOperation(
   operation: 'create' | 'update' | 'delete' | 'view' | 'move' | 'duplicate',
   projectPath: string
 ) {
-  Sentry.addBreadcrumb({
+  addBreadcrumb({
     category: 'issue.operation',
     message: `Issue ${operation}`,
     level: 'info',
@@ -136,7 +136,7 @@ export function trackDocOperation(
   operation: 'create' | 'update' | 'delete' | 'view',
   projectPath: string
 ) {
-  Sentry.addBreadcrumb({
+  addBreadcrumb({
     category: 'doc.operation',
     message: `Document ${operation}`,
     level: 'info',
@@ -149,7 +149,7 @@ export function trackDocOperation(
 
 // Daemon connection metrics
 export function trackDaemonConnection(connected: boolean, demoMode: boolean) {
-  Sentry.addBreadcrumb({
+  addBreadcrumb({
     category: 'daemon.status',
     message: connected ? 'Daemon connected' : 'Daemon disconnected',
     level: connected ? 'info' : 'warning',
@@ -165,7 +165,7 @@ export function trackError(
   error: Error,
   context: Record<string, unknown> = {}
 ) {
-  Sentry.captureException(error, {
+  captureException(error, {
     extra: context,
   })
 }

@@ -4,15 +4,7 @@ import { useState, useCallback, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import { useRouter, useParams } from 'next/navigation'
 import { route, type RouteLiteral } from 'nextjs-routes'
-import { centyClient } from '@/lib/grpc/client'
 import { create } from '@bufbuild/protobuf'
-import {
-  ListUsersRequestSchema,
-  DeleteUserRequestSchema,
-  IsInitializedRequestSchema,
-  type User,
-} from '@/gen/centy_pb'
-import { useProject } from '@/components/providers/ProjectProvider'
 import {
   useReactTable,
   getCoreRowModel,
@@ -23,11 +15,19 @@ import {
   type SortingState,
   type ColumnFiltersState,
 } from '@tanstack/react-table'
+import { SyncUsersModal } from './SyncUsersModal'
+import { centyClient } from '@/lib/grpc/client'
+import {
+  ListUsersRequestSchema,
+  DeleteUserRequestSchema,
+  IsInitializedRequestSchema,
+  type User,
+} from '@/gen/centy_pb'
+import { useProject } from '@/components/providers/ProjectProvider'
 import {
   ContextMenu,
   type ContextMenuItem,
 } from '@/components/shared/ContextMenu'
-import { SyncUsersModal } from './SyncUsersModal'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import { isDaemonUnimplemented } from '@/lib/daemon-error'
 

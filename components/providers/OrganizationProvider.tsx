@@ -8,8 +8,8 @@ import {
   useEffect,
   type ReactNode,
 } from 'react'
-import { centyClient } from '@/lib/grpc/client'
 import { create } from '@bufbuild/protobuf'
+import { centyClient } from '@/lib/grpc/client'
 import {
   ListOrganizationsRequestSchema,
   type Organization,
