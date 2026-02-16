@@ -90,6 +90,8 @@ describe('AddLinkModal', () => {
       totalCount: 2,
       $typeName: 'centy.v1.ListIssuesResponse',
       $unknown: undefined,
+      success: true,
+      error: '',
     })
 
     vi.mocked(centyClient.listDocs).mockResolvedValue({
@@ -105,6 +107,8 @@ describe('AddLinkModal', () => {
       totalCount: 1,
       $typeName: 'centy.v1.ListDocsResponse',
       $unknown: undefined,
+      success: true,
+      error: '',
     })
   })
 
@@ -205,6 +209,8 @@ describe('AddLinkModal', () => {
       totalCount: 2,
       $typeName: 'centy.v1.ListIssuesResponse',
       $unknown: undefined,
+      success: true,
+      error: '',
     })
 
     render(<AddLinkModal {...defaultProps} />)
@@ -331,6 +337,8 @@ describe('AddLinkModal', () => {
       totalCount: 0,
       $typeName: 'centy.v1.ListIssuesResponse',
       $unknown: undefined,
+      success: true,
+      error: '',
     })
 
     render(<AddLinkModal {...defaultProps} />)

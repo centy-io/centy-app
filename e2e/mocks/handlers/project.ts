@@ -56,6 +56,8 @@ export function addProjectHandlers(
     (): ListProjectsResponse => ({
       projects,
       totalCount: projects.length,
+      success: true,
+      error: '',
       $typeName: 'centy.v1.ListProjectsResponse',
     })
   )
@@ -106,6 +108,8 @@ export function addProjectHandlers(
     (): GetProjectInfoResponse => ({
       found: projects.length > 0,
       project: projects[0],
+      success: true,
+      error: '',
       $typeName: 'centy.v1.GetProjectInfoResponse',
     })
   )
