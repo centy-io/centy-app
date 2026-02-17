@@ -32,10 +32,9 @@ export function StateListEditor({
 
   const handleAddState = () => {
     const trimmed = newState.trim().toLowerCase().replace(/\s+/g, '-')
-    if (trimmed && !states.includes(trimmed)) {
-      onStatesChange([...states, trimmed])
-      setNewState('')
-    }
+    if (!trimmed || states.includes(trimmed)) return
+    onStatesChange([...states, trimmed])
+    setNewState('')
   }
 
   const handleRemoveState = (state: string) => {
@@ -78,10 +77,9 @@ export function StateListEditor({
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      e.preventDefault()
-      handleAddState()
-    }
+    if (e.key !== 'Enter') return
+    e.preventDefault()
+    handleAddState()
   }
 
   return (

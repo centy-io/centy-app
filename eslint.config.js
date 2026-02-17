@@ -27,7 +27,6 @@ export default [
       'default/no-default-params': 'off',
       'security/detect-object-injection': 'off',
       'ddd/require-spec-file': 'off',
-      'early-return/prefer-early-return': 'off',
       'default/no-hardcoded-urls': 'off',
       'default/no-localhost': 'off',
       'error/no-literal-error-message': 'off',

@@ -32,14 +32,13 @@ export function EditorSelector({
     // Schedule setState asynchronously to satisfy eslint react-hooks/set-state-in-effect
     const timeoutId = setTimeout(() => {
       const saved = localStorage.getItem(EDITOR_PREFERENCE_KEY)
-      if (saved) {
-        const editorType = parseInt(saved, 10) as EditorType
-        if (
-          editorType === EditorType.VSCODE ||
-          editorType === EditorType.TERMINAL
-        ) {
-          setPreferredEditor(editorType)
-        }
+      if (!saved) return
+      const editorType = parseInt(saved, 10) as EditorType
+      if (
+        editorType === EditorType.VSCODE ||
+        editorType === EditorType.TERMINAL
+      ) {
+        setPreferredEditor(editorType)
       }
     }, 0)
     return () => clearTimeout(timeoutId)

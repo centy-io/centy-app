@@ -150,11 +150,10 @@ export function DocDetail({ slug }: DocDetailProps) {
 
   const handleCancelEdit = () => {
     setIsEditing(false)
-    if (doc) {
-      setEditTitle(doc.title)
-      setEditContent(doc.content)
-      setEditSlug('')
-    }
+    if (!doc) return
+    setEditTitle(doc.title)
+    setEditContent(doc.content)
+    setEditSlug('')
   }
 
   const handleMoved = useCallback(

@@ -252,10 +252,9 @@ function CustomFieldForm({
 
   const handleAddEnumValue = () => {
     const trimmed = newEnumValue.trim()
-    if (trimmed && !enumValues.includes(trimmed)) {
-      setEnumValues([...enumValues, trimmed])
-      setNewEnumValue('')
-    }
+    if (!trimmed || enumValues.includes(trimmed)) return
+    setEnumValues([...enumValues, trimmed])
+    setNewEnumValue('')
   }
 
   const handleRemoveEnumValue = (value: string) => {
@@ -328,10 +327,9 @@ function CustomFieldForm({
               value={newEnumValue}
               onChange={e => setNewEnumValue(e.target.value)}
               onKeyDown={e => {
-                if (e.key === 'Enter') {
-                  e.preventDefault()
-                  handleAddEnumValue()
-                }
+                if (e.key !== 'Enter') return
+                e.preventDefault()
+                handleAddEnumValue()
               }}
               placeholder="Add option..."
               className="custom-field-form-input"

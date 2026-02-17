@@ -136,36 +136,35 @@ export function ProjectSelector() {
 
   const handleManualSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (manualPath.trim()) {
-      const path = manualPath.trim()
-      try {
-        // Register the project with the daemon
-        const request = create(RegisterProjectRequestSchema, {
-          projectPath: path,
+    if (!manualPath.trim()) return
+    const path = manualPath.trim()
+    try {
+      // Register the project with the daemon
+      const request = create(RegisterProjectRequestSchema, {
+        projectPath: path,
+      })
+      const response = await centyClient.registerProject(request)
+      if (response.success && response.project) {
+        setProjectPath(path)
+        setIsInitialized(response.project.initialized)
+        // Add to projects list if not already there
+        setProjects(prev => {
+          if (prev.some(p => p.path === path)) return prev
+          return [...prev, response.project!]
         })
-        const response = await centyClient.registerProject(request)
-        if (response.success && response.project) {
-          setProjectPath(path)
-          setIsInitialized(response.project.initialized)
-          // Add to projects list if not already there
-          setProjects(prev => {
-            if (prev.some(p => p.path === path)) return prev
-            return [...prev, response.project!]
-          })
-        } else {
-          // Still set the path even if registration fails
-          setProjectPath(path)
-          setIsInitialized(null)
-        }
-      } catch {
-        // Fallback: set path without registration
+      } else {
+        // Still set the path even if registration fails
         setProjectPath(path)
         setIsInitialized(null)
       }
-      setManualPath('')
-      setSearchQuery('')
-      setIsOpen(false)
+    } catch {
+      // Fallback: set path without registration
+      setProjectPath(path)
+      setIsInitialized(null)
     }
+    setManualPath('')
+    setSearchQuery('')
+    setIsOpen(false)
   }
 
   const getCurrentProjectName = () => {
@@ -184,10 +183,9 @@ export function ProjectSelector() {
     e.stopPropagation() // Prevent selecting the project
     archiveProject(projectToArchive.path)
     // If archiving the currently selected project, clear selection
-    if (projectToArchive.path === projectPath) {
-      setProjectPath('')
-      setIsInitialized(null)
-    }
+    if (projectToArchive.path !== projectPath) return
+    setProjectPath('')
+    setIsInitialized(null)
   }
 
   const handleToggleFavorite = async (
