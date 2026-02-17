@@ -3,35 +3,13 @@
 import { useEffect, useCallback, useSyncExternalStore } from 'react'
 import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
-import { GetConfigRequestSchema, type Config } from '@/gen/centy_pb'
+import { GetConfigRequestSchema } from '@/gen/centy_pb'
 import { usePathContext } from '@/components/providers/PathContextProvider'
-
-// Snapshot type for useSyncExternalStore - must be immutable and cached
-interface ConfigSnapshot {
-  config: Config | null
-  loading: boolean
-  error: string | null
-}
-
-// Internal cache state per project path
-interface CacheState {
-  config: Config | null
-  loading: boolean
-  error: string | null
-  listeners: Set<() => void>
-  // Cached snapshot - only recreated when state changes
-  snapshot: ConfigSnapshot
-}
+import type { ConfigSnapshot, CacheState } from './useConfig.types'
+import { DEFAULT_SNAPSHOT } from './useConfig.types'
 
 // Cache config per project path
 const configCache = new Map<string, CacheState>()
-
-// Default snapshot for server-side rendering - must be a constant to avoid infinite loops
-const DEFAULT_SNAPSHOT: ConfigSnapshot = {
-  config: null,
-  loading: false,
-  error: null,
-}
 
 function createSnapshot(cache: CacheState): ConfigSnapshot {
   return {

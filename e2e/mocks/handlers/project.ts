@@ -1,4 +1,5 @@
 import type { GrpcMocker } from '../../utils/mock-grpc'
+import type { ProjectHandlerOptions } from './project.types'
 import {
   mockConfig,
   mockManifest,
@@ -19,20 +20,10 @@ import {
 import type {
   ListProjectsResponse,
   IsInitializedResponse,
-  Config,
-  Manifest,
   GetConfigResponse,
   GetManifestResponse,
   GetProjectInfoResponse,
-  ProjectInfo,
 } from '@/gen/centy_pb'
-
-interface ProjectHandlerOptions {
-  projects?: ProjectInfo[]
-  isInitialized?: boolean
-  config?: Config
-  manifest?: Manifest
-}
 
 /**
  * Adds project-related handlers to the GrpcMocker.

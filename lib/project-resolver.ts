@@ -3,30 +3,9 @@
 import { create } from '@bufbuild/protobuf'
 import { centyClient } from './grpc/client'
 import { ListProjectsRequestSchema, type ProjectInfo } from '@/gen/centy_pb'
+import type { ProjectCache, ProjectResolution } from './project-resolver.types'
 
-/**
- * Resolution result for a project lookup
- */
-export interface ProjectResolution {
-  /** Absolute filesystem path for API calls */
-  projectPath: string
-  /** Project name (directory name) */
-  projectName: string
-  /** Organization slug (null if ungrouped) */
-  orgSlug: string | null
-  /** Whether project has .centy folder */
-  initialized: boolean
-  /** Display path (with ~/ for home) */
-  displayPath: string
-}
-
-/**
- * Cache for project list with TTL
- */
-interface ProjectCache {
-  projects: ProjectInfo[]
-  timestamp: number
-}
+export type { ProjectResolution } from './project-resolver.types'
 
 const CACHE_TTL_MS = 30_000 // 30 seconds
 let projectCache: ProjectCache | null = null
@@ -81,21 +60,14 @@ export function invalidateProjectCache(): void {
 
 /**
  * Resolve a project from URL params (org slug + project name) to full project info
- *
- * @param orgSlug - Organization slug from URL (use UNGROUPED_ORG_MARKER for ungrouped)
- * @param projectName - Project name (directory name) from URL
- * @returns ProjectResolution or null if not found
  */
 export async function resolveProject(
   orgSlug: string,
   projectName: string
 ): Promise<ProjectResolution | null> {
   const projects = await fetchProjects()
-
-  // Normalize org slug: "_" means ungrouped (empty string)
   const targetOrgSlug = orgSlug === UNGROUPED_ORG_MARKER ? '' : orgSlug
 
-  // Find matching project
   const project = projects.find(
     p => p.name === projectName && p.organizationSlug === targetOrgSlug
   )
@@ -115,15 +87,11 @@ export async function resolveProject(
 
 /**
  * Resolve a project path to org slug and project name for URL construction
- *
- * @param projectPath - Absolute filesystem path
- * @returns {orgSlug, projectName} or null if not found
  */
 export async function resolveProjectPath(
   projectPath: string
 ): Promise<{ orgSlug: string; projectName: string } | null> {
   const projects = await fetchProjects()
-
   const project = projects.find(p => p.path === projectPath)
 
   if (!project) {
@@ -146,9 +114,7 @@ export async function getProjects(orgSlug?: string): Promise<ProjectInfo[]> {
     return projects
   }
 
-  // Normalize: "_" means ungrouped
   const targetOrgSlug = orgSlug === UNGROUPED_ORG_MARKER ? '' : orgSlug
-
   return projects.filter(p => p.organizationSlug === targetOrgSlug)
 }
 

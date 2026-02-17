@@ -1,0 +1,91 @@
+import { useState, useCallback } from 'react'
+import { useRouter } from 'next/navigation'
+import { route } from 'nextjs-routes'
+import { create } from '@bufbuild/protobuf'
+import { centyClient } from '@/lib/grpc/client'
+import { CreateDocRequestSchema } from '@/gen/centy_pb'
+import { useProjectContext } from './useProjectContext'
+import type { UseCreateDocReturn } from '../CreateDoc.types'
+
+export function useCreateDoc(): UseCreateDocReturn {
+  const router = useRouter()
+  const { projectPath, isInitialized, getProjectContext } = useProjectContext()
+  const [title, setTitle] = useState('')
+  const [content, setContent] = useState('')
+  const [slug, setSlug] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault()
+      if (!projectPath.trim() || !title.trim()) return
+      setLoading(true)
+      setError(null)
+      try {
+        const request = create(CreateDocRequestSchema, {
+          projectPath: projectPath.trim(),
+          title: title.trim(),
+          content: content.trim(),
+          slug: slug.trim() || undefined,
+        })
+        const response = await centyClient.createDoc(request)
+        if (response.success) {
+          const ctx = await getProjectContext()
+          if (ctx) {
+            router.push(
+              route({
+                pathname: '/[organization]/[project]/docs/[slug]',
+                query: {
+                  organization: ctx.organization,
+                  project: ctx.project,
+                  slug: response.slug,
+                },
+              })
+            )
+          } else {
+            router.push('/')
+          }
+        } else {
+          setError(response.error || 'Failed to create document')
+        }
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : 'Failed to connect to daemon'
+        )
+      } finally {
+        setLoading(false)
+      }
+    },
+    [projectPath, title, content, slug, router, getProjectContext]
+  )
+
+  const handleCancel = useCallback(async () => {
+    const ctx = await getProjectContext()
+    if (ctx) {
+      router.push(
+        route({
+          pathname: '/[organization]/[project]/docs',
+          query: { organization: ctx.organization, project: ctx.project },
+        })
+      )
+    } else {
+      router.push('/')
+    }
+  }, [getProjectContext, router])
+
+  return {
+    projectPath,
+    isInitialized,
+    title,
+    content,
+    slug,
+    loading,
+    error,
+    setTitle,
+    setContent,
+    setSlug,
+    handleSubmit,
+    handleCancel,
+  }
+}

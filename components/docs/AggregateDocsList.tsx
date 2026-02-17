@@ -1,81 +1,13 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
 import Link from 'next/link'
-import { create } from '@bufbuild/protobuf'
-import { centyClient } from '@/lib/grpc/client'
-import { ListDocsRequestSchema, type Doc } from '@/gen/centy_pb'
-import { getProjects } from '@/lib/project-resolver'
 import { useAppLink } from '@/hooks/useAppLink'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
-
-interface AggregateDoc extends Doc {
-  projectName: string
-  orgSlug: string | null
-  projectPath: string
-}
+import { useAggregateDocsData } from './useAggregateDocsData'
 
 export function AggregateDocsList() {
   const { createProjectLink } = useAppLink()
-  const [docs, setDocs] = useState<AggregateDoc[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  const fetchAllDocs = useCallback(async () => {
-    setLoading(true)
-    setError(null)
-
-    try {
-      // Get all initialized projects
-      const projects = await getProjects()
-      const initializedProjects = projects.filter(p => p.initialized)
-
-      // Fetch docs from each project in parallel
-      const docPromises = initializedProjects.map(async project => {
-        try {
-          const request = create(ListDocsRequestSchema, {
-            projectPath: project.path,
-          })
-          const response = await centyClient.listDocs(request)
-          return response.docs.map(doc => ({
-            ...doc,
-            projectName: project.name,
-            orgSlug: project.organizationSlug || null,
-            projectPath: project.path,
-          }))
-        } catch {
-          // Skip projects that fail to load
-          console.warn(`Failed to fetch docs from ${project.name}`)
-          return []
-        }
-      })
-
-      const docArrays = await Promise.all(docPromises)
-      const allDocs = docArrays.flat()
-
-      // Sort by updated date (most recent first)
-      allDocs.sort((a, b) => {
-        const dateA = a.metadata?.updatedAt
-          ? new Date(a.metadata.updatedAt).getTime()
-          : 0
-        const dateB = b.metadata?.updatedAt
-          ? new Date(b.metadata.updatedAt).getTime()
-          : 0
-        return dateB - dateA
-      })
-
-      setDocs(allDocs)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch docs')
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    fetchAllDocs()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const { docs, loading, error, fetchAllDocs } = useAggregateDocsData()
 
   return (
     <div className="docs-list">

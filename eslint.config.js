@@ -23,7 +23,6 @@ export default [
       'import/no-namespace': 'off',
       'no-optional-chaining/no-optional-chaining': 'off',
       'single-export/single-export': 'off',
-      'max-lines': 'off',
       'max-lines-per-function': 'off',
       'default/no-default-params': 'off',
       'security/detect-object-injection': 'off',
