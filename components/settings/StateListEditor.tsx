@@ -95,9 +95,9 @@ export function StateListEditor({
             onDragEnd={handleDragEnd}
           >
             <div className="state-drag-handle" title="Drag to reorder">
-              <span></span>
-              <span></span>
-              <span></span>
+              <span className="state-drag-handle-bar"></span>
+              <span className="state-drag-handle-bar"></span>
+              <span className="state-drag-handle-bar"></span>
             </div>
 
             <div
@@ -121,8 +121,12 @@ export function StateListEditor({
               }}
               className="state-default-select"
             >
-              <option value="">-</option>
-              <option value="default">Default</option>
+              <option value="" className="state-default-option">
+                -
+              </option>
+              <option value="default" className="state-default-option">
+                Default
+              </option>
             </select>
 
             <button

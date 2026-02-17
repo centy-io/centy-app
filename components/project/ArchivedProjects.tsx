@@ -129,7 +129,7 @@ export function ArchivedProjects() {
   return (
     <div className="archived-projects">
       <div className="archived-header">
-        <h2>Archived Projects</h2>
+        <h2 className="archived-title">Archived Projects</h2>
         <div className="archived-header-actions">
           {hasArchivedProjects && !loading && (
             <>
@@ -174,7 +174,7 @@ export function ArchivedProjects() {
       ) : archivedProjects.length === 0 &&
         archivedPathsNotInDaemon.length === 0 ? (
         <div className="empty-state">
-          <p>No archived projects</p>
+          <p className="archived-empty-message">No archived projects</p>
           <p className="hint">
             Archive projects from the project selector to see them here
           </p>
@@ -191,8 +191,12 @@ export function ArchivedProjects() {
                   {project.displayPath}
                 </span>
                 <div className="archived-item-stats">
-                  <span>Issues: {project.issueCount}</span>
-                  <span>Docs: {project.docCount}</span>
+                  <span className="archived-item-stat">
+                    Issues: {project.issueCount}
+                  </span>
+                  <span className="archived-item-stat">
+                    Docs: {project.docCount}
+                  </span>
                   {!project.initialized && (
                     <span className="not-initialized-badge">
                       Not initialized

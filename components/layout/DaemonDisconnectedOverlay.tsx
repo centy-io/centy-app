@@ -26,6 +26,7 @@ export function DaemonDisconnectedOverlay() {
       <div className="daemon-disconnected-content">
         <div className="daemon-disconnected-icon">
           <svg
+            className="daemon-disconnected-svg"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -33,25 +34,48 @@ export function DaemonDisconnectedOverlay() {
             strokeLinecap="round"
             strokeLinejoin="round"
           >
-            <line x1="1" y1="1" x2="23" y2="23" />
-            <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55" />
-            <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39" />
-            <path d="M10.71 5.05A16 16 0 0 1 22.58 9" />
-            <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88" />
-            <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
-            <line x1="12" y1="20" x2="12.01" y2="20" />
+            <line className="daemon-svg-line" x1="1" y1="1" x2="23" y2="23" />
+            <path
+              className="daemon-svg-path"
+              d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"
+            />
+            <path
+              className="daemon-svg-path"
+              d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"
+            />
+            <path
+              className="daemon-svg-path"
+              d="M10.71 5.05A16 16 0 0 1 22.58 9"
+            />
+            <path
+              className="daemon-svg-path"
+              d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"
+            />
+            <path
+              className="daemon-svg-path"
+              d="M8.53 16.11a6 6 0 0 1 6.95 0"
+            />
+            <line
+              className="daemon-svg-line"
+              x1="12"
+              y1="20"
+              x2="12.01"
+              y2="20"
+            />
           </svg>
         </div>
-        <h2>Daemon Not Connected</h2>
-        <p>
+        <h2 className="daemon-disconnected-title">Daemon Not Connected</h2>
+        <p className="daemon-disconnected-description">
           The Centy daemon is not running or cannot be reached.
-          <br />
+          <br className="daemon-description-break" />
           Please start the daemon to use the application.
         </p>
         <div className="daemon-disconnected-instructions">
-          <p>If you haven&apos;t installed the daemon yet, run:</p>
+          <p className="daemon-instructions-label">
+            If you haven&apos;t installed the daemon yet, run:
+          </p>
           <div className="daemon-code-block">
-            <code>{INSTALL_COMMAND}</code>
+            <code className="daemon-install-command">{INSTALL_COMMAND}</code>
             <button
               className="daemon-copy-button"
               onClick={handleCopy}
@@ -59,6 +83,7 @@ export function DaemonDisconnectedOverlay() {
             >
               {copied ? (
                 <svg
+                  className="daemon-copy-icon"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -66,10 +91,14 @@ export function DaemonDisconnectedOverlay() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
-                  <polyline points="20 6 9 17 4 12" />
+                  <polyline
+                    className="daemon-copy-checkmark"
+                    points="20 6 9 17 4 12"
+                  />
                 </svg>
               ) : (
                 <svg
+                  className="daemon-copy-icon"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -77,20 +106,31 @@ export function DaemonDisconnectedOverlay() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
-                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                  <rect
+                    className="daemon-copy-rect"
+                    x="9"
+                    y="9"
+                    width="13"
+                    height="13"
+                    rx="2"
+                    ry="2"
+                  />
+                  <path
+                    className="daemon-copy-path"
+                    d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                  />
                 </svg>
               )}
             </button>
           </div>
-          <p>Then start the daemon:</p>
-          <code>pnpm dlx centy start</code>
+          <p className="daemon-instructions-label">Then start the daemon:</p>
+          <code className="daemon-start-command">pnpm dlx centy start</code>
         </div>
         <button className="daemon-retry-button" onClick={checkNow}>
           Retry Connection
         </button>
         <div className="daemon-disconnected-demo-section">
-          <p>Or explore with sample data:</p>
+          <p className="daemon-demo-prompt">Or explore with sample data:</p>
           <button className="daemon-demo-button" onClick={enterDemoMode}>
             Try Demo Mode
           </button>

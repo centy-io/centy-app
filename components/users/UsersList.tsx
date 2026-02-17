@@ -304,7 +304,7 @@ export function UsersList() {
   return (
     <div className="users-list">
       <div className="users-header">
-        <h2>Users</h2>
+        <h2 className="users-title">Users</h2>
         <div className="header-actions">
           {projectPath && isInitialized === true && (
             <>
@@ -331,13 +331,17 @@ export function UsersList() {
 
       {!projectPath && (
         <div className="no-project-message">
-          <p>Select a project from the header to view users</p>
+          <p className="no-project-text">
+            Select a project from the header to view users
+          </p>
         </div>
       )}
 
       {projectPath && isInitialized === false && (
         <div className="not-initialized-message">
-          <p>Centy is not initialized in this directory</p>
+          <p className="not-initialized-text">
+            Centy is not initialized in this directory
+          </p>
           <Link href="/">Initialize Project</Link>
         </div>
       )}
@@ -348,7 +352,9 @@ export function UsersList() {
 
           {showDeleteConfirm && (
             <div className="delete-confirm">
-              <p>Are you sure you want to delete this user?</p>
+              <p className="delete-confirm-text">
+                Are you sure you want to delete this user?
+              </p>
               <div className="delete-confirm-actions">
                 <button
                   onClick={() => setShowDeleteConfirm(null)}
@@ -371,8 +377,8 @@ export function UsersList() {
             <div className="loading">Loading users...</div>
           ) : users.length === 0 ? (
             <div className="empty-state">
-              <p>No users found</p>
-              <p>
+              <p className="empty-state-title">No users found</p>
+              <p className="empty-state-hint">
                 <Link href={newUserRoute}>Create your first user</Link> or{' '}
                 <button
                   onClick={() => setShowSyncModal(true)}
@@ -384,12 +390,12 @@ export function UsersList() {
             </div>
           ) : (
             <div className="users-table">
-              <table>
-                <thead>
+              <table className="users-table-element">
+                <thead className="users-table-head">
                   {table.getHeaderGroups().map(headerGroup => (
-                    <tr key={headerGroup.id}>
+                    <tr key={headerGroup.id} className="users-table-header-row">
                       {headerGroup.headers.map(header => (
-                        <th key={header.id}>
+                        <th key={header.id} className="users-table-header-cell">
                           <div className="th-content">
                             <button
                               type="button"
@@ -427,7 +433,7 @@ export function UsersList() {
                     </tr>
                   ))}
                 </thead>
-                <tbody>
+                <tbody className="users-table-body">
                   {table.getRowModel().rows.map(row => (
                     <tr
                       key={row.original.id}

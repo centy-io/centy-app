@@ -53,18 +53,18 @@ export function DefaultsEditor({
     <div className="defaults-editor">
       {entries.length > 0 && (
         <table className="defaults-table">
-          <thead>
-            <tr>
-              <th>Key</th>
-              <th>Value</th>
-              <th></th>
+          <thead className="defaults-table-head">
+            <tr className="defaults-table-row">
+              <th className="defaults-table-header">Key</th>
+              <th className="defaults-table-header">Value</th>
+              <th className="defaults-table-header"></th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="defaults-table-body">
             {entries.map(([key, val]) => (
-              <tr key={key}>
+              <tr key={key} className="defaults-table-row">
                 <td className="defaults-key">{key}</td>
-                <td>
+                <td className="defaults-table-cell">
                   <input
                     type="text"
                     value={val}
@@ -72,7 +72,7 @@ export function DefaultsEditor({
                     className="defaults-value-input"
                   />
                 </td>
-                <td>
+                <td className="defaults-table-cell">
                   <button
                     type="button"
                     onClick={() => handleRemove(key)}
@@ -99,9 +99,9 @@ export function DefaultsEditor({
           list="suggested-keys"
         />
         {availableKeys.length > 0 && (
-          <datalist id="suggested-keys">
+          <datalist id="suggested-keys" className="defaults-suggested-keys">
             {availableKeys.map(k => (
-              <option key={k} value={k} />
+              <option key={k} value={k} className="defaults-suggested-option" />
             ))}
           </datalist>
         )}

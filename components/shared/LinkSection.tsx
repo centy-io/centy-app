@@ -178,7 +178,7 @@ export function LinkSection({
   if (loading) {
     return (
       <div className="link-section">
-        <h3>Links</h3>
+        <h3 className="link-section-title">Links</h3>
         <div className="link-section-loading">Loading links...</div>
       </div>
     )
@@ -187,7 +187,7 @@ export function LinkSection({
   return (
     <div className="link-section">
       <div className="link-section-header">
-        <h3>Links</h3>
+        <h3 className="link-section-title">Links</h3>
         {editable && (
           <button
             className="link-add-btn"

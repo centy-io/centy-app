@@ -242,7 +242,7 @@ export function AddLinkModal({
     <div className="link-modal-overlay">
       <div className="link-modal" ref={modalRef}>
         <div className="link-modal-header">
-          <h3>Add Link</h3>
+          <h3 className="link-modal-title">Add Link</h3>
           <button className="link-modal-close" onClick={onClose}>
             x
           </button>
@@ -254,7 +254,7 @@ export function AddLinkModal({
           )}
 
           <div className="link-modal-field">
-            <label>Link Type</label>
+            <label className="link-modal-label">Link Type</label>
             {loadingTypes ? (
               <div className="link-modal-loading">Loading...</div>
             ) : (
@@ -264,7 +264,11 @@ export function AddLinkModal({
                 className="link-modal-select"
               >
                 {linkTypes.map(type => (
-                  <option key={type.name} value={type.name}>
+                  <option
+                    key={type.name}
+                    value={type.name}
+                    className="link-modal-option"
+                  >
                     {type.name}{' '}
                     {type.description ? `- ${type.description}` : ''}
                   </option>
@@ -274,7 +278,7 @@ export function AddLinkModal({
           </div>
 
           <div className="link-modal-field">
-            <label>Target Type</label>
+            <label className="link-modal-label">Target Type</label>
             <div className="link-modal-tabs">
               <button
                 className={`link-modal-tab ${targetTypeFilter === 'issue' ? 'active' : ''}`}
@@ -292,7 +296,7 @@ export function AddLinkModal({
           </div>
 
           <div className="link-modal-field">
-            <label>Search</label>
+            <label className="link-modal-label">Search</label>
             <input
               type="text"
               value={searchQuery}
@@ -303,7 +307,7 @@ export function AddLinkModal({
           </div>
 
           <div className="link-modal-field">
-            <label>Select Target</label>
+            <label className="link-modal-label">Select Target</label>
             <div className="link-modal-results">
               {loadingSearch ? (
                 <div className="link-modal-loading">Searching...</div>
@@ -335,7 +339,10 @@ export function AddLinkModal({
               <div className="link-preview-item">
                 <span className="link-preview-label">This will create:</span>
                 <span className="link-preview-text">
-                  This {entityType} <strong>{selectedLinkType}</strong>{' '}
+                  This {entityType}{' '}
+                  <strong className="link-preview-emphasis">
+                    {selectedLinkType}
+                  </strong>{' '}
                   {selectedTarget.type} #
                   {selectedTarget.displayNumber ||
                     selectedTarget.id.slice(0, 8)}
@@ -347,8 +354,10 @@ export function AddLinkModal({
                   {selectedTarget.type} #
                   {selectedTarget.displayNumber ||
                     selectedTarget.id.slice(0, 8)}{' '}
-                  <strong>{getInverseLinkType(selectedLinkType)}</strong> this{' '}
-                  {entityType}
+                  <strong className="link-preview-emphasis">
+                    {getInverseLinkType(selectedLinkType)}
+                  </strong>{' '}
+                  this {entityType}
                 </span>
               </div>
             </div>

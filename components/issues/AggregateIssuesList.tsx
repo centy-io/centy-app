@@ -310,7 +310,7 @@ export function AggregateIssuesList() {
   return (
     <div className="issues-list">
       <div className="issues-header">
-        <h2>{getOrgDisplayName()}</h2>
+        <h2 className="issues-heading">{getOrgDisplayName()}</h2>
         <div className="header-actions">
           <button
             onClick={fetchAllIssues}
@@ -343,7 +343,7 @@ export function AggregateIssuesList() {
         <div className="loading">Loading issues...</div>
       ) : filteredIssues.length === 0 ? (
         <div className="empty-state">
-          <p>
+          <p className="empty-state-message">
             {selectedOrgSlug === null
               ? 'No issues found across any projects'
               : selectedOrgSlug === ''
@@ -360,12 +360,15 @@ export function AggregateIssuesList() {
         </div>
       ) : (
         <div className="issues-table">
-          <table>
-            <thead>
+          <table className="aggregate-issues-table">
+            <thead className="aggregate-issues-thead">
               {table.getHeaderGroups().map(headerGroup => (
-                <tr key={headerGroup.id}>
+                <tr
+                  key={headerGroup.id}
+                  className="aggregate-issues-header-row"
+                >
                   {headerGroup.headers.map(header => (
-                    <th key={header.id}>
+                    <th key={header.id} className="aggregate-issues-th">
                       <div className="th-content">
                         <button
                           type="button"
@@ -433,10 +436,11 @@ export function AggregateIssuesList() {
                 </tr>
               ))}
             </thead>
-            <tbody>
+            <tbody className="aggregate-issues-tbody">
               {table.getRowModel().rows.map(row => (
                 <tr
                   key={`${row.original.projectPath}-${row.original.issueNumber}`}
+                  className="aggregate-issues-row"
                 >
                   {row.getVisibleCells().map(cell => (
                     <td

@@ -152,7 +152,9 @@ export function DuplicateModal({
     <div className="move-modal-overlay">
       <div className="move-modal" ref={modalRef}>
         <div className="move-modal-header">
-          <h3>Duplicate {entityType === 'issue' ? 'Issue' : 'Document'}</h3>
+          <h3 className="move-modal-title">
+            Duplicate {entityType === 'issue' ? 'Issue' : 'Document'}
+          </h3>
           <button className="move-modal-close" onClick={onClose}>
             x
           </button>
@@ -169,7 +171,7 @@ export function DuplicateModal({
           </div>
 
           <div className="move-modal-field">
-            <label>Target Project</label>
+            <label className="move-modal-field-label">Target Project</label>
             {loadingProjects ? (
               <div className="move-modal-loading">Loading projects...</div>
             ) : projects.length === 0 ? (
@@ -181,7 +183,11 @@ export function DuplicateModal({
                 className="move-modal-select"
               >
                 {projects.map(project => (
-                  <option key={project.path} value={project.path}>
+                  <option
+                    key={project.path}
+                    value={project.path}
+                    className="move-modal-option"
+                  >
                     {project.userTitle || project.projectTitle || project.name}
                     {project.path === currentProjectPath ? ' (current)' : ''} (
                     {project.displayPath})
@@ -192,7 +198,7 @@ export function DuplicateModal({
           </div>
 
           <div className="move-modal-field">
-            <label>New Title</label>
+            <label className="move-modal-field-label">New Title</label>
             <input
               type="text"
               value={newTitle}
@@ -204,7 +210,7 @@ export function DuplicateModal({
 
           {entityType === 'doc' && (
             <div className="move-modal-field">
-              <label>New Slug</label>
+              <label className="move-modal-field-label">New Slug</label>
               <input
                 type="text"
                 value={newSlug}

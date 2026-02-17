@@ -158,7 +158,7 @@ export function StandaloneWorkspaceModal({
     <div className="standalone-modal-overlay">
       <div className="standalone-modal" ref={modalRef}>
         <div className="standalone-modal-header">
-          <h3>New Standalone Workspace</h3>
+          <h3 className="standalone-modal-title">New Standalone Workspace</h3>
           <button className="standalone-modal-close" onClick={onClose}>
             &times;
           </button>
@@ -178,7 +178,12 @@ export function StandaloneWorkspaceModal({
           </div>
 
           <div className="standalone-modal-field">
-            <label htmlFor="workspace-name">Name (optional)</label>
+            <label
+              className="standalone-modal-field-label"
+              htmlFor="workspace-name"
+            >
+              Name (optional)
+            </label>
             <input
               id="workspace-name"
               type="text"
@@ -190,7 +195,10 @@ export function StandaloneWorkspaceModal({
           </div>
 
           <div className="standalone-modal-field">
-            <label htmlFor="workspace-description">
+            <label
+              className="standalone-modal-field-label"
+              htmlFor="workspace-description"
+            >
               Description (optional)
             </label>
             <textarea
@@ -204,7 +212,12 @@ export function StandaloneWorkspaceModal({
           </div>
 
           <div className="standalone-modal-field">
-            <label htmlFor="workspace-ttl">Workspace Duration</label>
+            <label
+              className="standalone-modal-field-label"
+              htmlFor="workspace-ttl"
+            >
+              Workspace Duration
+            </label>
             <select
               id="workspace-ttl"
               value={ttlHours}
@@ -212,7 +225,11 @@ export function StandaloneWorkspaceModal({
               className="standalone-modal-select"
             >
               {TTL_OPTIONS.map(option => (
-                <option key={option.value} value={option.value}>
+                <option
+                  key={option.value}
+                  value={option.value}
+                  className="standalone-modal-option"
+                >
                   {option.label}
                 </option>
               ))}
@@ -220,7 +237,7 @@ export function StandaloneWorkspaceModal({
           </div>
 
           <div className="standalone-modal-field">
-            <label>Open In</label>
+            <label className="standalone-modal-field-label">Open In</label>
             <div className="standalone-modal-editor-options">
               <button
                 type="button"
@@ -232,7 +249,7 @@ export function StandaloneWorkspaceModal({
                 disabled={!isEditorAvailable(EditorType.VSCODE)}
               >
                 <VscodeIcon />
-                <span>VS Code</span>
+                <span className="standalone-editor-label">VS Code</span>
                 {!isEditorAvailable(EditorType.VSCODE) && (
                   <span className="unavailable-badge">Not available</span>
                 )}
@@ -247,7 +264,7 @@ export function StandaloneWorkspaceModal({
                 disabled={!isEditorAvailable(EditorType.TERMINAL)}
               >
                 <TerminalIcon />
-                <span>Terminal</span>
+                <span className="standalone-editor-label">Terminal</span>
                 {!isEditorAvailable(EditorType.TERMINAL) && (
                   <span className="unavailable-badge">Not available</span>
                 )}
@@ -277,13 +294,17 @@ export function StandaloneWorkspaceModal({
 function VscodeIcon() {
   return (
     <svg
+      className="standalone-editor-icon-svg"
       width="20"
       height="20"
       viewBox="0 0 24 24"
       fill="currentColor"
       aria-hidden="true"
     >
-      <path d="M17.583 17.222L8.528 8.167 2.75 13.944v2.111l4.917 4.195 9.916-3.028zm0-10.444L8.528 15.833 2.75 10.056V7.944l4.917-4.194 9.916 3.028zM2.75 10.056L8.528 12 2.75 13.944v-3.888zm14.833 10.166L21.25 18v-12l-3.667 2.222v7.778l.028 2.222z" />
+      <path
+        className="standalone-editor-icon-path"
+        d="M17.583 17.222L8.528 8.167 2.75 13.944v2.111l4.917 4.195 9.916-3.028zm0-10.444L8.528 15.833 2.75 10.056V7.944l4.917-4.194 9.916 3.028zM2.75 10.056L8.528 12 2.75 13.944v-3.888zm14.833 10.166L21.25 18v-12l-3.667 2.222v7.778l.028 2.222z"
+      />
     </svg>
   )
 }
@@ -292,6 +313,7 @@ function VscodeIcon() {
 function TerminalIcon() {
   return (
     <svg
+      className="standalone-editor-icon-svg"
       width="20"
       height="20"
       viewBox="0 0 24 24"
@@ -302,8 +324,17 @@ function TerminalIcon() {
       strokeLinejoin="round"
       aria-hidden="true"
     >
-      <polyline points="4 17 10 11 4 5"></polyline>
-      <line x1="12" y1="19" x2="20" y2="19"></line>
+      <polyline
+        className="standalone-editor-icon-polyline"
+        points="4 17 10 11 4 5"
+      ></polyline>
+      <line
+        className="standalone-editor-icon-line"
+        x1="12"
+        y1="19"
+        x2="20"
+        y2="19"
+      ></line>
     </svg>
   )
 }

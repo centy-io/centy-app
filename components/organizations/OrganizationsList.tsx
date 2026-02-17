@@ -225,7 +225,7 @@ export function OrganizationsList() {
   return (
     <div className="organizations-list">
       <div className="organizations-header">
-        <h2>Organizations</h2>
+        <h2 className="organizations-title">Organizations</h2>
         <div className="header-actions">
           <button
             onClick={fetchOrganizations}
@@ -244,7 +244,9 @@ export function OrganizationsList() {
 
       {showDeleteConfirm && (
         <div className="delete-confirm">
-          <p>Are you sure you want to delete this organization?</p>
+          <p className="delete-confirm-text">
+            Are you sure you want to delete this organization?
+          </p>
           {deleteError && <p className="delete-error-message">{deleteError}</p>}
           <div className="delete-confirm-actions">
             <button
@@ -271,8 +273,8 @@ export function OrganizationsList() {
         <div className="loading">Loading organizations...</div>
       ) : organizations.length === 0 ? (
         <div className="empty-state">
-          <p>No organizations found</p>
-          <p>
+          <p className="empty-state-message">No organizations found</p>
+          <p className="empty-state-action">
             <Link href="/organizations/new">
               Create your first organization
             </Link>{' '}
@@ -281,12 +283,12 @@ export function OrganizationsList() {
         </div>
       ) : (
         <div className="organizations-table">
-          <table>
-            <thead>
+          <table className="organizations-data-table">
+            <thead className="organizations-thead">
               {table.getHeaderGroups().map(headerGroup => (
-                <tr key={headerGroup.id}>
+                <tr key={headerGroup.id} className="organizations-header-row">
                   {headerGroup.headers.map(header => (
-                    <th key={header.id}>
+                    <th key={header.id} className="organizations-th">
                       <div className="th-content">
                         <button
                           type="button"
@@ -323,7 +325,7 @@ export function OrganizationsList() {
                 </tr>
               ))}
             </thead>
-            <tbody>
+            <tbody className="organizations-tbody">
               {table.getRowModel().rows.map(row => (
                 <tr
                   key={row.original.slug}

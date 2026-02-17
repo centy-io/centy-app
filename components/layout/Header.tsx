@@ -153,7 +153,7 @@ export function Header() {
   return (
     <header className="app-header">
       <div className="header-top">
-        <h1>
+        <h1 className="header-logo">
           <Link href="/" className="header-logo-link">
             <img
               src="/logo.svg"
@@ -163,7 +163,7 @@ export function Header() {
               height={28}
               aria-hidden="true"
             />
-            <span>Centy</span>
+            <span className="header-logo-text">Centy</span>
           </Link>
           {contextDisplay}
         </h1>
@@ -184,7 +184,9 @@ export function Header() {
           <span className="hamburger-line" />
         </button>
       </div>
-      <p>Local-first issue and documentation tracker</p>
+      <p className="header-subtitle">
+        Local-first issue and documentation tracker
+      </p>
       <nav className="app-nav">
         {/* Project-dependent items - only show when project context exists */}
         {navLinks && (

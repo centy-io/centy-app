@@ -22,6 +22,11 @@ import { UNGROUPED_ORG_MARKER } from '@/lib/project-resolver'
 
 const COLLAPSED_ORGS_KEY = 'centy-collapsed-orgs'
 
+const Root = Popover.Root
+const Trigger = Popover.Trigger
+const Portal = Popover.Portal
+const Content = Popover.Content
+
 export function ProjectSelector() {
   const router = useRouter()
   const params = useParams()
@@ -283,17 +288,17 @@ export function ProjectSelector() {
   }, [visibleProjects, selectedOrgSlug, organizations])
 
   return (
-    <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
-      <Popover.Trigger asChild>
+    <Root open={isOpen} onOpenChange={setIsOpen}>
+      <Trigger asChild>
         <button className="project-selector-trigger" aria-haspopup="listbox">
           <span className="project-icon">📁</span>
           <span className="project-name">{getCurrentProjectName()}</span>
           <span className="dropdown-arrow">{isOpen ? '▲' : '▼'}</span>
         </button>
-      </Popover.Trigger>
+      </Trigger>
 
-      <Popover.Portal>
-        <Popover.Content
+      <Portal>
+        <Content
           className="project-selector-dropdown"
           align="start"
           sideOffset={4}
@@ -303,7 +308,7 @@ export function ProjectSelector() {
           }}
         >
           <div className="project-selector-header">
-            <h3>Select Project</h3>
+            <h3 className="project-selector-heading">Select Project</h3>
             <button
               className="refresh-btn"
               onClick={fetchProjects}
@@ -342,12 +347,16 @@ export function ProjectSelector() {
             <div className="project-selector-empty">
               {searchQuery ? (
                 <>
-                  <p>No projects match "{searchQuery}"</p>
+                  <p className="project-selector-empty-message">
+                    No projects match "{searchQuery}"
+                  </p>
                   <p className="hint">Try a different search term</p>
                 </>
               ) : (
                 <>
-                  <p>No tracked projects found</p>
+                  <p className="project-selector-empty-message">
+                    No tracked projects found
+                  </p>
                   <p className="hint">
                     Initialize a project with Centy to see it here
                   </p>
@@ -426,10 +435,16 @@ export function ProjectSelector() {
                               <div className="project-item-stats">
                                 {project.initialized && (
                                   <>
-                                    <span title="Issues">
+                                    <span
+                                      className="project-item-stat"
+                                      title="Issues"
+                                    >
                                       📋 {project.issueCount}
                                     </span>
-                                    <span title="Docs">
+                                    <span
+                                      className="project-item-stat"
+                                      title="Docs"
+                                    >
                                       📄 {project.docCount}
                                     </span>
                                   </>
@@ -491,8 +506,12 @@ export function ProjectSelector() {
                     <div className="project-item-stats">
                       {project.initialized && (
                         <>
-                          <span title="Issues">📋 {project.issueCount}</span>
-                          <span title="Docs">📄 {project.docCount}</span>
+                          <span className="project-item-stat" title="Issues">
+                            📋 {project.issueCount}
+                          </span>
+                          <span className="project-item-stat" title="Docs">
+                            📄 {project.docCount}
+                          </span>
                         </>
                       )}
                     </div>
@@ -520,7 +539,10 @@ export function ProjectSelector() {
           </div>
 
           <div className="project-selector-manual">
-            <form onSubmit={handleManualSubmit}>
+            <form
+              className="project-selector-manual-form"
+              onSubmit={handleManualSubmit}
+            >
               <input
                 type="text"
                 value={manualPath}
@@ -537,8 +559,8 @@ export function ProjectSelector() {
               </button>
             </form>
           </div>
-        </Popover.Content>
-      </Popover.Portal>
-    </Popover.Root>
+        </Content>
+      </Portal>
+    </Root>
   )
 }

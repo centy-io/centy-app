@@ -236,7 +236,9 @@ export function OrganizationDetail({ orgSlug }: OrganizationDetailProps) {
 
       {showDeleteConfirm && (
         <div className="delete-confirm">
-          <p>Are you sure you want to delete this organization?</p>
+          <p className="delete-confirm-text">
+            Are you sure you want to delete this organization?
+          </p>
           {projects.length > 0 && (
             <p className="delete-warning">
               This organization has {projects.length} project(s). They will
@@ -267,30 +269,36 @@ export function OrganizationDetail({ orgSlug }: OrganizationDetailProps) {
 
       <div className="organization-content">
         <div className="org-slug-badge">
-          <code>{organization.slug}</code>
+          <code className="org-slug-code">{organization.slug}</code>
         </div>
 
         {isEditing ? (
           <div className="edit-form">
             <div className="form-group">
-              <label htmlFor="edit-name">Name:</label>
+              <label htmlFor="edit-name" className="form-label">
+                Name:
+              </label>
               <input
                 id="edit-name"
                 type="text"
                 value={editName}
                 onChange={e => setEditName(e.target.value)}
                 placeholder="Organization name"
+                className="form-input"
               />
             </div>
 
             <div className="form-group">
-              <label htmlFor="edit-slug">Slug:</label>
+              <label htmlFor="edit-slug" className="form-label">
+                Slug:
+              </label>
               <input
                 id="edit-slug"
                 type="text"
                 value={editSlug}
                 onChange={e => setEditSlug(e.target.value)}
                 placeholder="organization-slug"
+                className="form-input"
               />
               {editSlug !== organization.slug && (
                 <p className="field-hint warning">
@@ -301,13 +309,16 @@ export function OrganizationDetail({ orgSlug }: OrganizationDetailProps) {
             </div>
 
             <div className="form-group">
-              <label htmlFor="edit-description">Description:</label>
+              <label htmlFor="edit-description" className="form-label">
+                Description:
+              </label>
               <textarea
                 id="edit-description"
                 value={editDescription}
                 onChange={e => setEditDescription(e.target.value)}
                 placeholder="Description (optional)"
                 rows={3}
+                className="form-textarea"
               />
             </div>
           </div>
@@ -353,7 +364,9 @@ export function OrganizationDetail({ orgSlug }: OrganizationDetailProps) {
 
             {projects.length > 0 && (
               <div className="organization-projects">
-                <h3>Projects in this organization</h3>
+                <h3 className="organization-projects-title">
+                  Projects in this organization
+                </h3>
                 <ul className="project-list">
                   {projects.map(project => (
                     <li key={project.path} className="project-item">
