@@ -7,7 +7,8 @@ import type { Issue, IssueMetadata } from '@/gen/centy_pb'
 const FIXED_DATE = '2024-01-15T10:30:00.000Z'
 
 export function createMockIssue(overrides: Partial<Issue> = {}): Issue {
-  const displayNumber = overrides.displayNumber ?? 1
+  const displayNumber =
+    overrides.displayNumber !== undefined ? overrides.displayNumber : 1
   const now = FIXED_DATE
 
   const defaultMetadata: IssueMetadata = {
@@ -27,12 +28,20 @@ export function createMockIssue(overrides: Partial<Issue> = {}): Issue {
   }
 
   return {
-    id: overrides.id ?? `issue-${displayNumber}`,
+    id: overrides.id !== undefined ? overrides.id : `issue-${displayNumber}`,
     displayNumber,
-    issueNumber: overrides.issueNumber ?? `uuid-${displayNumber}`,
-    title: overrides.title ?? `Test Issue ${displayNumber}`,
+    issueNumber:
+      overrides.issueNumber !== undefined
+        ? overrides.issueNumber
+        : `uuid-${displayNumber}`,
+    title:
+      overrides.title !== undefined
+        ? overrides.title
+        : `Test Issue ${displayNumber}`,
     description:
-      overrides.description ?? `Description for issue ${displayNumber}`,
+      overrides.description !== undefined
+        ? overrides.description
+        : `Description for issue ${displayNumber}`,
     metadata: {
       ...defaultMetadata,
       ...overrides.metadata,
@@ -50,18 +59,25 @@ export function createMockIssueMetadata(
   const now = FIXED_DATE
 
   return {
-    displayNumber: overrides.displayNumber ?? 1,
-    status: overrides.status ?? 'open',
-    priority: overrides.priority ?? 2,
-    priorityLabel: overrides.priorityLabel ?? 'medium',
-    createdAt: overrides.createdAt ?? now,
-    updatedAt: overrides.updatedAt ?? now,
-    customFields: overrides.customFields ?? {},
-    draft: overrides.draft ?? false,
-    deletedAt: overrides.deletedAt ?? '',
-    isOrgIssue: overrides.isOrgIssue ?? false,
-    orgSlug: overrides.orgSlug ?? '',
-    orgDisplayNumber: overrides.orgDisplayNumber ?? 0,
+    displayNumber:
+      overrides.displayNumber !== undefined ? overrides.displayNumber : 1,
+    status: overrides.status !== undefined ? overrides.status : 'open',
+    priority: overrides.priority !== undefined ? overrides.priority : 2,
+    priorityLabel:
+      overrides.priorityLabel !== undefined
+        ? overrides.priorityLabel
+        : 'medium',
+    createdAt: overrides.createdAt !== undefined ? overrides.createdAt : now,
+    updatedAt: overrides.updatedAt !== undefined ? overrides.updatedAt : now,
+    customFields:
+      overrides.customFields !== undefined ? overrides.customFields : {},
+    draft: overrides.draft !== undefined ? overrides.draft : false,
+    deletedAt: overrides.deletedAt !== undefined ? overrides.deletedAt : '',
+    isOrgIssue:
+      overrides.isOrgIssue !== undefined ? overrides.isOrgIssue : false,
+    orgSlug: overrides.orgSlug !== undefined ? overrides.orgSlug : '',
+    orgDisplayNumber:
+      overrides.orgDisplayNumber !== undefined ? overrides.orgDisplayNumber : 0,
     $typeName: 'centy.v1.IssueMetadata',
   }
 }

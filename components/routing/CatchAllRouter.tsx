@@ -1,9 +1,9 @@
 'use client'
 
 import { usePathname, useRouter } from 'next/navigation'
-import { useMemo, useEffect } from 'react'
+import { useMemo, useEffect, type ReactNode } from 'react'
 import Link from 'next/link'
-import { route } from 'nextjs-routes'
+import { route, type RouteLiteral } from 'nextjs-routes'
 import { PathContextProvider } from '@/components/providers/PathContextProvider'
 
 // Components for different route types
@@ -21,6 +21,12 @@ import { ProjectConfig } from '@/components/settings/ProjectConfig'
 
 // Routes that require project context (no longer accessible at root level)
 const PROJECT_SCOPED_ROUTES = new Set(['issues', 'docs', 'users'])
+
+interface RouteResult {
+  content: ReactNode
+  shouldRedirect: boolean
+  redirectTo: RouteLiteral | null
+}
 
 /**
  * Component displayed when a project-scoped route is accessed without project context
@@ -58,11 +64,11 @@ function ProjectContextRequired({ requestedPage }: { requestedPage: string }) {
  * Routes like /issues, /docs, /users require project context
  * and will show a message directing users to select a project.
  */
-export function CatchAllRouter() {
+export function CatchAllRouter(): ReactNode {
   const pathname = usePathname()
   const router = useRouter()
 
-  const { content, shouldRedirect, redirectTo } = useMemo(() => {
+  const { content, shouldRedirect, redirectTo } = useMemo((): RouteResult => {
     const segments = pathname.split('/').filter(Boolean)
 
     // Check if this is a single-segment project-scoped route (e.g., /issues, /docs)
@@ -175,13 +181,12 @@ export function CatchAllRouter() {
             query: { organization: org, project },
           }),
         }
+    }
 
-      default:
-        return {
-          content: <div className="not-found">Page not found</div>,
-          shouldRedirect: false,
-          redirectTo: null,
-        }
+    return {
+      content: <div className="not-found">Page not found</div>,
+      shouldRedirect: false,
+      redirectTo: null,
     }
   }, [pathname])
 

@@ -25,10 +25,16 @@ function loadSettings(projectPath: string): IssueTableSettings {
   try {
     const stored = localStorage.getItem(getStorageKey(projectPath))
     if (!stored) return DEFAULT_SETTINGS
-    const parsed = JSON.parse(stored) as IssueTableSettings
+    const parsed: IssueTableSettings = JSON.parse(stored)
     return {
-      sorting: parsed.sorting ?? DEFAULT_SETTINGS.sorting,
-      columnFilters: parsed.columnFilters ?? DEFAULT_SETTINGS.columnFilters,
+      sorting:
+        parsed.sorting !== undefined
+          ? parsed.sorting
+          : DEFAULT_SETTINGS.sorting,
+      columnFilters:
+        parsed.columnFilters !== undefined
+          ? parsed.columnFilters
+          : DEFAULT_SETTINGS.columnFilters,
     }
   } catch {
     return DEFAULT_SETTINGS

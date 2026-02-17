@@ -40,8 +40,14 @@ export function CreateIssue() {
 
   // Get the project context from params or resolve from projectPath
   const getProjectContext = useCallback(async () => {
-    const org = params ? (params.organization as string | undefined) : undefined
-    const project = params ? (params.project as string | undefined) : undefined
+    const orgParam = params ? params.organization : undefined
+    const org: string | undefined = Array.isArray(orgParam)
+      ? orgParam[0]
+      : orgParam
+    const projectParam = params ? params.project : undefined
+    const project: string | undefined = Array.isArray(projectParam)
+      ? projectParam[0]
+      : projectParam
 
     if (org && project) {
       return { organization: org, project }
@@ -85,8 +91,8 @@ export function CreateIssue() {
   }, [projectPath, isInitialized, checkInitialized])
 
   const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault()
+    async (e?: React.FormEvent) => {
+      if (e) e.preventDefault()
 
       if (!projectPath.trim() || !title.trim()) return
 
@@ -149,8 +155,7 @@ export function CreateIssue() {
 
   const handleKeyboardSave = useCallback(() => {
     if (!projectPath.trim() || !title.trim() || loading) return
-    const syntheticEvent = { preventDefault: () => {} } as React.FormEvent
-    handleSubmit(syntheticEvent)
+    void handleSubmit()
   }, [projectPath, title, loading, handleSubmit])
 
   useSaveShortcut({

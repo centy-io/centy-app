@@ -25,8 +25,6 @@ function getItemHref(
       return createLink(`/docs/${item.id}`)
     case 'pr':
       return createLink(`/pull-requests/${item.displayNumber}`)
-    default:
-      return createLink('/')
   }
 }
 

@@ -2,7 +2,7 @@ import type { GrpcMocker } from '../../utils/mock-grpc'
 import { GetDaemonInfoRequestSchema, DaemonInfoSchema } from '@/gen/centy_pb'
 import type { DaemonInfo } from '@/gen/centy_pb'
 
-interface DaemonHandlerOptions {
+export interface DaemonHandlerOptions {
   vscodeAvailable?: boolean
 }
 
@@ -30,5 +30,3 @@ export function addDaemonHandlers(
 
   return mocker
 }
-
-export type { DaemonHandlerOptions }
