@@ -144,8 +144,8 @@ export function ProjectTitleEditor({ projectPath }: ProjectTitleEditorProps) {
   const setCurrentTitle = scope === 'user' ? setUserTitle : setProjectTitle
   const hasChanges =
     scope === 'user'
-      ? userTitle !== (projectInfo?.userTitle || '')
-      : projectTitle !== (projectInfo?.projectTitle || '')
+      ? userTitle !== ((projectInfo ? projectInfo.userTitle : '') || '')
+      : projectTitle !== ((projectInfo ? projectInfo.projectTitle : '') || '')
 
   if (!projectInfo) {
     return <div className="title-loading">Loading project info...</div>

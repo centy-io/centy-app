@@ -91,7 +91,7 @@ export function AggregateIssuesList() {
     if (selectedOrgSlug === null) return 'All Issues'
     if (selectedOrgSlug === '') return 'Ungrouped Issues'
     const org = organizations.find(o => o.slug === selectedOrgSlug)
-    return org?.name ? `${org.name} Issues` : `${selectedOrgSlug} Issues`
+    return org && org.name ? `${org.name} Issues` : `${selectedOrgSlug} Issues`
   }
 
   const statusOptions: MultiSelectOption[] = useMemo(
@@ -154,87 +154,96 @@ export function AggregateIssuesList() {
         enableColumnFilter: true,
         filterFn: 'includesString',
       }),
-      columnHelper.accessor(row => row.metadata?.status || 'unknown', {
-        id: 'status',
-        header: 'Status',
-        cell: info => {
-          const status = info.getValue()
-          return (
-            <span
-              className={`status-badge ${stateManager.getStateClass(status)}`}
-            >
-              {status}
-            </span>
-          )
-        },
-        enableColumnFilter: true,
-        filterFn: (row, columnId, filterValue) => {
-          const status = row.getValue(columnId) as string
-          const selectedValues = filterValue as string[]
-          if (!selectedValues || selectedValues.length === 0) {
-            return true
-          }
-          return selectedValues.includes(status)
-        },
-      }),
-      columnHelper.accessor(row => row.metadata?.priorityLabel || 'unknown', {
-        id: 'priority',
-        header: 'Priority',
-        cell: info => {
-          const priority = info.getValue()
-          return (
-            <span className={`priority-badge ${getPriorityClass(priority)}`}>
-              {priority}
-            </span>
-          )
-        },
-        enableColumnFilter: true,
-        filterFn: (row, columnId, filterValue) => {
-          const priority = (row.getValue(columnId) as string).toLowerCase()
-          const selectedValues = filterValue as string[]
-          if (!selectedValues || selectedValues.length === 0) {
-            return true
-          }
-          return selectedValues.includes(priority)
-        },
-        sortingFn: (rowA, rowB) => {
-          const priorityOrder: Record<string, number> = {
-            high: 1,
-            critical: 1,
-            p1: 1,
-            medium: 2,
-            normal: 2,
-            p2: 2,
-            low: 3,
-            p3: 3,
-            unknown: 4,
-          }
-          const a = (rowA.getValue('priority') as string).toLowerCase()
-          const b = (rowB.getValue('priority') as string).toLowerCase()
-          return (priorityOrder[a] || 4) - (priorityOrder[b] || 4)
-        },
-      }),
-      columnHelper.accessor(row => row.metadata?.createdAt || '', {
-        id: 'createdAt',
-        header: 'Created',
-        cell: info => {
-          const date = info.getValue()
-          return (
-            <span className="issue-date-text">
-              {date ? new Date(date).toLocaleDateString() : '-'}
-            </span>
-          )
-        },
-        enableColumnFilter: false,
-        sortingFn: (rowA, rowB) => {
-          const a = rowA.getValue('createdAt') as string
-          const b = rowB.getValue('createdAt') as string
-          if (!a && !b) return 0
-          if (!a) return 1
-          if (!b) return -1
-          return new Date(a).getTime() - new Date(b).getTime()
-        },
-      }),
+      columnHelper.accessor(
+        row => (row.metadata && row.metadata.status) || 'unknown',
+        {
+          id: 'status',
+          header: 'Status',
+          cell: info => {
+            const status = info.getValue()
+            return (
+              <span
+                className={`status-badge ${stateManager.getStateClass(status)}`}
+              >
+                {status}
+              </span>
+            )
+          },
+          enableColumnFilter: true,
+          filterFn: (row, columnId, filterValue) => {
+            const status = row.getValue(columnId) as string
+            const selectedValues = filterValue as string[]
+            if (!selectedValues || selectedValues.length === 0) {
+              return true
+            }
+            return selectedValues.includes(status)
+          },
+        }
+      ),
+      columnHelper.accessor(
+        row => (row.metadata && row.metadata.priorityLabel) || 'unknown',
+        {
+          id: 'priority',
+          header: 'Priority',
+          cell: info => {
+            const priority = info.getValue()
+            return (
+              <span className={`priority-badge ${getPriorityClass(priority)}`}>
+                {priority}
+              </span>
+            )
+          },
+          enableColumnFilter: true,
+          filterFn: (row, columnId, filterValue) => {
+            const priority = (row.getValue(columnId) as string).toLowerCase()
+            const selectedValues = filterValue as string[]
+            if (!selectedValues || selectedValues.length === 0) {
+              return true
+            }
+            return selectedValues.includes(priority)
+          },
+          sortingFn: (rowA, rowB) => {
+            const priorityOrder: Record<string, number> = {
+              high: 1,
+              critical: 1,
+              p1: 1,
+              medium: 2,
+              normal: 2,
+              p2: 2,
+              low: 3,
+              p3: 3,
+              unknown: 4,
+            }
+            const a = (rowA.getValue('priority') as string).toLowerCase()
+            const b = (rowB.getValue('priority') as string).toLowerCase()
+            return (priorityOrder[a] || 4) - (priorityOrder[b] || 4)
+          },
+        }
+      ),
+      columnHelper.accessor(
+        row => (row.metadata && row.metadata.createdAt) || '',
+        {
+          id: 'createdAt',
+          header: 'Created',
+          cell: info => {
+            const date = info.getValue()
+            return (
+              <span className="issue-date-text">
+                {date ? new Date(date).toLocaleDateString() : '-'}
+              </span>
+            )
+          },
+          enableColumnFilter: false,
+          sortingFn: (rowA, rowB) => {
+            const a = rowA.getValue('createdAt') as string
+            const b = rowB.getValue('createdAt') as string
+            if (!a && !b) return 0
+            if (!a) return 1
+            if (!b) return -1
+            return new Date(a).getTime() - new Date(b).getTime()
+          },
+        }
+      ),
     ],
     [stateManager, createProjectLink]
   )
@@ -318,7 +327,14 @@ export function AggregateIssuesList() {
           ? 'Showing issues from all projects. Select a project to create new issues.'
           : selectedOrgSlug === ''
             ? 'Showing issues from ungrouped projects. Select a project to create new issues.'
-            : `Showing issues from ${organizations.find(o => o.slug === selectedOrgSlug)?.name || selectedOrgSlug} organization. Select a project to create new issues.`}
+            : `Showing issues from ${
+                (() => {
+                  const found = organizations.find(
+                    o => o.slug === selectedOrgSlug
+                  )
+                  return found ? found.name : ''
+                })() || selectedOrgSlug
+              } organization. Select a project to create new issues.`}
       </p>
 
       {error && <DaemonErrorMessage error={error} />}
@@ -332,7 +348,14 @@ export function AggregateIssuesList() {
               ? 'No issues found across any projects'
               : selectedOrgSlug === ''
                 ? 'No issues found in ungrouped projects'
-                : `No issues found in ${organizations.find(o => o.slug === selectedOrgSlug)?.name || selectedOrgSlug} organization`}
+                : `No issues found in ${
+                    (() => {
+                      const found = organizations.find(
+                        o => o.slug === selectedOrgSlug
+                      )
+                      return found ? found.name : ''
+                    })() || selectedOrgSlug
+                  } organization`}
           </p>
         </div>
       ) : (

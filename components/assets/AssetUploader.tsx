@@ -110,13 +110,13 @@ export const AssetUploader = forwardRef<
         if (response.success && response.asset) {
           setAssets(prev => {
             const updated = [...prev, response.asset!]
-            onAssetsChange?.(updated)
+            if (onAssetsChange) onAssetsChange(updated)
             return updated
           })
           // Remove from pending
           setPendingAssets(prev => {
             const updated = prev.filter(p => p.id !== pending.id)
-            onPendingChange?.(updated)
+            if (onPendingChange) onPendingChange(updated)
             return updated
           })
           // Revoke object URL if exists
@@ -180,7 +180,7 @@ export const AssetUploader = forwardRef<
 
         setPendingAssets(prev => {
           const updated = [...prev, pending]
-          onPendingChange?.(updated)
+          if (onPendingChange) onPendingChange(updated)
           return updated
         })
 
@@ -234,7 +234,7 @@ export const AssetUploader = forwardRef<
         if (response.success) {
           setAssets(prev => {
             const updated = prev.filter(a => a.filename !== filename)
-            onAssetsChange?.(updated)
+            if (onAssetsChange) onAssetsChange(updated)
             return updated
           })
         } else {
@@ -251,10 +251,10 @@ export const AssetUploader = forwardRef<
   const removePending = useCallback(
     (pendingId: string) => {
       const pending = pendingAssets.find(p => p.id === pendingId)
-      if (pending?.preview) URL.revokeObjectURL(pending.preview)
+      if (pending && pending.preview) URL.revokeObjectURL(pending.preview)
       setPendingAssets(prev => {
         const updated = prev.filter(p => p.id !== pendingId)
-        onPendingChange?.(updated)
+        if (onPendingChange) onPendingChange(updated)
         return updated
       })
     },
@@ -300,7 +300,9 @@ export const AssetUploader = forwardRef<
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
-        onClick={() => fileInputRef.current?.click()}
+        onClick={() => {
+          if (fileInputRef.current) fileInputRef.current.click()
+        }}
       >
         <input
           ref={fileInputRef}

@@ -36,7 +36,11 @@ export class StateManager {
    * Returns config states if available, otherwise defaults.
    */
   getAllowedStates(): string[] {
-    if (this.config?.allowedStates && this.config.allowedStates.length > 0) {
+    if (
+      this.config &&
+      this.config.allowedStates &&
+      this.config.allowedStates.length > 0
+    ) {
       return [...this.config.allowedStates]
     }
     return [...StateManager.DEFAULT_STATES]
@@ -47,7 +51,9 @@ export class StateManager {
    * Returns config defaultState if available, otherwise 'open'.
    */
   getDefaultState(): string {
-    return this.config?.defaultState || StateManager.DEFAULT_STATE
+    return (
+      (this.config && this.config.defaultState) || StateManager.DEFAULT_STATE
+    )
   }
 
   /**
@@ -55,7 +61,10 @@ export class StateManager {
    * Returns config color if available, otherwise default color, or fallback.
    */
   getStateColor(state: string): string {
-    const configColor = this.config?.stateColors?.[state]
+    const configColor =
+      this.config && this.config.stateColors
+        ? this.config.stateColors[state]
+        : undefined
     if (configColor) return configColor
     return StateManager.DEFAULT_COLORS[state] || '#888888'
   }
@@ -88,7 +97,11 @@ export class StateManager {
    * Returns 'status-custom' if config has custom color, otherwise status-{state}.
    */
   getStateClass(state: string): string {
-    if (this.config?.stateColors?.[state]) {
+    if (
+      this.config &&
+      this.config.stateColors &&
+      this.config.stateColors[state]
+    ) {
       return 'status-custom'
     }
     switch (state) {

@@ -11,7 +11,11 @@ turndownService.addRule('codeBlock', {
   filter: ['pre'],
   replacement: function (content, node) {
     const codeNode = (node as HTMLElement).querySelector('code')
-    const language = codeNode?.className?.match(/language-(\w+)/)?.[1] || ''
+    const classMatch =
+      codeNode && codeNode.className
+        ? codeNode.className.match(/language-(\w+)/)
+        : null
+    const language = (classMatch ? classMatch[1] : '') || ''
     return `\n\`\`\`${language}\n${content}\n\`\`\`\n`
   },
 })

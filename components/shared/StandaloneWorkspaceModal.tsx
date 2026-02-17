@@ -46,7 +46,7 @@ export function StandaloneWorkspaceModal({
   const isEditorAvailable = useCallback(
     (type: EditorType): boolean => {
       const editor = editors.find(e => e.editorType === type)
-      return editor?.available ?? false
+      return editor ? editor.available : false
     },
     [editors]
   )
@@ -110,7 +110,7 @@ export function StandaloneWorkspaceModal({
           await centyClient.openStandaloneWorkspaceVscode(request)
 
         if (response.success) {
-          onCreated?.(response.workspacePath)
+          if (onCreated) onCreated(response.workspacePath)
           onClose()
         } else {
           setError(response.error || 'Failed to create workspace')
@@ -127,7 +127,7 @@ export function StandaloneWorkspaceModal({
           await centyClient.openStandaloneWorkspaceTerminal(request)
 
         if (response.success) {
-          onCreated?.(response.workspacePath)
+          if (onCreated) onCreated(response.workspacePath)
           onClose()
         } else {
           setError(response.error || 'Failed to create workspace')

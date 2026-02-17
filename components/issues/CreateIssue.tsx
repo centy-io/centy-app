@@ -40,8 +40,8 @@ export function CreateIssue() {
 
   // Get the project context from params or resolve from projectPath
   const getProjectContext = useCallback(async () => {
-    const org = params?.organization as string | undefined
-    const project = params?.project as string | undefined
+    const org = params ? (params.organization as string | undefined) : undefined
+    const project = params ? (params.project as string | undefined) : undefined
 
     if (org && project) {
       return { organization: org, project }

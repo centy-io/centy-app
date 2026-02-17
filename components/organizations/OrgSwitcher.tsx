@@ -56,7 +56,7 @@ export function OrgSwitcher() {
     if (selectedOrgSlug === null) return 'All Orgs'
     if (selectedOrgSlug === '') return 'Ungrouped'
     const org = organizations.find(o => o.slug === selectedOrgSlug)
-    return org?.name || selectedOrgSlug
+    return (org ? org.name : '') || selectedOrgSlug
   }
 
   const handleSelect = (slug: string | null) => {

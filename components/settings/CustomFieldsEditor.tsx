@@ -134,7 +134,10 @@ function CustomFieldDisplay({
   onMoveDown,
 }: CustomFieldDisplayProps) {
   const typeLabel =
-    FIELD_TYPES.find(t => t.value === field.fieldType)?.label || field.fieldType
+    (() => {
+      const found = FIELD_TYPES.find(t => t.value === field.fieldType)
+      return found ? found.label : ''
+    })() || field.fieldType
 
   return (
     <div className="custom-field-display">
@@ -219,12 +222,14 @@ function CustomFieldForm({
   onSave,
   onCancel,
 }: CustomFieldFormProps) {
-  const [name, setName] = useState(field?.name || '')
-  const [fieldType, setFieldType] = useState(field?.fieldType || 'string')
-  const [required, setRequired] = useState(field?.required || false)
-  const [defaultValue, setDefaultValue] = useState(field?.defaultValue || '')
+  const [name, setName] = useState(field ? field.name : '')
+  const [fieldType, setFieldType] = useState(field ? field.fieldType : 'string')
+  const [required, setRequired] = useState(field ? field.required : false)
+  const [defaultValue, setDefaultValue] = useState(
+    field ? field.defaultValue : ''
+  )
   const [enumValues, setEnumValues] = useState<string[]>(
-    field?.enumValues || []
+    field ? field.enumValues : []
   )
   const [newEnumValue, setNewEnumValue] = useState('')
 

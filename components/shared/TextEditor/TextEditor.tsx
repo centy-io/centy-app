@@ -91,7 +91,7 @@ export function TextEditor({
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       const newValue = e.target.value
       setRawValue(newValue)
-      onChange?.(newValue)
+      if (onChange) onChange(newValue)
     },
     [onChange]
   )
@@ -111,7 +111,7 @@ export function TextEditor({
   const handleModeToggle = useCallback(() => {
     const newMode = currentMode === 'display' ? 'edit' : 'display'
     setCurrentMode(newMode)
-    onModeChange?.(newMode)
+    if (onModeChange) onModeChange(newMode)
   }, [currentMode, onModeChange])
 
   const setLink = useCallback(() => {

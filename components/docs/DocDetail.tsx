@@ -373,12 +373,12 @@ export function DocDetail({ slug }: DocDetailProps) {
             <h1 className="doc-title">{doc.title}</h1>
 
             <div className="doc-metadata">
-              {doc.metadata?.createdAt && (
+              {doc.metadata && doc.metadata.createdAt && (
                 <span className="doc-date">
                   Created: {new Date(doc.metadata.createdAt).toLocaleString()}
                 </span>
               )}
-              {doc.metadata?.updatedAt && (
+              {doc.metadata && doc.metadata.updatedAt && (
                 <span className="doc-date">
                   Updated: {new Date(doc.metadata.updatedAt).toLocaleString()}
                 </span>
