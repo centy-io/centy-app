@@ -262,12 +262,11 @@ export function IssueDetail({ issueNumber }: IssueDetailProps) {
 
   const handleCancelEdit = () => {
     setIsEditing(false)
-    if (issue) {
-      setEditTitle(issue.title)
-      setEditDescription(issue.description)
-      setEditStatus(issue.metadata?.status || 'open')
-      setEditPriority(issue.metadata?.priority || 2)
-    }
+    if (!issue) return
+    setEditTitle(issue.title)
+    setEditDescription(issue.description)
+    setEditStatus(issue.metadata?.status || 'open')
+    setEditPriority(issue.metadata?.priority || 2)
   }
 
   const handleOpenInVscode = useCallback(async () => {

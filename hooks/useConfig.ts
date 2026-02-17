@@ -73,11 +73,10 @@ function subscribe(projectPath: string, listener: () => void) {
 
 function notifyListeners(projectPath: string) {
   const cache = configCache.get(projectPath)
-  if (cache) {
-    // Create a new snapshot object so useSyncExternalStore detects the change
-    cache.snapshot = createSnapshot(cache)
-    cache.listeners.forEach(listener => listener())
-  }
+  if (!cache) return
+  // Create a new snapshot object so useSyncExternalStore detects the change
+  cache.snapshot = createSnapshot(cache)
+  cache.listeners.forEach(listener => listener())
 }
 
 async function fetchConfig(projectPath: string, force = false): Promise<void> {

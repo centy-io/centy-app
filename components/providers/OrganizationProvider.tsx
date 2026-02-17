@@ -49,12 +49,11 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY)
     const explicitSelection = localStorage.getItem(EXPLICIT_SELECTION_KEY)
-    if (explicitSelection === 'true') {
-      setHasExplicitSelection(true)
-      // Only restore the org slug if there was an explicit selection
-      if (stored !== null) {
-        setSelectedOrgSlugState(stored)
-      }
+    if (explicitSelection !== 'true') return
+    setHasExplicitSelection(true)
+    // Only restore the org slug if there was an explicit selection
+    if (stored !== null) {
+      setSelectedOrgSlugState(stored)
     }
   }, [])
 
@@ -91,13 +90,12 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
     setSelectedOrgSlugState(slug)
     setHasExplicitSelection(true)
     // Persist to localStorage
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(EXPLICIT_SELECTION_KEY, 'true')
-      if (slug !== null) {
-        localStorage.setItem(STORAGE_KEY, slug)
-      } else {
-        localStorage.removeItem(STORAGE_KEY)
-      }
+    if (typeof window === 'undefined') return
+    localStorage.setItem(EXPLICIT_SELECTION_KEY, 'true')
+    if (slug !== null) {
+      localStorage.setItem(STORAGE_KEY, slug)
+    } else {
+      localStorage.removeItem(STORAGE_KEY)
     }
   }, [])
 

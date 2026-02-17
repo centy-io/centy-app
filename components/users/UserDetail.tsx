@@ -185,11 +185,10 @@ export function UserDetail({ userId }: UserDetailProps) {
 
   const handleCancelEdit = () => {
     setIsEditing(false)
-    if (user) {
-      setEditName(user.name)
-      setEditEmail(user.email || '')
-      setEditGitUsernames([...user.gitUsernames])
-    }
+    if (!user) return
+    setEditName(user.name)
+    setEditEmail(user.email || '')
+    setEditGitUsernames([...user.gitUsernames])
   }
 
   const handleAddGitUsername = () => {
