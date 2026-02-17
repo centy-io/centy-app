@@ -1,10 +1,7 @@
-import { useState, useCallback, useEffect, useRef } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
-import {
-  CreateIssueRequestSchema,
-  IsInitializedRequestSchema,
-} from '@/gen/centy_pb'
+import { CreateIssueRequestSchema } from '@/gen/centy_pb'
 import { useProject } from '@/components/providers/ProjectProvider'
 import type {
   AssetUploaderHandle,
@@ -13,6 +10,7 @@ import type {
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
 import { useStateManager } from '@/lib/state'
 import { useProjectContext } from './useProjectContext'
+import { useInitializationCheck } from './useInitializationCheck'
 
 export function useCreateIssue() {
   const { projectPath, isInitialized, setIsInitialized } = useProject()
@@ -29,26 +27,7 @@ export function useCreateIssue() {
   const assetUploaderRef = useRef<AssetUploaderHandle>(null)
   const stateOptions = stateManager.getStateOptions()
 
-  useEffect(() => {
-    if (projectPath && isInitialized === null) {
-      if (!projectPath.trim()) {
-        setIsInitialized(null)
-        return
-      }
-      const check = async () => {
-        try {
-          const request = create(IsInitializedRequestSchema, {
-            projectPath: projectPath.trim(),
-          })
-          const response = await centyClient.isInitialized(request)
-          setIsInitialized(response.initialized)
-        } catch {
-          setIsInitialized(false)
-        }
-      }
-      check()
-    }
-  }, [projectPath, isInitialized, setIsInitialized])
+  useInitializationCheck(projectPath, isInitialized, setIsInitialized)
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {

@@ -1,20 +1,15 @@
 import { useState, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
 import type { Issue } from '@/gen/centy_pb'
-import { useProjectPathToUrl } from '@/components/providers/PathContextProvider'
-import { useAppLink } from '@/hooks/useAppLink'
-import { usePinnedItems } from '@/hooks/usePinnedItems'
-import type { ContextMenuItem } from '@/components/shared/ContextMenu'
 import type { ContextMenuState } from '../IssuesList.types'
+import { useContextMenuNavigation } from './useContextMenuNavigation'
+import { useContextMenuItems } from './useContextMenuItems'
 
 export function useIssueContextMenu(
   projectPath: string,
   fetchIssues: () => Promise<void>
 ) {
-  const router = useRouter()
-  const resolvePathToUrl = useProjectPathToUrl()
-  const { createLink, createProjectLink } = useAppLink()
-  const { pinItem, unpinItem, isPinned } = usePinnedItems()
+  const { router, createLink, handleMoved, handleDuplicated } =
+    useContextMenuNavigation(projectPath, fetchIssues)
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null)
   const [showMoveModal, setShowMoveModal] = useState(false)
   const [showDuplicateModal, setShowDuplicateModal] = useState(false)
@@ -37,105 +32,45 @@ export function useIssueContextMenu(
     setContextMenu(null)
   }, [])
 
-  const handleMoved = useCallback(
-    async (targetProjectPath: string) => {
-      const result = await resolvePathToUrl(targetProjectPath)
-      if (result) {
-        router.push(
-          createProjectLink(result.orgSlug, result.projectName, 'issues')
-        )
-      } else {
-        router.push('/')
-      }
-    },
-    [resolvePathToUrl, createProjectLink, router]
-  )
-
-  const handleDuplicated = useCallback(
+  const onDuplicated = useCallback(
     async (newIssueId: string, targetProjectPath: string) => {
-      if (targetProjectPath === projectPath) {
-        fetchIssues()
-        router.push(createLink(`/issues/${newIssueId}`))
-      } else {
-        const result = await resolvePathToUrl(targetProjectPath)
-        if (result) {
-          router.push(
-            createProjectLink(
-              result.orgSlug,
-              result.projectName,
-              `issues/${newIssueId}`
-            )
-          )
-        } else {
-          router.push('/')
-        }
-      }
+      await handleDuplicated(newIssueId, targetProjectPath)
       setShowDuplicateModal(false)
       setSelectedIssue(null)
     },
-    [
-      projectPath,
-      router,
-      fetchIssues,
-      createLink,
-      resolvePathToUrl,
-      createProjectLink,
-    ]
+    [handleDuplicated]
   )
 
-  const getContextMenuItems = useCallback((): ContextMenuItem[] => {
-    if (!contextMenu) return []
-    const issue = contextMenu.issue
-    return [
-      {
-        label: isPinned(issue.issueNumber) ? 'Unpin' : 'Pin',
-        onClick: () => {
-          if (isPinned(issue.issueNumber)) {
-            unpinItem(issue.issueNumber)
-          } else {
-            pinItem({
-              id: issue.issueNumber,
-              type: 'issue',
-              title: issue.title,
-              displayNumber: issue.displayNumber,
-            })
-          }
-          setContextMenu(null)
-        },
-      },
-      {
-        label: 'View',
-        onClick: () => {
-          router.push(createLink(`/issues/${issue.id}`))
-          setContextMenu(null)
-        },
-      },
-      { label: 'Move', onClick: () => handleMoveIssue(issue) },
-      { label: 'Duplicate', onClick: () => handleDuplicateIssue(issue) },
-    ]
-  }, [
+  const getContextMenuItems = useContextMenuItems({
     contextMenu,
-    isPinned,
-    unpinItem,
-    pinItem,
+    setContextMenu,
     router,
     createLink,
     handleMoveIssue,
     handleDuplicateIssue,
-  ])
+  })
+
+  const closeMoveModal = useCallback(() => {
+    setShowMoveModal(false)
+    setSelectedIssue(null)
+  }, [])
+
+  const closeDuplicateModal = useCallback(() => {
+    setShowDuplicateModal(false)
+    setSelectedIssue(null)
+  }, [])
 
   return {
     contextMenu,
     setContextMenu,
     showMoveModal,
-    setShowMoveModal,
     showDuplicateModal,
-    setShowDuplicateModal,
     selectedIssue,
-    setSelectedIssue,
     handleContextMenu,
     handleMoved,
-    handleDuplicated,
+    handleDuplicated: onDuplicated,
     getContextMenuItems,
+    closeMoveModal,
+    closeDuplicateModal,
   }
 }

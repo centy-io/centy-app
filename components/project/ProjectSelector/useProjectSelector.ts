@@ -1,30 +1,20 @@
 'use client'
 
 import { useState, useCallback, useEffect, useRef } from 'react'
-import { useRouter, useParams, usePathname } from 'next/navigation'
-import { route } from 'nextjs-routes'
+import { useParams, usePathname } from 'next/navigation'
 import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
-import {
-  ListProjectsRequestSchema,
-  RegisterProjectRequestSchema,
-  SetProjectFavoriteRequestSchema,
-  type ProjectInfo,
-} from '@/gen/centy_pb'
-import {
-  useProject,
-  useArchivedProjects,
-} from '@/components/providers/ProjectProvider'
+import { ListProjectsRequestSchema, type ProjectInfo } from '@/gen/centy_pb'
+import { useArchivedProjects } from '@/components/providers/ProjectProvider'
 import { useOrganization } from '@/components/providers/OrganizationProvider'
-import { UNGROUPED_ORG_MARKER } from '@/lib/project-resolver'
-import { COLLAPSED_ORGS_KEY, ROOT_ROUTES } from './ProjectSelector.types'
+import { COLLAPSED_ORGS_KEY } from './ProjectSelector.types'
+import { getCurrentPage, persistCollapsedOrgs } from './projectSelectorActions'
+import { useProjectActions } from './useProjectActions'
 
 export function useProjectSelector() {
-  const router = useRouter()
   const params = useParams()
   const pathname = usePathname()
-  const { projectPath, setProjectPath, setIsInitialized } = useProject()
-  const { isArchived, archiveProject } = useArchivedProjects()
+  const { isArchived } = useArchivedProjects()
   const { selectedOrgSlug, organizations } = useOrganization()
   const [projects, setProjects] = useState<ProjectInfo[]>([])
   const [loading, setLoading] = useState(false)
@@ -43,15 +33,7 @@ export function useProjectSelector() {
     }
   })
   const searchInputRef = useRef<HTMLInputElement>(null)
-  const getCurrentPage = () => {
-    const org = params?.organization as string | undefined
-    const proj = params?.project as string | undefined
-    const segments = pathname.split('/').filter(Boolean)
-    if (org && proj) return segments[2] || 'issues'
-    if (segments.length >= 2 && !ROOT_ROUTES.has(segments[0]))
-      return segments[2] || 'issues'
-    return segments[0] || 'issues'
-  }
+
   const fetchProjects = useCallback(async () => {
     setLoading(true)
     setError(null)
@@ -71,98 +53,33 @@ export function useProjectSelector() {
       setLoading(false)
     }
   }, [selectedOrgSlug])
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   useEffect(() => {
     if (isOpen) fetchProjects()
   }, [isOpen])
-  const handleSelectProject = (p: ProjectInfo) => {
-    setProjectPath(p.path)
-    setIsInitialized(p.initialized)
-    router.push(
-      route({
-        pathname: '/[...path]',
-        query: {
-          path: [
-            p.organizationSlug || UNGROUPED_ORG_MARKER,
-            p.name,
-            getCurrentPage(),
-          ],
-        },
-      })
-    )
-    setIsOpen(false)
-    setSearchQuery('')
-  }
-  const handleManualSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!manualPath.trim()) return
-    const path = manualPath.trim()
-    try {
-      const req = create(RegisterProjectRequestSchema, { projectPath: path })
-      const res = await centyClient.registerProject(req)
-      if (res.success && res.project) {
-        setProjectPath(path)
-        setIsInitialized(res.project.initialized)
-        setProjects(prev =>
-          prev.some(p => p.path === path) ? prev : [...prev, res.project!]
-        )
-      } else {
-        setProjectPath(path)
-        setIsInitialized(null)
-      }
-    } catch {
-      setProjectPath(path)
-      setIsInitialized(null)
-    }
-    setManualPath('')
-    setSearchQuery('')
-    setIsOpen(false)
-  }
-  const getCurrentProjectName = () => {
-    if (!projectPath) return 'Select Project'
-    const p = projects.find(p => p.path === projectPath)
-    return p?.name || projectPath.split('/').pop() || projectPath
-  }
-  const handleArchiveProject = (e: React.MouseEvent, p: ProjectInfo) => {
-    e.stopPropagation()
-    archiveProject(p.path)
-    if (p.path === projectPath) {
-      setProjectPath('')
-      setIsInitialized(null)
-    }
-  }
-  const handleToggleFavorite = async (e: React.MouseEvent, p: ProjectInfo) => {
-    e.stopPropagation()
-    try {
-      const req = create(SetProjectFavoriteRequestSchema, {
-        projectPath: p.path,
-        isFavorite: !p.isFavorite,
-      })
-      const res = await centyClient.setProjectFavorite(req)
-      if (res.success && res.project) {
-        setProjects(prev =>
-          prev.map(x => (x.path === p.path ? res.project! : x))
-        )
-      }
-    } catch (err) {
-      console.error('Failed to toggle favorite:', err)
-    }
-  }
+
+  const actions = useProjectActions(
+    projects,
+    setProjects,
+    () => getCurrentPage(params ?? null, pathname),
+    setIsOpen,
+    setSearchQuery,
+    manualPath,
+    setManualPath
+  )
+
   const toggleOrgCollapse = (slug: string) => {
     setCollapsedOrgs(prev => {
       const next = new Set(prev)
       if (next.has(slug)) next.delete(slug)
       else next.add(slug)
-      try {
-        localStorage.setItem(COLLAPSED_ORGS_KEY, JSON.stringify([...next]))
-      } catch {
-        /* */
-      }
+      persistCollapsedOrgs(next)
       return next
     })
   }
+
   return {
-    projectPath,
+    ...actions,
     projects,
     loading,
     error,
@@ -178,11 +95,6 @@ export function useProjectSelector() {
     organizations,
     isArchived,
     fetchProjects,
-    handleSelectProject,
-    handleManualSubmit,
-    getCurrentProjectName,
-    handleArchiveProject,
-    handleToggleFavorite,
     toggleOrgCollapse,
   }
 }

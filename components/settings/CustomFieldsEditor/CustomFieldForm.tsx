@@ -7,6 +7,7 @@ import {
 } from './CustomFieldsEditor.types'
 import { EnumValuesEditor } from './EnumValuesEditor'
 import { DefaultValueField } from './DefaultValueField'
+import { CustomFieldFormActions } from './CustomFieldFormActions'
 
 export function CustomFieldForm({
   field,
@@ -96,19 +97,12 @@ export function CustomFieldForm({
         onDefaultValueChange={setDefaultValue}
       />
 
-      <div className="custom-field-form-actions">
-        <button type="button" onClick={onCancel} className="secondary">
-          Cancel
-        </button>
-        <button
-          type="button"
-          onClick={handleSave}
-          disabled={!isValid}
-          className="primary"
-        >
-          {field ? 'Update' : 'Add'} Field
-        </button>
-      </div>
+      <CustomFieldFormActions
+        isEditing={!!field}
+        isValid={!!isValid}
+        onSave={handleSave}
+        onCancel={onCancel}
+      />
     </div>
   )
 }

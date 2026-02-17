@@ -1,137 +1,90 @@
 'use client'
 
-import { useState, useCallback } from 'react'
-import { usePathContext } from '@/components/providers/PathContextProvider'
-import { useDaemonStatus } from '@/components/providers/DaemonStatusProvider'
-import { useStateManager } from '@/lib/state'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
-import { useIssueDetail } from './hooks/useIssueDetail'
-import { useIssueActions } from './hooks/useIssueActions'
-import { useStatusChange } from './hooks/useStatusChange'
-import { useIssueNavigation } from './hooks/useIssueNavigation'
-import { useEditorActions } from './hooks/useEditorActions'
-import { useEditState } from './hooks/useEditState'
 import { IssueDetailHeader } from './IssueDetailHeader'
 import { DeleteConfirmation } from './DeleteConfirmation'
 import { IssueContentSection } from './IssueContentSection'
 import { IssueDetailModals } from './IssueDetailModals'
 import { getLoadingState } from './IssueDetailLoadingStates'
+import { useIssueDetailSetup } from './useIssueDetailSetup'
 import type { IssueDetailProps } from './IssueDetail.types'
 
 export function IssueDetail({ issueNumber }: IssueDetailProps) {
-  const { projectPath, isLoading: pathLoading } = usePathContext()
-  useDaemonStatus()
-  const stateOptions = useStateManager().getStateOptions()
-  const data = useIssueDetail(projectPath, issueNumber)
-  const nav = useIssueNavigation(projectPath)
-  const actions = useIssueActions({
-    projectPath,
-    issueNumber,
-    issue: data.issue,
-    setIssue: data.setIssue,
-    setError: data.setError,
-    onDeleted: nav.navigateToIssuesList,
-  })
-  const statusCtrl = useStatusChange({
-    projectPath,
-    issueNumber,
-    issue: data.issue,
-    setIssue: data.setIssue,
-    setError: data.setError,
-  })
-  const [showMoveModal, setShowMoveModal] = useState(false)
-  const [showDuplicateModal, setShowDuplicateModal] = useState(false)
-  const [showStatusConfig, setShowStatusConfig] = useState(false)
-  const [assignees, setAssignees] = useState<string[]>([])
-  const editor = useEditorActions({
-    projectPath,
-    issue: data.issue,
-    setError: data.setError,
-    setShowStatusConfigDialog: setShowStatusConfig,
-  })
-  const edit = useEditState({
-    issue: data.issue,
-    onSave: actions.handleSave,
-    saving: actions.saving,
-  })
-  const onStatusConfigured = useCallback(() => {
-    setShowStatusConfig(false)
-    editor.handleOpenInVscode()
-  }, [editor.handleOpenInVscode])
+  const s = useIssueDetailSetup(issueNumber)
 
   const ls = getLoadingState({
-    projectPath,
-    pathLoading,
-    loading: data.loading,
-    error: data.error,
-    hasIssue: !!data.issue,
-    issuesListUrl: nav.issuesListUrl,
+    projectPath: s.projectPath,
+    pathLoading: s.pathLoading,
+    loading: s.data.loading,
+    error: s.data.error,
+    hasIssue: !!s.data.issue,
+    issuesListUrl: s.nav.issuesListUrl,
   })
   if (ls.element) return ls.element
-  const issue = data.issue!
+  const issue = s.data.issue!
 
   return (
     <div className="issue-detail">
       <IssueDetailHeader
-        issuesListUrl={nav.issuesListUrl}
-        isEditing={edit.isEditing}
-        saving={actions.saving}
-        openingInVscode={editor.openingInVscode}
-        editTitle={edit.editTitle}
-        onEdit={edit.handleStartEdit}
-        onCancelEdit={edit.handleCancelEdit}
-        onSave={edit.handleSave}
-        onOpenInVscode={editor.handleOpenInVscode}
-        onOpenInTerminal={editor.handleOpenInTerminal}
-        onMove={() => setShowMoveModal(true)}
-        onDuplicate={() => setShowDuplicateModal(true)}
-        onDelete={() => actions.setShowDeleteConfirm(true)}
+        issuesListUrl={s.nav.issuesListUrl}
+        isEditing={s.edit.isEditing}
+        saving={s.actions.saving}
+        openingInVscode={s.editor.openingInVscode}
+        editTitle={s.edit.editTitle}
+        onEdit={s.edit.handleStartEdit}
+        onCancelEdit={s.edit.handleCancelEdit}
+        onSave={s.edit.handleSave}
+        onOpenInVscode={s.editor.handleOpenInVscode}
+        onOpenInTerminal={s.editor.handleOpenInTerminal}
+        onMove={() => s.setShowMoveModal(true)}
+        onDuplicate={() => s.setShowDuplicateModal(true)}
+        onDelete={() => s.actions.setShowDeleteConfirm(true)}
       />
-      {data.error && <DaemonErrorMessage error={data.error} />}
-      {actions.showDeleteConfirm && (
+      {s.data.error && <DaemonErrorMessage error={s.data.error} />}
+      {s.actions.showDeleteConfirm && (
         <DeleteConfirmation
-          deleting={actions.deleting}
-          onCancel={() => actions.setShowDeleteConfirm(false)}
-          onConfirm={actions.handleDelete}
+          deleting={s.actions.deleting}
+          onCancel={() => s.actions.setShowDeleteConfirm(false)}
+          onConfirm={s.actions.handleDelete}
         />
       )}
       <IssueContentSection
         issue={issue}
         issueNumber={issueNumber}
-        projectPath={projectPath}
-        isEditing={edit.isEditing}
-        editTitle={edit.editTitle}
-        editDescription={edit.editDescription}
-        editStatus={edit.editStatus}
-        editPriority={edit.editPriority}
-        stateOptions={stateOptions}
-        assets={data.assets}
-        updatingStatus={statusCtrl.updatingStatus}
-        showStatusDropdown={statusCtrl.showStatusDropdown}
-        assignees={assignees}
-        onTitleChange={edit.setEditTitle}
-        onDescriptionChange={edit.setEditDescription}
-        onStatusChange={edit.setEditStatus}
-        onPriorityChange={edit.setEditPriority}
-        onAssetsChange={data.setAssets}
+        projectPath={s.projectPath}
+        isEditing={s.edit.isEditing}
+        editTitle={s.edit.editTitle}
+        editDescription={s.edit.editDescription}
+        editStatus={s.edit.editStatus}
+        editPriority={s.edit.editPriority}
+        stateOptions={s.stateOptions}
+        assets={s.data.assets}
+        updatingStatus={s.statusCtrl.updatingStatus}
+        showStatusDropdown={s.statusCtrl.showStatusDropdown}
+        assignees={s.assignees}
+        onTitleChange={s.edit.setEditTitle}
+        onDescriptionChange={s.edit.setEditDescription}
+        onStatusChange={s.edit.setEditStatus}
+        onPriorityChange={s.edit.setEditPriority}
+        onAssetsChange={s.data.setAssets}
         onStatusDropdownToggle={() =>
-          statusCtrl.setShowStatusDropdown(!statusCtrl.showStatusDropdown)
+          s.statusCtrl.setShowStatusDropdown(!s.statusCtrl.showStatusDropdown)
         }
-        onViewStatusChange={statusCtrl.handleStatusChange}
-        onAssigneesChange={setAssignees}
+        onViewStatusChange={s.statusCtrl.handleStatusChange}
+        onAssigneesChange={s.setAssignees}
       />
       <IssueDetailModals
         issue={issue}
-        projectPath={projectPath}
-        showMoveModal={showMoveModal}
-        showDuplicateModal={showDuplicateModal}
-        showStatusConfigDialog={showStatusConfig}
-        onCloseMoveModal={() => setShowMoveModal(false)}
-        onCloseDuplicateModal={() => setShowDuplicateModal(false)}
-        onCloseStatusConfigDialog={() => setShowStatusConfig(false)}
-        onMoved={nav.handleMoved}
-        onDuplicated={nav.handleDuplicated}
-        onStatusConfigured={onStatusConfigured}
+        projectPath={s.projectPath}
+        showMoveModal={s.showMoveModal}
+        showDuplicateModal={s.showDuplicateModal}
+        showStatusConfigDialog={s.showStatusConfig}
+        onCloseMoveModal={() => s.setShowMoveModal(false)}
+        onCloseDuplicateModal={() => s.setShowDuplicateModal(false)}
+        onCloseStatusConfigDialog={() => s.setShowStatusConfig(false)}
+        onMoved={s.nav.handleMoved}
+        onDuplicated={s.nav.handleDuplicated}
+        onStatusConfigured={s.onStatusConfigured}
       />
     </div>
   )

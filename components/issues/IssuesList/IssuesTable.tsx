@@ -1,15 +1,25 @@
 import { flexRender, type Table } from '@tanstack/react-table'
 import type { Issue } from '@/gen/centy_pb'
-import {
-  MultiSelect,
-  type MultiSelectOption,
-} from '@/components/shared/MultiSelect'
-import { PRIORITY_OPTIONS } from './utils'
+import type { MultiSelectOption } from '@/components/shared/MultiSelect'
+import { IssueColumnFilter } from './IssueColumnFilter'
 
 interface IssuesTableProps {
   table: Table<Issue>
   statusOptions: MultiSelectOption[]
   onContextMenu: (e: React.MouseEvent, issue: Issue) => void
+}
+
+function getCellClassName(columnId: string): string {
+  switch (columnId) {
+    case 'displayNumber':
+      return 'issue-number'
+    case 'title':
+      return 'issue-title'
+    case 'createdAt':
+      return 'issue-date'
+    default:
+      return ''
+  }
 }
 
 export function IssuesTable({
@@ -42,7 +52,7 @@ export function IssuesTable({
                       </span>
                     </button>
                     {header.column.getCanFilter() && (
-                      <ColumnFilter
+                      <IssueColumnFilter
                         header={header}
                         statusOptions={statusOptions}
                       />
@@ -70,57 +80,5 @@ export function IssuesTable({
         </tbody>
       </table>
     </div>
-  )
-}
-
-function getCellClassName(columnId: string): string {
-  switch (columnId) {
-    case 'displayNumber':
-      return 'issue-number'
-    case 'title':
-      return 'issue-title'
-    case 'createdAt':
-      return 'issue-date'
-    default:
-      return ''
-  }
-}
-
-function ColumnFilter({
-  header,
-  statusOptions,
-}: {
-  header: {
-    column: {
-      id: string
-      getFilterValue: () => unknown
-      setFilterValue: (v: unknown) => void
-    }
-  }
-  statusOptions: MultiSelectOption[]
-}) {
-  if (header.column.id === 'status' || header.column.id === 'priority') {
-    const options =
-      header.column.id === 'status' ? statusOptions : PRIORITY_OPTIONS
-    return (
-      <MultiSelect
-        options={options}
-        value={(header.column.getFilterValue() as string[]) ?? []}
-        onChange={values =>
-          header.column.setFilterValue(values.length > 0 ? values : undefined)
-        }
-        placeholder="All"
-        className="column-filter-multi"
-      />
-    )
-  }
-  return (
-    <input
-      type="text"
-      className="column-filter"
-      placeholder="Filter..."
-      value={(header.column.getFilterValue() as string) ?? ''}
-      onChange={e => header.column.setFilterValue(e.target.value)}
-    />
   )
 }

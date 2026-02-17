@@ -1,14 +1,26 @@
 import { flexRender, type Table } from '@tanstack/react-table'
-import {
-  MultiSelect,
-  type MultiSelectOption,
-} from '@/components/shared/MultiSelect'
+import type { MultiSelectOption } from '@/components/shared/MultiSelect'
 import type { AggregateIssue } from './AggregateIssuesList.types'
-import { PRIORITY_OPTIONS } from './utils'
+import { AggregateColumnFilter } from './AggregateColumnFilter'
 
 interface AggregateIssuesTableProps {
   table: Table<AggregateIssue>
   statusOptions: MultiSelectOption[]
+}
+
+function getCellClassName(columnId: string): string {
+  switch (columnId) {
+    case 'displayNumber':
+      return 'issue-number'
+    case 'title':
+      return 'issue-title'
+    case 'createdAt':
+      return 'issue-date'
+    case 'projectName':
+      return 'project-name'
+    default:
+      return ''
+  }
 }
 
 export function AggregateIssuesTable({
@@ -40,7 +52,7 @@ export function AggregateIssuesTable({
                       </span>
                     </button>
                     {header.column.getCanFilter() && (
-                      <ColumnFilter
+                      <AggregateColumnFilter
                         header={header}
                         statusOptions={statusOptions}
                       />
@@ -64,59 +76,5 @@ export function AggregateIssuesTable({
         </tbody>
       </table>
     </div>
-  )
-}
-
-function getCellClassName(columnId: string): string {
-  switch (columnId) {
-    case 'displayNumber':
-      return 'issue-number'
-    case 'title':
-      return 'issue-title'
-    case 'createdAt':
-      return 'issue-date'
-    case 'projectName':
-      return 'project-name'
-    default:
-      return ''
-  }
-}
-
-function ColumnFilter({
-  header,
-  statusOptions,
-}: {
-  header: {
-    column: {
-      id: string
-      getFilterValue: () => unknown
-      setFilterValue: (v: unknown) => void
-    }
-  }
-  statusOptions: MultiSelectOption[]
-}) {
-  if (header.column.id === 'status' || header.column.id === 'priority') {
-    const options =
-      header.column.id === 'status' ? statusOptions : PRIORITY_OPTIONS
-    return (
-      <MultiSelect
-        options={options}
-        value={(header.column.getFilterValue() as string[]) ?? []}
-        onChange={values =>
-          header.column.setFilterValue(values.length > 0 ? values : undefined)
-        }
-        placeholder="All"
-        className="column-filter-multi"
-      />
-    )
-  }
-  return (
-    <input
-      type="text"
-      className="column-filter"
-      placeholder="Filter..."
-      value={(header.column.getFilterValue() as string) ?? ''}
-      onChange={e => header.column.setFilterValue(e.target.value)}
-    />
   )
 }

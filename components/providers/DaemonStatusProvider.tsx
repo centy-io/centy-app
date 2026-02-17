@@ -8,21 +8,13 @@ import {
   useCallback,
   type ReactNode,
 } from 'react'
-import {
-  centyClient,
-  enableDemoMode,
-  disableDemoMode,
-  isDemoMode,
-} from '@/lib/grpc/client'
+import { enableDemoMode, disableDemoMode, isDemoMode } from '@/lib/grpc/client'
 import { DEMO_ORG_SLUG, DEMO_PROJECT_PATH } from '@/lib/grpc/demo-data'
-import { EditorType } from '@/gen/centy_pb'
 import { trackDaemonConnection } from '@/lib/metrics'
 import type { DaemonStatusContextType } from './DaemonStatusProvider.types'
 import { CHECK_INTERVAL_MS } from './DaemonStatusProvider.types'
-import {
-  createDemoEditors,
-  getTestVscodeOverride,
-} from './DaemonStatusProvider.helpers'
+import { useDaemonCheck } from './useDaemonCheck'
+import { useDemoModeInit } from './useDemoModeInit'
 
 const DaemonStatusContext = createContext<DaemonStatusContextType | null>(null)
 
@@ -34,72 +26,14 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
   const [vscodeAvailable, setVscodeAvailable] = useState<boolean | null>(null)
   const [editors, setEditors] = useState<DaemonStatusContextType['editors']>([])
 
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      const urlParams = new URLSearchParams(window.location.search)
-      if (urlParams.get('demo') === 'true' && !isDemoMode()) {
-        enableDemoMode()
-        setStatus('demo')
-        setVscodeAvailable(getTestVscodeOverride() ?? true)
-        setEditors(createDemoEditors())
-        const newUrl = `${window.location.pathname}?org=${DEMO_ORG_SLUG}&project=${encodeURIComponent(DEMO_PROJECT_PATH)}`
-        window.history.replaceState({}, '', newUrl)
-      } else if (isDemoMode()) {
-        setStatus('demo')
-        setVscodeAvailable(getTestVscodeOverride() ?? true)
-        setEditors(createDemoEditors())
-      }
-      setHasMounted(true)
-    }, 0)
-    return () => clearTimeout(timeoutId)
-  }, [])
+  const checkDaemonStatus = useDaemonCheck(
+    setStatus,
+    setVscodeAvailable,
+    setEditors,
+    setLastChecked as (d: Date) => void
+  )
 
-  const checkDaemonStatus = useCallback(async () => {
-    if (isDemoMode()) {
-      setStatus('demo')
-      setVscodeAvailable(getTestVscodeOverride() ?? true)
-      setEditors(createDemoEditors())
-      return
-    }
-    setStatus('checking')
-    try {
-      const daemonInfo = await centyClient.getDaemonInfo({})
-      setStatus('connected')
-      setVscodeAvailable(daemonInfo.vscodeAvailable)
-      trackDaemonConnection(true, false)
-      try {
-        const editorsResponse = await centyClient.getSupportedEditors({})
-        setEditors(editorsResponse.editors)
-      } catch {
-        setEditors([
-          {
-            $typeName: 'centy.v1.EditorInfo',
-            editorType: EditorType.VSCODE,
-            name: 'VS Code',
-            description: 'Open in temporary VS Code workspace with AI agent',
-            available: daemonInfo.vscodeAvailable,
-            editorId: 'vscode',
-            terminalWrapper: false,
-          },
-          {
-            $typeName: 'centy.v1.EditorInfo',
-            editorType: EditorType.TERMINAL,
-            name: 'Terminal',
-            description: 'Open in terminal with AI agent',
-            available: true,
-            editorId: 'terminal',
-            terminalWrapper: true,
-          },
-        ])
-      }
-    } catch {
-      setStatus('disconnected')
-      setVscodeAvailable(null)
-      setEditors([])
-      trackDaemonConnection(false, false)
-    }
-    setLastChecked(new Date())
-  }, [])
+  useDemoModeInit(setStatus, setVscodeAvailable, setEditors, setHasMounted)
 
   const enterDemoMode = useCallback(() => {
     enableDemoMode()
@@ -111,10 +45,10 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
   const exitDemoMode = useCallback(() => {
     disableDemoMode()
     setStatus('checking')
-
     setTimeout(() => {
       checkDaemonStatus()
     }, 100)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {

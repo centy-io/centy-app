@@ -1,44 +1,14 @@
 'use client'
 
 import Link from 'next/link'
-import type { Organization, ProjectInfo } from '@/gen/centy_pb'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import { OrgReadView } from './OrgReadView'
-
-interface OrganizationDetailViewProps {
-  organization: Organization
-  projects: ProjectInfo[]
-  error: string | null
-  isEditing: boolean
-  setIsEditing: (v: boolean) => void
-  editName: string
-  setEditName: (v: string) => void
-  editDescription: string
-  setEditDescription: (v: string) => void
-  editSlug: string
-  setEditSlug: (v: string) => void
-  saving: boolean
-  deleting: boolean
-  showDeleteConfirm: boolean
-  setShowDeleteConfirm: (v: boolean) => void
-  deleteError: string | null
-  setDeleteError: (v: string | null) => void
-  handleSave: () => void
-  handleDelete: () => void
-  handleCancelEdit: () => void
-}
+import { OrgEditForm } from './OrgEditForm'
+import { DeleteConfirmDialog } from './DeleteConfirmDialog'
+import type { OrganizationDetailViewProps } from './OrganizationDetailView.types'
 
 export function OrganizationDetailView(props: OrganizationDetailViewProps) {
-  const {
-    organization,
-    projects,
-    error,
-    isEditing,
-    saving,
-    deleting,
-    showDeleteConfirm,
-    deleteError,
-  } = props
+  const { organization, projects, error, isEditing, saving, deleting } = props
   return (
     <div className="organization-detail">
       <div className="organization-header">
@@ -78,79 +48,32 @@ export function OrganizationDetailView(props: OrganizationDetailViewProps) {
         </div>
       </div>
       {error && <DaemonErrorMessage error={error} />}
-      {showDeleteConfirm && (
-        <div className="delete-confirm">
-          <p>Are you sure you want to delete this organization?</p>
-          {projects.length > 0 && (
-            <p className="delete-warning">
-              This organization has {projects.length} project(s). They will
-              become ungrouped.
-            </p>
-          )}
-          {deleteError && <p className="delete-error-message">{deleteError}</p>}
-          <div className="delete-confirm-actions">
-            <button
-              onClick={() => {
-                props.setShowDeleteConfirm(false)
-                props.setDeleteError(null)
-              }}
-              className="cancel-btn"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={props.handleDelete}
-              disabled={deleting}
-              className="confirm-delete-btn"
-            >
-              {deleting ? 'Deleting...' : 'Yes, Delete'}
-            </button>
-          </div>
-        </div>
+      {props.showDeleteConfirm && (
+        <DeleteConfirmDialog
+          projectCount={projects.length}
+          deleteError={props.deleteError}
+          deleting={deleting}
+          onCancel={() => {
+            props.setShowDeleteConfirm(false)
+            props.setDeleteError(null)
+          }}
+          onConfirm={props.handleDelete}
+        />
       )}
       <div className="organization-content">
         <div className="org-slug-badge">
           <code>{organization.slug}</code>
         </div>
         {isEditing ? (
-          <div className="edit-form">
-            <div className="form-group">
-              <label htmlFor="edit-name">Name:</label>
-              <input
-                id="edit-name"
-                type="text"
-                value={props.editName}
-                onChange={e => props.setEditName(e.target.value)}
-                placeholder="Organization name"
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="edit-slug">Slug:</label>
-              <input
-                id="edit-slug"
-                type="text"
-                value={props.editSlug}
-                onChange={e => props.setEditSlug(e.target.value)}
-                placeholder="organization-slug"
-              />
-              {props.editSlug !== organization.slug && (
-                <p className="field-hint warning">
-                  Changing the slug will update the URL. Make sure to update any
-                  references.
-                </p>
-              )}
-            </div>
-            <div className="form-group">
-              <label htmlFor="edit-description">Description:</label>
-              <textarea
-                id="edit-description"
-                value={props.editDescription}
-                onChange={e => props.setEditDescription(e.target.value)}
-                placeholder="Description (optional)"
-                rows={3}
-              />
-            </div>
-          </div>
+          <OrgEditForm
+            editName={props.editName}
+            setEditName={props.setEditName}
+            editSlug={props.editSlug}
+            setEditSlug={props.setEditSlug}
+            editDescription={props.editDescription}
+            setEditDescription={props.setEditDescription}
+            organization={organization}
+          />
         ) : (
           <OrgReadView organization={organization} projects={projects} />
         )}

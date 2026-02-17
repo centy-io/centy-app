@@ -1,15 +1,12 @@
 import { useState, useCallback, useEffect } from 'react'
 import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
-import {
-  CreateLinkRequestSchema,
-  GetAvailableLinkTypesRequestSchema,
-  type LinkTypeInfo,
-} from '@/gen/centy_pb'
+import { CreateLinkRequestSchema, type LinkTypeInfo } from '@/gen/centy_pb'
 import { useProject } from '@/components/providers/ProjectProvider'
 import { useModalDismiss } from '@/components/shared/useModalDismiss'
 import { targetTypeToProto } from './AddLinkModal.types'
 import type { EntityItem, AddLinkModalProps } from './AddLinkModal.types'
+import { loadLinkTypes } from './loadLinkTypes'
 
 export function useAddLink({
   entityId,
@@ -35,24 +32,16 @@ export function useAddLink({
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    async function loadLinkTypes() {
-      if (!projectPath) return
-      try {
-        const request = create(GetAvailableLinkTypesRequestSchema, {
-          projectPath,
-        })
-        const response = await centyClient.getAvailableLinkTypes(request)
-        setLinkTypes(response.linkTypes)
-        if (response.linkTypes.length > 0) {
-          setSelectedLinkType(response.linkTypes[0].name)
+    if (!projectPath) return
+    loadLinkTypes(projectPath)
+      .then(result => {
+        setLinkTypes(result.linkTypes)
+        if (result.defaultLinkType) {
+          setSelectedLinkType(result.defaultLinkType)
         }
-      } catch (err) {
-        console.error('Failed to load link types:', err)
-      } finally {
-        setLoadingTypes(false)
-      }
-    }
-    loadLinkTypes()
+      })
+      .catch(err => console.error('Failed to load link types:', err))
+      .finally(() => setLoadingTypes(false))
   }, [projectPath])
 
   const handleCreateLink = useCallback(async () => {

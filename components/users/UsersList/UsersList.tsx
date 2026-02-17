@@ -2,8 +2,6 @@
 
 import { useState, useCallback, useMemo } from 'react'
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
-import { route, type RouteLiteral } from 'nextjs-routes'
 import {
   useReactTable,
   getCoreRowModel,
@@ -14,37 +12,16 @@ import {
 } from '@tanstack/react-table'
 import { SyncUsersModal } from '../SyncUsersModal'
 import { ContextMenu } from '@/components/shared/ContextMenu'
-import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import { createUsersColumns } from './columns'
 import { useUsersList } from './useUsersList'
 import { useUsersContextMenu } from './useUsersContextMenu'
-import { UsersTable } from './UsersTable'
+import { useUsersRoutes } from './useUsersRoutes'
+import { UsersListHeader } from './UsersListHeader'
+import { UsersListContent } from './UsersListContent'
 
 export function UsersList() {
-  const params = useParams()
   const hook = useUsersList()
-  const projectContext = useMemo(() => {
-    const org = params?.organization as string | undefined
-    const project = params?.project as string | undefined
-    return org && project ? { organization: org, project } : null
-  }, [params])
-  const getUserRoute = useCallback(
-    (userId: string): RouteLiteral | '/' => {
-      if (!projectContext) return '/'
-      return route({
-        pathname: '/[organization]/[project]/users/[userId]',
-        query: { ...projectContext, userId },
-      })
-    },
-    [projectContext]
-  )
-  const newUserRoute: RouteLiteral | '/' = useMemo(() => {
-    if (!projectContext) return '/'
-    return route({
-      pathname: '/[organization]/[project]/users/new',
-      query: projectContext,
-    })
-  }, [projectContext])
+  const { getUserRoute, newUserRoute } = useUsersRoutes()
 
   const { contextMenu, contextMenuItems, handleContextMenu, closeContextMenu } =
     useUsersContextMenu(getUserRoute, hook.setShowDeleteConfirm)
@@ -75,31 +52,14 @@ export function UsersList() {
 
   return (
     <div className="users-list">
-      <div className="users-header">
-        <h2>Users</h2>
-        <div className="header-actions">
-          {hook.projectPath && hook.isInitialized === true && (
-            <>
-              <button
-                onClick={hook.fetchUsers}
-                disabled={hook.loading}
-                className="refresh-btn"
-              >
-                {hook.loading ? 'Loading...' : 'Refresh'}
-              </button>
-              <button
-                onClick={() => hook.setShowSyncModal(true)}
-                className="sync-btn"
-              >
-                Sync from Git
-              </button>
-            </>
-          )}
-          <Link href={newUserRoute} className="create-btn">
-            + New User
-          </Link>
-        </div>
-      </div>
+      <UsersListHeader
+        projectPath={hook.projectPath}
+        isInitialized={hook.isInitialized}
+        loading={hook.loading}
+        newUserRoute={newUserRoute}
+        fetchUsers={hook.fetchUsers}
+        setShowSyncModal={hook.setShowSyncModal}
+      />
       {!hook.projectPath && (
         <div className="no-project-message">
           <p>Select a project from the header to view users</p>
@@ -112,47 +72,19 @@ export function UsersList() {
         </div>
       )}
       {hook.projectPath && hook.isInitialized === true && (
-        <>
-          {hook.error && <DaemonErrorMessage error={hook.error} />}
-          {hook.showDeleteConfirm && (
-            <div className="delete-confirm">
-              <p>Are you sure you want to delete this user?</p>
-              <div className="delete-confirm-actions">
-                <button
-                  onClick={() => hook.setShowDeleteConfirm(null)}
-                  className="cancel-btn"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={() => hook.handleDelete(hook.showDeleteConfirm!)}
-                  disabled={hook.deleting}
-                  className="confirm-delete-btn"
-                >
-                  {hook.deleting ? 'Deleting...' : 'Yes, Delete'}
-                </button>
-              </div>
-            </div>
-          )}
-          {hook.loading && hook.users.length === 0 ? (
-            <div className="loading">Loading users...</div>
-          ) : hook.users.length === 0 ? (
-            <div className="empty-state">
-              <p>No users found</p>
-              <p>
-                <Link href={newUserRoute}>Create your first user</Link> or{' '}
-                <button
-                  onClick={() => hook.setShowSyncModal(true)}
-                  className="sync-link-btn"
-                >
-                  sync from git history
-                </button>
-              </p>
-            </div>
-          ) : (
-            <UsersTable table={table} onContextMenu={handleContextMenu} />
-          )}
-        </>
+        <UsersListContent
+          error={hook.error}
+          showDeleteConfirm={hook.showDeleteConfirm}
+          deleting={hook.deleting}
+          loading={hook.loading}
+          users={hook.users}
+          newUserRoute={newUserRoute}
+          table={table}
+          setShowDeleteConfirm={hook.setShowDeleteConfirm}
+          handleDelete={hook.handleDelete}
+          setShowSyncModal={hook.setShowSyncModal}
+          handleContextMenu={handleContextMenu}
+        />
       )}
       {contextMenu && (
         <ContextMenu

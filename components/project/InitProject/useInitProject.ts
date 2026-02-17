@@ -2,17 +2,9 @@
 
 import { useState, useCallback, useEffect } from 'react'
 import { open } from '@tauri-apps/plugin-dialog'
-import { create } from '@bufbuild/protobuf'
-import { centyClient } from '@/lib/grpc/client'
-import {
-  InitRequestSchema,
-  GetReconciliationPlanRequestSchema,
-  ExecuteReconciliationRequestSchema,
-  ReconciliationDecisionsSchema,
-  type ReconciliationPlan,
-  type InitResponse,
-} from '@/gen/centy_pb'
+import type { ReconciliationPlan, InitResponse } from '@/gen/centy_pb'
 import type { InitStep } from './InitProject.types'
+import { useInitHandlers } from './useInitHandlers'
 
 export function useInitProject() {
   const [projectPath, setProjectPath] = useState('')
@@ -44,87 +36,6 @@ export function useInitProject() {
     }
   }, [isTauri])
 
-  const handleQuickInit = useCallback(async () => {
-    if (!projectPath.trim()) return
-    setLoading(true)
-    setError(null)
-    try {
-      const req = create(InitRequestSchema, {
-        projectPath: projectPath.trim(),
-        force: true,
-      })
-      const res = await centyClient.init(req)
-      if (res.success) {
-        setResult(res)
-        setStep('success')
-      } else {
-        setError(res.error || 'Initialization failed')
-        setStep('error')
-      }
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to connect to daemon'
-      )
-      setStep('error')
-    } finally {
-      setLoading(false)
-    }
-  }, [projectPath])
-
-  const handleGetPlan = useCallback(async () => {
-    if (!projectPath.trim()) return
-    setLoading(true)
-    setError(null)
-    try {
-      const req = create(GetReconciliationPlanRequestSchema, {
-        projectPath: projectPath.trim(),
-      })
-      const res = await centyClient.getReconciliationPlan(req)
-      setPlan(res)
-      setStep('plan')
-      setSelectedRestore(new Set(res.toRestore.map(f => f.path)))
-      setSelectedReset(new Set())
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to connect to daemon'
-      )
-      setStep('error')
-    } finally {
-      setLoading(false)
-    }
-  }, [projectPath])
-
-  const handleExecutePlan = useCallback(async () => {
-    if (!projectPath.trim()) return
-    setLoading(true)
-    setStep('executing')
-    try {
-      const decisions = create(ReconciliationDecisionsSchema, {
-        restore: Array.from(selectedRestore),
-        reset: Array.from(selectedReset),
-      })
-      const req = create(ExecuteReconciliationRequestSchema, {
-        projectPath: projectPath.trim(),
-        decisions,
-      })
-      const res = await centyClient.executeReconciliation(req)
-      if (res.success) {
-        setResult(res)
-        setStep('success')
-      } else {
-        setError(res.error || 'Initialization failed')
-        setStep('error')
-      }
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to connect to daemon'
-      )
-      setStep('error')
-    } finally {
-      setLoading(false)
-    }
-  }, [projectPath, selectedRestore, selectedReset])
-
   const toggleRestore = useCallback((path: string) => {
     setSelectedRestore(prev => {
       const next = new Set(prev)
@@ -141,14 +52,17 @@ export function useInitProject() {
       return next
     })
   }, [])
-  const handleReset = useCallback(() => {
-    setStep('input')
-    setPlan(null)
-    setResult(null)
-    setError(null)
-    setSelectedRestore(new Set())
-    setSelectedReset(new Set())
-  }, [])
+
+  const { handleQuickInit, handleGetPlan, handleExecutePlan, handleReset } =
+    useInitHandlers(projectPath, selectedRestore, selectedReset, {
+      setStep,
+      setLoading,
+      setError,
+      setResult,
+      setPlan,
+      setSelectedRestore,
+      setSelectedReset,
+    })
 
   return {
     projectPath,

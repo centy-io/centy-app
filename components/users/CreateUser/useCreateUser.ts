@@ -3,13 +3,10 @@
 import { useState, useCallback, useEffect, useMemo } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import { route, type RouteLiteral } from 'nextjs-routes'
-import { create } from '@bufbuild/protobuf'
-import { centyClient } from '@/lib/grpc/client'
-import { CreateUserRequestSchema } from '@/gen/centy_pb'
 import { useProject } from '@/components/providers/ProjectProvider'
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
-import { isDaemonUnimplemented } from '@/lib/daemon-error'
 import { generateSlug } from './CreateUser.types'
+import { submitUser } from './submitUser'
 
 export function useCreateUser() {
   const router = useRouter()
@@ -45,54 +42,21 @@ export function useCreateUser() {
     setUserIdManuallySet(true)
   }
 
-  const handleSubmit = useCallback(async () => {
-    if (!projectPath || !name.trim()) return
-    setSaving(true)
-    setError(null)
-    try {
-      const request = create(CreateUserRequestSchema, {
-        projectPath,
-        id: userId.trim() || undefined,
-        name: name.trim(),
-        email: email.trim() || undefined,
-        gitUsernames: gitUsernames.filter(u => u.trim() !== ''),
-      })
-      const response = await centyClient.createUser(request)
-      if (response.success && response.user) {
-        if (projectContext) {
-          router.push(
-            route({
-              pathname: '/[organization]/[project]/users/[userId]',
-              query: { ...projectContext, userId: response.user.id },
-            })
-          )
-        } else {
-          router.push('/')
-        }
-      } else {
-        const errorMsg = response.error || 'Failed to create user'
-        if (isDaemonUnimplemented(errorMsg)) {
-          setError(
-            'User management is not yet available. Please update your daemon to the latest version.'
-          )
-        } else {
-          setError(errorMsg)
-        }
-      }
-    } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to connect to daemon'
-      if (isDaemonUnimplemented(message)) {
-        setError(
-          'User management is not yet available. Please update your daemon to the latest version.'
-        )
-      } else {
-        setError(message)
-      }
-    } finally {
-      setSaving(false)
-    }
-  }, [projectPath, name, userId, email, gitUsernames, router, projectContext])
+  const handleSubmit = useCallback(
+    () =>
+      submitUser({
+        projectPath: projectPath || '',
+        name,
+        userId,
+        email,
+        gitUsernames,
+        projectContext,
+        router,
+        setError,
+        setSaving,
+      }),
+    [projectPath, name, userId, email, gitUsernames, router, projectContext]
+  )
 
   useSaveShortcut({
     onSave: handleSubmit,

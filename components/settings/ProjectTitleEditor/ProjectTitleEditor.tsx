@@ -4,6 +4,7 @@ import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import '@/styles/components/ProjectTitleEditor.css'
 import type { ProjectTitleEditorProps } from './ProjectTitleEditor.types'
 import { useProjectTitle } from './useProjectTitle'
+import { TitlePreview } from './TitlePreview'
 
 export function ProjectTitleEditor({ projectPath }: ProjectTitleEditorProps) {
   const {
@@ -86,26 +87,7 @@ export function ProjectTitleEditor({ projectPath }: ProjectTitleEditorProps) {
         </button>
       </div>
 
-      <div className="title-preview">
-        <h4 className="title-preview-label">Current Display Name</h4>
-        <p className="title-preview-value">
-          <strong>
-            {projectInfo.userTitle ||
-              projectInfo.projectTitle ||
-              projectInfo.name ||
-              'Unnamed Project'}
-          </strong>
-          <span className="title-source">
-            (
-            {projectInfo.userTitle
-              ? 'user title'
-              : projectInfo.projectTitle
-                ? 'project title'
-                : 'directory name'}
-            )
-          </span>
-        </p>
-      </div>
+      <TitlePreview projectInfo={projectInfo} />
     </div>
   )
 }

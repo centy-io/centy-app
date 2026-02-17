@@ -1,6 +1,6 @@
+export { PathContextProvider } from './PathContextProvider'
 export {
-  PathContextProvider,
   usePathContext,
   useLastProjectPath,
   useProjectPathToUrl,
-} from './PathContextProvider'
+} from './pathContextHooks'

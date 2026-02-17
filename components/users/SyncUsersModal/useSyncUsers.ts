@@ -1,29 +1,10 @@
 'use client'
 
 import { useState, useCallback, useEffect } from 'react'
-import { create } from '@bufbuild/protobuf'
-import { centyClient } from '@/lib/grpc/client'
-import { SyncUsersRequestSchema, type GitContributor } from '@/gen/centy_pb'
+import type { GitContributor } from '@/gen/centy_pb'
 import { useProject } from '@/components/providers/ProjectProvider'
-import { isDaemonUnimplemented } from '@/lib/daemon-error'
 import type { SyncState, SyncUsersModalProps } from './SyncUsersModal.types'
-
-function handleSyncError(
-  err: unknown,
-  setError: (e: string) => void,
-  setState: (s: SyncState) => void
-) {
-  const message =
-    err instanceof Error ? err.message : 'Failed to connect to daemon'
-  if (isDaemonUnimplemented(message)) {
-    setError(
-      'User sync is not yet available. Please update your daemon to the latest version.'
-    )
-  } else {
-    setError(message)
-  }
-  setState('error')
-}
+import { fetchSyncPreview, executeSyncUsers } from './syncUsersApi'
 
 export function useSyncUsers({ onClose, onSynced }: SyncUsersModalProps) {
   const { projectPath } = useProject()
@@ -37,68 +18,29 @@ export function useSyncUsers({ onClose, onSynced }: SyncUsersModalProps) {
 
   const fetchPreview = useCallback(async () => {
     if (!projectPath) return
-    setState('loading')
-    setError(null)
-    try {
-      const request = create(SyncUsersRequestSchema, {
-        projectPath,
-        dryRun: true,
-      })
-      const response = await centyClient.syncUsers(request)
-      if (response.success) {
-        setWouldCreate(response.wouldCreate)
-        setWouldSkip(response.wouldSkip)
-        setState('preview')
-      } else {
-        const errorMsg = response.error || 'Failed to fetch git contributors'
-        if (isDaemonUnimplemented(errorMsg)) {
-          setError(
-            'User sync is not yet available. Please update your daemon to the latest version.'
-          )
-        } else {
-          setError(errorMsg)
-        }
-        setState('error')
-      }
-    } catch (err) {
-      handleSyncError(err, setError, setState)
-    }
+    await fetchSyncPreview(projectPath, {
+      setState,
+      setError,
+      setWouldCreate,
+      setWouldSkip,
+    })
   }, [projectPath])
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     void fetchPreview()
+    // Run only on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleSync = useCallback(async () => {
     if (!projectPath) return
-    setState('syncing')
-    setError(null)
-    try {
-      const request = create(SyncUsersRequestSchema, {
-        projectPath,
-        dryRun: false,
-      })
-      const response = await centyClient.syncUsers(request)
-      if (response.success) {
-        setCreated(response.created)
-        setSkipped(response.skipped)
-        setSyncErrors(response.errors)
-        setState('success')
-      } else {
-        const errorMsg = response.error || 'Failed to sync users'
-        if (isDaemonUnimplemented(errorMsg)) {
-          setError(
-            'User sync is not yet available. Please update your daemon to the latest version.'
-          )
-        } else {
-          setError(errorMsg)
-        }
-        setState('error')
-      }
-    } catch (err) {
-      handleSyncError(err, setError, setState)
-    }
+    await executeSyncUsers(projectPath, {
+      setState,
+      setError,
+      setCreated,
+      setSkipped,
+      setSyncErrors,
+    })
   }, [projectPath])
 
   const handleClose = useCallback(() => {

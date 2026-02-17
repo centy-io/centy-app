@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import { useArchivedProjectsList } from './useArchivedProjectsList'
 import { ArchivedProjectItem } from './ArchivedProjectItem'
+import { StaleProjectItem } from './StaleProjectItem'
 
 export function ArchivedProjects() {
   const hook = useArchivedProjectsList()
@@ -74,43 +75,13 @@ export function ArchivedProjects() {
             />
           ))}
           {hook.archivedPathsNotInDaemon.map(path => (
-            <li key={path} className="archived-item stale">
-              <div className="archived-item-info">
-                <span className="archived-item-name">
-                  {path.split('/').pop() || path}
-                </span>
-                <span className="archived-item-path">{path}</span>
-                <div className="archived-item-stats">
-                  <span className="stale-badge">Not tracked by daemon</span>
-                </div>
-              </div>
-              <div className="archived-item-actions">
-                {hook.confirmRemove === path ? (
-                  <>
-                    <span className="confirm-text">Remove permanently?</span>
-                    <button
-                      className="confirm-yes-btn"
-                      onClick={() => hook.handleRemoveStale(path)}
-                    >
-                      Yes
-                    </button>
-                    <button
-                      className="confirm-no-btn"
-                      onClick={() => hook.setConfirmRemove(null)}
-                    >
-                      No
-                    </button>
-                  </>
-                ) : (
-                  <button
-                    className="remove-btn"
-                    onClick={() => hook.setConfirmRemove(path)}
-                  >
-                    Remove
-                  </button>
-                )}
-              </div>
-            </li>
+            <StaleProjectItem
+              key={path}
+              path={path}
+              confirmRemove={hook.confirmRemove}
+              setConfirmRemove={hook.setConfirmRemove}
+              handleRemoveStale={hook.handleRemoveStale}
+            />
           ))}
         </ul>
       )}

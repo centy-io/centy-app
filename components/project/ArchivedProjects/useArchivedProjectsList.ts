@@ -3,15 +3,13 @@
 import { useState, useCallback, useEffect } from 'react'
 import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
-import {
-  ListProjectsRequestSchema,
-  UntrackProjectRequestSchema,
-  type ProjectInfo,
-} from '@/gen/centy_pb'
+import { ListProjectsRequestSchema, type ProjectInfo } from '@/gen/centy_pb'
 import {
   useArchivedProjects as useArchivedProjectsProvider,
   useProject,
 } from '@/components/providers/ProjectProvider'
+import { untrackProject, untrackAllProjects } from './archivedProjectActions'
+import { useArchivedHandlers } from './useArchivedHandlers'
 
 export function useArchivedProjectsList() {
   const { archivedPaths, unarchiveProject, removeArchivedProject } =
@@ -51,63 +49,21 @@ export function useArchivedProjectsList() {
   const hasArchivedProjects =
     archivedProjects.length > 0 || archivedPathsNotInDaemon.length > 0
 
-  const handleRestore = (projectPath: string) => {
-    unarchiveProject(projectPath)
-  }
-  const handleRestoreAndSelect = (project: ProjectInfo) => {
-    unarchiveProject(project.path)
-    setProjectPath(project.path)
-    setIsInitialized(project.initialized)
-  }
-  const handleRemove = async (projectPath: string) => {
-    setRemovingPath(projectPath)
-    setError(null)
-    try {
-      const req = create(UntrackProjectRequestSchema, { projectPath })
-      const res = await centyClient.untrackProject(req)
-      if (!res.success && res.error) {
-        setError(res.error)
-      } else {
-        removeArchivedProject(projectPath)
-        setAllProjects(prev => prev.filter(p => p.path !== projectPath))
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to remove project')
-    } finally {
-      setRemovingPath(null)
-      setConfirmRemove(null)
-    }
-  }
-  const handleRemoveStale = (path: string) => {
-    removeArchivedProject(path)
-    setConfirmRemove(null)
-  }
-  const handleRemoveAll = async () => {
-    setRemovingAll(true)
-    setError(null)
-    try {
-      for (const p of archivedProjects) {
-        const req = create(UntrackProjectRequestSchema, { projectPath: p.path })
-        const res = await centyClient.untrackProject(req)
-        if (!res.success && res.error) {
-          setError(res.error)
-          setRemovingAll(false)
-          setConfirmRemoveAll(false)
-          return
-        }
-        removeArchivedProject(p.path)
-      }
-      for (const path of archivedPathsNotInDaemon) removeArchivedProject(path)
-      setAllProjects(prev => prev.filter(p => !archivedPaths.includes(p.path)))
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to remove all projects'
-      )
-    } finally {
-      setRemovingAll(false)
-      setConfirmRemoveAll(false)
-    }
-  }
+  const handlers = useArchivedHandlers({
+    archivedPaths,
+    archivedProjects,
+    archivedPathsNotInDaemon,
+    unarchiveProject,
+    removeArchivedProject,
+    setProjectPath,
+    setIsInitialized,
+    setAllProjects,
+    setError,
+    setRemovingPath,
+    setConfirmRemove,
+    setRemovingAll,
+    setConfirmRemoveAll,
+  })
 
   return {
     loading,
@@ -121,10 +77,6 @@ export function useArchivedProjectsList() {
     confirmRemoveAll,
     setConfirmRemoveAll,
     removingAll,
-    handleRestore,
-    handleRestoreAndSelect,
-    handleRemove,
-    handleRemoveStale,
-    handleRemoveAll,
+    ...handlers,
   }
 }

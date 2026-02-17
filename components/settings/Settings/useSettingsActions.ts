@@ -1,13 +1,9 @@
 import { useState, useCallback } from 'react'
 import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
-import {
-  UpdateConfigRequestSchema,
-  ShutdownRequestSchema,
-  RestartRequestSchema,
-  type Config,
-} from '@/gen/centy_pb'
+import { UpdateConfigRequestSchema, type Config } from '@/gen/centy_pb'
 import type { UseSettingsActionsParams } from './Settings.types'
+import { performShutdown, performRestart } from './daemonActions'
 
 export function useSettingsActions({
   projectPath,
@@ -59,44 +55,16 @@ export function useSettingsActions({
 
   const handleShutdown = useCallback(async () => {
     setShuttingDown(true)
-    setError(null)
-    try {
-      const request = create(ShutdownRequestSchema, {})
-      const response = await centyClient.shutdown(request)
-      if (response.success) {
-        setSuccess(response.message || 'Daemon is shutting down...')
-      } else {
-        setError('Failed to shutdown daemon')
-      }
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to connect to daemon'
-      )
-    } finally {
-      setShuttingDown(false)
-      setShowShutdownConfirm(false)
-    }
+    await performShutdown({ setError, setSuccess })
+    setShuttingDown(false)
+    setShowShutdownConfirm(false)
   }, [setError, setSuccess])
 
   const handleRestart = useCallback(async () => {
     setRestarting(true)
-    setError(null)
-    try {
-      const request = create(RestartRequestSchema, {})
-      const response = await centyClient.restart(request)
-      if (response.success) {
-        setSuccess(response.message || 'Daemon is restarting...')
-      } else {
-        setError('Failed to restart daemon')
-      }
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to connect to daemon'
-      )
-    } finally {
-      setRestarting(false)
-      setShowRestartConfirm(false)
-    }
+    await performRestart({ setError, setSuccess })
+    setRestarting(false)
+    setShowRestartConfirm(false)
   }, [setError, setSuccess])
 
   const updateConfig = useCallback(

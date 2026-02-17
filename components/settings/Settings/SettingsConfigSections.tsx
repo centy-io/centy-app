@@ -8,15 +8,7 @@ import { PriorityEditor } from '@/components/settings/PriorityEditor'
 import { CustomFieldsEditor } from '@/components/settings/CustomFieldsEditor'
 import { DefaultsEditor } from '@/components/settings/DefaultsEditor'
 import { WorkspaceSettingsEditor } from '@/components/settings/WorkspaceSettingsEditor'
-
-interface SettingsConfigSectionsProps {
-  config: Config
-  saving: boolean
-  isDirty: boolean
-  updateConfig: (updates: Partial<Config>) => void
-  onSave: () => void
-  onReset: () => void
-}
+import type { SettingsConfigSectionsProps } from './Settings.types'
 
 export function SettingsConfigSections({
   config,

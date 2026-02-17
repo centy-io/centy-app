@@ -1,12 +1,8 @@
 import { useState, useCallback, useEffect } from 'react'
-import { create } from '@bufbuild/protobuf'
-import { centyClient } from '@/lib/grpc/client'
-import {
-  OpenStandaloneWorkspaceRequestSchema,
-  EditorType,
-} from '@/gen/centy_pb'
+import { EditorType } from '@/gen/centy_pb'
 import { useDaemonStatus } from '@/components/providers/DaemonStatusProvider'
 import { useModalDismiss } from '@/components/shared/useModalDismiss'
+import { createWorkspace } from './createWorkspace'
 
 export function useStandaloneWorkspace(
   projectPath: string,
@@ -50,23 +46,18 @@ export function useStandaloneWorkspace(
     setLoading(true)
     setError(null)
     try {
-      const request = create(OpenStandaloneWorkspaceRequestSchema, {
+      const result = await createWorkspace({
         projectPath,
-        name: name.trim() || undefined,
-        description: description.trim() || undefined,
-        agentName: '',
+        name,
+        description,
         ttlHours,
+        selectedEditor,
       })
-      const clientMethod =
-        selectedEditor === EditorType.VSCODE
-          ? centyClient.openStandaloneWorkspaceVscode
-          : centyClient.openStandaloneWorkspaceTerminal
-      const response = await clientMethod(request)
-      if (response.success) {
-        onCreated?.(response.workspacePath)
+      if (result.success) {
+        onCreated?.(result.workspacePath)
         onClose()
       } else {
-        setError(response.error || 'Failed to create workspace')
+        setError(result.error || 'Failed to create workspace')
       }
     } catch (err) {
       setError(

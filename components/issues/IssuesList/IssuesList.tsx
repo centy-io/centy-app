@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import Link from 'next/link'
 import {
   useReactTable,
   getCoreRowModel,
@@ -15,12 +14,11 @@ import { useLastSeenIssues } from '@/hooks/useLastSeenIssues'
 import { useIssueTableSettings } from '@/hooks/useIssueTableSettings'
 import { useStateManager } from '@/lib/state'
 import type { MultiSelectOption } from '@/components/shared/MultiSelect'
-import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import { useIssuesData } from './hooks/useIssuesData'
 import { useIssueContextMenu } from './hooks/useIssueContextMenu'
 import { createIssueColumns } from './columns'
 import { createDateColumns } from './dateColumns'
-import { IssuesTable } from './IssuesTable'
+import { IssuesListContent } from './IssuesListContent'
 import { IssuesListModals } from './IssuesListModals'
 import { IssuesListHeader } from './IssuesListHeader'
 
@@ -74,38 +72,17 @@ export function IssuesList() {
         onRefresh={fetchIssues}
         onNewWorkspace={() => setShowStandaloneModal(true)}
       />
-      {!projectPath && (
-        <div className="no-project-message">
-          <p>Select a project from the header to view issues</p>
-        </div>
-      )}
-      {projectPath && isInitialized === false && (
-        <div className="not-initialized-message">
-          <p>Centy is not initialized in this directory</p>
-          <Link href={createLink('/')}>Initialize Project</Link>
-        </div>
-      )}
-      {projectPath && isInitialized === true && (
-        <>
-          {error && <DaemonErrorMessage error={error} />}
-          {loading && issues.length === 0 ? (
-            <div className="loading">Loading issues...</div>
-          ) : issues.length === 0 ? (
-            <div className="empty-state">
-              <p>No issues found</p>
-              <Link href={createLink('/issues/new')}>
-                Create your first issue
-              </Link>
-            </div>
-          ) : (
-            <IssuesTable
-              table={table}
-              statusOptions={statusOptions}
-              onContextMenu={ctx.handleContextMenu}
-            />
-          )}
-        </>
-      )}
+      <IssuesListContent
+        projectPath={projectPath}
+        isInitialized={isInitialized}
+        issues={issues}
+        loading={loading}
+        error={error}
+        table={table}
+        statusOptions={statusOptions}
+        createLink={createLink}
+        onContextMenu={ctx.handleContextMenu}
+      />
       <IssuesListModals
         projectPath={projectPath}
         contextMenu={ctx.contextMenu}
@@ -115,14 +92,8 @@ export function IssuesList() {
         showDuplicateModal={ctx.showDuplicateModal}
         showStandaloneModal={showStandaloneModal}
         selectedIssue={ctx.selectedIssue}
-        onCloseMoveModal={() => {
-          ctx.setShowMoveModal(false)
-          ctx.setSelectedIssue(null)
-        }}
-        onCloseDuplicateModal={() => {
-          ctx.setShowDuplicateModal(false)
-          ctx.setSelectedIssue(null)
-        }}
+        onCloseMoveModal={ctx.closeMoveModal}
+        onCloseDuplicateModal={ctx.closeDuplicateModal}
         onCloseStandaloneModal={() => setShowStandaloneModal(false)}
         onMoved={ctx.handleMoved}
         onDuplicated={ctx.handleDuplicated}

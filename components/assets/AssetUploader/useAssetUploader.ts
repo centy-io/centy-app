@@ -3,10 +3,10 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
 import type { Asset } from '@/gen/centy_pb'
 import type { PendingAsset, AssetUploaderProps } from './types'
-import { ALLOWED_TYPES, MAX_FILE_SIZE } from './types'
 import { useUploadAsset } from './useUploadAsset'
 import { useAssetActions } from './useAssetActions'
 import { useDragDrop } from './useDragDrop'
+import { processFiles } from './handleAssetFiles'
 
 export function useAssetUploader({
   projectPath,
@@ -48,42 +48,18 @@ export function useAssetUploader({
     setError
   )
 
-  const validateFile = useCallback((file: File): string | null => {
-    if (!Object.keys(ALLOWED_TYPES).includes(file.type)) {
-      return `Unsupported file type: ${file.type}`
-    }
-    if (file.size > MAX_FILE_SIZE) {
-      return `File too large: ${(file.size / 1024 / 1024).toFixed(1)}MB (max 50MB)`
-    }
-    return null
-  }, [])
-
   const handleFiles = useCallback(
-    async (files: FileList | File[]) => {
-      for (const file of Array.from(files)) {
-        const validationError = validateFile(file)
-        if (validationError) {
-          setError(validationError)
-          continue
-        }
-        const preview = file.type.startsWith('image/')
-          ? URL.createObjectURL(file)
-          : undefined
-        const pending: PendingAsset = {
-          id: crypto.randomUUID(),
-          file,
-          preview,
-          status: mode === 'edit' && targetId ? 'uploading' : 'pending',
-        }
-        setPendingAssets(prev => {
-          const updated = [...prev, pending]
-          onPendingChange?.(updated)
-          return updated
-        })
-        if (mode === 'edit' && targetId) await uploadAsset(pending, targetId)
-      }
-    },
-    [mode, targetId, onPendingChange, validateFile, uploadAsset]
+    (files: FileList | File[]) =>
+      processFiles({
+        files,
+        mode,
+        targetId,
+        setError,
+        setPendingAssets,
+        onPendingChange,
+        uploadAsset,
+      }),
+    [mode, targetId, onPendingChange, uploadAsset]
   )
 
   const uploadAllPending = useCallback(
@@ -95,7 +71,9 @@ export function useAssetUploader({
             p.id === pending.id ? { ...p, status: 'uploading' as const } : p
           )
         )
-        if (!(await uploadAsset(pending, uploadTargetId))) allSuccess = false
+        if (!(await uploadAsset(pending, uploadTargetId))) {
+          allSuccess = false
+        }
       }
       return allSuccess
     },

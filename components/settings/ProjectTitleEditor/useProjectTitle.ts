@@ -7,7 +7,7 @@ import type {
   TitleScope,
   UseProjectTitleResult,
 } from './ProjectTitleEditor.types'
-import { saveTitle, clearTitle } from './titleActions'
+import { handleSaveTitle, handleClearTitle } from './titleMutations'
 
 export function useProjectTitle(projectPath: string): UseProjectTitleResult {
   const [projectInfo, setProjectInfo] = useState<ProjectInfo | null>(null)
@@ -48,50 +48,29 @@ export function useProjectTitle(projectPath: string): UseProjectTitleResult {
   }, [])
 
   const handleSave = useCallback(async () => {
-    setError(null)
-    setSuccess(null)
-    setSaving(true)
-
-    try {
-      const result = await saveTitle({
-        scope,
-        projectPath,
-        userTitle,
-        projectTitle,
-      })
-      if (!result.success) {
-        setError(result.error || 'Failed to save title')
-        return
-      }
-      applyProjectUpdate(result.project)
-      setSuccess(result.message || 'Title saved')
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save title')
-    } finally {
-      setSaving(false)
-    }
+    await handleSaveTitle({
+      scope,
+      projectPath,
+      userTitle,
+      projectTitle,
+      setError,
+      setSuccess,
+      setSaving,
+      applyProjectUpdate,
+    })
   }, [scope, userTitle, projectTitle, projectPath, applyProjectUpdate])
 
   const handleClear = useCallback(async () => {
-    setError(null)
-    setSuccess(null)
-    setSaving(true)
-
-    try {
-      const result = await clearTitle(scope, projectPath)
-      if (!result.success) {
-        setError(result.error || 'Failed to clear title')
-        return
-      }
-      applyProjectUpdate(result.project)
-      if (scope === 'user') setUserTitle('')
-      else setProjectTitle('')
-      setSuccess(result.message || 'Title cleared')
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to clear title')
-    } finally {
-      setSaving(false)
-    }
+    await handleClearTitle({
+      scope,
+      projectPath,
+      setError,
+      setSuccess,
+      setSaving,
+      applyProjectUpdate,
+      setUserTitle,
+      setProjectTitle,
+    })
   }, [scope, projectPath, applyProjectUpdate])
 
   const currentTitle = scope === 'user' ? userTitle : projectTitle

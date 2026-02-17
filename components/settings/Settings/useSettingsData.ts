@@ -1,16 +1,11 @@
 import { useState, useCallback, useEffect } from 'react'
-import { create } from '@bufbuild/protobuf'
-import { centyClient } from '@/lib/grpc/client'
-import {
-  GetConfigRequestSchema,
-  GetManifestRequestSchema,
-  GetDaemonInfoRequestSchema,
-  IsInitializedRequestSchema,
-  type Config,
-  type Manifest,
-  type DaemonInfo,
-} from '@/gen/centy_pb'
+import { type Config, type Manifest, type DaemonInfo } from '@/gen/centy_pb'
 import { useProject } from '@/components/providers/ProjectProvider'
+import {
+  fetchSettingsProjectData,
+  fetchDaemonInfoData,
+} from './fetchSettingsData'
+import { checkProjectInitialized } from './checkInitialized'
 
 export function useSettingsData() {
   const { projectPath, isInitialized, setIsInitialized } = useProject()
@@ -40,55 +35,24 @@ export function useSettingsData() {
   }, [isDirty])
 
   const checkInitialized = useCallback(
-    async (path: string) => {
-      if (!path.trim()) {
-        setIsInitialized(null)
-        return
-      }
-      try {
-        const request = create(IsInitializedRequestSchema, {
-          projectPath: path.trim(),
-        })
-        const response = await centyClient.isInitialized(request)
-        setIsInitialized(response.initialized)
-      } catch {
-        setIsInitialized(false)
-      }
-    },
+    (path: string) => checkProjectInitialized(path, setIsInitialized),
     [setIsInitialized]
   )
-
-  const fetchDaemonInfo = useCallback(async () => {
-    try {
-      const request = create(GetDaemonInfoRequestSchema, {})
-      const response = await centyClient.getDaemonInfo(request)
-      setDaemonInfo(response)
-    } catch (err) {
-      console.error('Failed to fetch daemon info:', err)
-    }
-  }, [])
 
   const fetchProjectData = useCallback(async () => {
     if (!projectPath.trim() || isInitialized !== true) return
     setLoading(true)
     setError(null)
     try {
-      const configRequest = create(GetConfigRequestSchema, {
-        projectPath: projectPath.trim(),
-      })
-      const configResponse = await centyClient.getConfig(configRequest)
-      if (configResponse.config) {
-        setConfig(configResponse.config)
-        setOriginalConfig(structuredClone(configResponse.config))
-      } else {
-        setError(configResponse.error || 'Failed to load configuration')
+      const result = await fetchSettingsProjectData(projectPath)
+      if (result.error) {
+        setError(result.error)
+      } else if (result.config) {
+        setConfig(result.config)
+        setOriginalConfig(structuredClone(result.config))
       }
-      const manifestRequest = create(GetManifestRequestSchema, {
-        projectPath: projectPath.trim(),
-      })
-      const manifestResponse = await centyClient.getManifest(manifestRequest)
-      if (manifestResponse.manifest) {
-        setManifest(manifestResponse.manifest)
+      if (result.manifest) {
+        setManifest(result.manifest)
       }
     } catch (err) {
       setError(
@@ -100,8 +64,10 @@ export function useSettingsData() {
   }, [projectPath, isInitialized])
 
   useEffect(() => {
-    fetchDaemonInfo()
-  }, [fetchDaemonInfo])
+    fetchDaemonInfoData().then(info => {
+      if (info) setDaemonInfo(info)
+    })
+  }, [])
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {

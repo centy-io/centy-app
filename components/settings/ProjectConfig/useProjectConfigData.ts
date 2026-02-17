@@ -2,12 +2,11 @@ import { useState, useCallback, useEffect } from 'react'
 import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
 import {
-  GetConfigRequestSchema,
-  GetManifestRequestSchema,
   IsInitializedRequestSchema,
   type Config,
   type Manifest,
 } from '@/gen/centy_pb'
+import { fetchProjectConfig } from './fetchProjectConfig'
 
 export function useProjectConfigData(
   projectPath: string,
@@ -61,22 +60,15 @@ export function useProjectConfigData(
     setLoading(true)
     setError(null)
     try {
-      const configRequest = create(GetConfigRequestSchema, {
-        projectPath: projectPath.trim(),
-      })
-      const configResponse = await centyClient.getConfig(configRequest)
-      if (configResponse.config) {
-        setConfig(configResponse.config)
-        setOriginalConfig(structuredClone(configResponse.config))
-      } else {
-        setError(configResponse.error || 'Failed to load configuration')
+      const result = await fetchProjectConfig(projectPath)
+      if (result.error) {
+        setError(result.error)
+      } else if (result.config) {
+        setConfig(result.config)
+        setOriginalConfig(structuredClone(result.config))
       }
-      const manifestRequest = create(GetManifestRequestSchema, {
-        projectPath: projectPath.trim(),
-      })
-      const manifestResponse = await centyClient.getManifest(manifestRequest)
-      if (manifestResponse.manifest) {
-        setManifest(manifestResponse.manifest)
+      if (result.manifest) {
+        setManifest(result.manifest)
       }
     } catch (err) {
       setError(
