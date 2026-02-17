@@ -14,31 +14,19 @@ import '@/styles/components/MoveModal.css'
 
 interface MoveModalProps {
   entityType: 'issue' | 'doc'
-  entityId: string // UUID for issues, slug for docs
-  entityTitle: string // For display purposes
+  entityId: string
+  entityTitle: string
   currentProjectPath: string
   onClose: () => void
   onMoved: (targetProjectPath: string, newEntityId?: string) => void
 }
 
-export function MoveModal({
-  entityType,
-  entityId,
-  entityTitle,
-  currentProjectPath,
-  onClose,
-  onMoved,
-}: MoveModalProps) {
-  const modalRef = useRef<HTMLDivElement>(null)
-
+function useLoadProjects(currentProjectPath: string) {
   const [projects, setProjects] = useState<ProjectInfo[]>([])
   const [selectedProject, setSelectedProject] = useState<string>('')
-  const [newSlug, setNewSlug] = useState('') // Only for docs
-  const [loading, setLoading] = useState(false)
   const [loadingProjects, setLoadingProjects] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [loadError, setLoadError] = useState<string | null>(null)
 
-  // Load available projects
   useEffect(() => {
     async function loadProjects() {
       try {
@@ -48,7 +36,6 @@ export function MoveModal({
           includeArchived: false,
         })
         const response = await centyClient.listProjects(request)
-        // Filter out current project
         const otherProjects = response.projects.filter(
           p => p.path !== currentProjectPath
         )
@@ -58,7 +45,7 @@ export function MoveModal({
         }
       } catch (err) {
         console.error('Failed to load projects:', err)
-        setError('Failed to load projects')
+        setLoadError('Failed to load projects')
       } finally {
         setLoadingProjects(false)
       }
@@ -67,22 +54,32 @@ export function MoveModal({
     loadProjects()
   }, [currentProjectPath])
 
-  // Close on click outside
+  return {
+    projects,
+    selectedProject,
+    setSelectedProject,
+    loadingProjects,
+    loadError,
+  }
+}
+
+function useClickOutside(
+  ref: React.RefObject<HTMLDivElement | null>,
+  onClose: () => void
+) {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        modalRef.current &&
-        !modalRef.current.contains(event.target as Node)
-      ) {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
         onClose()
       }
     }
 
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [onClose])
+  }, [ref, onClose])
+}
 
-  // Close on escape
+function useEscapeKey(onClose: () => void) {
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -93,6 +90,18 @@ export function MoveModal({
     document.addEventListener('keydown', handleEscape)
     return () => document.removeEventListener('keydown', handleEscape)
   }, [onClose])
+}
+
+function useMove(
+  entityType: 'issue' | 'doc',
+  entityId: string,
+  currentProjectPath: string,
+  selectedProject: string,
+  newSlug: string,
+  onMoved: (targetProjectPath: string, newEntityId?: string) => void
+) {
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleMove = useCallback(async () => {
     if (!selectedProject) return
@@ -146,6 +155,168 @@ export function MoveModal({
     onMoved,
   ])
 
+  return { loading, error, handleMove }
+}
+
+function ProjectSelector({
+  loadingProjects,
+  projects,
+  selectedProject,
+  setSelectedProject,
+}: {
+  loadingProjects: boolean
+  projects: ProjectInfo[]
+  selectedProject: string
+  setSelectedProject: (value: string) => void
+}) {
+  return (
+    <div className="move-modal-field">
+      <label>Target Project</label>
+      {loadingProjects ? (
+        <div className="move-modal-loading">Loading projects...</div>
+      ) : projects.length === 0 ? (
+        <div className="move-modal-empty">No other projects available</div>
+      ) : (
+        <select
+          value={selectedProject}
+          onChange={e => setSelectedProject(e.target.value)}
+          className="move-modal-select"
+        >
+          {projects.map(project => (
+            <option key={project.path} value={project.path}>
+              {project.userTitle || project.projectTitle || project.name} (
+              {project.displayPath})
+            </option>
+          ))}
+        </select>
+      )}
+    </div>
+  )
+}
+
+function DocSlugField({
+  entityId,
+  newSlug,
+  setNewSlug,
+}: {
+  entityId: string
+  newSlug: string
+  setNewSlug: (value: string) => void
+}) {
+  return (
+    <div className="move-modal-field">
+      <label>New Slug (optional - leave empty to keep current)</label>
+      <input
+        type="text"
+        value={newSlug}
+        onChange={e => setNewSlug(e.target.value)}
+        placeholder={entityId}
+        className="move-modal-input"
+      />
+      <span className="move-modal-hint">
+        Change if the slug already exists in the target project
+      </span>
+    </div>
+  )
+}
+
+function MoveModalBody({
+  displayError,
+  entityTitle,
+  entityType,
+  entityId,
+  loadingProjects,
+  projects,
+  selectedProject,
+  setSelectedProject,
+  newSlug,
+  setNewSlug,
+  selectedProjectInfo,
+}: {
+  displayError: string | null
+  entityTitle: string
+  entityType: 'issue' | 'doc'
+  entityId: string
+  loadingProjects: boolean
+  projects: ProjectInfo[]
+  selectedProject: string
+  setSelectedProject: (value: string) => void
+  newSlug: string
+  setNewSlug: (value: string) => void
+  selectedProjectInfo: ProjectInfo | undefined
+}) {
+  return (
+    <div className="move-modal-body">
+      {displayError && (
+        <DaemonErrorMessage error={displayError} className="move-modal-error" />
+      )}
+
+      <div className="move-modal-info">
+        <span className="move-modal-label">Moving:</span>
+        <span className="move-modal-value">{entityTitle}</span>
+      </div>
+
+      <ProjectSelector
+        loadingProjects={loadingProjects}
+        projects={projects}
+        selectedProject={selectedProject}
+        setSelectedProject={setSelectedProject}
+      />
+
+      {entityType === 'doc' && (
+        <DocSlugField
+          entityId={entityId}
+          newSlug={newSlug}
+          setNewSlug={setNewSlug}
+        />
+      )}
+
+      {selectedProjectInfo && (
+        <div className="move-modal-preview">
+          <span className="move-modal-preview-label">
+            This {entityType} will be moved to:
+          </span>
+          <span className="move-modal-preview-value">
+            {selectedProjectInfo.name}
+          </span>
+        </div>
+      )}
+    </div>
+  )
+}
+
+export function MoveModal({
+  entityType,
+  entityId,
+  entityTitle,
+  currentProjectPath,
+  onClose,
+  onMoved,
+}: MoveModalProps) {
+  const modalRef = useRef<HTMLDivElement>(null)
+  const [newSlug, setNewSlug] = useState('')
+
+  const {
+    projects,
+    selectedProject,
+    setSelectedProject,
+    loadingProjects,
+    loadError,
+  } = useLoadProjects(currentProjectPath)
+
+  const { loading, error, handleMove } = useMove(
+    entityType,
+    entityId,
+    currentProjectPath,
+    selectedProject,
+    newSlug,
+    onMoved
+  )
+
+  useClickOutside(modalRef, onClose)
+  useEscapeKey(onClose)
+
+  const displayError = error || loadError
   const selectedProjectInfo = projects.find(p => p.path === selectedProject)
 
   return (
@@ -158,67 +329,19 @@ export function MoveModal({
           </button>
         </div>
 
-        <div className="move-modal-body">
-          {error && (
-            <DaemonErrorMessage error={error} className="move-modal-error" />
-          )}
-
-          <div className="move-modal-info">
-            <span className="move-modal-label">Moving:</span>
-            <span className="move-modal-value">{entityTitle}</span>
-          </div>
-
-          <div className="move-modal-field">
-            <label>Target Project</label>
-            {loadingProjects ? (
-              <div className="move-modal-loading">Loading projects...</div>
-            ) : projects.length === 0 ? (
-              <div className="move-modal-empty">
-                No other projects available
-              </div>
-            ) : (
-              <select
-                value={selectedProject}
-                onChange={e => setSelectedProject(e.target.value)}
-                className="move-modal-select"
-              >
-                {projects.map(project => (
-                  <option key={project.path} value={project.path}>
-                    {project.userTitle || project.projectTitle || project.name}{' '}
-                    ({project.displayPath})
-                  </option>
-                ))}
-              </select>
-            )}
-          </div>
-
-          {entityType === 'doc' && (
-            <div className="move-modal-field">
-              <label>New Slug (optional - leave empty to keep current)</label>
-              <input
-                type="text"
-                value={newSlug}
-                onChange={e => setNewSlug(e.target.value)}
-                placeholder={entityId}
-                className="move-modal-input"
-              />
-              <span className="move-modal-hint">
-                Change if the slug already exists in the target project
-              </span>
-            </div>
-          )}
-
-          {selectedProjectInfo && (
-            <div className="move-modal-preview">
-              <span className="move-modal-preview-label">
-                This {entityType} will be moved to:
-              </span>
-              <span className="move-modal-preview-value">
-                {selectedProjectInfo.name}
-              </span>
-            </div>
-          )}
-        </div>
+        <MoveModalBody
+          displayError={displayError}
+          entityTitle={entityTitle}
+          entityType={entityType}
+          entityId={entityId}
+          loadingProjects={loadingProjects}
+          projects={projects}
+          selectedProject={selectedProject}
+          setSelectedProject={setSelectedProject}
+          newSlug={newSlug}
+          setNewSlug={setNewSlug}
+          selectedProjectInfo={selectedProjectInfo}
+        />
 
         <div className="move-modal-footer">
           <button className="move-modal-cancel" onClick={onClose}>

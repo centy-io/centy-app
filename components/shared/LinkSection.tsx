@@ -34,20 +34,9 @@ const protoToTargetType: Record<LinkTargetType, string> = {
   [LinkTargetType.DOC]: 'doc',
 }
 
-export function LinkSection({
-  entityId,
-  entityType,
-  editable = true,
-}: LinkSectionProps) {
-  const { projectPath } = useProject()
+function useLinkRouteBuilder() {
   const params = useParams()
-  const [links, setLinks] = useState<LinkType[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [showAddModal, setShowAddModal] = useState(false)
-  const [deletingLinkId, setDeletingLinkId] = useState<string | null>(null)
 
-  // Get project context for building routes
   const projectContext = useMemo(() => {
     const org = params ? (params.organization as string | undefined) : undefined
     const project = params ? (params.project as string | undefined) : undefined
@@ -55,7 +44,6 @@ export function LinkSection({
     return null
   }, [params])
 
-  // Helper to build route for linked item
   const buildLinkRoute = useCallback(
     (targetType: LinkTargetType, targetId: string): RouteLiteral | '/' => {
       if (!projectContext) return '/'
@@ -77,6 +65,18 @@ export function LinkSection({
     },
     [projectContext]
   )
+
+  return buildLinkRoute
+}
+
+function useFetchLinks(
+  projectPath: string | undefined,
+  entityId: string,
+  entityType: 'issue' | 'doc'
+) {
+  const [links, setLinks] = useState<LinkType[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   const fetchLinks = useCallback(async () => {
     if (!projectPath || !entityId) return
@@ -103,6 +103,18 @@ export function LinkSection({
     fetchLinks()
   }, [fetchLinks])
 
+  return { links, setLinks, loading, error, setError, fetchLinks }
+}
+
+function useDeleteLink(
+  projectPath: string | undefined,
+  entityId: string,
+  entityType: 'issue' | 'doc',
+  setError: (error: string | null) => void,
+  setLinks: React.Dispatch<React.SetStateAction<LinkType[]>>
+) {
+  const [deletingLinkId, setDeletingLinkId] = useState<string | null>(null)
+
   const handleDeleteLink = useCallback(
     async (link: LinkType) => {
       if (!projectPath || !entityId) return
@@ -123,7 +135,6 @@ export function LinkSection({
         const response = await centyClient.deleteLink(request)
 
         if (response.success) {
-          // Remove the deleted link from state
           setLinks(prev =>
             prev.filter(
               l =>
@@ -139,16 +150,118 @@ export function LinkSection({
         setDeletingLinkId(null)
       }
     },
-    [projectPath, entityId, entityType]
+    [projectPath, entityId, entityType, setError, setLinks]
   )
 
-  const handleLinkCreated = useCallback(() => {
-    fetchLinks()
-    setShowAddModal(false)
-  }, [fetchLinks])
+  return { deletingLinkId, handleDeleteLink }
+}
 
-  // Group links by type
-  const groupedLinks = links.reduce<Record<string, LinkType[]>>((acc, link) => {
+function getLinkTypeDisplay(linkType: string) {
+  return linkType
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
+}
+
+function getTargetTypeIcon(targetType: LinkTargetType) {
+  switch (targetType) {
+    case LinkTargetType.ISSUE:
+      return '!'
+    case LinkTargetType.DOC:
+      return 'D'
+    default:
+      return '?'
+  }
+}
+
+function LinkItem({
+  link,
+  editable,
+  deletingLinkId,
+  buildLinkRoute,
+  onDelete,
+}: {
+  link: LinkType
+  editable: boolean
+  deletingLinkId: string | null
+  buildLinkRoute: (
+    targetType: LinkTargetType,
+    targetId: string
+  ) => RouteLiteral | '/'
+  onDelete: (link: LinkType) => void
+}) {
+  const targetTypeName = protoToTargetType[link.targetType]
+  const linkKey = `${link.targetId}-${link.linkType}`
+  const isDeleting = deletingLinkId === linkKey
+
+  return (
+    <li key={linkKey} className="link-item">
+      <Link
+        href={buildLinkRoute(link.targetType, link.targetId)}
+        className="link-item-link"
+      >
+        <span className={`link-type-icon link-type-${targetTypeName}`}>
+          {getTargetTypeIcon(link.targetType)}
+        </span>
+        <span className="link-target-id">{link.targetId.slice(0, 8)}...</span>
+      </Link>
+      {editable && (
+        <button
+          className="link-delete-btn"
+          onClick={() => onDelete(link)}
+          disabled={isDeleting}
+          title="Remove link"
+        >
+          {isDeleting ? '...' : 'x'}
+        </button>
+      )}
+    </li>
+  )
+}
+
+function LinkGroups({
+  groupedLinks,
+  editable,
+  deletingLinkId,
+  buildLinkRoute,
+  onDeleteLink,
+}: {
+  groupedLinks: Record<string, LinkType[]>
+  editable: boolean
+  deletingLinkId: string | null
+  buildLinkRoute: (
+    targetType: LinkTargetType,
+    targetId: string
+  ) => RouteLiteral | '/'
+  onDeleteLink: (link: LinkType) => void
+}) {
+  return (
+    <div className="link-groups">
+      {Object.entries(groupedLinks).map(([linkType, typeLinks]) => (
+        <div key={linkType} className="link-group">
+          <div className="link-group-header">
+            {getLinkTypeDisplay(linkType)}
+          </div>
+          <ul className="link-list">
+            {typeLinks.map(link => (
+              <LinkItem
+                key={`${link.targetId}-${link.linkType}`}
+                link={link}
+                editable={editable}
+                deletingLinkId={deletingLinkId}
+                buildLinkRoute={buildLinkRoute}
+                onDelete={onDeleteLink}
+              />
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function groupLinksByType(links: LinkType[]): Record<string, LinkType[]> {
+  return links.reduce<Record<string, LinkType[]>>((acc, link) => {
     const type = link.linkType || 'related'
     if (!acc[type]) {
       acc[type] = []
@@ -156,24 +269,34 @@ export function LinkSection({
     acc[type].push(link)
     return acc
   }, {})
+}
 
-  const getLinkTypeDisplay = (linkType: string) => {
-    return linkType
-      .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ')
-  }
+export function LinkSection({
+  entityId,
+  entityType,
+  editable = true,
+}: LinkSectionProps) {
+  const { projectPath } = useProject()
+  const [showAddModal, setShowAddModal] = useState(false)
 
-  const getTargetTypeIcon = (targetType: LinkTargetType) => {
-    switch (targetType) {
-      case LinkTargetType.ISSUE:
-        return '!'
-      case LinkTargetType.DOC:
-        return 'D'
-      default:
-        return '?'
-    }
-  }
+  const buildLinkRoute = useLinkRouteBuilder()
+  const { links, setLinks, loading, error, setError, fetchLinks } =
+    useFetchLinks(projectPath, entityId, entityType)
+
+  const { deletingLinkId, handleDeleteLink } = useDeleteLink(
+    projectPath,
+    entityId,
+    entityType,
+    setError,
+    setLinks
+  )
+
+  const handleLinkCreated = useCallback(() => {
+    fetchLinks()
+    setShowAddModal(false)
+  }, [fetchLinks])
+
+  const groupedLinks = groupLinksByType(links)
 
   if (loading) {
     return (
@@ -206,50 +329,13 @@ export function LinkSection({
       {links.length === 0 ? (
         <p className="link-section-empty">No linked items</p>
       ) : (
-        <div className="link-groups">
-          {Object.entries(groupedLinks).map(([linkType, typeLinks]) => (
-            <div key={linkType} className="link-group">
-              <div className="link-group-header">
-                {getLinkTypeDisplay(linkType)}
-              </div>
-              <ul className="link-list">
-                {typeLinks.map(link => {
-                  const targetTypeName = protoToTargetType[link.targetType]
-                  const linkKey = `${link.targetId}-${link.linkType}`
-                  const isDeleting = deletingLinkId === linkKey
-
-                  return (
-                    <li key={linkKey} className="link-item">
-                      <Link
-                        href={buildLinkRoute(link.targetType, link.targetId)}
-                        className="link-item-link"
-                      >
-                        <span
-                          className={`link-type-icon link-type-${targetTypeName}`}
-                        >
-                          {getTargetTypeIcon(link.targetType)}
-                        </span>
-                        <span className="link-target-id">
-                          {link.targetId.slice(0, 8)}...
-                        </span>
-                      </Link>
-                      {editable && (
-                        <button
-                          className="link-delete-btn"
-                          onClick={() => handleDeleteLink(link)}
-                          disabled={isDeleting}
-                          title="Remove link"
-                        >
-                          {isDeleting ? '...' : 'x'}
-                        </button>
-                      )}
-                    </li>
-                  )
-                })}
-              </ul>
-            </div>
-          ))}
-        </div>
+        <LinkGroups
+          groupedLinks={groupedLinks}
+          editable={editable}
+          deletingLinkId={deletingLinkId}
+          buildLinkRoute={buildLinkRoute}
+          onDeleteLink={handleDeleteLink}
+        />
       )}
 
       {showAddModal && (

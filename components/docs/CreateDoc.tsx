@@ -15,19 +15,14 @@ import { useProjectPathToUrl } from '@/components/providers/PathContextProvider'
 import { TextEditor } from '@/components/shared/TextEditor'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
-export function CreateDoc() {
-  const router = useRouter()
-  const params = useParams()
-  const { projectPath, isInitialized, setIsInitialized } = useProject()
-  const projectPathToUrl = useProjectPathToUrl()
-  const [title, setTitle] = useState('')
-  const [content, setContent] = useState('')
-  const [slug, setSlug] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+type ProjectContext = { organization: string; project: string } | null
 
-  // Get the project context from params or resolve from projectPath
-  const getProjectContext = useCallback(async () => {
+function useProjectContext() {
+  const params = useParams()
+  const { projectPath } = useProject()
+  const projectPathToUrl = useProjectPathToUrl()
+
+  return useCallback(async (): Promise<ProjectContext> => {
     const org = params ? (params.organization as string | undefined) : undefined
     const project = params ? (params.project as string | undefined) : undefined
 
@@ -35,7 +30,6 @@ export function CreateDoc() {
       return { organization: org, project }
     }
 
-    // Fall back to resolving from projectPath
     if (projectPath) {
       const result = await projectPathToUrl(projectPath)
       if (result) {
@@ -45,8 +39,12 @@ export function CreateDoc() {
 
     return null
   }, [params, projectPath, projectPathToUrl])
+}
 
-  const checkInitialized = useCallback(
+function useCheckInitialized() {
+  const { setIsInitialized } = useProject()
+
+  return useCallback(
     async (path: string) => {
       if (!path.trim()) {
         setIsInitialized(null)
@@ -65,12 +63,18 @@ export function CreateDoc() {
     },
     [setIsInitialized]
   )
+}
 
-  useEffect(() => {
-    if (projectPath && isInitialized === null) {
-      checkInitialized(projectPath)
-    }
-  }, [projectPath, isInitialized, checkInitialized])
+function useCreateDocSubmit(
+  projectPath: string,
+  title: string,
+  content: string,
+  slug: string,
+  getProjectContext: () => Promise<ProjectContext>
+) {
+  const router = useRouter()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -91,7 +95,6 @@ export function CreateDoc() {
         const response = await centyClient.createDoc(request)
 
         if (response.success) {
-          // Navigate to the project-scoped doc detail page
           const ctx = await getProjectContext()
           if (ctx) {
             router.push(
@@ -105,7 +108,6 @@ export function CreateDoc() {
               })
             )
           } else {
-            // Fallback to home if we can't determine project base
             router.push('/')
           }
         } else {
@@ -122,94 +124,153 @@ export function CreateDoc() {
     [projectPath, title, content, slug, router, getProjectContext]
   )
 
-  if (!projectPath) {
-    return (
-      <div className="create-doc">
-        <h2>Create New Document</h2>
-        <div className="no-project-message">
-          <p>Select a project from the header to create a document</p>
-        </div>
-      </div>
-    )
-  }
+  return { loading, error, handleSubmit }
+}
 
-  if (isInitialized === false) {
-    return (
-      <div className="create-doc">
-        <h2>Create New Document</h2>
-        <div className="not-initialized-message">
-          <p>Centy is not initialized in this directory</p>
-          <Link href="/">Initialize Project</Link>
-        </div>
+function NoProjectMessage() {
+  return (
+    <div className="create-doc">
+      <h2>Create New Document</h2>
+      <div className="no-project-message">
+        <p>Select a project from the header to create a document</p>
       </div>
-    )
-  }
+    </div>
+  )
+}
+
+function NotInitializedMessage() {
+  return (
+    <div className="create-doc">
+      <h2>Create New Document</h2>
+      <div className="not-initialized-message">
+        <p>Centy is not initialized in this directory</p>
+        <Link href="/">Initialize Project</Link>
+      </div>
+    </div>
+  )
+}
+
+function useCancelNavigation(getProjectContext: () => Promise<ProjectContext>) {
+  const router = useRouter()
+
+  return useCallback(async () => {
+    const ctx = await getProjectContext()
+    if (ctx) {
+      router.push(
+        route({
+          pathname: '/[organization]/[project]/docs',
+          query: {
+            organization: ctx.organization,
+            project: ctx.project,
+          },
+        })
+      )
+    } else {
+      router.push('/')
+    }
+  }, [getProjectContext, router])
+}
+
+function CreateDocFormFields({
+  title,
+  setTitle,
+  slug,
+  setSlug,
+  content,
+  setContent,
+}: {
+  title: string
+  setTitle: (v: string) => void
+  slug: string
+  setSlug: (v: string) => void
+  content: string
+  setContent: (v: string) => void
+}) {
+  return (
+    <>
+      <div className="form-group">
+        <label htmlFor="title">Title:</label>
+        <input
+          id="title"
+          type="text"
+          value={title}
+          onChange={e => setTitle(e.target.value)}
+          placeholder="Document title"
+          required
+        />
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="slug">
+          Slug (optional, auto-generated from title):
+        </label>
+        <input
+          id="slug"
+          type="text"
+          value={slug}
+          onChange={e => setSlug(e.target.value)}
+          placeholder="e.g., getting-started"
+        />
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="content">Content (Markdown):</label>
+        <TextEditor
+          value={content}
+          onChange={setContent}
+          format="md"
+          mode="edit"
+          placeholder="Write your documentation in Markdown..."
+          minHeight={300}
+        />
+      </div>
+    </>
+  )
+}
+
+function CreateDocForm({
+  title,
+  setTitle,
+  slug,
+  setSlug,
+  content,
+  setContent,
+  error,
+  loading,
+  handleSubmit,
+  getProjectContext,
+}: {
+  title: string
+  setTitle: (v: string) => void
+  slug: string
+  setSlug: (v: string) => void
+  content: string
+  setContent: (v: string) => void
+  error: string | null
+  loading: boolean
+  handleSubmit: (e: React.FormEvent) => void
+  getProjectContext: () => Promise<ProjectContext>
+}) {
+  const handleCancel = useCancelNavigation(getProjectContext)
 
   return (
     <div className="create-doc">
       <h2>Create New Document</h2>
 
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="title">Title:</label>
-          <input
-            id="title"
-            type="text"
-            value={title}
-            onChange={e => setTitle(e.target.value)}
-            placeholder="Document title"
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="slug">
-            Slug (optional, auto-generated from title):
-          </label>
-          <input
-            id="slug"
-            type="text"
-            value={slug}
-            onChange={e => setSlug(e.target.value)}
-            placeholder="e.g., getting-started"
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="content">Content (Markdown):</label>
-          <TextEditor
-            value={content}
-            onChange={setContent}
-            format="md"
-            mode="edit"
-            placeholder="Write your documentation in Markdown..."
-            minHeight={300}
-          />
-        </div>
+        <CreateDocFormFields
+          title={title}
+          setTitle={setTitle}
+          slug={slug}
+          setSlug={setSlug}
+          content={content}
+          setContent={setContent}
+        />
 
         {error && <DaemonErrorMessage error={error} />}
 
         <div className="actions">
-          <button
-            type="button"
-            onClick={async () => {
-              const ctx = await getProjectContext()
-              if (ctx) {
-                router.push(
-                  route({
-                    pathname: '/[organization]/[project]/docs',
-                    query: {
-                      organization: ctx.organization,
-                      project: ctx.project,
-                    },
-                  })
-                )
-              } else {
-                router.push('/')
-              }
-            }}
-            className="secondary"
-          >
+          <button type="button" onClick={handleCancel} className="secondary">
             Cancel
           </button>
           <button
@@ -222,5 +283,52 @@ export function CreateDoc() {
         </div>
       </form>
     </div>
+  )
+}
+
+export function CreateDoc() {
+  const { projectPath, isInitialized } = useProject()
+  const [title, setTitle] = useState('')
+  const [content, setContent] = useState('')
+  const [slug, setSlug] = useState('')
+
+  const getProjectContext = useProjectContext()
+  const checkInitialized = useCheckInitialized()
+
+  useEffect(() => {
+    if (projectPath && isInitialized === null) {
+      checkInitialized(projectPath)
+    }
+  }, [projectPath, isInitialized, checkInitialized])
+
+  const { loading, error, handleSubmit } = useCreateDocSubmit(
+    projectPath,
+    title,
+    content,
+    slug,
+    getProjectContext
+  )
+
+  if (!projectPath) {
+    return <NoProjectMessage />
+  }
+
+  if (isInitialized === false) {
+    return <NotInitializedMessage />
+  }
+
+  return (
+    <CreateDocForm
+      title={title}
+      setTitle={setTitle}
+      slug={slug}
+      setSlug={setSlug}
+      content={content}
+      setContent={setContent}
+      error={error}
+      loading={loading}
+      handleSubmit={handleSubmit}
+      getProjectContext={getProjectContext}
+    />
   )
 }

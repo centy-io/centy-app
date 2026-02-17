@@ -38,9 +38,183 @@ interface IssueHandlerOptions {
   onDeleteIssue?: (issueId: string) => boolean
 }
 
-/**
- * Adds issue-related handlers to the GrpcMocker.
- */
+function makeListIssuesHandler(issues: Issue[]) {
+  return (request: ListIssuesRequest): ListIssuesResponse => {
+    let filteredIssues = issues
+
+    if (request.status) {
+      filteredIssues = filteredIssues.filter(
+        i => i.metadata && i.metadata.status === request.status
+      )
+    }
+
+    if (request.priority !== undefined && request.priority > 0) {
+      filteredIssues = filteredIssues.filter(
+        i => i.metadata && i.metadata.priority === request.priority
+      )
+    }
+
+    return {
+      issues: filteredIssues,
+      totalCount: filteredIssues.length,
+      success: true,
+      error: '',
+      $typeName: 'centy.v1.ListIssuesResponse',
+    }
+  }
+}
+
+function makeGetIssueHandler(issues: Issue[]) {
+  return (request: GetIssueRequest): GetIssueResponse => {
+    const issue = issues.find(i => i.id === request.issueId)
+    if (!issue) {
+      return {
+        success: false,
+        error: `Issue not found: ${request.issueId}`,
+        $typeName: 'centy.v1.GetIssueResponse',
+      }
+    }
+    return {
+      success: true,
+      error: '',
+      issue,
+      $typeName: 'centy.v1.GetIssueResponse',
+    }
+  }
+}
+
+function makeGetIssueByDisplayNumberHandler(issues: Issue[]) {
+  return (request: GetIssueByDisplayNumberRequest): GetIssueResponse => {
+    const issue = issues.find(i => i.displayNumber === request.displayNumber)
+    if (!issue) {
+      return {
+        success: false,
+        error: `Issue not found: #${request.displayNumber}`,
+        $typeName: 'centy.v1.GetIssueResponse',
+      }
+    }
+    return {
+      success: true,
+      error: '',
+      issue,
+      $typeName: 'centy.v1.GetIssueResponse',
+    }
+  }
+}
+
+function makeCreateIssueHandler(
+  issues: Issue[],
+  options: IssueHandlerOptions,
+  getNextDisplayNumber: () => number,
+  incrementDisplayNumber: () => void
+) {
+  return (request: CreateIssueRequest): CreateIssueResponse => {
+    const newIssue = options.onCreateIssue
+      ? options.onCreateIssue(request)
+      : createMockIssue({
+          displayNumber: getNextDisplayNumber(),
+          title: request.title,
+          description: request.description,
+        })
+
+    issues.push(newIssue)
+    incrementDisplayNumber()
+
+    return {
+      success: true,
+      error: '',
+      id: newIssue.id,
+      displayNumber: newIssue.displayNumber,
+      issueNumber: newIssue.issueNumber,
+      createdFiles: [],
+      manifest: mockManifest,
+      orgDisplayNumber: 0,
+      syncResults: [],
+      $typeName: 'centy.v1.CreateIssueResponse',
+    }
+  }
+}
+
+function makeUpdateIssueHandler(issues: Issue[], options: IssueHandlerOptions) {
+  return (request: UpdateIssueRequest): UpdateIssueResponse => {
+    const index = issues.findIndex(i => i.id === request.issueId)
+    if (index === -1) {
+      return {
+        success: false,
+        error: `Issue not found: ${request.issueId}`,
+        issue: undefined,
+        manifest: mockManifest,
+        syncResults: [],
+        $typeName: 'centy.v1.UpdateIssueResponse',
+      }
+    }
+
+    const existing = issues[index]
+    const updatedIssue = options.onUpdateIssue
+      ? options.onUpdateIssue(request, existing)
+      : {
+          ...existing,
+          title: request.title || existing.title,
+          description: request.description || existing.description,
+          metadata: {
+            ...existing.metadata!,
+            status:
+              request.status ||
+              (existing.metadata && existing.metadata.status) ||
+              'open',
+            priority:
+              request.priority !== undefined
+                ? request.priority
+                : ((existing.metadata && existing.metadata.priority) ?? 2),
+            updatedAt: new Date().toISOString(),
+          },
+        }
+
+    issues[index] = updatedIssue
+
+    return {
+      success: true,
+      error: '',
+      issue: updatedIssue,
+      manifest: mockManifest,
+      syncResults: [],
+      $typeName: 'centy.v1.UpdateIssueResponse',
+    }
+  }
+}
+
+function makeDeleteIssueHandler(issues: Issue[], options: IssueHandlerOptions) {
+  return (request: { issueId: string }): DeleteIssueResponse => {
+    const index = issues.findIndex(i => i.id === request.issueId)
+    if (index === -1) {
+      return {
+        success: false,
+        error: `Issue not found: ${request.issueId}`,
+        manifest: mockManifest,
+        $typeName: 'centy.v1.DeleteIssueResponse',
+      }
+    }
+
+    if (options.onDeleteIssue && !options.onDeleteIssue(request.issueId)) {
+      return {
+        success: false,
+        error: 'Delete cancelled',
+        manifest: mockManifest,
+        $typeName: 'centy.v1.DeleteIssueResponse',
+      }
+    }
+
+    issues.splice(index, 1)
+
+    return {
+      success: true,
+      error: '',
+      manifest: mockManifest,
+      $typeName: 'centy.v1.DeleteIssueResponse',
+    }
+  }
+}
+
 export function addIssueHandlers(
   mocker: GrpcMocker,
   options: IssueHandlerOptions = {}
@@ -48,85 +222,25 @@ export function addIssueHandlers(
   const issues = options.issues ?? [...mockIssues]
   let nextDisplayNumber = issues.length + 1
 
-  // ListIssues
   mocker.addHandler(
     'ListIssues',
     ListIssuesRequestSchema,
     ListIssuesResponseSchema,
-    (request: ListIssuesRequest): ListIssuesResponse => {
-      let filteredIssues = issues
-
-      // Filter by status if provided
-      if (request.status) {
-        filteredIssues = filteredIssues.filter(
-          i => i.metadata && i.metadata.status === request.status
-        )
-      }
-
-      // Filter by priority if provided
-      if (request.priority !== undefined && request.priority > 0) {
-        filteredIssues = filteredIssues.filter(
-          i => i.metadata && i.metadata.priority === request.priority
-        )
-      }
-
-      return {
-        issues: filteredIssues,
-        totalCount: filteredIssues.length,
-        success: true,
-        error: '',
-        $typeName: 'centy.v1.ListIssuesResponse',
-      }
-    }
+    makeListIssuesHandler(issues)
   )
-
-  // GetIssue
   mocker.addHandler(
     'GetIssue',
     GetIssueRequestSchema,
     GetIssueResponseSchema,
-    (request: GetIssueRequest): GetIssueResponse => {
-      const issue = issues.find(i => i.id === request.issueId)
-      if (!issue) {
-        return {
-          success: false,
-          error: `Issue not found: ${request.issueId}`,
-          $typeName: 'centy.v1.GetIssueResponse',
-        }
-      }
-      return {
-        success: true,
-        error: '',
-        issue,
-        $typeName: 'centy.v1.GetIssueResponse',
-      }
-    }
+    makeGetIssueHandler(issues)
   )
-
-  // GetIssueByDisplayNumber
   mocker.addHandler(
     'GetIssueByDisplayNumber',
     GetIssueByDisplayNumberRequestSchema,
     GetIssueResponseSchema,
-    (request: GetIssueByDisplayNumberRequest): GetIssueResponse => {
-      const issue = issues.find(i => i.displayNumber === request.displayNumber)
-      if (!issue) {
-        return {
-          success: false,
-          error: `Issue not found: #${request.displayNumber}`,
-          $typeName: 'centy.v1.GetIssueResponse',
-        }
-      }
-      return {
-        success: true,
-        error: '',
-        issue,
-        $typeName: 'centy.v1.GetIssueResponse',
-      }
-    }
+    makeGetIssueByDisplayNumberHandler(issues)
   )
 
-  // GetNextIssueNumber
   mocker.addHandler(
     'GetNextIssueNumber',
     GetNextIssueNumberRequestSchema,
@@ -139,124 +253,31 @@ export function addIssueHandlers(
     })
   )
 
-  // CreateIssue
   mocker.addHandler(
     'CreateIssue',
     CreateIssueRequestSchema,
     CreateIssueResponseSchema,
-    (request: CreateIssueRequest): CreateIssueResponse => {
-      const newIssue = options.onCreateIssue
-        ? options.onCreateIssue(request)
-        : createMockIssue({
-            displayNumber: nextDisplayNumber,
-            title: request.title,
-            description: request.description,
-          })
-
-      issues.push(newIssue)
-      nextDisplayNumber++
-
-      return {
-        success: true,
-        error: '',
-        id: newIssue.id,
-        displayNumber: newIssue.displayNumber,
-        issueNumber: newIssue.issueNumber,
-        createdFiles: [],
-        manifest: mockManifest,
-        orgDisplayNumber: 0,
-        syncResults: [],
-        $typeName: 'centy.v1.CreateIssueResponse',
+    makeCreateIssueHandler(
+      issues,
+      options,
+      () => nextDisplayNumber,
+      () => {
+        nextDisplayNumber++
       }
-    }
+    )
   )
 
-  // UpdateIssue
   mocker.addHandler(
     'UpdateIssue',
     UpdateIssueRequestSchema,
     UpdateIssueResponseSchema,
-    (request: UpdateIssueRequest): UpdateIssueResponse => {
-      const index = issues.findIndex(i => i.id === request.issueId)
-      if (index === -1) {
-        return {
-          success: false,
-          error: `Issue not found: ${request.issueId}`,
-          issue: undefined,
-          manifest: mockManifest,
-          syncResults: [],
-          $typeName: 'centy.v1.UpdateIssueResponse',
-        }
-      }
-
-      const existing = issues[index]
-      const updatedIssue = options.onUpdateIssue
-        ? options.onUpdateIssue(request, existing)
-        : {
-            ...existing,
-            title: request.title || existing.title,
-            description: request.description || existing.description,
-            metadata: {
-              ...existing.metadata!,
-              status:
-                request.status ||
-                (existing.metadata && existing.metadata.status) ||
-                'open',
-              priority:
-                request.priority !== undefined
-                  ? request.priority
-                  : ((existing.metadata && existing.metadata.priority) ?? 2),
-              updatedAt: new Date().toISOString(),
-            },
-          }
-
-      issues[index] = updatedIssue
-
-      return {
-        success: true,
-        error: '',
-        issue: updatedIssue,
-        manifest: mockManifest,
-        syncResults: [],
-        $typeName: 'centy.v1.UpdateIssueResponse',
-      }
-    }
+    makeUpdateIssueHandler(issues, options)
   )
-
-  // DeleteIssue
   mocker.addHandler(
     'DeleteIssue',
     DeleteIssueRequestSchema,
     DeleteIssueResponseSchema,
-    (request: { issueId: string }): DeleteIssueResponse => {
-      const index = issues.findIndex(i => i.id === request.issueId)
-      if (index === -1) {
-        return {
-          success: false,
-          error: `Issue not found: ${request.issueId}`,
-          manifest: mockManifest,
-          $typeName: 'centy.v1.DeleteIssueResponse',
-        }
-      }
-
-      if (options.onDeleteIssue && !options.onDeleteIssue(request.issueId)) {
-        return {
-          success: false,
-          error: 'Delete cancelled',
-          manifest: mockManifest,
-          $typeName: 'centy.v1.DeleteIssueResponse',
-        }
-      }
-
-      issues.splice(index, 1)
-
-      return {
-        success: true,
-        error: '',
-        manifest: mockManifest,
-        $typeName: 'centy.v1.DeleteIssueResponse',
-      }
-    }
+    makeDeleteIssueHandler(issues, options)
   )
 
   return mocker

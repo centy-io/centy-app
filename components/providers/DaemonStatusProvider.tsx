@@ -59,15 +59,31 @@ function createDemoEditors(): EditorInfo[] {
   ]
 }
 
-export function DaemonStatusProvider({ children }: { children: ReactNode }) {
-  // Always start with 'checking' to avoid hydration mismatch
-  // (sessionStorage is not available during SSR)
-  const [status, setStatus] = useState<DaemonStatus>('checking')
-  const [lastChecked, setLastChecked] = useState<Date | null>(null)
-  const [hasMounted, setHasMounted] = useState(false)
-  const [vscodeAvailable, setVscodeAvailable] = useState<boolean | null>(null)
-  const [editors, setEditors] = useState<EditorInfo[]>([])
+// Helper to get the test override for vscode availability
+function getTestVscodeOverride(): boolean {
+  const testOverride = (
+    window as Window & { __TEST_VSCODE_AVAILABLE__?: boolean }
+  ).__TEST_VSCODE_AVAILABLE__
+  return testOverride ?? true
+}
 
+// Apply demo mode state to setters
+function applyDemoState(
+  setStatus: (s: DaemonStatus) => void,
+  setVscodeAvailable: (v: boolean | null) => void,
+  setEditors: (e: EditorInfo[]) => void
+) {
+  setStatus('demo')
+  setVscodeAvailable(getTestVscodeOverride())
+  setEditors(createDemoEditors())
+}
+
+function useDemoModeInit(
+  setStatus: (s: DaemonStatus) => void,
+  setVscodeAvailable: (v: boolean | null) => void,
+  setEditors: (e: EditorInfo[]) => void,
+  setHasMounted: (v: boolean) => void
+) {
   // Check for demo mode after mount to avoid hydration mismatch
   // Also check for ?demo=true URL param to auto-enable demo mode
   useEffect(() => {
@@ -77,40 +93,29 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
       const urlParams = new URLSearchParams(window.location.search)
       if (urlParams.get('demo') === 'true' && !isDemoMode()) {
         enableDemoMode()
-        setStatus('demo')
-        // Set vscodeAvailable for demo mode (check for test override)
-        const testOverride = (
-          window as Window & { __TEST_VSCODE_AVAILABLE__?: boolean }
-        ).__TEST_VSCODE_AVAILABLE__
-        setVscodeAvailable(testOverride ?? true)
-        setEditors(createDemoEditors())
+        applyDemoState(setStatus, setVscodeAvailable, setEditors)
         // Clean up URL by removing demo param and adding org/project (preserve current path)
         const newUrl = `${window.location.pathname}?org=${DEMO_ORG_SLUG}&project=${encodeURIComponent(DEMO_PROJECT_PATH)}`
         window.history.replaceState({}, '', newUrl)
       } else if (isDemoMode()) {
-        setStatus('demo')
-        // Set vscodeAvailable for demo mode (check for test override)
-        const testOverride = (
-          window as Window & { __TEST_VSCODE_AVAILABLE__?: boolean }
-        ).__TEST_VSCODE_AVAILABLE__
-        setVscodeAvailable(testOverride ?? true)
-        setEditors(createDemoEditors())
+        applyDemoState(setStatus, setVscodeAvailable, setEditors)
       }
       setHasMounted(true)
     }, 0)
     return () => clearTimeout(timeoutId)
-  }, [])
+  }, [setStatus, setVscodeAvailable, setEditors, setHasMounted])
+}
 
-  const checkDaemonStatus = useCallback(async () => {
+function useCheckDaemonStatus(
+  setStatus: (s: DaemonStatus) => void,
+  setLastChecked: (d: Date) => void,
+  setVscodeAvailable: (v: boolean | null) => void,
+  setEditors: (e: EditorInfo[]) => void
+) {
+  return useCallback(async () => {
     // Skip health checks when in demo mode
     if (isDemoMode()) {
-      setStatus('demo')
-      // Check for test override first, then default to true for demo mode
-      const testOverride = (
-        window as Window & { __TEST_VSCODE_AVAILABLE__?: boolean }
-      ).__TEST_VSCODE_AVAILABLE__
-      setVscodeAvailable(testOverride ?? true)
-      setEditors(createDemoEditors())
+      applyDemoState(setStatus, setVscodeAvailable, setEditors)
       return
     }
 
@@ -128,26 +133,7 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
         setEditors(editorsResponse.editors)
       } catch {
         // Fallback: create basic editor list based on vscodeAvailable
-        setEditors([
-          {
-            $typeName: 'centy.v1.EditorInfo',
-            editorType: EditorType.VSCODE,
-            name: 'VS Code',
-            description: 'Open in temporary VS Code workspace with AI agent',
-            available: daemonInfo.vscodeAvailable,
-            editorId: 'vscode',
-            terminalWrapper: false,
-          },
-          {
-            $typeName: 'centy.v1.EditorInfo',
-            editorType: EditorType.TERMINAL,
-            name: 'Terminal',
-            description: 'Open in terminal with AI agent',
-            available: true, // Terminal is always available
-            editorId: 'terminal',
-            terminalWrapper: true,
-          },
-        ])
+        setEditors(createFallbackEditors(daemonInfo.vscodeAvailable))
       }
     } catch {
       setStatus('disconnected')
@@ -156,26 +142,36 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
       trackDaemonConnection(false, false)
     }
     setLastChecked(new Date())
-  }, [])
+  }, [setStatus, setLastChecked, setVscodeAvailable, setEditors])
+}
 
-  const enterDemoMode = useCallback(() => {
-    enableDemoMode()
-    setStatus('demo')
-    trackDaemonConnection(true, true)
-    // Navigate to demo org and project
-    window.location.href = `/?org=${DEMO_ORG_SLUG}&project=${encodeURIComponent(DEMO_PROJECT_PATH)}`
-  }, [])
+function createFallbackEditors(vscodeAvailable: boolean): EditorInfo[] {
+  return [
+    {
+      $typeName: 'centy.v1.EditorInfo',
+      editorType: EditorType.VSCODE,
+      name: 'VS Code',
+      description: 'Open in temporary VS Code workspace with AI agent',
+      available: vscodeAvailable,
+      editorId: 'vscode',
+      terminalWrapper: false,
+    },
+    {
+      $typeName: 'centy.v1.EditorInfo',
+      editorType: EditorType.TERMINAL,
+      name: 'Terminal',
+      description: 'Open in terminal with AI agent',
+      available: true, // Terminal is always available
+      editorId: 'terminal',
+      terminalWrapper: true,
+    },
+  ]
+}
 
-  const exitDemoMode = useCallback(() => {
-    disableDemoMode()
-    setStatus('checking')
-    // Trigger a check after exiting demo mode
-    setTimeout(() => {
-      checkDaemonStatus()
-    }, 100)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
+function useDaemonPolling(
+  hasMounted: boolean,
+  checkDaemonStatus: () => Promise<void>
+) {
   // Initial check and periodic polling
   useEffect(() => {
     // Wait until after mount to avoid hydration issues
@@ -199,6 +195,45 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasMounted])
+}
+
+export function DaemonStatusProvider({ children }: { children: ReactNode }) {
+  // Always start with 'checking' to avoid hydration mismatch
+  // (sessionStorage is not available during SSR)
+  const [status, setStatus] = useState<DaemonStatus>('checking')
+  const [lastChecked, setLastChecked] = useState<Date | null>(null)
+  const [hasMounted, setHasMounted] = useState(false)
+  const [vscodeAvailable, setVscodeAvailable] = useState<boolean | null>(null)
+  const [editors, setEditors] = useState<EditorInfo[]>([])
+
+  useDemoModeInit(setStatus, setVscodeAvailable, setEditors, setHasMounted)
+
+  const checkDaemonStatus = useCheckDaemonStatus(
+    setStatus,
+    setLastChecked,
+    setVscodeAvailable,
+    setEditors
+  )
+
+  const enterDemoMode = useCallback(() => {
+    enableDemoMode()
+    setStatus('demo')
+    trackDaemonConnection(true, true)
+    // Navigate to demo org and project
+    window.location.href = `/?org=${DEMO_ORG_SLUG}&project=${encodeURIComponent(DEMO_PROJECT_PATH)}`
+  }, [])
+
+  const exitDemoMode = useCallback(() => {
+    disableDemoMode()
+    setStatus('checking')
+    // Trigger a check after exiting demo mode
+    setTimeout(() => {
+      checkDaemonStatus()
+    }, 100)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useDaemonPolling(hasMounted, checkDaemonStatus)
 
   return (
     <DaemonStatusContext.Provider

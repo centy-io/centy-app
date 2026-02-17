@@ -1,7 +1,7 @@
 'use client'
 
 import { usePathname, useRouter } from 'next/navigation'
-import { useMemo, useEffect } from 'react'
+import { useMemo, useEffect, type ReactNode } from 'react'
 import Link from 'next/link'
 import { route } from 'nextjs-routes'
 import { PathContextProvider } from '@/components/providers/PathContextProvider'
@@ -21,6 +21,20 @@ import { ProjectConfig } from '@/components/settings/ProjectConfig'
 
 // Routes that require project context (no longer accessible at root level)
 const PROJECT_SCOPED_ROUTES = new Set(['issues', 'docs', 'users'])
+
+interface RouteResult {
+  content: ReactNode
+  shouldRedirect: boolean
+  redirectTo: string | null
+}
+
+function contentResult(content: ReactNode): RouteResult {
+  return { content, shouldRedirect: false, redirectTo: null }
+}
+
+function redirectResult(redirectTo: string): RouteResult {
+  return { content: null, shouldRedirect: true, redirectTo }
+}
 
 /**
  * Component displayed when a project-scoped route is accessed without project context
@@ -49,6 +63,72 @@ function ProjectContextRequired({ requestedPage }: { requestedPage: string }) {
   )
 }
 
+function resolveIssuesRoute(rest: string[]): RouteResult {
+  if (rest[0] === 'new') return contentResult(<CreateIssue />)
+  if (rest[0]) return contentResult(<IssueDetail issueNumber={rest[0]} />)
+  return contentResult(<IssuesList />)
+}
+
+function resolveDocsRoute(rest: string[]): RouteResult {
+  if (rest[0] === 'new') return contentResult(<CreateDoc />)
+  if (rest[0]) return contentResult(<DocDetail slug={rest[0]} />)
+  return contentResult(<DocsList />)
+}
+
+function resolveUsersRoute(rest: string[]): RouteResult {
+  if (rest[0] === 'new') return contentResult(<CreateUser />)
+  if (rest[0]) return contentResult(<UserDetail userId={rest[0]} />)
+  return contentResult(<UsersList />)
+}
+
+function resolveProjectRoute(
+  org: string,
+  project: string,
+  pageType: string | undefined,
+  rest: string[]
+): RouteResult {
+  switch (pageType) {
+    case 'issues':
+      return resolveIssuesRoute(rest)
+    case 'docs':
+      return resolveDocsRoute(rest)
+    case 'users':
+      return resolveUsersRoute(rest)
+    case 'assets':
+      return contentResult(<SharedAssets />)
+    case 'config':
+      return contentResult(<ProjectConfig />)
+    case undefined:
+      // Just org/project - redirect to issues
+      return redirectResult(
+        route({
+          pathname: '/[organization]/[project]/issues',
+          query: { organization: org, project },
+        })
+      )
+    default:
+      return contentResult(<div className="not-found">Page not found</div>)
+  }
+}
+
+function resolveRoute(pathname: string): RouteResult {
+  const segments = pathname.split('/').filter(Boolean)
+
+  // Check if this is a single-segment project-scoped route (e.g., /issues, /docs)
+  if (segments.length === 1 && PROJECT_SCOPED_ROUTES.has(segments[0])) {
+    return contentResult(<ProjectContextRequired requestedPage={segments[0]} />)
+  }
+
+  // Need at least org/project to be a project-scoped route
+  if (segments.length < 2) {
+    return contentResult(<div className="not-found">Page not found</div>)
+  }
+
+  // Extract org, project, and remaining path
+  const [org, project, pageType, ...rest] = segments
+  return resolveProjectRoute(org, project, pageType, rest)
+}
+
 /**
  * Client-side router for catch-all paths
  *
@@ -62,128 +142,10 @@ export function CatchAllRouter() {
   const pathname = usePathname()
   const router = useRouter()
 
-  const { content, shouldRedirect, redirectTo } = useMemo(() => {
-    const segments = pathname.split('/').filter(Boolean)
-
-    // Check if this is a single-segment project-scoped route (e.g., /issues, /docs)
-    if (segments.length === 1 && PROJECT_SCOPED_ROUTES.has(segments[0])) {
-      return {
-        content: <ProjectContextRequired requestedPage={segments[0]} />,
-        shouldRedirect: false,
-        redirectTo: null,
-      }
-    }
-
-    // Need at least org/project to be a project-scoped route
-    if (segments.length < 2) {
-      return {
-        content: <div className="not-found">Page not found</div>,
-        shouldRedirect: false,
-        redirectTo: null,
-      }
-    }
-
-    // Extract org, project, and remaining path
-    const [org, project, pageType, ...rest] = segments
-
-    // Route based on the page type
-    switch (pageType) {
-      case 'issues':
-        if (rest[0] === 'new') {
-          return {
-            content: <CreateIssue />,
-            shouldRedirect: false,
-            redirectTo: null,
-          }
-        }
-        if (rest[0]) {
-          return {
-            content: <IssueDetail issueNumber={rest[0]} />,
-            shouldRedirect: false,
-            redirectTo: null,
-          }
-        }
-        return {
-          content: <IssuesList />,
-          shouldRedirect: false,
-          redirectTo: null,
-        }
-
-      case 'docs':
-        if (rest[0] === 'new') {
-          return {
-            content: <CreateDoc />,
-            shouldRedirect: false,
-            redirectTo: null,
-          }
-        }
-        if (rest[0]) {
-          return {
-            content: <DocDetail slug={rest[0]} />,
-            shouldRedirect: false,
-            redirectTo: null,
-          }
-        }
-        return {
-          content: <DocsList />,
-          shouldRedirect: false,
-          redirectTo: null,
-        }
-
-      case 'users':
-        if (rest[0] === 'new') {
-          return {
-            content: <CreateUser />,
-            shouldRedirect: false,
-            redirectTo: null,
-          }
-        }
-        if (rest[0]) {
-          return {
-            content: <UserDetail userId={rest[0]} />,
-            shouldRedirect: false,
-            redirectTo: null,
-          }
-        }
-        return {
-          content: <UsersList />,
-          shouldRedirect: false,
-          redirectTo: null,
-        }
-
-      case 'assets':
-        return {
-          content: <SharedAssets />,
-          shouldRedirect: false,
-          redirectTo: null,
-        }
-
-      case 'config':
-        return {
-          content: <ProjectConfig />,
-          shouldRedirect: false,
-          redirectTo: null,
-        }
-
-      case undefined:
-        // Just org/project - redirect to issues
-        return {
-          content: null,
-          shouldRedirect: true,
-          redirectTo: route({
-            pathname: '/[organization]/[project]/issues',
-            query: { organization: org, project },
-          }),
-        }
-
-      default:
-        return {
-          content: <div className="not-found">Page not found</div>,
-          shouldRedirect: false,
-          redirectTo: null,
-        }
-    }
-  }, [pathname])
+  const { content, shouldRedirect, redirectTo } = useMemo(
+    () => resolveRoute(pathname),
+    [pathname]
+  )
 
   useEffect(() => {
     if (shouldRedirect && redirectTo) {

@@ -18,10 +18,7 @@ interface AssigneeSelectorProps {
   disabled?: boolean
 }
 
-export function AssigneeSelector({
-  projectPath,
-  currentAssignees,
-}: AssigneeSelectorProps) {
+function useProjectUsers(projectPath: string) {
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -55,6 +52,16 @@ export function AssigneeSelector({
     fetchUsers()
   }, [fetchUsers])
 
+  return { users, loading, error, setError, fetchUsers }
+}
+
+export function AssigneeSelector({
+  projectPath,
+  currentAssignees,
+}: AssigneeSelectorProps) {
+  const { users, loading, error, setError, fetchUsers } =
+    useProjectUsers(projectPath)
+
   const options: MultiSelectOption[] = useMemo(
     () =>
       users.map(user => ({
@@ -67,7 +74,7 @@ export function AssigneeSelector({
   const handleChange = useCallback(async () => {
     // TODO: Implement AssignIssue and UnassignIssue RPCs in the daemon
     setError('Assignee modification not yet implemented')
-  }, [])
+  }, [setError])
 
   if (loading) {
     return (

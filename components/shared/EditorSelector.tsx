@@ -14,22 +14,12 @@ interface EditorSelectorProps {
   loading?: boolean
 }
 
-export function EditorSelector({
-  onOpenInVscode,
-  onOpenInTerminal,
-  disabled = false,
-  loading = false,
-}: EditorSelectorProps) {
-  const { editors } = useDaemonStatus()
-  const [showDropdown, setShowDropdown] = useState(false)
+function useEditorPreference() {
   const [preferredEditor, setPreferredEditor] = useState<EditorType>(
     EditorType.VSCODE
   )
-  const dropdownRef = useRef<HTMLDivElement>(null)
 
-  // Load preference from localStorage on mount
   useEffect(() => {
-    // Schedule setState asynchronously to satisfy eslint react-hooks/set-state-in-effect
     const timeoutId = setTimeout(() => {
       const saved = localStorage.getItem(EDITOR_PREFERENCE_KEY)
       if (!saved) return
@@ -44,13 +34,19 @@ export function EditorSelector({
     return () => clearTimeout(timeoutId)
   }, [])
 
-  // Save preference to localStorage
   const savePreference = useCallback((editorType: EditorType) => {
     setPreferredEditor(editorType)
     localStorage.setItem(EDITOR_PREFERENCE_KEY, String(editorType))
   }, [])
 
-  // Close dropdown on click outside
+  return { preferredEditor, savePreference }
+}
+
+function useDropdownClose(
+  dropdownRef: React.RefObject<HTMLDivElement | null>,
+  showDropdown: boolean,
+  setShowDropdown: (value: boolean) => void
+) {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -67,9 +63,18 @@ export function EditorSelector({
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [showDropdown])
+  }, [dropdownRef, showDropdown, setShowDropdown])
+}
 
-  // Get editor info by type
+function useEditorActions(
+  editors: EditorInfo[],
+  disabled: boolean,
+  loading: boolean,
+  onOpenInVscode: () => Promise<void>,
+  onOpenInTerminal: () => Promise<void>,
+  savePreference: (editorType: EditorType) => void,
+  setShowDropdown: (value: boolean) => void
+) {
   const getEditorInfo = useCallback(
     (type: EditorType): EditorInfo | undefined => {
       return editors.find(e => e.editorType === type)
@@ -77,7 +82,6 @@ export function EditorSelector({
     [editors]
   )
 
-  // Check if an editor is available
   const isEditorAvailable = useCallback(
     (type: EditorType): boolean => {
       const editor = getEditorInfo(type)
@@ -86,59 +90,182 @@ export function EditorSelector({
     [getEditorInfo]
   )
 
-  // Get the preferred editor's display info
-  const preferredEditorInfo = getEditorInfo(preferredEditor)
-  const preferredEditorName =
-    (preferredEditorInfo ? preferredEditorInfo.name : '') || 'VS Code'
-  const preferredEditorAvailable = isEditorAvailable(preferredEditor)
-
-  // Handle primary button click
-  const handlePrimaryClick = useCallback(async () => {
-    if (disabled || loading || !preferredEditorAvailable) return
-
-    if (preferredEditor === EditorType.VSCODE) {
-      await onOpenInVscode()
-    } else if (preferredEditor === EditorType.TERMINAL) {
-      await onOpenInTerminal()
-    }
-  }, [
-    disabled,
-    loading,
-    preferredEditor,
-    preferredEditorAvailable,
-    onOpenInVscode,
-    onOpenInTerminal,
-  ])
-
-  // Handle editor selection from dropdown
-  const handleSelectEditor = useCallback(
+  const openEditor = useCallback(
     async (editorType: EditorType) => {
-      if (disabled || loading) return
-
-      const available = isEditorAvailable(editorType)
-      if (!available) return
-
-      savePreference(editorType)
-      setShowDropdown(false)
-
-      // Immediately open the selected editor
       if (editorType === EditorType.VSCODE) {
         await onOpenInVscode()
       } else if (editorType === EditorType.TERMINAL) {
         await onOpenInTerminal()
       }
     },
+    [onOpenInVscode, onOpenInTerminal]
+  )
+
+  const handleSelectEditor = useCallback(
+    async (editorType: EditorType) => {
+      if (disabled || loading) return
+      if (!isEditorAvailable(editorType)) return
+
+      savePreference(editorType)
+      setShowDropdown(false)
+      await openEditor(editorType)
+    },
     [
       disabled,
       loading,
       isEditorAvailable,
       savePreference,
-      onOpenInVscode,
-      onOpenInTerminal,
+      setShowDropdown,
+      openEditor,
     ]
   )
 
-  // If no editors available, show unavailable hint
+  return { getEditorInfo, isEditorAvailable, openEditor, handleSelectEditor }
+}
+
+function EditorDropdown({
+  editors,
+  preferredEditor,
+  handleSelectEditor,
+}: {
+  editors: EditorInfo[]
+  preferredEditor: EditorType
+  handleSelectEditor: (editorType: EditorType) => void
+}) {
+  return (
+    <ul className="editor-dropdown" role="listbox" aria-label="Editors">
+      {editors.map(editor => (
+        <li
+          key={editor.editorType}
+          role="option"
+          aria-selected={editor.editorType === preferredEditor}
+          aria-disabled={!editor.available}
+          className={`editor-option ${editor.editorType === preferredEditor ? 'selected' : ''} ${!editor.available ? 'disabled' : ''}`}
+          onClick={() =>
+            editor.available && handleSelectEditor(editor.editorType)
+          }
+          title={
+            editor.available
+              ? editor.description
+              : `${editor.name} is not available`
+          }
+        >
+          <span className="editor-option-icon">
+            {editor.editorType === EditorType.TERMINAL ? (
+              <TerminalIcon />
+            ) : (
+              <VscodeIcon />
+            )}
+          </span>
+          <div className="editor-option-content">
+            <span className="editor-option-name">{editor.name}</span>
+            {!editor.available && (
+              <span className="editor-option-unavailable">Not available</span>
+            )}
+          </div>
+          {editor.editorType === preferredEditor && editor.available && (
+            <span className="editor-option-check">&#10003;</span>
+          )}
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+function EditorButtonGroup({
+  preferredEditor,
+  preferredEditorAvailable,
+  preferredEditorInfo,
+  preferredEditorName,
+  handlePrimaryClick,
+  disabled,
+  loading,
+  showDropdown,
+  setShowDropdown,
+}: {
+  preferredEditor: EditorType
+  preferredEditorAvailable: boolean
+  preferredEditorInfo: EditorInfo | undefined
+  preferredEditorName: string
+  handlePrimaryClick: () => void
+  disabled: boolean
+  loading: boolean
+  showDropdown: boolean
+  setShowDropdown: (value: boolean) => void
+}) {
+  return (
+    <div className="editor-selector-button-group">
+      <button
+        className={`editor-primary-btn ${preferredEditor === EditorType.TERMINAL ? 'terminal' : 'vscode'}`}
+        onClick={handlePrimaryClick}
+        disabled={disabled || loading || !preferredEditorAvailable}
+        title={
+          preferredEditorAvailable
+            ? preferredEditorInfo
+              ? preferredEditorInfo.description
+              : ''
+            : `${preferredEditorName} is not available`
+        }
+      >
+        <span className="editor-icon">
+          {preferredEditor === EditorType.TERMINAL ? (
+            <TerminalIcon />
+          ) : (
+            <VscodeIcon />
+          )}
+        </span>
+        {loading ? 'Opening...' : `Open in ${preferredEditorName}`}
+      </button>
+      <button
+        className={`editor-dropdown-btn ${preferredEditor === EditorType.TERMINAL ? 'terminal' : 'vscode'}`}
+        onClick={() => setShowDropdown(!showDropdown)}
+        disabled={disabled || loading}
+        aria-label="Select editor"
+        aria-expanded={showDropdown}
+        aria-haspopup="listbox"
+      >
+        <span className={`editor-dropdown-arrow ${showDropdown ? 'open' : ''}`}>
+          &#9660;
+        </span>
+      </button>
+    </div>
+  )
+}
+
+export function EditorSelector({
+  onOpenInVscode,
+  onOpenInTerminal,
+  disabled = false,
+  loading = false,
+}: EditorSelectorProps) {
+  const { editors } = useDaemonStatus()
+  const [showDropdown, setShowDropdown] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  const { preferredEditor, savePreference } = useEditorPreference()
+  useDropdownClose(dropdownRef, showDropdown, setShowDropdown)
+
+  const { getEditorInfo, isEditorAvailable, openEditor, handleSelectEditor } =
+    useEditorActions(
+      editors,
+      disabled,
+      loading,
+      onOpenInVscode,
+      onOpenInTerminal,
+      savePreference,
+      setShowDropdown
+    )
+
+  const preferredEditorInfo = getEditorInfo(preferredEditor)
+  const preferredEditorName =
+    (preferredEditorInfo ? preferredEditorInfo.name : '') || 'VS Code'
+  const preferredEditorAvailable = isEditorAvailable(preferredEditor)
+
+  const handlePrimaryClick = useCallback(async () => {
+    if (disabled || loading || !preferredEditorAvailable) return
+    await openEditor(preferredEditor)
+  }, [disabled, loading, preferredEditorAvailable, openEditor, preferredEditor])
+
   const hasAnyAvailable = editors.some(e => e.available)
   if (!hasAnyAvailable && editors.length > 0) {
     return (
@@ -151,96 +278,35 @@ export function EditorSelector({
     )
   }
 
-  // If editors haven't loaded yet, show loading state
   if (editors.length === 0) {
     return null
   }
 
   return (
     <div className="editor-selector" ref={dropdownRef}>
-      <div className="editor-selector-button-group">
-        <button
-          className={`editor-primary-btn ${preferredEditor === EditorType.TERMINAL ? 'terminal' : 'vscode'}`}
-          onClick={handlePrimaryClick}
-          disabled={disabled || loading || !preferredEditorAvailable}
-          title={
-            preferredEditorAvailable
-              ? preferredEditorInfo
-                ? preferredEditorInfo.description
-                : ''
-              : `${preferredEditorName} is not available`
-          }
-        >
-          <span className="editor-icon">
-            {preferredEditor === EditorType.TERMINAL ? (
-              <TerminalIcon />
-            ) : (
-              <VscodeIcon />
-            )}
-          </span>
-          {loading ? 'Opening...' : `Open in ${preferredEditorName}`}
-        </button>
-        <button
-          className={`editor-dropdown-btn ${preferredEditor === EditorType.TERMINAL ? 'terminal' : 'vscode'}`}
-          onClick={() => setShowDropdown(!showDropdown)}
-          disabled={disabled || loading}
-          aria-label="Select editor"
-          aria-expanded={showDropdown}
-          aria-haspopup="listbox"
-        >
-          <span
-            className={`editor-dropdown-arrow ${showDropdown ? 'open' : ''}`}
-          >
-            &#9660;
-          </span>
-        </button>
-      </div>
+      <EditorButtonGroup
+        preferredEditor={preferredEditor}
+        preferredEditorAvailable={preferredEditorAvailable}
+        preferredEditorInfo={preferredEditorInfo}
+        preferredEditorName={preferredEditorName}
+        handlePrimaryClick={handlePrimaryClick}
+        disabled={disabled}
+        loading={loading}
+        showDropdown={showDropdown}
+        setShowDropdown={setShowDropdown}
+      />
 
       {showDropdown && (
-        <ul className="editor-dropdown" role="listbox" aria-label="Editors">
-          {editors.map(editor => (
-            <li
-              key={editor.editorType}
-              role="option"
-              aria-selected={editor.editorType === preferredEditor}
-              aria-disabled={!editor.available}
-              className={`editor-option ${editor.editorType === preferredEditor ? 'selected' : ''} ${!editor.available ? 'disabled' : ''}`}
-              onClick={() =>
-                editor.available && handleSelectEditor(editor.editorType)
-              }
-              title={
-                editor.available
-                  ? editor.description
-                  : `${editor.name} is not available`
-              }
-            >
-              <span className="editor-option-icon">
-                {editor.editorType === EditorType.TERMINAL ? (
-                  <TerminalIcon />
-                ) : (
-                  <VscodeIcon />
-                )}
-              </span>
-              <div className="editor-option-content">
-                <span className="editor-option-name">{editor.name}</span>
-                {!editor.available && (
-                  <span className="editor-option-unavailable">
-                    Not available
-                  </span>
-                )}
-              </div>
-              {editor.editorType === preferredEditor && editor.available && (
-                <span className="editor-option-check">&#10003;</span>
-              )}
-            </li>
-          ))}
-        </ul>
+        <EditorDropdown
+          editors={editors}
+          preferredEditor={preferredEditor}
+          handleSelectEditor={handleSelectEditor}
+        />
       )}
     </div>
   )
 }
 
-// VS Code icon component
 function VscodeIcon() {
   return (
     <svg
@@ -255,7 +321,6 @@ function VscodeIcon() {
   )
 }
 
-// Terminal icon component
 function TerminalIcon() {
   return (
     <svg

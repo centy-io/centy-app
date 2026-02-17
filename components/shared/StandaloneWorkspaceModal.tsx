@@ -25,61 +25,23 @@ const TTL_OPTIONS = [
   { value: 48, label: '48 hours' },
 ]
 
-export function StandaloneWorkspaceModal({
-  projectPath,
-  onClose,
-  onCreated,
-}: StandaloneWorkspaceModalProps) {
-  const modalRef = useRef<HTMLDivElement>(null)
-  const { editors } = useDaemonStatus()
-
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
-  const [ttlHours, setTtlHours] = useState(12)
-  const [selectedEditor, setSelectedEditor] = useState<EditorType>(
-    EditorType.VSCODE
-  )
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-
-  // Check editor availability
-  const isEditorAvailable = useCallback(
-    (type: EditorType): boolean => {
-      const editor = editors.find(e => e.editorType === type)
-      return editor ? editor.available : false
-    },
-    [editors]
-  )
-
-  // Set initial editor based on availability
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (
-        !isEditorAvailable(EditorType.VSCODE) &&
-        isEditorAvailable(EditorType.TERMINAL)
-      ) {
-        setSelectedEditor(EditorType.TERMINAL)
-      }
-    }, 0)
-    return () => clearTimeout(timeoutId)
-  }, [isEditorAvailable])
-
-  // Close on click outside
+function useClickOutside(
+  ref: React.RefObject<HTMLDivElement | null>,
+  onClose: () => void
+) {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        modalRef.current &&
-        !modalRef.current.contains(event.target as Node)
-      ) {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
         onClose()
       }
     }
 
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [onClose])
+  }, [ref, onClose])
+}
 
-  // Close on escape
+function useEscapeKey(onClose: () => void) {
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -90,6 +52,19 @@ export function StandaloneWorkspaceModal({
     document.addEventListener('keydown', handleEscape)
     return () => document.removeEventListener('keydown', handleEscape)
   }, [onClose])
+}
+
+function useCreateWorkspace(
+  projectPath: string,
+  name: string,
+  description: string,
+  ttlHours: number,
+  selectedEditor: EditorType,
+  onCreated: ((workspacePath: string) => void) | undefined,
+  onClose: () => void
+) {
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleCreate = useCallback(async () => {
     if (!projectPath) return
@@ -98,40 +73,24 @@ export function StandaloneWorkspaceModal({
     setError(null)
 
     try {
-      if (selectedEditor === EditorType.VSCODE) {
-        const request = create(OpenStandaloneWorkspaceRequestSchema, {
-          projectPath,
-          name: name.trim() || undefined,
-          description: description.trim() || undefined,
-          agentName: '',
-          ttlHours,
-        })
-        const response =
-          await centyClient.openStandaloneWorkspaceVscode(request)
+      const request = create(OpenStandaloneWorkspaceRequestSchema, {
+        projectPath,
+        name: name.trim() || undefined,
+        description: description.trim() || undefined,
+        agentName: '',
+        ttlHours,
+      })
 
-        if (response.success) {
-          if (onCreated) onCreated(response.workspacePath)
-          onClose()
-        } else {
-          setError(response.error || 'Failed to create workspace')
-        }
+      const response =
+        selectedEditor === EditorType.VSCODE
+          ? await centyClient.openStandaloneWorkspaceVscode(request)
+          : await centyClient.openStandaloneWorkspaceTerminal(request)
+
+      if (response.success) {
+        if (onCreated) onCreated(response.workspacePath)
+        onClose()
       } else {
-        const request = create(OpenStandaloneWorkspaceRequestSchema, {
-          projectPath,
-          name: name.trim() || undefined,
-          description: description.trim() || undefined,
-          agentName: '',
-          ttlHours,
-        })
-        const response =
-          await centyClient.openStandaloneWorkspaceTerminal(request)
-
-        if (response.success) {
-          if (onCreated) onCreated(response.workspacePath)
-          onClose()
-        } else {
-          setError(response.error || 'Failed to create workspace')
-        }
+        setError(response.error || 'Failed to create workspace')
       }
     } catch (err) {
       setError(
@@ -150,9 +109,237 @@ export function StandaloneWorkspaceModal({
     onClose,
   ])
 
+  return { loading, error, handleCreate }
+}
+
+function EditorOptions({
+  selectedEditor,
+  setSelectedEditor,
+  isEditorAvailable,
+}: {
+  selectedEditor: EditorType
+  setSelectedEditor: (value: EditorType) => void
+  isEditorAvailable: (type: EditorType) => boolean
+}) {
+  return (
+    <div className="standalone-modal-field">
+      <label>Open In</label>
+      <div className="standalone-modal-editor-options">
+        <button
+          type="button"
+          className={`standalone-editor-option ${selectedEditor === EditorType.VSCODE ? 'selected' : ''} ${!isEditorAvailable(EditorType.VSCODE) ? 'disabled' : ''}`}
+          onClick={() =>
+            isEditorAvailable(EditorType.VSCODE) &&
+            setSelectedEditor(EditorType.VSCODE)
+          }
+          disabled={!isEditorAvailable(EditorType.VSCODE)}
+        >
+          <VscodeIcon />
+          <span>VS Code</span>
+          {!isEditorAvailable(EditorType.VSCODE) && (
+            <span className="unavailable-badge">Not available</span>
+          )}
+        </button>
+        <button
+          type="button"
+          className={`standalone-editor-option ${selectedEditor === EditorType.TERMINAL ? 'selected' : ''} ${!isEditorAvailable(EditorType.TERMINAL) ? 'disabled' : ''}`}
+          onClick={() =>
+            isEditorAvailable(EditorType.TERMINAL) &&
+            setSelectedEditor(EditorType.TERMINAL)
+          }
+          disabled={!isEditorAvailable(EditorType.TERMINAL)}
+        >
+          <TerminalIcon />
+          <span>Terminal</span>
+          {!isEditorAvailable(EditorType.TERMINAL) && (
+            <span className="unavailable-badge">Not available</span>
+          )}
+        </button>
+      </div>
+    </div>
+  )
+}
+
+function WorkspaceFormFields({
+  name,
+  setName,
+  description,
+  setDescription,
+  ttlHours,
+  setTtlHours,
+}: {
+  name: string
+  setName: (value: string) => void
+  description: string
+  setDescription: (value: string) => void
+  ttlHours: number
+  setTtlHours: (value: number) => void
+}) {
+  return (
+    <>
+      <div className="standalone-modal-field">
+        <label htmlFor="workspace-name">Name (optional)</label>
+        <input
+          id="workspace-name"
+          type="text"
+          value={name}
+          onChange={e => setName(e.target.value)}
+          placeholder="e.g., Experiment with new API"
+          className="standalone-modal-input"
+        />
+      </div>
+
+      <div className="standalone-modal-field">
+        <label htmlFor="workspace-description">Description (optional)</label>
+        <textarea
+          id="workspace-description"
+          value={description}
+          onChange={e => setDescription(e.target.value)}
+          placeholder="What would you like to work on in this workspace?"
+          className="standalone-modal-textarea"
+          rows={3}
+        />
+      </div>
+
+      <div className="standalone-modal-field">
+        <label htmlFor="workspace-ttl">Workspace Duration</label>
+        <select
+          id="workspace-ttl"
+          value={ttlHours}
+          onChange={e => setTtlHours(Number(e.target.value))}
+          className="standalone-modal-select"
+        >
+          {TTL_OPTIONS.map(option => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      </div>
+    </>
+  )
+}
+
+function StandaloneWorkspaceModalBody({
+  error,
+  name,
+  setName,
+  description,
+  setDescription,
+  ttlHours,
+  setTtlHours,
+  selectedEditor,
+  setSelectedEditor,
+  isEditorAvailable,
+}: {
+  error: string | null
+  name: string
+  setName: (value: string) => void
+  description: string
+  setDescription: (value: string) => void
+  ttlHours: number
+  setTtlHours: (value: number) => void
+  selectedEditor: EditorType
+  setSelectedEditor: (value: EditorType) => void
+  isEditorAvailable: (type: EditorType) => boolean
+}) {
+  return (
+    <div className="standalone-modal-body">
+      {error && (
+        <DaemonErrorMessage error={error} className="standalone-modal-error" />
+      )}
+
+      <div className="standalone-modal-description">
+        Create a temporary workspace without associating it with an issue. Great
+        for quick experiments or exploratory work.
+      </div>
+
+      <WorkspaceFormFields
+        name={name}
+        setName={setName}
+        description={description}
+        setDescription={setDescription}
+        ttlHours={ttlHours}
+        setTtlHours={setTtlHours}
+      />
+
+      <EditorOptions
+        selectedEditor={selectedEditor}
+        setSelectedEditor={setSelectedEditor}
+        isEditorAvailable={isEditorAvailable}
+      />
+    </div>
+  )
+}
+
+function useEditorAvailability() {
+  const { editors } = useDaemonStatus()
+  const [selectedEditor, setSelectedEditor] = useState<EditorType>(
+    EditorType.VSCODE
+  )
+
+  const isEditorAvailable = useCallback(
+    (type: EditorType): boolean => {
+      const editor = editors.find(e => e.editorType === type)
+      return editor ? editor.available : false
+    },
+    [editors]
+  )
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (
+        !isEditorAvailable(EditorType.VSCODE) &&
+        isEditorAvailable(EditorType.TERMINAL)
+      ) {
+        setSelectedEditor(EditorType.TERMINAL)
+      }
+    }, 0)
+    return () => clearTimeout(timeoutId)
+  }, [isEditorAvailable])
+
   const hasAvailableEditor =
     isEditorAvailable(EditorType.VSCODE) ||
     isEditorAvailable(EditorType.TERMINAL)
+
+  return {
+    selectedEditor,
+    setSelectedEditor,
+    isEditorAvailable,
+    hasAvailableEditor,
+  }
+}
+
+export function StandaloneWorkspaceModal({
+  projectPath,
+  onClose,
+  onCreated,
+}: StandaloneWorkspaceModalProps) {
+  const modalRef = useRef<HTMLDivElement>(null)
+
+  const [name, setName] = useState('')
+  const [description, setDescription] = useState('')
+  const [ttlHours, setTtlHours] = useState(12)
+
+  const {
+    selectedEditor,
+    setSelectedEditor,
+    isEditorAvailable,
+    hasAvailableEditor,
+  } = useEditorAvailability()
+
+  useClickOutside(modalRef, onClose)
+  useEscapeKey(onClose)
+
+  const { loading, error, handleCreate } = useCreateWorkspace(
+    projectPath,
+    name,
+    description,
+    ttlHours,
+    selectedEditor,
+    onCreated,
+    onClose
+  )
 
   return (
     <div className="standalone-modal-overlay">
@@ -164,97 +351,18 @@ export function StandaloneWorkspaceModal({
           </button>
         </div>
 
-        <div className="standalone-modal-body">
-          {error && (
-            <DaemonErrorMessage
-              error={error}
-              className="standalone-modal-error"
-            />
-          )}
-
-          <div className="standalone-modal-description">
-            Create a temporary workspace without associating it with an issue.
-            Great for quick experiments or exploratory work.
-          </div>
-
-          <div className="standalone-modal-field">
-            <label htmlFor="workspace-name">Name (optional)</label>
-            <input
-              id="workspace-name"
-              type="text"
-              value={name}
-              onChange={e => setName(e.target.value)}
-              placeholder="e.g., Experiment with new API"
-              className="standalone-modal-input"
-            />
-          </div>
-
-          <div className="standalone-modal-field">
-            <label htmlFor="workspace-description">
-              Description (optional)
-            </label>
-            <textarea
-              id="workspace-description"
-              value={description}
-              onChange={e => setDescription(e.target.value)}
-              placeholder="What would you like to work on in this workspace?"
-              className="standalone-modal-textarea"
-              rows={3}
-            />
-          </div>
-
-          <div className="standalone-modal-field">
-            <label htmlFor="workspace-ttl">Workspace Duration</label>
-            <select
-              id="workspace-ttl"
-              value={ttlHours}
-              onChange={e => setTtlHours(Number(e.target.value))}
-              className="standalone-modal-select"
-            >
-              {TTL_OPTIONS.map(option => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="standalone-modal-field">
-            <label>Open In</label>
-            <div className="standalone-modal-editor-options">
-              <button
-                type="button"
-                className={`standalone-editor-option ${selectedEditor === EditorType.VSCODE ? 'selected' : ''} ${!isEditorAvailable(EditorType.VSCODE) ? 'disabled' : ''}`}
-                onClick={() =>
-                  isEditorAvailable(EditorType.VSCODE) &&
-                  setSelectedEditor(EditorType.VSCODE)
-                }
-                disabled={!isEditorAvailable(EditorType.VSCODE)}
-              >
-                <VscodeIcon />
-                <span>VS Code</span>
-                {!isEditorAvailable(EditorType.VSCODE) && (
-                  <span className="unavailable-badge">Not available</span>
-                )}
-              </button>
-              <button
-                type="button"
-                className={`standalone-editor-option ${selectedEditor === EditorType.TERMINAL ? 'selected' : ''} ${!isEditorAvailable(EditorType.TERMINAL) ? 'disabled' : ''}`}
-                onClick={() =>
-                  isEditorAvailable(EditorType.TERMINAL) &&
-                  setSelectedEditor(EditorType.TERMINAL)
-                }
-                disabled={!isEditorAvailable(EditorType.TERMINAL)}
-              >
-                <TerminalIcon />
-                <span>Terminal</span>
-                {!isEditorAvailable(EditorType.TERMINAL) && (
-                  <span className="unavailable-badge">Not available</span>
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
+        <StandaloneWorkspaceModalBody
+          error={error}
+          name={name}
+          setName={setName}
+          description={description}
+          setDescription={setDescription}
+          ttlHours={ttlHours}
+          setTtlHours={setTtlHours}
+          selectedEditor={selectedEditor}
+          setSelectedEditor={setSelectedEditor}
+          isEditorAvailable={isEditorAvailable}
+        />
 
         <div className="standalone-modal-footer">
           <button className="standalone-modal-cancel" onClick={onClose}>
@@ -273,7 +381,6 @@ export function StandaloneWorkspaceModal({
   )
 }
 
-// VS Code icon component
 function VscodeIcon() {
   return (
     <svg
@@ -288,7 +395,6 @@ function VscodeIcon() {
   )
 }
 
-// Terminal icon component
 function TerminalIcon() {
   return (
     <svg

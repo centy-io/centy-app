@@ -25,28 +25,12 @@ interface DocDetailProps {
   slug: string
 }
 
-export function DocDetail({ slug }: DocDetailProps) {
-  const router = useRouter()
-  const { projectPath } = useProject()
-  const { copyToClipboard } = useCopyToClipboard()
-  const { createLink, createProjectLink } = useAppLink()
-  const resolvePathToUrl = useProjectPathToUrl()
-
-  // Get the project-scoped docs URL
-  const docsListUrl = createLink('/docs')
-
+function useFetchDoc(projectPath: string, slug: string) {
   const [doc, setDoc] = useState<Doc | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [isEditing, setIsEditing] = useState(false)
   const [editTitle, setEditTitle] = useState('')
   const [editContent, setEditContent] = useState('')
-  const [editSlug, setEditSlug] = useState('')
-  const [saving, setSaving] = useState(false)
-  const [deleting, setDeleting] = useState(false)
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
-  const [showMoveModal, setShowMoveModal] = useState(false)
-  const [showDuplicateModal, setShowDuplicateModal] = useState(false)
 
   const fetchDoc = useCallback(async () => {
     if (!projectPath || !slug) {
@@ -68,7 +52,6 @@ export function DocDetail({ slug }: DocDetailProps) {
         setDoc(response.doc)
         setEditTitle(response.doc.title)
         setEditContent(response.doc.content)
-        setEditSlug('')
       } else {
         setError(response.error || 'Document not found')
       }
@@ -84,6 +67,33 @@ export function DocDetail({ slug }: DocDetailProps) {
   useEffect(() => {
     fetchDoc()
   }, [fetchDoc])
+
+  return {
+    doc,
+    setDoc,
+    loading,
+    error,
+    setError,
+    editTitle,
+    setEditTitle,
+    editContent,
+    setEditContent,
+  }
+}
+
+function useSaveDoc(
+  projectPath: string,
+  slug: string,
+  editTitle: string,
+  editContent: string,
+  editSlug: string,
+  setDoc: (doc: Doc) => void,
+  setIsEditing: (v: boolean) => void,
+  setError: (v: string | null) => void
+) {
+  const router = useRouter()
+  const { createLink } = useAppLink()
+  const [saving, setSaving] = useState(false)
 
   const handleSave = useCallback(async () => {
     if (!projectPath || !slug) return
@@ -117,7 +127,31 @@ export function DocDetail({ slug }: DocDetailProps) {
     } finally {
       setSaving(false)
     }
-  }, [projectPath, slug, editTitle, editContent, editSlug, router, createLink])
+  }, [
+    projectPath,
+    slug,
+    editTitle,
+    editContent,
+    editSlug,
+    router,
+    createLink,
+    setDoc,
+    setIsEditing,
+    setError,
+  ])
+
+  return { saving, handleSave }
+}
+
+function useDeleteDoc(
+  projectPath: string,
+  slug: string,
+  docsListUrl: string,
+  setError: (v: string | null) => void
+) {
+  const router = useRouter()
+  const [deleting, setDeleting] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   const handleDelete = useCallback(async () => {
     if (!projectPath || !slug) return
@@ -146,19 +180,18 @@ export function DocDetail({ slug }: DocDetailProps) {
     } finally {
       setDeleting(false)
     }
-  }, [projectPath, slug, router, docsListUrl])
+  }, [projectPath, slug, router, docsListUrl, setError])
 
-  const handleCancelEdit = () => {
-    setIsEditing(false)
-    if (!doc) return
-    setEditTitle(doc.title)
-    setEditContent(doc.content)
-    setEditSlug('')
-  }
+  return { deleting, showDeleteConfirm, setShowDeleteConfirm, handleDelete }
+}
+
+function useDocNavigation(projectPath: string, docsListUrl: string) {
+  const router = useRouter()
+  const resolvePathToUrl = useProjectPathToUrl()
+  const { createLink, createProjectLink } = useAppLink()
 
   const handleMoved = useCallback(
     async (targetProjectPath: string) => {
-      // Resolve path to org/project for URL navigation
       const result = await resolvePathToUrl(targetProjectPath)
       if (result) {
         const url = createProjectLink(
@@ -168,7 +201,6 @@ export function DocDetail({ slug }: DocDetailProps) {
         )
         router.push(url)
       } else {
-        // Fallback to current project docs if resolution fails
         router.push(docsListUrl)
       }
     },
@@ -178,10 +210,8 @@ export function DocDetail({ slug }: DocDetailProps) {
   const handleDuplicated = useCallback(
     async (newSlug: string, targetProjectPath: string) => {
       if (targetProjectPath === projectPath) {
-        // Same project - navigate to the new doc
         router.push(createLink(`/docs/${newSlug}`))
       } else {
-        // Different project - resolve and redirect
         const result = await resolvePathToUrl(targetProjectPath)
         if (result) {
           const url = createProjectLink(
@@ -191,11 +221,9 @@ export function DocDetail({ slug }: DocDetailProps) {
           )
           router.push(url)
         } else {
-          // Fallback to current project if resolution fails
           router.push(docsListUrl)
         }
       }
-      setShowDuplicateModal(false)
     },
     [
       projectPath,
@@ -207,197 +235,236 @@ export function DocDetail({ slug }: DocDetailProps) {
     ]
   )
 
-  if (!projectPath) {
-    return (
-      <div className="doc-detail">
-        <div className="error-message">
-          No project path specified. Please go to the{' '}
-          <Link href={docsListUrl}>documentation list</Link> and select a
-          project.
-        </div>
-      </div>
-    )
-  }
+  return { handleMoved, handleDuplicated }
+}
 
-  if (loading) {
-    return (
-      <div className="doc-detail">
-        <div className="loading">Loading document...</div>
-      </div>
-    )
-  }
-
-  if (error && !doc) {
-    return (
-      <div className="doc-detail">
-        <DaemonErrorMessage error={error} />
-        <Link href={docsListUrl} className="back-link">
-          Back to Documentation
-        </Link>
-      </div>
-    )
-  }
-
-  if (!doc) {
-    return (
-      <div className="doc-detail">
-        <div className="error-message">Document not found</div>
-        <Link href={docsListUrl} className="back-link">
-          Back to Documentation
-        </Link>
-      </div>
-    )
-  }
+function DeleteConfirmSection({
+  showDeleteConfirm,
+  setShowDeleteConfirm,
+  handleDelete,
+  deleting,
+}: {
+  showDeleteConfirm: boolean
+  setShowDeleteConfirm: (v: boolean) => void
+  handleDelete: () => void
+  deleting: boolean
+}) {
+  if (!showDeleteConfirm) return null
 
   return (
-    <div className="doc-detail">
-      <div className="doc-header">
-        <Link href={docsListUrl} className="back-link">
-          Back to Documentation
-        </Link>
+    <div className="delete-confirm">
+      <p>Are you sure you want to delete this document?</p>
+      <div className="delete-confirm-actions">
+        <button
+          onClick={() => setShowDeleteConfirm(false)}
+          className="cancel-btn"
+        >
+          Cancel
+        </button>
+        <button
+          onClick={handleDelete}
+          disabled={deleting}
+          className="confirm-delete-btn"
+        >
+          {deleting ? 'Deleting...' : 'Yes, Delete'}
+        </button>
+      </div>
+    </div>
+  )
+}
 
-        <div className="doc-actions">
-          {!isEditing ? (
-            <>
-              <button onClick={() => setIsEditing(true)} className="edit-btn">
-                Edit
-              </button>
-              <button
-                onClick={() => setShowMoveModal(true)}
-                className="move-btn"
-              >
-                Move
-              </button>
-              <button
-                onClick={() => setShowDuplicateModal(true)}
-                className="duplicate-btn"
-              >
-                Duplicate
-              </button>
-              <button
-                onClick={() => setShowDeleteConfirm(true)}
-                className="delete-btn"
-              >
-                Delete
-              </button>
-            </>
-          ) : (
-            <>
-              <button onClick={handleCancelEdit} className="cancel-btn">
-                Cancel
-              </button>
-              <button
-                onClick={handleSave}
-                disabled={saving}
-                className="save-btn"
-              >
-                {saving ? 'Saving...' : 'Save'}
-              </button>
-            </>
-          )}
-        </div>
+function DocViewActions({
+  setIsEditing,
+  setShowMoveModal,
+  setShowDuplicateModal,
+  setShowDeleteConfirm,
+}: {
+  setIsEditing: (v: boolean) => void
+  setShowMoveModal: (v: boolean) => void
+  setShowDuplicateModal: (v: boolean) => void
+  setShowDeleteConfirm: (v: boolean) => void
+}) {
+  return (
+    <>
+      <button onClick={() => setIsEditing(true)} className="edit-btn">
+        Edit
+      </button>
+      <button onClick={() => setShowMoveModal(true)} className="move-btn">
+        Move
+      </button>
+      <button
+        onClick={() => setShowDuplicateModal(true)}
+        className="duplicate-btn"
+      >
+        Duplicate
+      </button>
+      <button onClick={() => setShowDeleteConfirm(true)} className="delete-btn">
+        Delete
+      </button>
+    </>
+  )
+}
+
+function DocHeaderActions({
+  isEditing,
+  setIsEditing,
+  setShowMoveModal,
+  setShowDuplicateModal,
+  setShowDeleteConfirm,
+  handleCancelEdit,
+  handleSave,
+  saving,
+}: {
+  isEditing: boolean
+  setIsEditing: (v: boolean) => void
+  setShowMoveModal: (v: boolean) => void
+  setShowDuplicateModal: (v: boolean) => void
+  setShowDeleteConfirm: (v: boolean) => void
+  handleCancelEdit: () => void
+  handleSave: () => void
+  saving: boolean
+}) {
+  return (
+    <div className="doc-actions">
+      {isEditing ? (
+        <>
+          <button onClick={handleCancelEdit} className="cancel-btn">
+            Cancel
+          </button>
+          <button onClick={handleSave} disabled={saving} className="save-btn">
+            {saving ? 'Saving...' : 'Save'}
+          </button>
+        </>
+      ) : (
+        <DocViewActions
+          setIsEditing={setIsEditing}
+          setShowMoveModal={setShowMoveModal}
+          setShowDuplicateModal={setShowDuplicateModal}
+          setShowDeleteConfirm={setShowDeleteConfirm}
+        />
+      )}
+    </div>
+  )
+}
+
+function DocEditForm({
+  editTitle,
+  setEditTitle,
+  editSlug,
+  setEditSlug,
+  editContent,
+  setEditContent,
+  docSlug,
+}: {
+  editTitle: string
+  setEditTitle: (v: string) => void
+  editSlug: string
+  setEditSlug: (v: string) => void
+  editContent: string
+  setEditContent: (v: string) => void
+  docSlug: string
+}) {
+  return (
+    <div className="edit-form">
+      <div className="form-group">
+        <label htmlFor="edit-title">Title:</label>
+        <input
+          id="edit-title"
+          type="text"
+          value={editTitle}
+          onChange={e => setEditTitle(e.target.value)}
+        />
       </div>
 
-      {error && <DaemonErrorMessage error={error} />}
+      <div className="form-group">
+        <label htmlFor="edit-slug">Slug (leave empty to keep current):</label>
+        <input
+          id="edit-slug"
+          type="text"
+          value={editSlug}
+          onChange={e => setEditSlug(e.target.value)}
+          placeholder={docSlug}
+        />
+      </div>
 
-      {showDeleteConfirm && (
-        <div className="delete-confirm">
-          <p>Are you sure you want to delete this document?</p>
-          <div className="delete-confirm-actions">
-            <button
-              onClick={() => setShowDeleteConfirm(false)}
-              className="cancel-btn"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleDelete}
-              disabled={deleting}
-              className="confirm-delete-btn"
-            >
-              {deleting ? 'Deleting...' : 'Yes, Delete'}
-            </button>
-          </div>
-        </div>
-      )}
+      <div className="form-group">
+        <label htmlFor="edit-content">Content (Markdown):</label>
+        <TextEditor
+          value={editContent}
+          onChange={setEditContent}
+          format="md"
+          mode="edit"
+          placeholder="Write your documentation in Markdown..."
+          minHeight={400}
+        />
+      </div>
+    </div>
+  )
+}
 
-      <div className="doc-content">
-        {isEditing ? (
-          <div className="edit-form">
-            <div className="form-group">
-              <label htmlFor="edit-title">Title:</label>
-              <input
-                id="edit-title"
-                type="text"
-                value={editTitle}
-                onChange={e => setEditTitle(e.target.value)}
-              />
-            </div>
+function DocViewContent({ doc, slug }: { doc: Doc; slug: string }) {
+  const { copyToClipboard } = useCopyToClipboard()
 
-            <div className="form-group">
-              <label htmlFor="edit-slug">
-                Slug (leave empty to keep current):
-              </label>
-              <input
-                id="edit-slug"
-                type="text"
-                value={editSlug}
-                onChange={e => setEditSlug(e.target.value)}
-                placeholder={doc.slug}
-              />
-            </div>
+  return (
+    <>
+      <button
+        type="button"
+        className="doc-slug-badge"
+        onClick={() => slug && copyToClipboard(slug, `doc "${slug}"`)}
+        title="Click to copy slug"
+      >
+        {doc.slug}
+      </button>
+      <h1 className="doc-title">{doc.title}</h1>
 
-            <div className="form-group">
-              <label htmlFor="edit-content">Content (Markdown):</label>
-              <TextEditor
-                value={editContent}
-                onChange={setEditContent}
-                format="md"
-                mode="edit"
-                placeholder="Write your documentation in Markdown..."
-                minHeight={400}
-              />
-            </div>
-          </div>
-        ) : (
-          <>
-            <button
-              type="button"
-              className="doc-slug-badge"
-              onClick={() => slug && copyToClipboard(slug, `doc "${slug}"`)}
-              title="Click to copy slug"
-            >
-              {doc.slug}
-            </button>
-            <h1 className="doc-title">{doc.title}</h1>
-
-            <div className="doc-metadata">
-              {doc.metadata && doc.metadata.createdAt && (
-                <span className="doc-date">
-                  Created: {new Date(doc.metadata.createdAt).toLocaleString()}
-                </span>
-              )}
-              {doc.metadata && doc.metadata.updatedAt && (
-                <span className="doc-date">
-                  Updated: {new Date(doc.metadata.updatedAt).toLocaleString()}
-                </span>
-              )}
-            </div>
-
-            <div className="doc-body">
-              {doc.content ? (
-                <TextEditor value={doc.content} format="md" mode="display" />
-              ) : (
-                <p className="no-content">No content</p>
-              )}
-            </div>
-
-            <LinkSection entityId={doc.slug} entityType="doc" editable={true} />
-          </>
+      <div className="doc-metadata">
+        {doc.metadata && doc.metadata.createdAt && (
+          <span className="doc-date">
+            Created: {new Date(doc.metadata.createdAt).toLocaleString()}
+          </span>
+        )}
+        {doc.metadata && doc.metadata.updatedAt && (
+          <span className="doc-date">
+            Updated: {new Date(doc.metadata.updatedAt).toLocaleString()}
+          </span>
         )}
       </div>
 
-      {showMoveModal && doc && (
+      <div className="doc-body">
+        {doc.content ? (
+          <TextEditor value={doc.content} format="md" mode="display" />
+        ) : (
+          <p className="no-content">No content</p>
+        )}
+      </div>
+
+      <LinkSection entityId={doc.slug} entityType="doc" editable={true} />
+    </>
+  )
+}
+
+function DocModals({
+  doc,
+  projectPath,
+  showMoveModal,
+  setShowMoveModal,
+  showDuplicateModal,
+  setShowDuplicateModal,
+  handleMoved,
+  handleDuplicated,
+}: {
+  doc: Doc
+  projectPath: string
+  showMoveModal: boolean
+  setShowMoveModal: (v: boolean) => void
+  showDuplicateModal: boolean
+  setShowDuplicateModal: (v: boolean) => void
+  handleMoved: (targetProjectPath: string) => void
+  handleDuplicated: (newSlug: string, targetProjectPath: string) => void
+}) {
+  return (
+    <>
+      {showMoveModal && (
         <MoveModal
           entityType="doc"
           entityId={doc.slug}
@@ -408,7 +475,7 @@ export function DocDetail({ slug }: DocDetailProps) {
         />
       )}
 
-      {showDuplicateModal && doc && (
+      {showDuplicateModal && (
         <DuplicateModal
           entityType="doc"
           entityId={doc.slug}
@@ -419,6 +486,201 @@ export function DocDetail({ slug }: DocDetailProps) {
           onDuplicated={handleDuplicated}
         />
       )}
+    </>
+  )
+}
+
+function useDocDetailState(projectPath: string, slug: string) {
+  const { createLink } = useAppLink()
+  const docsListUrl = createLink('/docs')
+
+  const fetchState = useFetchDoc(projectPath, slug)
+
+  const [isEditing, setIsEditing] = useState(false)
+  const [editSlug, setEditSlug] = useState('')
+  const [showMoveModal, setShowMoveModal] = useState(false)
+  const [showDuplicateModal, setShowDuplicateModal] = useState(false)
+
+  const { saving, handleSave } = useSaveDoc(
+    projectPath,
+    slug,
+    fetchState.editTitle,
+    fetchState.editContent,
+    editSlug,
+    fetchState.setDoc,
+    setIsEditing,
+    fetchState.setError
+  )
+
+  const deleteState = useDeleteDoc(
+    projectPath,
+    slug,
+    docsListUrl,
+    fetchState.setError
+  )
+
+  const { handleMoved, handleDuplicated } = useDocNavigation(
+    projectPath,
+    docsListUrl
+  )
+
+  const handleDuplicatedAndClose = useCallback(
+    async (newSlug: string, targetProjectPath: string) => {
+      await handleDuplicated(newSlug, targetProjectPath)
+      setShowDuplicateModal(false)
+    },
+    [handleDuplicated]
+  )
+
+  const handleCancelEdit = useCallback(() => {
+    setIsEditing(false)
+    if (!fetchState.doc) return
+    fetchState.setEditTitle(fetchState.doc.title)
+    fetchState.setEditContent(fetchState.doc.content)
+    setEditSlug('')
+  }, [fetchState])
+
+  return {
+    ...fetchState,
+    docsListUrl,
+    isEditing,
+    setIsEditing,
+    editSlug,
+    setEditSlug,
+    showMoveModal,
+    setShowMoveModal,
+    showDuplicateModal,
+    setShowDuplicateModal,
+    saving,
+    handleSave,
+    ...deleteState,
+    handleMoved,
+    handleDuplicated: handleDuplicatedAndClose,
+    handleCancelEdit,
+  }
+}
+
+function DocDetailLoaded({
+  doc,
+  slug,
+  state,
+  projectPath,
+}: {
+  doc: Doc
+  slug: string
+  state: ReturnType<typeof useDocDetailState>
+  projectPath: string
+}) {
+  return (
+    <div className="doc-detail">
+      <div className="doc-header">
+        <Link href={state.docsListUrl} className="back-link">
+          Back to Documentation
+        </Link>
+
+        <DocHeaderActions
+          isEditing={state.isEditing}
+          setIsEditing={state.setIsEditing}
+          setShowMoveModal={state.setShowMoveModal}
+          setShowDuplicateModal={state.setShowDuplicateModal}
+          setShowDeleteConfirm={state.setShowDeleteConfirm}
+          handleCancelEdit={state.handleCancelEdit}
+          handleSave={state.handleSave}
+          saving={state.saving}
+        />
+      </div>
+
+      {state.error && <DaemonErrorMessage error={state.error} />}
+
+      <DeleteConfirmSection
+        showDeleteConfirm={state.showDeleteConfirm}
+        setShowDeleteConfirm={state.setShowDeleteConfirm}
+        handleDelete={state.handleDelete}
+        deleting={state.deleting}
+      />
+
+      <div className="doc-content">
+        {state.isEditing ? (
+          <DocEditForm
+            editTitle={state.editTitle}
+            setEditTitle={state.setEditTitle}
+            editSlug={state.editSlug}
+            setEditSlug={state.setEditSlug}
+            editContent={state.editContent}
+            setEditContent={state.setEditContent}
+            docSlug={doc.slug}
+          />
+        ) : (
+          <DocViewContent doc={doc} slug={slug} />
+        )}
+      </div>
+
+      <DocModals
+        doc={doc}
+        projectPath={projectPath}
+        showMoveModal={state.showMoveModal}
+        setShowMoveModal={state.setShowMoveModal}
+        showDuplicateModal={state.showDuplicateModal}
+        setShowDuplicateModal={state.setShowDuplicateModal}
+        handleMoved={state.handleMoved}
+        handleDuplicated={state.handleDuplicated}
+      />
     </div>
+  )
+}
+
+export function DocDetail({ slug }: DocDetailProps) {
+  const { projectPath } = useProject()
+  const state = useDocDetailState(projectPath, slug)
+
+  if (!projectPath) {
+    return (
+      <div className="doc-detail">
+        <div className="error-message">
+          No project path specified. Please go to the{' '}
+          <Link href={state.docsListUrl}>documentation list</Link> and select a
+          project.
+        </div>
+      </div>
+    )
+  }
+
+  if (state.loading) {
+    return (
+      <div className="doc-detail">
+        <div className="loading">Loading document...</div>
+      </div>
+    )
+  }
+
+  if (state.error && !state.doc) {
+    return (
+      <div className="doc-detail">
+        <DaemonErrorMessage error={state.error} />
+        <Link href={state.docsListUrl} className="back-link">
+          Back to Documentation
+        </Link>
+      </div>
+    )
+  }
+
+  if (!state.doc) {
+    return (
+      <div className="doc-detail">
+        <div className="error-message">Document not found</div>
+        <Link href={state.docsListUrl} className="back-link">
+          Back to Documentation
+        </Link>
+      </div>
+    )
+  }
+
+  return (
+    <DocDetailLoaded
+      doc={state.doc}
+      slug={slug}
+      state={state}
+      projectPath={projectPath}
+    />
   )
 }

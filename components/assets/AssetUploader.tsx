@@ -52,48 +52,24 @@ interface AssetUploaderProps {
   mode: 'create' | 'edit'
 }
 
-export const AssetUploader = forwardRef<
-  AssetUploaderHandle,
-  AssetUploaderProps
->(function AssetUploader(
-  {
-    projectPath,
-    issueId,
-    prId,
-    onAssetsChange,
-    onPendingChange,
-    initialAssets = [],
-    mode,
-  },
-  ref
+function validateFile(file: File): string | null {
+  if (!Object.keys(ALLOWED_TYPES).includes(file.type)) {
+    return `Unsupported file type: ${file.type}`
+  }
+  if (file.size > MAX_FILE_SIZE) {
+    return `File too large: ${(file.size / 1024 / 1024).toFixed(1)}MB (max 50MB)`
+  }
+  return null
+}
+
+function useAssetUpload(
+  projectPath: string,
+  onAssetsChange?: (assets: Asset[]) => void,
+  onPendingChange?: (pending: PendingAsset[]) => void
 ) {
-  // Determine which ID to use for uploads
-  const targetId = issueId || prId
-  const [assets, setAssets] = useState<Asset[]>(initialAssets)
+  const [assets, setAssets] = useState<Asset[]>([])
   const [pendingAssets, setPendingAssets] = useState<PendingAsset[]>([])
-  const [isDragging, setIsDragging] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // Update assets when initialAssets changes (use JSON stringify for stable comparison)
-  const initialAssetsKey = JSON.stringify(initialAssets.map(a => a.filename))
-  useEffect(() => {
-    setAssets(initialAssets)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialAssetsKey])
-
-  // Validate file
-  const validateFile = useCallback((file: File): string | null => {
-    if (!Object.keys(ALLOWED_TYPES).includes(file.type)) {
-      return `Unsupported file type: ${file.type}`
-    }
-    if (file.size > MAX_FILE_SIZE) {
-      return `File too large: ${(file.size / 1024 / 1024).toFixed(1)}MB (max 50MB)`
-    }
-    return null
-  }, [])
-
-  // Upload single asset to server
   const uploadAsset = useCallback(
     async (pending: PendingAsset, uploadTargetId: string): Promise<boolean> => {
       try {
@@ -113,17 +89,14 @@ export const AssetUploader = forwardRef<
             if (onAssetsChange) onAssetsChange(updated)
             return updated
           })
-          // Remove from pending
           setPendingAssets(prev => {
             const updated = prev.filter(p => p.id !== pending.id)
             if (onPendingChange) onPendingChange(updated)
             return updated
           })
-          // Revoke object URL if exists
           if (pending.preview) URL.revokeObjectURL(pending.preview)
           return true
         } else {
-          // Mark as error
           setPendingAssets(prev =>
             prev.map(p =>
               p.id === pending.id
@@ -155,70 +128,20 @@ export const AssetUploader = forwardRef<
     [projectPath, onAssetsChange, onPendingChange]
   )
 
-  // Add files (drag/drop or file picker)
-  const handleFiles = useCallback(
-    async (files: FileList | File[]) => {
-      const fileArray = Array.from(files)
+  return { assets, setAssets, pendingAssets, setPendingAssets, uploadAsset }
+}
 
-      for (const file of fileArray) {
-        const validationError = validateFile(file)
-        if (validationError) {
-          setError(validationError)
-          continue
-        }
+function useAssetActions(
+  projectPath: string,
+  targetId: string | undefined,
+  onAssetsChange?: (assets: Asset[]) => void,
+  onPendingChange?: (pending: PendingAsset[]) => void,
+  setAssets?: React.Dispatch<React.SetStateAction<Asset[]>>,
+  pendingAssets?: PendingAsset[],
+  setPendingAssets?: React.Dispatch<React.SetStateAction<PendingAsset[]>>
+) {
+  const [error, setError] = useState<string | null>(null)
 
-        const preview = file.type.startsWith('image/')
-          ? URL.createObjectURL(file)
-          : undefined
-
-        const pending: PendingAsset = {
-          id: crypto.randomUUID(),
-          file,
-          preview,
-          status: mode === 'edit' && targetId ? 'uploading' : 'pending',
-        }
-
-        setPendingAssets(prev => {
-          const updated = [...prev, pending]
-          if (onPendingChange) onPendingChange(updated)
-          return updated
-        })
-
-        // If in edit mode with existing issue, upload immediately
-        if (mode === 'edit' && targetId) {
-          await uploadAsset(pending, targetId)
-        }
-      }
-    },
-    [mode, targetId, onPendingChange, validateFile, uploadAsset]
-  )
-
-  // Upload all pending assets (called when issue is created in create mode)
-  const uploadAllPending = useCallback(
-    async (uploadTargetId: string): Promise<boolean> => {
-      let allSuccess = true
-      const pendingToUpload = pendingAssets.filter(p => p.status === 'pending')
-
-      for (const pending of pendingToUpload) {
-        setPendingAssets(prev =>
-          prev.map(p =>
-            p.id === pending.id ? { ...p, status: 'uploading' as const } : p
-          )
-        )
-        const success = await uploadAsset(pending, uploadTargetId)
-        if (!success) allSuccess = false
-      }
-      return allSuccess
-    },
-    [pendingAssets, uploadAsset]
-  )
-
-  // Expose uploadAllPending to parent via ref
-  useImperativeHandle(ref, () => ({
-    uploadAllPending,
-  }))
-
-  // Remove asset from server
   const removeAsset = useCallback(
     async (filename: string) => {
       if (!targetId) return
@@ -232,7 +155,7 @@ export const AssetUploader = forwardRef<
         const response = await centyClient.deleteAsset(request)
 
         if (response.success) {
-          setAssets(prev => {
+          setAssets!(prev => {
             const updated = prev.filter(a => a.filename !== filename)
             if (onAssetsChange) onAssetsChange(updated)
             return updated
@@ -244,46 +167,263 @@ export const AssetUploader = forwardRef<
         setError(err instanceof Error ? err.message : 'Failed to remove asset')
       }
     },
-    [projectPath, targetId, onAssetsChange]
+    [projectPath, targetId, onAssetsChange, setAssets]
   )
 
-  // Remove pending asset
   const removePending = useCallback(
     (pendingId: string) => {
-      const pending = pendingAssets.find(p => p.id === pendingId)
+      const pending = pendingAssets!.find(p => p.id === pendingId)
       if (pending && pending.preview) URL.revokeObjectURL(pending.preview)
-      setPendingAssets(prev => {
+      setPendingAssets!(prev => {
         const updated = prev.filter(p => p.id !== pendingId)
         if (onPendingChange) onPendingChange(updated)
         return updated
       })
     },
-    [pendingAssets, onPendingChange]
+    [pendingAssets, onPendingChange, setPendingAssets]
   )
 
-  // Drag and drop handlers
-  const handleDragOver = useCallback((e: React.DragEvent) => {
+  return { error, setError, removeAsset, removePending }
+}
+
+function DropZone({
+  isDragging,
+  onDragOver,
+  onDragLeave,
+  onDrop,
+  onClickBrowse,
+  fileInputRef,
+  onFilesSelected,
+}: {
+  isDragging: boolean
+  onDragOver: (e: React.DragEvent) => void
+  onDragLeave: (e: React.DragEvent) => void
+  onDrop: (e: React.DragEvent) => void
+  onClickBrowse: () => void
+  fileInputRef: React.RefObject<HTMLInputElement | null>
+  onFilesSelected: (files: FileList) => void
+}) {
+  return (
+    <div
+      className={`drop-zone ${isDragging ? 'dragging' : ''}`}
+      onDragOver={onDragOver}
+      onDragLeave={onDragLeave}
+      onDrop={onDrop}
+      onClick={onClickBrowse}
+    >
+      <input
+        ref={fileInputRef}
+        type="file"
+        multiple
+        accept="image/png,image/jpeg,image/gif,image/webp,video/mp4,video/webm,application/pdf"
+        onChange={e => e.target.files && onFilesSelected(e.target.files)}
+        style={{ display: 'none' }}
+      />
+      <div className="drop-zone-content">
+        <span className="drop-zone-icon">+</span>
+        <span className="drop-zone-text">
+          {isDragging
+            ? 'Drop files here...'
+            : 'Drag & drop files or click to browse'}
+        </span>
+        <span className="drop-zone-hint">
+          Images, videos, or PDFs (max 50MB)
+        </span>
+      </div>
+    </div>
+  )
+}
+
+function useHandleFiles(
+  mode: 'create' | 'edit',
+  targetId: string | undefined,
+  onPendingChange: ((pending: PendingAsset[]) => void) | undefined,
+  uploadAsset: (
+    pending: PendingAsset,
+    uploadTargetId: string
+  ) => Promise<boolean>,
+  setError: (error: string | null) => void,
+  setPendingAssets: React.Dispatch<React.SetStateAction<PendingAsset[]>>
+) {
+  return useCallback(
+    async (files: FileList | File[]) => {
+      for (const file of Array.from(files)) {
+        const validationError = validateFile(file)
+        if (validationError) {
+          setError(validationError)
+          continue
+        }
+
+        const preview = file.type.startsWith('image/')
+          ? URL.createObjectURL(file)
+          : undefined
+        const pending: PendingAsset = {
+          id: crypto.randomUUID(),
+          file,
+          preview,
+          status: mode === 'edit' && targetId ? 'uploading' : 'pending',
+        }
+
+        setPendingAssets(prev => {
+          const updated = [...prev, pending]
+          if (onPendingChange) onPendingChange(updated)
+          return updated
+        })
+
+        if (mode === 'edit' && targetId) {
+          await uploadAsset(pending, targetId)
+        }
+      }
+    },
+    [mode, targetId, onPendingChange, uploadAsset, setError, setPendingAssets]
+  )
+}
+
+function useUploadAllPending(
+  pendingAssets: PendingAsset[],
+  uploadAsset: (
+    pending: PendingAsset,
+    uploadTargetId: string
+  ) => Promise<boolean>,
+  setPendingAssets: React.Dispatch<React.SetStateAction<PendingAsset[]>>
+) {
+  return useCallback(
+    async (uploadTargetId: string): Promise<boolean> => {
+      let allSuccess = true
+      for (const pending of pendingAssets.filter(p => p.status === 'pending')) {
+        setPendingAssets(prev =>
+          prev.map(p =>
+            p.id === pending.id ? { ...p, status: 'uploading' as const } : p
+          )
+        )
+        if (!(await uploadAsset(pending, uploadTargetId))) allSuccess = false
+      }
+      return allSuccess
+    },
+    [pendingAssets, uploadAsset, setPendingAssets]
+  )
+}
+
+function useDragHandlers(handleFiles: (files: FileList | File[]) => void) {
+  const [isDragging, setIsDragging] = useState(false)
+
+  const onDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault()
     setIsDragging(true)
   }, [])
 
-  const handleDragLeave = useCallback((e: React.DragEvent) => {
+  const onDragLeave = useCallback((e: React.DragEvent) => {
     e.preventDefault()
     setIsDragging(false)
   }, [])
 
-  const handleDrop = useCallback(
+  const onDrop = useCallback(
     (e: React.DragEvent) => {
       e.preventDefault()
       setIsDragging(false)
-      if (e.dataTransfer.files.length > 0) {
-        handleFiles(e.dataTransfer.files)
-      }
+      if (e.dataTransfer.files.length > 0) handleFiles(e.dataTransfer.files)
     },
     [handleFiles]
   )
 
-  // Cleanup object URLs on unmount
+  return { isDragging, onDragOver, onDragLeave, onDrop }
+}
+
+function AssetErrorBanner({
+  error,
+  onDismiss,
+}: {
+  error: string | null
+  onDismiss: () => void
+}) {
+  if (!error) return null
+  return (
+    <div className="asset-error">
+      {error}
+      <button onClick={onDismiss}>Dismiss</button>
+    </div>
+  )
+}
+
+function AssetGrid({
+  assets,
+  pendingAssets,
+  projectPath,
+  issueId,
+  removeAsset,
+  removePending,
+}: {
+  assets: Asset[]
+  pendingAssets: PendingAsset[]
+  projectPath: string
+  issueId?: string
+  removeAsset: (filename: string) => void
+  removePending: (id: string) => void
+}) {
+  if (assets.length === 0 && pendingAssets.length === 0) return null
+  return (
+    <div className="asset-grid">
+      {assets.map(asset => (
+        <AssetPreviewItem
+          key={asset.filename}
+          asset={asset}
+          projectPath={projectPath}
+          issueId={issueId!}
+          onRemove={() => removeAsset(asset.filename)}
+        />
+      ))}
+      {pendingAssets.map(pending => (
+        <PendingAssetPreviewItem
+          key={pending.id}
+          pending={pending}
+          onRemove={() => removePending(pending.id)}
+        />
+      ))}
+    </div>
+  )
+}
+
+function useAssetUploaderSetup(
+  projectPath: string,
+  targetId: string | undefined,
+  onAssetsChange: ((assets: Asset[]) => void) | undefined,
+  onPendingChange: ((pending: PendingAsset[]) => void) | undefined,
+  initialAssets: Asset[],
+  mode: 'create' | 'edit'
+) {
+  const { assets, setAssets, pendingAssets, setPendingAssets, uploadAsset } =
+    useAssetUpload(projectPath, onAssetsChange, onPendingChange)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const { error, setError, removeAsset, removePending } = useAssetActions(
+    projectPath,
+    targetId,
+    onAssetsChange,
+    onPendingChange,
+    setAssets,
+    pendingAssets,
+    setPendingAssets
+  )
+
+  const initialAssetsKey = JSON.stringify(initialAssets.map(a => a.filename))
+  useEffect(() => {
+    setAssets(initialAssets)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialAssetsKey])
+
+  const handleFiles = useHandleFiles(
+    mode,
+    targetId,
+    onPendingChange,
+    uploadAsset,
+    setError,
+    setPendingAssets
+  )
+  const uploadAllPending = useUploadAllPending(
+    pendingAssets,
+    uploadAsset,
+    setPendingAssets
+  )
+
   useEffect(() => {
     return () => {
       pendingAssets.forEach(p => {
@@ -292,70 +432,74 @@ export const AssetUploader = forwardRef<
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
+  return {
+    assets,
+    pendingAssets,
+    fileInputRef,
+    error,
+    setError,
+    removeAsset,
+    removePending,
+    handleFiles,
+    uploadAllPending,
+  }
+}
+
+export const AssetUploader = forwardRef<
+  AssetUploaderHandle,
+  AssetUploaderProps
+>(function AssetUploader(
+  {
+    projectPath,
+    issueId,
+    prId,
+    onAssetsChange,
+    onPendingChange,
+    initialAssets = [],
+    mode,
+  },
+  ref
+) {
+  const targetId = issueId || prId
+  const setup = useAssetUploaderSetup(
+    projectPath,
+    targetId,
+    onAssetsChange,
+    onPendingChange,
+    initialAssets,
+    mode
+  )
+  const { isDragging, onDragOver, onDragLeave, onDrop } = useDragHandlers(
+    setup.handleFiles
+  )
+
+  useImperativeHandle(ref, () => ({ uploadAllPending: setup.uploadAllPending }))
+
   return (
     <div className="asset-uploader">
-      {/* Drop Zone */}
-      <div
-        className={`drop-zone ${isDragging ? 'dragging' : ''}`}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-        onClick={() => {
-          if (fileInputRef.current) fileInputRef.current.click()
+      <DropZone
+        isDragging={isDragging}
+        onDragOver={onDragOver}
+        onDragLeave={onDragLeave}
+        onDrop={onDrop}
+        onClickBrowse={() => {
+          if (setup.fileInputRef.current) setup.fileInputRef.current.click()
         }}
-      >
-        <input
-          ref={fileInputRef}
-          type="file"
-          multiple
-          accept="image/png,image/jpeg,image/gif,image/webp,video/mp4,video/webm,application/pdf"
-          onChange={e => e.target.files && handleFiles(e.target.files)}
-          style={{ display: 'none' }}
-        />
-        <div className="drop-zone-content">
-          <span className="drop-zone-icon">+</span>
-          <span className="drop-zone-text">
-            {isDragging
-              ? 'Drop files here...'
-              : 'Drag & drop files or click to browse'}
-          </span>
-          <span className="drop-zone-hint">
-            Images, videos, or PDFs (max 50MB)
-          </span>
-        </div>
-      </div>
-
-      {error && (
-        <div className="asset-error">
-          {error}
-          <button onClick={() => setError(null)}>Dismiss</button>
-        </div>
-      )}
-
-      {/* Asset Grid */}
-      {(assets.length > 0 || pendingAssets.length > 0) && (
-        <div className="asset-grid">
-          {/* Existing Assets */}
-          {assets.map(asset => (
-            <AssetPreviewItem
-              key={asset.filename}
-              asset={asset}
-              projectPath={projectPath}
-              issueId={issueId!}
-              onRemove={() => removeAsset(asset.filename)}
-            />
-          ))}
-
-          {/* Pending Assets */}
-          {pendingAssets.map(pending => (
-            <PendingAssetPreviewItem
-              key={pending.id}
-              pending={pending}
-              onRemove={() => removePending(pending.id)}
-            />
-          ))}
-        </div>
-      )}
+        fileInputRef={setup.fileInputRef}
+        onFilesSelected={setup.handleFiles}
+      />
+      <AssetErrorBanner
+        error={setup.error}
+        onDismiss={() => setup.setError(null)}
+      />
+      <AssetGrid
+        assets={setup.assets}
+        pendingAssets={setup.pendingAssets}
+        projectPath={projectPath}
+        issueId={issueId}
+        removeAsset={setup.removeAsset}
+        removePending={setup.removePending}
+      />
     </div>
   )
 })
@@ -368,12 +512,7 @@ interface AssetPreviewItemProps {
   onRemove: () => void
 }
 
-function AssetPreviewItem({
-  asset,
-  projectPath,
-  issueId,
-  onRemove,
-}: AssetPreviewItemProps) {
+function useAssetPreview(asset: Asset, projectPath: string, issueId: string) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -393,7 +532,6 @@ function AssetPreviewItem({
           })
           const response = await centyClient.getAsset(request)
           if (mounted && response.data) {
-            // Create a new Uint8Array copy for Blob compatibility
             const bytes = new Uint8Array(response.data)
             const blob = new Blob([bytes], { type: asset.mimeType })
             setPreviewUrl(URL.createObjectURL(blob))
@@ -411,6 +549,17 @@ function AssetPreviewItem({
       if (previewUrl) URL.revokeObjectURL(previewUrl)
     }
   }, [asset, projectPath, issueId]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  return { previewUrl, loading }
+}
+
+function AssetPreviewItem({
+  asset,
+  projectPath,
+  issueId,
+  onRemove,
+}: AssetPreviewItemProps) {
+  const { previewUrl, loading } = useAssetPreview(asset, projectPath, issueId)
 
   const type = asset.mimeType.startsWith('image/')
     ? 'image'
