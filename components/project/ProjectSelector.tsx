@@ -61,10 +61,10 @@ export function ProjectSelector() {
   // Get current page from URL for navigation
   const getCurrentPage = () => {
     // Extract org and project from named route params
-    const orgParam = params?.organization
+    const orgParam = params ? params.organization : undefined
     const org: string | undefined =
       typeof orgParam === 'string' ? orgParam : undefined
-    const projectParam = params?.project
+    const projectParam = params ? params.project : undefined
     const project: string | undefined =
       typeof projectParam === 'string' ? projectParam : undefined
 
@@ -140,42 +140,41 @@ export function ProjectSelector() {
 
   const handleManualSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (manualPath.trim()) {
-      const path = manualPath.trim()
-      try {
-        // Register the project with the daemon
-        const request = create(RegisterProjectRequestSchema, {
-          projectPath: path,
+    if (!manualPath.trim()) return
+    const path = manualPath.trim()
+    try {
+      // Register the project with the daemon
+      const request = create(RegisterProjectRequestSchema, {
+        projectPath: path,
+      })
+      const response = await centyClient.registerProject(request)
+      if (response.success && response.project) {
+        setProjectPath(path)
+        setIsInitialized(response.project.initialized)
+        // Add to projects list if not already there
+        setProjects(prev => {
+          if (prev.some(p => p.path === path)) return prev
+          return [...prev, response.project!]
         })
-        const response = await centyClient.registerProject(request)
-        if (response.success && response.project) {
-          setProjectPath(path)
-          setIsInitialized(response.project.initialized)
-          // Add to projects list if not already there
-          setProjects(prev => {
-            if (prev.some(p => p.path === path)) return prev
-            return [...prev, response.project!]
-          })
-        } else {
-          // Still set the path even if registration fails
-          setProjectPath(path)
-          setIsInitialized(null)
-        }
-      } catch {
-        // Fallback: set path without registration
+      } else {
+        // Still set the path even if registration fails
         setProjectPath(path)
         setIsInitialized(null)
       }
-      setManualPath('')
-      setSearchQuery('')
-      setIsOpen(false)
+    } catch {
+      // Fallback: set path without registration
+      setProjectPath(path)
+      setIsInitialized(null)
     }
+    setManualPath('')
+    setSearchQuery('')
+    setIsOpen(false)
   }
 
   const getCurrentProjectName = () => {
     if (!projectPath) return 'Select Project'
     const project = projects.find(p => p.path === projectPath)
-    if (project?.name) return project.name
+    if (project && project.name) return project.name
     // Extract folder name from path
     const parts = projectPath.split('/')
     return parts[parts.length - 1] || projectPath
@@ -188,10 +187,9 @@ export function ProjectSelector() {
     e.stopPropagation() // Prevent selecting the project
     archiveProject(projectToArchive.path)
     // If archiving the currently selected project, clear selection
-    if (projectToArchive.path === projectPath) {
-      setProjectPath('')
-      setIsInitialized(null)
-    }
+    if (projectToArchive.path !== projectPath) return
+    setProjectPath('')
+    setIsInitialized(null)
   }
 
   const handleToggleFavorite = async (
@@ -268,7 +266,10 @@ export function ProjectSelector() {
       const orgSlug = project.organizationSlug || ''
       if (!groups.has(orgSlug)) {
         const org = organizations.find(o => o.slug === orgSlug)
-        groups.set(orgSlug, { name: org?.name || orgSlug, projects: [] })
+        groups.set(orgSlug, {
+          name: (org ? org.name : '') || orgSlug,
+          projects: [],
+        })
       }
       groups.get(orgSlug)!.projects.push(project)
     }
@@ -302,7 +303,7 @@ export function ProjectSelector() {
           sideOffset={4}
           onOpenAutoFocus={e => {
             e.preventDefault()
-            searchInputRef.current?.focus()
+            if (searchInputRef.current) searchInputRef.current.focus()
           }}
         >
           <div className="project-selector-header">

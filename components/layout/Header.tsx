@@ -29,10 +29,10 @@ export function Header() {
   // Extract org and project from URL
   // New route structure: /[organization]/[project]/...
   // Named params are available as params?.organization and params?.project
-  const orgParam = params?.organization
+  const orgParam = params ? params.organization : undefined
   const org: string | undefined =
     typeof orgParam === 'string' ? orgParam : undefined
-  const projectParam = params?.project
+  const projectParam = params ? params.project : undefined
   const project: string | undefined =
     typeof projectParam === 'string' ? projectParam : undefined
 

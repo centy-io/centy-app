@@ -134,7 +134,10 @@ function CustomFieldDisplay({
   onMoveDown,
 }: CustomFieldDisplayProps) {
   const typeLabel =
-    FIELD_TYPES.find(t => t.value === field.fieldType)?.label || field.fieldType
+    (() => {
+      const found = FIELD_TYPES.find(t => t.value === field.fieldType)
+      return found ? found.label : ''
+    })() || field.fieldType
 
   return (
     <div className="custom-field-display">
@@ -219,12 +222,14 @@ function CustomFieldForm({
   onSave,
   onCancel,
 }: CustomFieldFormProps) {
-  const [name, setName] = useState(field?.name || '')
-  const [fieldType, setFieldType] = useState(field?.fieldType || 'string')
-  const [required, setRequired] = useState(field?.required || false)
-  const [defaultValue, setDefaultValue] = useState(field?.defaultValue || '')
+  const [name, setName] = useState(field ? field.name : '')
+  const [fieldType, setFieldType] = useState(field ? field.fieldType : 'string')
+  const [required, setRequired] = useState(field ? field.required : false)
+  const [defaultValue, setDefaultValue] = useState(
+    field ? field.defaultValue : ''
+  )
   const [enumValues, setEnumValues] = useState<string[]>(
-    field?.enumValues || []
+    field ? field.enumValues : []
   )
   const [newEnumValue, setNewEnumValue] = useState('')
 
@@ -247,10 +252,9 @@ function CustomFieldForm({
 
   const handleAddEnumValue = () => {
     const trimmed = newEnumValue.trim()
-    if (trimmed && !enumValues.includes(trimmed)) {
-      setEnumValues([...enumValues, trimmed])
-      setNewEnumValue('')
-    }
+    if (!trimmed || enumValues.includes(trimmed)) return
+    setEnumValues([...enumValues, trimmed])
+    setNewEnumValue('')
   }
 
   const handleRemoveEnumValue = (value: string) => {
@@ -323,10 +327,9 @@ function CustomFieldForm({
               value={newEnumValue}
               onChange={e => setNewEnumValue(e.target.value)}
               onKeyDown={e => {
-                if (e.key === 'Enter') {
-                  e.preventDefault()
-                  handleAddEnumValue()
-                }
+                if (e.key !== 'Enter') return
+                e.preventDefault()
+                handleAddEnumValue()
               }}
               placeholder="Add option..."
               className="custom-field-form-input"

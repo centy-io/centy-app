@@ -55,10 +55,10 @@ export function LinkSection({
 
   // Get project context for building routes
   const projectContext = useMemo(() => {
-    const org =
-      typeof params?.organization === 'string' ? params.organization : undefined
-    const project =
-      typeof params?.project === 'string' ? params.project : undefined
+    const orgParam = params ? params.organization : undefined
+    const org = typeof orgParam === 'string' ? orgParam : undefined
+    const projectParam = params ? params.project : undefined
+    const project = typeof projectParam === 'string' ? projectParam : undefined
     if (org && project) return { organization: org, project }
     return null
   }, [params])

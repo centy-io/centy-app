@@ -111,7 +111,7 @@ export function StandaloneWorkspaceModal({
           await centyClient.openStandaloneWorkspaceVscode(request)
 
         if (response.success) {
-          onCreated?.(response.workspacePath)
+          if (onCreated) onCreated(response.workspacePath)
           onClose()
         } else {
           setError(response.error || 'Failed to create workspace')
@@ -128,7 +128,7 @@ export function StandaloneWorkspaceModal({
           await centyClient.openStandaloneWorkspaceTerminal(request)
 
         if (response.success) {
-          onCreated?.(response.workspacePath)
+          if (onCreated) onCreated(response.workspacePath)
           onClose()
         } else {
           setError(response.error || 'Failed to create workspace')

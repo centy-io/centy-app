@@ -73,10 +73,10 @@ export function PathContextProvider({ children }: { children: ReactNode }) {
   const pathname = usePathname()
 
   // Extract org and project from named route params
-  const orgParam = params?.organization
+  const orgParam = params ? params.organization : undefined
   const org: string | undefined =
     typeof orgParam === 'string' ? orgParam : undefined
-  const projectParam = params?.project
+  const projectParam = params ? params.project : undefined
   const project: string | undefined =
     typeof projectParam === 'string' ? projectParam : undefined
 

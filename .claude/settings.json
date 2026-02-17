@@ -160,7 +160,9 @@
       "Bash(pnpm add:*)",
       "Bash(pnpm remove:*)",
       "Bash(pnpm lint:fix:*)",
-      "Bash(pnpm knip:*)"
+      "Bash(pnpm knip:*)",
+      "Bash(npx eslint:*)",
+      "Bash(npx vitest run:*)"
     ],
     "deny": ["Bash(npm install)", "Bash(gh issue create:*)"]
   },

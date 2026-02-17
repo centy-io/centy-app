@@ -22,12 +22,11 @@ if (typeof window !== 'undefined') {
 // Enable demo mode
 export function enableDemoMode(): void {
   demoModeEnabled = true
-  if (typeof window !== 'undefined') {
-    sessionStorage.setItem(DEMO_MODE_STORAGE_KEY, 'true')
-    // Auto-navigate to demo org and project
-    localStorage.setItem('centy-selected-org', DEMO_ORG_SLUG)
-    localStorage.setItem('centy-project-path', DEMO_PROJECT_PATH)
-  }
+  if (typeof window === 'undefined') return
+  sessionStorage.setItem(DEMO_MODE_STORAGE_KEY, 'true')
+  // Auto-navigate to demo org and project
+  localStorage.setItem('centy-selected-org', DEMO_ORG_SLUG)
+  localStorage.setItem('centy-project-path', DEMO_PROJECT_PATH)
 }
 
 // Disable demo mode

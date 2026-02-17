@@ -229,7 +229,7 @@ export function AddLinkModal({
 
   const getInverseLinkType = (linkType: string) => {
     const type = linkTypes.find(t => t.name === linkType)
-    return type?.inverse || linkType
+    return (type ? type.inverse : '') || linkType
   }
 
   const getEntityLabel = (item: EntityItem) => {
@@ -315,7 +315,7 @@ export function AddLinkModal({
                   {searchResults.slice(0, 10).map(item => (
                     <li
                       key={item.id}
-                      className={`link-modal-item ${selectedTarget?.id === item.id ? 'selected' : ''}`}
+                      className={`link-modal-item ${selectedTarget && selectedTarget.id === item.id ? 'selected' : ''}`}
                       onClick={() => setSelectedTarget(item)}
                     >
                       <span className={`link-type-icon link-type-${item.type}`}>

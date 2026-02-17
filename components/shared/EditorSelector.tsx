@@ -32,13 +32,12 @@ export function EditorSelector({
     // Schedule setState asynchronously to satisfy eslint react-hooks/set-state-in-effect
     const timeoutId = setTimeout(() => {
       const saved = localStorage.getItem(EDITOR_PREFERENCE_KEY)
-      if (saved) {
-        const parsedValue = parseInt(saved, 10)
-        if (parsedValue === EditorType.VSCODE) {
-          setPreferredEditor(EditorType.VSCODE)
-        } else if (parsedValue === EditorType.TERMINAL) {
-          setPreferredEditor(EditorType.TERMINAL)
-        }
+      if (!saved) return
+      const parsedValue = parseInt(saved, 10)
+      if (parsedValue === EditorType.VSCODE) {
+        setPreferredEditor(EditorType.VSCODE)
+      } else if (parsedValue === EditorType.TERMINAL) {
+        setPreferredEditor(EditorType.TERMINAL)
       }
     }, 0)
     return () => clearTimeout(timeoutId)
@@ -89,7 +88,8 @@ export function EditorSelector({
 
   // Get the preferred editor's display info
   const preferredEditorInfo = getEditorInfo(preferredEditor)
-  const preferredEditorName = preferredEditorInfo?.name || 'VS Code'
+  const preferredEditorName =
+    (preferredEditorInfo ? preferredEditorInfo.name : '') || 'VS Code'
   const preferredEditorAvailable = isEditorAvailable(preferredEditor)
 
   // Handle primary button click
@@ -165,7 +165,9 @@ export function EditorSelector({
           disabled={disabled || loading || !preferredEditorAvailable}
           title={
             preferredEditorAvailable
-              ? preferredEditorInfo?.description
+              ? preferredEditorInfo
+                ? preferredEditorInfo.description
+                : ''
               : `${preferredEditorName} is not available`
           }
         >

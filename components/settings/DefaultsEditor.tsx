@@ -19,14 +19,13 @@ export function DefaultsEditor({
   const entries = Object.entries(value)
 
   const handleAdd = () => {
-    if (newKey.trim() && !value[newKey.trim()]) {
-      onChange({
-        ...value,
-        [newKey.trim()]: newValue,
-      })
-      setNewKey('')
-      setNewValue('')
-    }
+    if (!newKey.trim() || value[newKey.trim()]) return
+    onChange({
+      ...value,
+      [newKey.trim()]: newValue,
+    })
+    setNewKey('')
+    setNewValue('')
   }
 
   const handleRemove = (key: string) => {
@@ -43,10 +42,9 @@ export function DefaultsEditor({
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      e.preventDefault()
-      handleAdd()
-    }
+    if (e.key !== 'Enter') return
+    e.preventDefault()
+    handleAdd()
   }
 
   const availableKeys = suggestedKeys.filter(k => !value[k])

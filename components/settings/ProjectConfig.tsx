@@ -48,10 +48,9 @@ export function ProjectConfig() {
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (isDirty) {
-        e.preventDefault()
-        e.returnValue = ''
-      }
+      if (!isDirty) return
+      e.preventDefault()
+      e.returnValue = ''
     }
     window.addEventListener('beforeunload', handleBeforeUnload)
     return () => window.removeEventListener('beforeunload', handleBeforeUnload)
@@ -216,10 +215,9 @@ export function ProjectConfig() {
   }, [projectPath, checkInitialized])
 
   useEffect(() => {
-    if (isInitialized === true) {
-      fetchProjectData()
-      fetchProjectOrg()
-    }
+    if (isInitialized !== true) return
+    fetchProjectData()
+    fetchProjectOrg()
   }, [isInitialized, fetchProjectData, fetchProjectOrg])
 
   return (

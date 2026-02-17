@@ -100,8 +100,12 @@ export function IssueDetail({ issueNumber }: IssueDetailProps): ReactElement {
         setIssue(response.issue)
         setEditTitle(response.issue.title)
         setEditDescription(response.issue.description)
-        setEditStatus(response.issue.metadata?.status || 'open')
-        setEditPriority(response.issue.metadata?.priority || 2)
+        setEditStatus(
+          (response.issue.metadata && response.issue.metadata.status) || 'open'
+        )
+        setEditPriority(
+          (response.issue.metadata && response.issue.metadata.priority) || 2
+        )
       } else {
         setError(response.error || 'Issue not found')
       }
@@ -137,11 +141,11 @@ export function IssueDetail({ issueNumber }: IssueDetailProps): ReactElement {
 
   // Record last seen timestamp when issue is viewed
   useEffect(() => {
-    if (issue?.id) {
+    if (issue && issue.id) {
       recordLastSeen(issue.id)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [issue?.id])
+  }, [issue && issue.id])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -167,7 +171,7 @@ export function IssueDetail({ issueNumber }: IssueDetailProps): ReactElement {
   const handleStatusChange = useCallback(
     async (newStatus: string) => {
       if (!projectPath || !issueNumber || !issue) return
-      if (newStatus === issue.metadata?.status) {
+      if (newStatus === (issue.metadata && issue.metadata.status)) {
         setShowStatusDropdown(false)
         return
       }
@@ -185,7 +189,10 @@ export function IssueDetail({ issueNumber }: IssueDetailProps): ReactElement {
 
         if (response.success && response.issue) {
           setIssue(response.issue)
-          setEditStatus(response.issue.metadata?.status || 'open')
+          setEditStatus(
+            (response.issue.metadata && response.issue.metadata.status) ||
+              'open'
+          )
         } else {
           setError(response.error || 'Failed to update status')
         }
@@ -271,12 +278,11 @@ export function IssueDetail({ issueNumber }: IssueDetailProps): ReactElement {
 
   const handleCancelEdit = () => {
     setIsEditing(false)
-    if (issue) {
-      setEditTitle(issue.title)
-      setEditDescription(issue.description)
-      setEditStatus(issue.metadata?.status || 'open')
-      setEditPriority(issue.metadata?.priority || 2)
-    }
+    if (!issue) return
+    setEditTitle(issue.title)
+    setEditDescription(issue.description)
+    setEditStatus((issue.metadata && issue.metadata.status) || 'open')
+    setEditPriority((issue.metadata && issue.metadata.priority) || 2)
   }
 
   const handleOpenInVscode = useCallback(async () => {
@@ -639,7 +645,7 @@ export function IssueDetail({ issueNumber }: IssueDetailProps): ReactElement {
             <div className="issue-metadata">
               <div className="status-selector" ref={statusDropdownRef}>
                 <button
-                  className={`status-badge status-badge-clickable ${stateManager.getStateClass(issue.metadata?.status || '')} ${updatingStatus ? 'updating' : ''}`}
+                  className={`status-badge status-badge-clickable ${stateManager.getStateClass((issue.metadata && issue.metadata.status) || '')} ${updatingStatus ? 'updating' : ''}`}
                   onClick={() => setShowStatusDropdown(!showStatusDropdown)}
                   disabled={updatingStatus}
                   aria-label="Change status"
@@ -648,7 +654,7 @@ export function IssueDetail({ issueNumber }: IssueDetailProps): ReactElement {
                 >
                   {updatingStatus
                     ? 'Updating...'
-                    : issue.metadata?.status || 'unknown'}
+                    : (issue.metadata && issue.metadata.status) || 'unknown'}
                   <span className="status-dropdown-arrow" aria-hidden="true">
                     ▼
                   </span>
@@ -663,8 +669,11 @@ export function IssueDetail({ issueNumber }: IssueDetailProps): ReactElement {
                       <li
                         key={option.value}
                         role="option"
-                        aria-selected={option.value === issue.metadata?.status}
-                        className={`status-option ${stateManager.getStateClass(option.value)} ${option.value === issue.metadata?.status ? 'selected' : ''}`}
+                        aria-selected={
+                          option.value ===
+                          (issue.metadata && issue.metadata.status)
+                        }
+                        className={`status-option ${stateManager.getStateClass(option.value)} ${option.value === (issue.metadata && issue.metadata.status) ? 'selected' : ''}`}
                         onClick={() => handleStatusChange(option.value)}
                       >
                         {option.label}
@@ -674,17 +683,17 @@ export function IssueDetail({ issueNumber }: IssueDetailProps): ReactElement {
                 )}
               </div>
               <span
-                className={`priority-badge ${getPriorityClass(issue.metadata?.priorityLabel || '')}`}
+                className={`priority-badge ${getPriorityClass((issue.metadata && issue.metadata.priorityLabel) || '')}`}
               >
-                {issue.metadata?.priorityLabel || 'unknown'}
+                {(issue.metadata && issue.metadata.priorityLabel) || 'unknown'}
               </span>
               <span className="issue-date">
                 Created:{' '}
-                {issue.metadata?.createdAt
+                {issue.metadata && issue.metadata.createdAt
                   ? new Date(issue.metadata.createdAt).toLocaleString()
                   : '-'}
               </span>
-              {issue.metadata?.updatedAt && (
+              {issue.metadata && issue.metadata.updatedAt && (
                 <span className="issue-date">
                   Updated: {new Date(issue.metadata.updatedAt).toLocaleString()}
                 </span>

@@ -25,10 +25,12 @@ export function useAppLink() {
   const pathname = usePathname()
 
   // Extract org and project from named route params
+  const rawOrg = params ? params.organization : undefined
   const paramOrg: string | undefined =
-    typeof params?.organization === 'string' ? params.organization : undefined
+    typeof rawOrg === 'string' ? rawOrg : undefined
+  const rawProject = params ? params.project : undefined
   const paramProject: string | undefined =
-    typeof params?.project === 'string' ? params.project : undefined
+    typeof rawProject === 'string' ? rawProject : undefined
 
   // Parse path segments from pathname as fallback
   const pathSegments = useMemo(() => {

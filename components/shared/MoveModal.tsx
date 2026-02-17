@@ -111,7 +111,10 @@ export function MoveModal({
         const response = await centyClient.moveIssue(request)
 
         if (response.success) {
-          onMoved(selectedProject, response.issue?.id)
+          onMoved(
+            selectedProject,
+            response.issue ? response.issue.id : undefined
+          )
         } else {
           setError(response.error || 'Failed to move issue')
         }
@@ -125,7 +128,7 @@ export function MoveModal({
         const response = await centyClient.moveDoc(request)
 
         if (response.success) {
-          onMoved(selectedProject, response.doc?.slug)
+          onMoved(selectedProject, response.doc ? response.doc.slug : undefined)
         } else {
           setError(response.error || 'Failed to move document')
         }

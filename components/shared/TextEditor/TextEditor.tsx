@@ -57,12 +57,11 @@ export function TextEditor({
     editable: isEditable,
     immediatelyRender: false, // Required for Next.js SSR compatibility
     onUpdate: ({ editor }) => {
-      if (isEditable && !isRawMode && onChange) {
-        const html = editor.getHTML()
-        const markdown = htmlToMarkdown(html)
-        setRawValue(markdown)
-        onChange(markdown)
-      }
+      if (!isEditable || isRawMode || !onChange) return
+      const html = editor.getHTML()
+      const markdown = htmlToMarkdown(html)
+      setRawValue(markdown)
+      onChange(markdown)
     },
   })
 
@@ -80,18 +79,17 @@ export function TextEditor({
 
   // Update content when value changes
   useEffect(() => {
-    if (editor && markdownContent !== rawValue) {
-      const html = markdownToHtml(markdownContent)
-      editor.commands.setContent(html)
-      setRawValue(markdownContent)
-    }
+    if (!editor || markdownContent === rawValue) return
+    const html = markdownToHtml(markdownContent)
+    editor.commands.setContent(html)
+    setRawValue(markdownContent)
   }, [editor, markdownContent, rawValue])
 
   const handleRawChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       const newValue = e.target.value
       setRawValue(newValue)
-      onChange?.(newValue)
+      if (onChange) onChange(newValue)
     },
     [onChange]
   )
@@ -111,7 +109,7 @@ export function TextEditor({
   const handleModeToggle = useCallback(() => {
     const newMode = currentMode === 'display' ? 'edit' : 'display'
     setCurrentMode(newMode)
-    onModeChange?.(newMode)
+    if (onModeChange) onModeChange(newMode)
   }, [currentMode, onModeChange])
 
   const setLink = useCallback(() => {
