@@ -99,10 +99,9 @@ export function ContextMenu({ items, x, y, onClose }: ContextMenuProps) {
             key={index}
             className={`context-menu-item ${item.danger ? 'danger' : ''} ${item.disabled ? 'disabled' : ''}`}
             onClick={() => {
-              if (!item.disabled) {
-                item.onClick()
-                onClose()
-              }
+              if (item.disabled) return
+              item.onClick()
+              onClose()
             }}
             disabled={item.disabled}
           >

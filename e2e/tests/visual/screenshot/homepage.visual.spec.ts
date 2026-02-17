@@ -27,10 +27,9 @@ async function navigateDemoMode(
 
   // Dismiss mobile not supported overlay if present
   const dismissButton = page.locator('.mobile-dismiss-button')
-  if (await dismissButton.isVisible().catch(() => false)) {
-    await dismissButton.click()
-    await page.waitForTimeout(300)
-  }
+  if (!(await dismissButton.isVisible().catch(() => false))) return
+  await dismissButton.click()
+  await page.waitForTimeout(300)
 }
 
 test.describe('Homepage Layout Visual Tests @visual', () => {

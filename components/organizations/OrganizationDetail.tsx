@@ -154,11 +154,10 @@ export function OrganizationDetail({ orgSlug }: OrganizationDetailProps) {
 
   const handleCancelEdit = () => {
     setIsEditing(false)
-    if (organization) {
-      setEditName(organization.name)
-      setEditDescription(organization.description || '')
-      setEditSlug(organization.slug)
-    }
+    if (!organization) return
+    setEditName(organization.name)
+    setEditDescription(organization.description || '')
+    setEditSlug(organization.slug)
   }
 
   useSaveShortcut({
