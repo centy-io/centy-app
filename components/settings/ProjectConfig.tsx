@@ -223,7 +223,7 @@ export function ProjectConfig() {
   return (
     <div className="settings-page">
       <div className="settings-header">
-        <h2>Project Configuration</h2>
+        <h2 className="settings-title">Project Configuration</h2>
         {isDirty && <span className="unsaved-indicator">Unsaved changes</span>}
       </div>
 
@@ -232,13 +232,17 @@ export function ProjectConfig() {
 
       {!projectPath && (
         <div className="no-project-message">
-          <p>Select a project from the header to view project configuration</p>
+          <p className="no-project-text">
+            Select a project from the header to view project configuration
+          </p>
         </div>
       )}
 
       {projectPath && isInitialized === false && (
         <div className="not-initialized-message">
-          <p>Centy is not initialized in this directory</p>
+          <p className="not-initialized-text">
+            Centy is not initialized in this directory
+          </p>
           <Link href="/">Initialize Project</Link>
         </div>
       )}
@@ -250,10 +254,12 @@ export function ProjectConfig() {
           ) : (
             <>
               <section className="settings-section">
-                <h3>Organization</h3>
+                <h3 className="settings-section-title">Organization</h3>
                 <div className="settings-card">
                   <div className="form-group">
-                    <label htmlFor="project-org">Assign to Organization</label>
+                    <label htmlFor="project-org" className="form-label">
+                      Assign to Organization
+                    </label>
                     <div className="org-select-row">
                       <select
                         id="project-org"
@@ -262,9 +268,15 @@ export function ProjectConfig() {
                         disabled={savingOrg}
                         className="org-select"
                       >
-                        <option value="">No Organization (Ungrouped)</option>
+                        <option value="" className="org-select-option">
+                          No Organization (Ungrouped)
+                        </option>
                         {organizations.map(org => (
-                          <option key={org.slug} value={org.slug}>
+                          <option
+                            key={org.slug}
+                            value={org.slug}
+                            className="org-select-option"
+                          >
                             {org.name}
                           </option>
                         ))}
@@ -283,7 +295,7 @@ export function ProjectConfig() {
               </section>
 
               <section className="settings-section">
-                <h3>Project Title</h3>
+                <h3 className="settings-section-title">Project Title</h3>
                 <div className="settings-card">
                   <ProjectTitleEditor projectPath={projectPath} />
                 </div>
@@ -292,7 +304,7 @@ export function ProjectConfig() {
               {config && (
                 <>
                   <section className="settings-section">
-                    <h3>Issue States</h3>
+                    <h3 className="settings-section-title">Issue States</h3>
                     <div className="settings-card">
                       <StateListEditor
                         states={config.allowedStates}
@@ -312,7 +324,7 @@ export function ProjectConfig() {
                   </section>
 
                   <section className="settings-section">
-                    <h3>Priority Levels</h3>
+                    <h3 className="settings-section-title">Priority Levels</h3>
                     <div className="settings-card">
                       <PriorityEditor
                         levels={config.priorityLevels}
@@ -328,7 +340,7 @@ export function ProjectConfig() {
                   </section>
 
                   <section className="settings-section">
-                    <h3>Custom Fields</h3>
+                    <h3 className="settings-section-title">Custom Fields</h3>
                     <div className="settings-card">
                       <CustomFieldsEditor
                         fields={config.customFields}
@@ -340,7 +352,7 @@ export function ProjectConfig() {
                   </section>
 
                   <section className="settings-section">
-                    <h3>Default Values</h3>
+                    <h3 className="settings-section-title">Default Values</h3>
                     <div className="settings-card">
                       <DefaultsEditor
                         value={config.defaults}
@@ -351,7 +363,9 @@ export function ProjectConfig() {
                   </section>
 
                   <section className="settings-section">
-                    <h3>Workspace Settings</h3>
+                    <h3 className="settings-section-title">
+                      Workspace Settings
+                    </h3>
                     <div className="settings-card">
                       <WorkspaceSettingsEditor
                         value={config.workspace}
@@ -382,14 +396,14 @@ export function ProjectConfig() {
               )}
 
               <section className="settings-section">
-                <h3>Agent Configuration</h3>
+                <h3 className="settings-section-title">Agent Configuration</h3>
                 <div className="settings-card">
                   <AgentConfigEditor />
                 </div>
               </section>
 
               <section className="settings-section">
-                <h3>Manifest</h3>
+                <h3 className="settings-section-title">Manifest</h3>
                 <div className="settings-card">
                   {manifest && (
                     <div className="manifest-details">

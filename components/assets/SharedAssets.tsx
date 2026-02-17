@@ -162,7 +162,7 @@ export function SharedAssets() {
   return (
     <div className="shared-assets">
       <div className="shared-assets-header">
-        <h2>Shared Assets</h2>
+        <h2 className="shared-assets-title">Shared Assets</h2>
         <div className="header-actions">
           {projectPath && isInitialized === true && (
             <button
@@ -178,13 +178,17 @@ export function SharedAssets() {
 
       {!projectPath && (
         <div className="no-project-message">
-          <p>Select a project from the header to view shared assets</p>
+          <p className="no-project-text">
+            Select a project from the header to view shared assets
+          </p>
         </div>
       )}
 
       {projectPath && isInitialized === false && (
         <div className="not-initialized-message">
-          <p>Centy is not initialized in this directory</p>
+          <p className="not-initialized-text">
+            Centy is not initialized in this directory
+          </p>
           <Link href="/">Initialize Project</Link>
         </div>
       )}
@@ -197,7 +201,7 @@ export function SharedAssets() {
             <div className="loading">Loading shared assets...</div>
           ) : assets.length === 0 ? (
             <div className="empty-state">
-              <p>No shared assets found</p>
+              <p className="empty-state-message">No shared assets found</p>
               <p className="hint">
                 Shared assets are files that can be referenced across multiple
                 issues
@@ -242,7 +246,9 @@ export function SharedAssets() {
                   </button>
                   {deleteConfirm === asset.filename && (
                     <div className="delete-confirm-overlay">
-                      <p>Delete &ldquo;{asset.filename}&rdquo;?</p>
+                      <p className="delete-confirm-text">
+                        Delete &ldquo;{asset.filename}&rdquo;?
+                      </p>
                       <div className="delete-confirm-actions">
                         <button
                           onClick={() => setDeleteConfirm(null)}
@@ -276,16 +282,27 @@ export function SharedAssets() {
             <button className="preview-close-btn" onClick={closePreview}>
               x
             </button>
-            <h3>{previewAsset.asset.filename}</h3>
+            <h3 className="preview-modal-filename">
+              {previewAsset.asset.filename}
+            </h3>
             {previewAsset.asset.mimeType.startsWith('image/') ? (
-              <img src={previewAsset.url} alt={previewAsset.asset.filename} />
+              <img
+                src={previewAsset.url}
+                alt={previewAsset.asset.filename}
+                className="preview-modal-image"
+              />
             ) : previewAsset.asset.mimeType.startsWith('video/') ? (
-              <video src={previewAsset.url} controls />
+              <video
+                src={previewAsset.url}
+                controls
+                className="preview-modal-video"
+              />
             ) : (
               <div className="preview-download">
                 <a
                   href={previewAsset.url}
                   download={previewAsset.asset.filename}
+                  className="preview-download-link"
                 >
                   Download File
                 </a>

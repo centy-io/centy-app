@@ -153,7 +153,9 @@ export function MoveModal({
     <div className="move-modal-overlay">
       <div className="move-modal" ref={modalRef}>
         <div className="move-modal-header">
-          <h3>Move {entityType === 'issue' ? 'Issue' : 'Document'}</h3>
+          <h3 className="move-modal-title">
+            Move {entityType === 'issue' ? 'Issue' : 'Document'}
+          </h3>
           <button className="move-modal-close" onClick={onClose}>
             x
           </button>
@@ -170,7 +172,7 @@ export function MoveModal({
           </div>
 
           <div className="move-modal-field">
-            <label>Target Project</label>
+            <label className="move-modal-field-label">Target Project</label>
             {loadingProjects ? (
               <div className="move-modal-loading">Loading projects...</div>
             ) : projects.length === 0 ? (
@@ -184,7 +186,11 @@ export function MoveModal({
                 className="move-modal-select"
               >
                 {projects.map(project => (
-                  <option key={project.path} value={project.path}>
+                  <option
+                    key={project.path}
+                    value={project.path}
+                    className="move-modal-option"
+                  >
                     {project.userTitle || project.projectTitle || project.name}{' '}
                     ({project.displayPath})
                   </option>
@@ -195,7 +201,9 @@ export function MoveModal({
 
           {entityType === 'doc' && (
             <div className="move-modal-field">
-              <label>New Slug (optional - leave empty to keep current)</label>
+              <label className="move-modal-field-label">
+                New Slug (optional - leave empty to keep current)
+              </label>
               <input
                 type="text"
                 value={newSlug}

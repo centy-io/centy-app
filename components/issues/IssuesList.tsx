@@ -416,7 +416,7 @@ export function IssuesList() {
   return (
     <div className="issues-list">
       <div className="issues-header">
-        <h2>Issues</h2>
+        <h2 className="issues-heading">Issues</h2>
         <div className="header-actions">
           {projectPath && isInitialized === true && (
             <button
@@ -442,13 +442,17 @@ export function IssuesList() {
 
       {!projectPath && (
         <div className="no-project-message">
-          <p>Select a project from the header to view issues</p>
+          <p className="no-project-text">
+            Select a project from the header to view issues
+          </p>
         </div>
       )}
 
       {projectPath && isInitialized === false && (
         <div className="not-initialized-message">
-          <p>Centy is not initialized in this directory</p>
+          <p className="not-initialized-text">
+            Centy is not initialized in this directory
+          </p>
           <Link href={createLink('/')}>Initialize Project</Link>
         </div>
       )}
@@ -461,19 +465,19 @@ export function IssuesList() {
             <div className="loading">Loading issues...</div>
           ) : issues.length === 0 ? (
             <div className="empty-state">
-              <p>No issues found</p>
+              <p className="empty-state-message">No issues found</p>
               <Link href={createLink('/issues/new')}>
                 Create your first issue
               </Link>
             </div>
           ) : (
             <div className="issues-table">
-              <table>
-                <thead>
+              <table className="issues-data-table">
+                <thead className="issues-data-thead">
                   {table.getHeaderGroups().map(headerGroup => (
-                    <tr key={headerGroup.id}>
+                    <tr key={headerGroup.id} className="issues-header-row">
                       {headerGroup.headers.map(header => (
-                        <th key={header.id}>
+                        <th key={header.id} className="issues-th">
                           <div className="th-content">
                             <button
                               type="button"
@@ -561,7 +565,7 @@ export function IssuesList() {
                     </tr>
                   ))}
                 </thead>
-                <tbody>
+                <tbody className="issues-data-tbody">
                   {table.getRowModel().rows.map(row => (
                     <tr
                       key={row.original.issueNumber}

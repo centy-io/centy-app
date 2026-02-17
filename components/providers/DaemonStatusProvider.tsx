@@ -202,8 +202,9 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasMounted])
 
+  const Provider = DaemonStatusContext.Provider
   return (
-    <DaemonStatusContext.Provider
+    <Provider
       value={{
         status,
         lastChecked,
@@ -216,7 +217,7 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
       }}
     >
       {children}
-    </DaemonStatusContext.Provider>
+    </Provider>
   )
 }
 

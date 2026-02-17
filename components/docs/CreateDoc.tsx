@@ -131,9 +131,11 @@ export function CreateDoc() {
   if (!projectPath) {
     return (
       <div className="create-doc">
-        <h2>Create New Document</h2>
+        <h2 className="create-doc-heading">Create New Document</h2>
         <div className="no-project-message">
-          <p>Select a project from the header to create a document</p>
+          <p className="create-doc-message">
+            Select a project from the header to create a document
+          </p>
         </div>
       </div>
     )
@@ -142,9 +144,11 @@ export function CreateDoc() {
   if (isInitialized === false) {
     return (
       <div className="create-doc">
-        <h2>Create New Document</h2>
+        <h2 className="create-doc-heading">Create New Document</h2>
         <div className="not-initialized-message">
-          <p>Centy is not initialized in this directory</p>
+          <p className="create-doc-message">
+            Centy is not initialized in this directory
+          </p>
           <Link href="/">Initialize Project</Link>
         </div>
       </div>
@@ -153,12 +157,15 @@ export function CreateDoc() {
 
   return (
     <div className="create-doc">
-      <h2>Create New Document</h2>
+      <h2 className="create-doc-heading">Create New Document</h2>
 
-      <form onSubmit={handleSubmit}>
+      <form className="create-doc-form" onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="title">Title:</label>
+          <label className="create-doc-label" htmlFor="title">
+            Title:
+          </label>
           <input
+            className="create-doc-input"
             id="title"
             type="text"
             value={title}
@@ -169,10 +176,11 @@ export function CreateDoc() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="slug">
+          <label className="create-doc-label" htmlFor="slug">
             Slug (optional, auto-generated from title):
           </label>
           <input
+            className="create-doc-input"
             id="slug"
             type="text"
             value={slug}
@@ -182,7 +190,9 @@ export function CreateDoc() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="content">Content (Markdown):</label>
+          <label className="create-doc-label" htmlFor="content">
+            Content (Markdown):
+          </label>
           <TextEditor
             value={content}
             onChange={setContent}

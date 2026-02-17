@@ -541,7 +541,9 @@ export function IssueDetail({ issueNumber }: IssueDetailProps): ReactElement {
 
       {showDeleteConfirm && (
         <div className="delete-confirm">
-          <p>Are you sure you want to delete this issue?</p>
+          <p className="delete-confirm-message">
+            Are you sure you want to delete this issue?
+          </p>
           <div className="delete-confirm-actions">
             <button
               onClick={() => setShowDeleteConfirm(false)}
@@ -576,10 +578,13 @@ export function IssueDetail({ issueNumber }: IssueDetailProps): ReactElement {
         {isEditing ? (
           <div className="edit-form">
             <div className="form-group">
-              <label htmlFor="edit-title">Title:</label>
+              <label className="form-label" htmlFor="edit-title">
+                Title:
+              </label>
               <input
                 id="edit-title"
                 type="text"
+                className="form-input"
                 value={editTitle}
                 onChange={e => setEditTitle(e.target.value)}
               />
@@ -587,14 +592,21 @@ export function IssueDetail({ issueNumber }: IssueDetailProps): ReactElement {
 
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="edit-status">Status:</label>
+                <label className="form-label" htmlFor="edit-status">
+                  Status:
+                </label>
                 <select
                   id="edit-status"
+                  className="form-select"
                   value={editStatus}
                   onChange={e => setEditStatus(e.target.value)}
                 >
                   {stateOptions.map(option => (
-                    <option key={option.value} value={option.value}>
+                    <option
+                      className="form-option"
+                      key={option.value}
+                      value={option.value}
+                    >
                       {option.label}
                     </option>
                   ))}
@@ -602,21 +614,32 @@ export function IssueDetail({ issueNumber }: IssueDetailProps): ReactElement {
               </div>
 
               <div className="form-group">
-                <label htmlFor="edit-priority">Priority:</label>
+                <label className="form-label" htmlFor="edit-priority">
+                  Priority:
+                </label>
                 <select
                   id="edit-priority"
+                  className="form-select"
                   value={editPriority}
                   onChange={e => setEditPriority(Number(e.target.value))}
                 >
-                  <option value={1}>High</option>
-                  <option value={2}>Medium</option>
-                  <option value={3}>Low</option>
+                  <option className="form-option" value={1}>
+                    High
+                  </option>
+                  <option className="form-option" value={2}>
+                    Medium
+                  </option>
+                  <option className="form-option" value={3}>
+                    Low
+                  </option>
                 </select>
               </div>
             </div>
 
             <div className="form-group">
-              <label htmlFor="edit-description">Description:</label>
+              <label className="form-label" htmlFor="edit-description">
+                Description:
+              </label>
               <TextEditor
                 value={editDescription}
                 onChange={setEditDescription}
@@ -628,7 +651,7 @@ export function IssueDetail({ issueNumber }: IssueDetailProps): ReactElement {
             </div>
 
             <div className="form-group">
-              <label>Attachments:</label>
+              <label className="form-label">Attachments:</label>
               <AssetUploader
                 projectPath={projectPath}
                 issueId={issueNumber}
@@ -701,7 +724,7 @@ export function IssueDetail({ issueNumber }: IssueDetailProps): ReactElement {
             </div>
 
             <div className="issue-assignees">
-              <h4>Assignees</h4>
+              <h4 className="issue-assignees-heading">Assignees</h4>
               <AssigneeSelector
                 projectPath={projectPath}
                 issueId={issueNumber}
@@ -711,7 +734,7 @@ export function IssueDetail({ issueNumber }: IssueDetailProps): ReactElement {
             </div>
 
             <div className="issue-description">
-              <h3>Description</h3>
+              <h3 className="issue-description-heading">Description</h3>
               {issue.description ? (
                 <TextEditor
                   value={issue.description}
@@ -724,7 +747,7 @@ export function IssueDetail({ issueNumber }: IssueDetailProps): ReactElement {
             </div>
 
             <div className="issue-assets">
-              <h3>Attachments</h3>
+              <h3 className="issue-assets-heading">Attachments</h3>
               {assets.length > 0 ? (
                 <AssetUploader
                   projectPath={projectPath}

@@ -296,7 +296,9 @@ export function UserDetail({ userId }: UserDetailProps) {
 
       {showDeleteConfirm && (
         <div className="delete-confirm">
-          <p>Are you sure you want to delete this user?</p>
+          <p className="delete-confirm-text">
+            Are you sure you want to delete this user?
+          </p>
           <div className="delete-confirm-actions">
             <button
               onClick={() => setShowDeleteConfirm(false)}
@@ -321,29 +323,35 @@ export function UserDetail({ userId }: UserDetailProps) {
         {isEditing ? (
           <div className="edit-form">
             <div className="form-group">
-              <label htmlFor="edit-name">Name:</label>
+              <label htmlFor="edit-name" className="form-label">
+                Name:
+              </label>
               <input
                 id="edit-name"
                 type="text"
                 value={editName}
                 onChange={e => setEditName(e.target.value)}
                 placeholder="Display name"
+                className="form-input"
               />
             </div>
 
             <div className="form-group">
-              <label htmlFor="edit-email">Email:</label>
+              <label htmlFor="edit-email" className="form-label">
+                Email:
+              </label>
               <input
                 id="edit-email"
                 type="email"
                 value={editEmail}
                 onChange={e => setEditEmail(e.target.value)}
                 placeholder="Email address (optional)"
+                className="form-input"
               />
             </div>
 
             <div className="form-group">
-              <label>Git Usernames:</label>
+              <label className="form-label">Git Usernames:</label>
               <div className="git-usernames-list">
                 {editGitUsernames.map((username, index) => (
                   <div key={index} className="git-username-item">
@@ -354,6 +362,7 @@ export function UserDetail({ userId }: UserDetailProps) {
                         handleGitUsernameChange(index, e.target.value)
                       }
                       placeholder="Git username"
+                      className="git-username-input"
                     />
                     <button
                       type="button"

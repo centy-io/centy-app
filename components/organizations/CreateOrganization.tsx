@@ -97,7 +97,7 @@ export function CreateOrganization() {
         <Link href="/organizations" className="back-link">
           Back to Organizations
         </Link>
-        <h2>Create New Organization</h2>
+        <h2 className="create-organization-title">Create New Organization</h2>
       </div>
 
       {error && <DaemonErrorMessage error={error} />}
@@ -110,7 +110,7 @@ export function CreateOrganization() {
         className="create-organization-form"
       >
         <div className="form-group">
-          <label htmlFor="name">
+          <label htmlFor="name" className="form-label">
             Name <span className="required">*</span>
           </label>
           <input
@@ -120,17 +120,21 @@ export function CreateOrganization() {
             onChange={e => setName(e.target.value)}
             placeholder="Organization name"
             required
+            className="form-input"
           />
         </div>
 
         <div className="form-group">
-          <label htmlFor="slug">Slug</label>
+          <label htmlFor="slug" className="form-label">
+            Slug
+          </label>
           <input
             id="slug"
             type="text"
             value={slug}
             onChange={e => handleSlugChange(e.target.value)}
             placeholder="Auto-generated from name"
+            className="form-input"
           />
           <span className="form-hint">
             Unique identifier (kebab-case). Leave empty to auto-generate.
@@ -138,13 +142,16 @@ export function CreateOrganization() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="description">Description</label>
+          <label htmlFor="description" className="form-label">
+            Description
+          </label>
           <textarea
             id="description"
             value={description}
             onChange={e => setDescription(e.target.value)}
             placeholder="Description (optional)"
             rows={3}
+            className="form-textarea"
           />
         </div>
 

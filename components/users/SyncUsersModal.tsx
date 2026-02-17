@@ -140,7 +140,7 @@ export function SyncUsersModal({ onClose, onSynced }: SyncUsersModalProps) {
     <div className="sync-modal-overlay" onClick={handleClose}>
       <div className="sync-modal" onClick={e => e.stopPropagation()}>
         <div className="sync-modal-header">
-          <h3>Sync Users from Git</h3>
+          <h3 className="sync-modal-title">Sync Users from Git</h3>
           <button className="close-btn" onClick={handleClose}>
             &times;
           </button>
@@ -149,7 +149,7 @@ export function SyncUsersModal({ onClose, onSynced }: SyncUsersModalProps) {
         <div className="sync-modal-content">
           {state === 'loading' && (
             <div className="sync-loading">
-              <p>Checking git history...</p>
+              <p className="sync-loading-text">Checking git history...</p>
             </div>
           )}
 
@@ -168,16 +168,22 @@ export function SyncUsersModal({ onClose, onSynced }: SyncUsersModalProps) {
             <div className="sync-preview">
               {wouldCreate.length === 0 && wouldSkip.length === 0 ? (
                 <div className="sync-empty">
-                  <p>No git contributors found in this repository.</p>
+                  <p className="sync-empty-text">
+                    No git contributors found in this repository.
+                  </p>
                 </div>
               ) : wouldCreate.length === 0 ? (
                 <div className="sync-up-to-date">
-                  <p>All git contributors are already in the users list.</p>
+                  <p className="sync-up-to-date-text">
+                    All git contributors are already in the users list.
+                  </p>
                 </div>
               ) : (
                 <>
                   <div className="sync-section">
-                    <h4>Will Create ({wouldCreate.length})</h4>
+                    <h4 className="sync-section-title">
+                      Will Create ({wouldCreate.length})
+                    </h4>
                     <ul className="contributor-list">
                       {wouldCreate.map((contributor, i) => (
                         <li key={i} className="contributor-item create">
@@ -194,7 +200,9 @@ export function SyncUsersModal({ onClose, onSynced }: SyncUsersModalProps) {
 
                   {wouldSkip.length > 0 && (
                     <div className="sync-section">
-                      <h4>Will Skip ({wouldSkip.length})</h4>
+                      <h4 className="sync-section-title">
+                        Will Skip ({wouldSkip.length})
+                      </h4>
                       <ul className="contributor-list">
                         {wouldSkip.map((contributor, i) => (
                           <li key={i} className="contributor-item skip">
@@ -216,7 +224,7 @@ export function SyncUsersModal({ onClose, onSynced }: SyncUsersModalProps) {
 
           {state === 'syncing' && (
             <div className="sync-loading">
-              <p>Creating users...</p>
+              <p className="sync-loading-text">Creating users...</p>
             </div>
           )}
 
@@ -228,7 +236,9 @@ export function SyncUsersModal({ onClose, onSynced }: SyncUsersModalProps) {
 
               {created.length > 0 && (
                 <div className="sync-section">
-                  <h4>Created ({created.length})</h4>
+                  <h4 className="sync-section-title">
+                    Created ({created.length})
+                  </h4>
                   <ul className="result-list">
                     {created.map((userId, i) => (
                       <li key={i} className="result-item created">
@@ -241,7 +251,9 @@ export function SyncUsersModal({ onClose, onSynced }: SyncUsersModalProps) {
 
               {skipped.length > 0 && (
                 <div className="sync-section">
-                  <h4>Skipped ({skipped.length})</h4>
+                  <h4 className="sync-section-title">
+                    Skipped ({skipped.length})
+                  </h4>
                   <ul className="result-list">
                     {skipped.map((email, i) => (
                       <li key={i} className="result-item skipped">
@@ -254,7 +266,9 @@ export function SyncUsersModal({ onClose, onSynced }: SyncUsersModalProps) {
 
               {syncErrors.length > 0 && (
                 <div className="sync-section">
-                  <h4>Errors ({syncErrors.length})</h4>
+                  <h4 className="sync-section-title">
+                    Errors ({syncErrors.length})
+                  </h4>
                   <ul className="result-list">
                     {syncErrors.map((err, i) => (
                       <li key={i} className="result-item error">

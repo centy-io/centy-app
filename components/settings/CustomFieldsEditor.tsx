@@ -189,15 +189,18 @@ function CustomFieldDisplay({
 
       <div className="custom-field-details">
         {field.defaultValue && (
-          <span>
-            Default: <code>{field.defaultValue}</code>
+          <span className="custom-field-detail-default">
+            Default:{' '}
+            <code className="custom-field-detail-code">
+              {field.defaultValue}
+            </code>
           </span>
         )}
         {field.fieldType === 'enum' && field.enumValues.length > 0 && (
-          <span>
+          <span className="custom-field-detail-options">
             Options:{' '}
             {field.enumValues.map((v, i) => (
-              <code key={v}>
+              <code key={v} className="custom-field-detail-code">
                 {v}
                 {i < field.enumValues.length - 1 ? ', ' : ''}
               </code>
@@ -268,7 +271,7 @@ function CustomFieldForm({
     <div className="custom-field-form">
       <div className="custom-field-form-row">
         <div className="custom-field-form-group">
-          <label>Name</label>
+          <label className="custom-field-form-label">Name</label>
           <input
             type="text"
             value={name}
@@ -279,14 +282,18 @@ function CustomFieldForm({
         </div>
 
         <div className="custom-field-form-group">
-          <label>Type</label>
+          <label className="custom-field-form-label">Type</label>
           <select
             value={fieldType}
             onChange={e => setFieldType(e.target.value)}
             className="custom-field-form-select"
           >
             {FIELD_TYPES.map(t => (
-              <option key={t.value} value={t.value}>
+              <option
+                key={t.value}
+                value={t.value}
+                className="custom-field-form-option"
+              >
                 {t.label}
               </option>
             ))}
@@ -294,11 +301,12 @@ function CustomFieldForm({
         </div>
 
         <div className="custom-field-form-group custom-field-form-checkbox">
-          <label>
+          <label className="custom-field-form-label">
             <input
               type="checkbox"
               checked={required}
               onChange={e => setRequired(e.target.checked)}
+              className="custom-field-form-checkbox-input"
             />
             Required
           </label>
@@ -307,7 +315,7 @@ function CustomFieldForm({
 
       {fieldType === 'enum' && (
         <div className="custom-field-enum-section">
-          <label>Options</label>
+          <label className="custom-field-form-label">Options</label>
           <div className="custom-field-enum-list">
             {enumValues.map(value => (
               <span key={value} className="custom-field-enum-tag">
@@ -315,6 +323,7 @@ function CustomFieldForm({
                 <button
                   type="button"
                   onClick={() => handleRemoveEnumValue(value)}
+                  className="custom-field-enum-remove-btn"
                 >
                   &times;
                 </button>
@@ -340,6 +349,7 @@ function CustomFieldForm({
               disabled={
                 !newEnumValue.trim() || enumValues.includes(newEnumValue.trim())
               }
+              className="custom-field-enum-add-btn"
             >
               Add
             </button>
@@ -348,16 +358,18 @@ function CustomFieldForm({
       )}
 
       <div className="custom-field-form-group">
-        <label>Default Value</label>
+        <label className="custom-field-form-label">Default Value</label>
         {fieldType === 'enum' ? (
           <select
             value={defaultValue}
             onChange={e => setDefaultValue(e.target.value)}
             className="custom-field-form-select"
           >
-            <option value="">No default</option>
+            <option value="" className="custom-field-form-option">
+              No default
+            </option>
             {enumValues.map(v => (
-              <option key={v} value={v}>
+              <option key={v} value={v} className="custom-field-form-option">
                 {v}
               </option>
             ))}
@@ -368,9 +380,15 @@ function CustomFieldForm({
             onChange={e => setDefaultValue(e.target.value)}
             className="custom-field-form-select"
           >
-            <option value="">No default</option>
-            <option value="true">True</option>
-            <option value="false">False</option>
+            <option value="" className="custom-field-form-option">
+              No default
+            </option>
+            <option value="true" className="custom-field-form-option">
+              True
+            </option>
+            <option value="false" className="custom-field-form-option">
+              False
+            </option>
           </select>
         ) : (
           <input

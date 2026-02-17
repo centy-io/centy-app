@@ -234,7 +234,7 @@ export function Settings() {
   return (
     <div className="settings-page">
       <div className="settings-header">
-        <h2>Settings</h2>
+        <h2 className="settings-title">Settings</h2>
         {isDirty && <span className="unsaved-indicator">Unsaved changes</span>}
       </div>
 
@@ -242,7 +242,7 @@ export function Settings() {
       {success && <div className="success-message">{success}</div>}
 
       <section className="settings-section">
-        <h3>Daemon Information</h3>
+        <h3 className="settings-section-title">Daemon Information</h3>
         <div className="settings-card">
           {daemonInfo ? (
             <div className="info-grid">
@@ -274,7 +274,9 @@ export function Settings() {
 
           {showRestartConfirm && (
             <div className="confirm-dialog">
-              <p>Are you sure you want to restart the daemon?</p>
+              <p className="confirm-dialog-text">
+                Are you sure you want to restart the daemon?
+              </p>
               <div className="confirm-actions">
                 <button
                   onClick={() => setShowRestartConfirm(false)}
@@ -291,7 +293,7 @@ export function Settings() {
 
           {showShutdownConfirm && (
             <div className="confirm-dialog danger">
-              <p>
+              <p className="confirm-dialog-text">
                 Are you sure you want to shutdown the daemon? You will need to
                 manually restart it.
               </p>
@@ -312,7 +314,7 @@ export function Settings() {
       </section>
 
       <section className="settings-section">
-        <h3>Daemon Connection</h3>
+        <h3 className="settings-section-title">Daemon Connection</h3>
         <div className="settings-card">
           <DaemonSettings />
         </div>
@@ -320,13 +322,17 @@ export function Settings() {
 
       {!projectPath && (
         <div className="no-project-message">
-          <p>Select a project from the header to view project settings</p>
+          <p className="no-project-text">
+            Select a project from the header to view project settings
+          </p>
         </div>
       )}
 
       {projectPath && isInitialized === false && (
         <div className="not-initialized-message">
-          <p>Centy is not initialized in this directory</p>
+          <p className="not-initialized-text">
+            Centy is not initialized in this directory
+          </p>
           <Link href="/project/init">Initialize Project</Link>
         </div>
       )}
@@ -338,7 +344,7 @@ export function Settings() {
           ) : (
             <>
               <section className="settings-section">
-                <h3>Project Title</h3>
+                <h3 className="settings-section-title">Project Title</h3>
                 <div className="settings-card">
                   <ProjectTitleEditor projectPath={projectPath} />
                 </div>
@@ -347,7 +353,7 @@ export function Settings() {
               {config && (
                 <>
                   <section className="settings-section">
-                    <h3>Issue States</h3>
+                    <h3 className="settings-section-title">Issue States</h3>
                     <div className="settings-card">
                       <StateListEditor
                         states={config.allowedStates}
@@ -367,7 +373,7 @@ export function Settings() {
                   </section>
 
                   <section className="settings-section">
-                    <h3>Priority Levels</h3>
+                    <h3 className="settings-section-title">Priority Levels</h3>
                     <div className="settings-card">
                       <PriorityEditor
                         levels={config.priorityLevels}
@@ -383,7 +389,7 @@ export function Settings() {
                   </section>
 
                   <section className="settings-section">
-                    <h3>Custom Fields</h3>
+                    <h3 className="settings-section-title">Custom Fields</h3>
                     <div className="settings-card">
                       <CustomFieldsEditor
                         fields={config.customFields}
@@ -395,7 +401,7 @@ export function Settings() {
                   </section>
 
                   <section className="settings-section">
-                    <h3>Default Values</h3>
+                    <h3 className="settings-section-title">Default Values</h3>
                     <div className="settings-card">
                       <DefaultsEditor
                         value={config.defaults}
@@ -406,7 +412,9 @@ export function Settings() {
                   </section>
 
                   <section className="settings-section">
-                    <h3>Workspace Settings</h3>
+                    <h3 className="settings-section-title">
+                      Workspace Settings
+                    </h3>
                     <div className="settings-card">
                       <WorkspaceSettingsEditor
                         value={config.workspace}
@@ -437,7 +445,7 @@ export function Settings() {
               )}
 
               <section className="settings-section">
-                <h3>Manifest</h3>
+                <h3 className="settings-section-title">Manifest</h3>
                 <div className="settings-card">
                   {manifest && (
                     <div className="manifest-details">

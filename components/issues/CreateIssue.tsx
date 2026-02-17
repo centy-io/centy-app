@@ -166,9 +166,11 @@ export function CreateIssue() {
   if (!projectPath) {
     return (
       <div className="create-issue">
-        <h2>Create New Issue</h2>
+        <h2 className="create-issue-heading">Create New Issue</h2>
         <div className="no-project-message">
-          <p>Select a project from the header to create an issue</p>
+          <p className="no-project-text">
+            Select a project from the header to create an issue
+          </p>
         </div>
       </div>
     )
@@ -177,9 +179,11 @@ export function CreateIssue() {
   if (isInitialized === false) {
     return (
       <div className="create-issue">
-        <h2>Create New Issue</h2>
+        <h2 className="create-issue-heading">Create New Issue</h2>
         <div className="not-initialized-message">
-          <p>Centy is not initialized in this directory</p>
+          <p className="not-initialized-text">
+            Centy is not initialized in this directory
+          </p>
           <Link href="/">Initialize Project</Link>
         </div>
       </div>
@@ -188,14 +192,17 @@ export function CreateIssue() {
 
   return (
     <div className="create-issue">
-      <h2>Create New Issue</h2>
+      <h2 className="create-issue-heading">Create New Issue</h2>
 
-      <form onSubmit={handleSubmit}>
+      <form className="create-issue-form" onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="title">Title:</label>
+          <label className="form-label" htmlFor="title">
+            Title:
+          </label>
           <input
             id="title"
             type="text"
+            className="form-input"
             value={title}
             onChange={e => setTitle(e.target.value)}
             placeholder="Issue title"
@@ -204,7 +211,9 @@ export function CreateIssue() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="description">Description:</label>
+          <label className="form-label" htmlFor="description">
+            Description:
+          </label>
           <TextEditor
             value={description}
             onChange={setDescription}
@@ -216,27 +225,43 @@ export function CreateIssue() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="priority">Priority:</label>
+          <label className="form-label" htmlFor="priority">
+            Priority:
+          </label>
           <select
             id="priority"
+            className="form-select"
             value={priority}
             onChange={e => setPriority(Number(e.target.value))}
           >
-            <option value={1}>High</option>
-            <option value={2}>Medium</option>
-            <option value={3}>Low</option>
+            <option className="form-option" value={1}>
+              High
+            </option>
+            <option className="form-option" value={2}>
+              Medium
+            </option>
+            <option className="form-option" value={3}>
+              Low
+            </option>
           </select>
         </div>
 
         <div className="form-group">
-          <label htmlFor="status">Status:</label>
+          <label className="form-label" htmlFor="status">
+            Status:
+          </label>
           <select
             id="status"
+            className="form-select"
             value={status}
             onChange={e => setStatus(e.target.value)}
           >
             {stateOptions.map(option => (
-              <option key={option.value} value={option.value}>
+              <option
+                className="form-option"
+                key={option.value}
+                value={option.value}
+              >
                 {option.label}
               </option>
             ))}
@@ -244,7 +269,7 @@ export function CreateIssue() {
         </div>
 
         <div className="form-group">
-          <label>Attachments:</label>
+          <label className="form-label">Attachments:</label>
           <AssetUploader
             ref={assetUploaderRef}
             projectPath={projectPath}

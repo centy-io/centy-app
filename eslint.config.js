@@ -33,7 +33,6 @@ export default [
       'error/require-custom-error': 'off',
       'error/no-generic-error': 'off',
       'error/no-throw-literal': 'off',
-      'custom/jsx-classname-required': 'off',
     },
   },
   {

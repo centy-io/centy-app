@@ -151,7 +151,9 @@ export function CreateUser() {
     return (
       <div className="create-user">
         <div className="not-initialized-message">
-          <p>Centy is not initialized in this directory</p>
+          <p className="not-initialized-text">
+            Centy is not initialized in this directory
+          </p>
           <Link href="/">Initialize Project</Link>
         </div>
       </div>
@@ -164,7 +166,7 @@ export function CreateUser() {
         <Link href={usersListUrl} className="back-link">
           Back to Users
         </Link>
-        <h2>Create New User</h2>
+        <h2 className="create-user-title">Create New User</h2>
       </div>
 
       {error && <DaemonErrorMessage error={error} />}
@@ -177,7 +179,7 @@ export function CreateUser() {
         className="create-user-form"
       >
         <div className="form-group">
-          <label htmlFor="name">
+          <label htmlFor="name" className="form-label">
             Name <span className="required">*</span>
           </label>
           <input
@@ -187,17 +189,21 @@ export function CreateUser() {
             onChange={e => setName(e.target.value)}
             placeholder="Display name"
             required
+            className="form-input"
           />
         </div>
 
         <div className="form-group">
-          <label htmlFor="userId">User ID</label>
+          <label htmlFor="userId" className="form-label">
+            User ID
+          </label>
           <input
             id="userId"
             type="text"
             value={userId}
             onChange={e => handleUserIdChange(e.target.value)}
             placeholder="Auto-generated from name"
+            className="form-input"
           />
           <span className="form-hint">
             Unique identifier (slug format). Leave empty to auto-generate.
@@ -205,18 +211,21 @@ export function CreateUser() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="email">Email</label>
+          <label htmlFor="email" className="form-label">
+            Email
+          </label>
           <input
             id="email"
             type="email"
             value={email}
             onChange={e => setEmail(e.target.value)}
             placeholder="Email address (optional)"
+            className="form-input"
           />
         </div>
 
         <div className="form-group">
-          <label>Git Usernames</label>
+          <label className="form-label">Git Usernames</label>
           <div className="git-usernames-list">
             {gitUsernames.map((username, index) => (
               <div key={index} className="git-username-item">
@@ -225,6 +234,7 @@ export function CreateUser() {
                   value={username}
                   onChange={e => handleGitUsernameChange(index, e.target.value)}
                   placeholder="Git username"
+                  className="git-username-input"
                 />
                 <button
                   type="button"

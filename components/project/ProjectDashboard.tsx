@@ -15,7 +15,7 @@ export function ProjectDashboard() {
   if (isLoading) {
     return (
       <div className="project-dashboard-loading">
-        <p>Loading project...</p>
+        <p className="project-dashboard-loading-message">Loading project...</p>
       </div>
     )
   }
@@ -23,7 +23,9 @@ export function ProjectDashboard() {
   if (isInitialized === false) {
     return (
       <div className="project-dashboard-not-initialized">
-        <p>Centy is not initialized in this directory</p>
+        <p className="project-dashboard-not-initialized-message">
+          Centy is not initialized in this directory
+        </p>
         <Link href={createLink('/')}>Initialize Project</Link>
       </div>
     )
@@ -32,7 +34,7 @@ export function ProjectDashboard() {
   return (
     <div className="project-dashboard">
       <div className="project-dashboard-header">
-        <h1>{projectName}</h1>
+        <h1 className="project-dashboard-title">{projectName}</h1>
         {displayPath && (
           <div className="project-dashboard-path">{displayPath}</div>
         )}

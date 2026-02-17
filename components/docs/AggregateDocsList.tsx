@@ -82,7 +82,7 @@ export function AggregateDocsList() {
   return (
     <div className="docs-list">
       <div className="docs-header">
-        <h2>All Docs</h2>
+        <h2 className="docs-heading">All Docs</h2>
         <div className="header-actions">
           <button
             onClick={fetchAllDocs}
@@ -104,7 +104,7 @@ export function AggregateDocsList() {
         <div className="loading">Loading docs from all projects...</div>
       ) : docs.length === 0 ? (
         <div className="empty-state">
-          <p>No docs found across any projects</p>
+          <p className="docs-empty-text">No docs found across any projects</p>
         </div>
       ) : (
         <div className="docs-grid">

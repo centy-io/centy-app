@@ -43,8 +43,8 @@ function ProjectContextRequired({ requestedPage }: { requestedPage: string }) {
 
   return (
     <div className="project-context-required">
-      <h2>Project Required</h2>
-      <p>
+      <h2 className="project-context-required-title">Project Required</h2>
+      <p className="project-context-required-message">
         {pageLabel} are project-scoped. Please select a project to view its{' '}
         {pageLabel.toLowerCase()}.
       </p>

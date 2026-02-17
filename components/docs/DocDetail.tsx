@@ -302,7 +302,9 @@ export function DocDetail({ slug }: DocDetailProps) {
 
       {showDeleteConfirm && (
         <div className="delete-confirm">
-          <p>Are you sure you want to delete this document?</p>
+          <p className="delete-confirm-text">
+            Are you sure you want to delete this document?
+          </p>
           <div className="delete-confirm-actions">
             <button
               onClick={() => setShowDeleteConfirm(false)}
@@ -325,8 +327,11 @@ export function DocDetail({ slug }: DocDetailProps) {
         {isEditing ? (
           <div className="edit-form">
             <div className="form-group">
-              <label htmlFor="edit-title">Title:</label>
+              <label className="doc-detail-label" htmlFor="edit-title">
+                Title:
+              </label>
               <input
+                className="doc-detail-input"
                 id="edit-title"
                 type="text"
                 value={editTitle}
@@ -335,10 +340,11 @@ export function DocDetail({ slug }: DocDetailProps) {
             </div>
 
             <div className="form-group">
-              <label htmlFor="edit-slug">
+              <label className="doc-detail-label" htmlFor="edit-slug">
                 Slug (leave empty to keep current):
               </label>
               <input
+                className="doc-detail-input"
                 id="edit-slug"
                 type="text"
                 value={editSlug}
@@ -348,7 +354,9 @@ export function DocDetail({ slug }: DocDetailProps) {
             </div>
 
             <div className="form-group">
-              <label htmlFor="edit-content">Content (Markdown):</label>
+              <label className="doc-detail-label" htmlFor="edit-content">
+                Content (Markdown):
+              </label>
               <TextEditor
                 value={editContent}
                 onChange={setEditContent}

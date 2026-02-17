@@ -155,7 +155,7 @@ export function TextEditor({
               className={editor.isActive('bold') ? 'active' : ''}
               title="Bold (Ctrl+B)"
             >
-              <strong>B</strong>
+              <strong className="toolbar-btn-bold">B</strong>
             </button>
             <button
               type="button"
@@ -163,7 +163,7 @@ export function TextEditor({
               className={editor.isActive('italic') ? 'active' : ''}
               title="Italic (Ctrl+I)"
             >
-              <em>I</em>
+              <em className="toolbar-btn-italic">I</em>
             </button>
             <button
               type="button"
@@ -171,7 +171,7 @@ export function TextEditor({
               className={editor.isActive('strike') ? 'active' : ''}
               title="Strikethrough"
             >
-              <s>S</s>
+              <s className="toolbar-btn-strike">S</s>
             </button>
             <button
               type="button"
@@ -274,6 +274,7 @@ export function TextEditor({
             </button>
             <button
               type="button"
+              className="toolbar-btn-hr"
               onClick={() => editor.chain().focus().setHorizontalRule().run()}
               title="Horizontal Rule"
             >

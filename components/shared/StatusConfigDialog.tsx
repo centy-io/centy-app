@@ -127,7 +127,9 @@ export function StatusConfigDialog({
     <div className="status-config-dialog-overlay">
       <div className="status-config-dialog" ref={modalRef}>
         <div className="status-config-dialog-header">
-          <h3>Configure Status Update Behavior</h3>
+          <h3 className="status-config-dialog-title">
+            Configure Status Update Behavior
+          </h3>
           <button className="status-config-dialog-close" onClick={onClose}>
             x
           </button>
@@ -157,6 +159,7 @@ export function StatusConfigDialog({
                   className={`status-config-option ${selectedOption === true ? 'selected' : ''}`}
                 >
                   <input
+                    className="status-config-radio"
                     type="radio"
                     name="updateStatus"
                     checked={selectedOption === true}
@@ -177,6 +180,7 @@ export function StatusConfigDialog({
                   className={`status-config-option ${selectedOption === false ? 'selected' : ''}`}
                 >
                   <input
+                    className="status-config-radio"
                     type="radio"
                     name="updateStatus"
                     checked={selectedOption === false}

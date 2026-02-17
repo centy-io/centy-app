@@ -116,21 +116,25 @@ export function MultiSelect({
           >
             <label className="multi-select-option select-all">
               <input
+                className="multi-select-checkbox"
                 type="checkbox"
                 checked={allSelected}
                 onChange={handleSelectAll}
               />
-              <span>All</span>
+              <span className="multi-select-option-label">All</span>
             </label>
             <div className="multi-select-divider" />
             {options.map(option => (
               <label key={option.value} className="multi-select-option">
                 <input
+                  className="multi-select-checkbox"
                   type="checkbox"
                   checked={value.includes(option.value)}
                   onChange={() => handleOptionToggle(option.value)}
                 />
-                <span>{option.label}</span>
+                <span className="multi-select-option-label">
+                  {option.label}
+                </span>
               </label>
             ))}
           </div>

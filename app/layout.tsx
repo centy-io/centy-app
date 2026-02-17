@@ -28,8 +28,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
+    <html lang="en" suppressHydrationWarning className="root-html">
+      <head className="root-head">
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-ZV5SD70Z2D"
           strategy="afterInteractive"
@@ -43,7 +43,7 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body suppressHydrationWarning>
+      <body suppressHydrationWarning className="root-body">
         <Providers>
           <DaemonDisconnectedOverlay />
           <DemoModeIndicator />
@@ -51,7 +51,7 @@ export default function RootLayout({
           <MobileNotSupportedOverlay />
           <div className="app">
             <Header />
-            <main>
+            <main className="app-main">
               <ClientRouteHandler>{children}</ClientRouteHandler>
             </main>
           </div>

@@ -311,6 +311,7 @@ export const AssetUploader = forwardRef<
           accept="image/png,image/jpeg,image/gif,image/webp,video/mp4,video/webm,application/pdf"
           onChange={e => e.target.files && handleFiles(e.target.files)}
           style={{ display: 'none' }}
+          className="drop-zone-input"
         />
         <div className="drop-zone-content">
           <span className="drop-zone-icon">+</span>
@@ -328,7 +329,12 @@ export const AssetUploader = forwardRef<
       {error && (
         <div className="asset-error">
           {error}
-          <button onClick={() => setError(null)}>Dismiss</button>
+          <button
+            className="asset-error-dismiss"
+            onClick={() => setError(null)}
+          >
+            Dismiss
+          </button>
         </div>
       )}
 

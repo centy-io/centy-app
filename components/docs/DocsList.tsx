@@ -212,7 +212,7 @@ export function DocsList() {
   return (
     <div className="docs-list">
       <div className="docs-header">
-        <h2>Documentation</h2>
+        <h2 className="docs-heading">Documentation</h2>
         <div className="header-actions">
           {projectPath && isInitialized === true && (
             <button
@@ -231,13 +231,17 @@ export function DocsList() {
 
       {!projectPath && (
         <div className="no-project-message">
-          <p>Select a project from the header to view documentation</p>
+          <p className="docs-list-message">
+            Select a project from the header to view documentation
+          </p>
         </div>
       )}
 
       {projectPath && isInitialized === false && (
         <div className="not-initialized-message">
-          <p>Centy is not initialized in this directory</p>
+          <p className="docs-list-message">
+            Centy is not initialized in this directory
+          </p>
           <Link href="/">Initialize Project</Link>
         </div>
       )}
@@ -250,7 +254,7 @@ export function DocsList() {
             <div className="loading">Loading documentation...</div>
           ) : docs.length === 0 ? (
             <div className="empty-state">
-              <p>No documentation found</p>
+              <p className="docs-empty-text">No documentation found</p>
               <Link href={createLink('/docs/new')}>
                 Create your first document
               </Link>
@@ -307,7 +311,9 @@ export function DocsList() {
                   </button>
                   {deleteConfirm === doc.slug && (
                     <div className="delete-confirm-overlay">
-                      <p>Delete &ldquo;{doc.title}&rdquo;?</p>
+                      <p className="docs-delete-confirm-text">
+                        Delete &ldquo;{doc.title}&rdquo;?
+                      </p>
                       <div className="delete-confirm-actions">
                         <button
                           onClick={() => setDeleteConfirm(null)}

@@ -217,7 +217,7 @@ export function ProjectTitleEditor({ projectPath }: ProjectTitleEditorProps) {
       <div className="title-preview">
         <h4 className="title-preview-label">Current Display Name</h4>
         <p className="title-preview-value">
-          <strong>
+          <strong className="title-preview-name">
             {projectInfo.userTitle ||
               projectInfo.projectTitle ||
               projectInfo.name ||

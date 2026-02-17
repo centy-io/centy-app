@@ -186,10 +186,10 @@ export function InitProject() {
 
     return (
       <div className="file-list">
-        <h4>{title}</h4>
-        <ul>
+        <h4 className="file-list-title">{title}</h4>
+        <ul className="file-list-items">
           {files.map(file => (
-            <li key={file.path}>
+            <li key={file.path} className="file-list-item">
               <span className="file-icon">
                 {file.fileType === FileType.DIRECTORY ? '📁' : '📄'}
               </span>
@@ -212,13 +212,14 @@ export function InitProject() {
 
     return (
       <div className="file-list checkbox-list">
-        <h4>{title}</h4>
+        <h4 className="file-list-title">{title}</h4>
         <p className="description">{description}</p>
-        <ul>
+        <ul className="file-list-items">
           {files.map(file => (
-            <li key={file.path}>
-              <label>
+            <li key={file.path} className="file-list-item">
+              <label className="file-list-label">
                 <input
+                  className="file-list-checkbox"
                   type="checkbox"
                   checked={selected.has(file.path)}
                   onChange={() => toggle(file.path)}
@@ -237,19 +238,22 @@ export function InitProject() {
 
   return (
     <div className="init-project">
-      <h2>Initialize Centy Project</h2>
+      <h2 className="init-project-title">Initialize Centy Project</h2>
 
       {step === 'input' && (
         <div className="input-step">
-          <p>
-            Create a <code>.centy</code> folder to track issues and
-            documentation for your project.
+          <p className="input-step-description">
+            Create a <code className="input-step-code">.centy</code> folder to
+            track issues and documentation for your project.
           </p>
 
           <div className="path-input">
-            <label htmlFor="project-path">Project Path:</label>
+            <label className="path-input-label" htmlFor="project-path">
+              Project Path:
+            </label>
             <div className="input-row">
               <input
+                className="path-input-field"
                 id="project-path"
                 type="text"
                 value={projectPath}
@@ -289,9 +293,10 @@ export function InitProject() {
 
       {step === 'plan' && plan && (
         <div className="plan-step">
-          <h3>Reconciliation Plan</h3>
-          <p>
-            Review what will happen when initializing <code>{projectPath}</code>
+          <h3 className="plan-step-title">Reconciliation Plan</h3>
+          <p className="plan-step-description">
+            Review what will happen when initializing{' '}
+            <code className="plan-step-code">{projectPath}</code>
           </p>
 
           {renderFileList(plan.toCreate, 'Files to Create')}
@@ -333,23 +338,26 @@ export function InitProject() {
       {step === 'executing' && (
         <div className="executing-step">
           <div className="spinner" />
-          <p>Initializing project...</p>
+          <p className="executing-step-message">Initializing project...</p>
         </div>
       )}
 
       {step === 'success' && result && (
         <div className="success-step">
-          <h3>Success!</h3>
-          <p>
-            Centy has been initialized in <code>{projectPath}</code>
+          <h3 className="success-step-title">Success!</h3>
+          <p className="success-step-description">
+            Centy has been initialized in{' '}
+            <code className="success-step-code">{projectPath}</code>
           </p>
 
           {result.created.length > 0 && (
             <div className="result-section">
-              <h4>Created:</h4>
-              <ul>
+              <h4 className="result-section-title">Created:</h4>
+              <ul className="result-section-list">
                 {result.created.map(path => (
-                  <li key={path}>{path}</li>
+                  <li key={path} className="result-section-item">
+                    {path}
+                  </li>
                 ))}
               </ul>
             </div>
@@ -357,10 +365,12 @@ export function InitProject() {
 
           {result.restored.length > 0 && (
             <div className="result-section">
-              <h4>Restored:</h4>
-              <ul>
+              <h4 className="result-section-title">Restored:</h4>
+              <ul className="result-section-list">
                 {result.restored.map(path => (
-                  <li key={path}>{path}</li>
+                  <li key={path} className="result-section-item">
+                    {path}
+                  </li>
                 ))}
               </ul>
             </div>
@@ -368,10 +378,12 @@ export function InitProject() {
 
           {result.reset.length > 0 && (
             <div className="result-section">
-              <h4>Reset:</h4>
-              <ul>
+              <h4 className="result-section-title">Reset:</h4>
+              <ul className="result-section-list">
                 {result.reset.map(path => (
-                  <li key={path}>{path}</li>
+                  <li key={path} className="result-section-item">
+                    {path}
+                  </li>
                 ))}
               </ul>
             </div>
@@ -385,7 +397,7 @@ export function InitProject() {
 
       {step === 'error' && (
         <div className="error-step">
-          <h3>Error</h3>
+          <h3 className="error-step-title">Error</h3>
           {error && <DaemonErrorMessage error={error} />}
           <button onClick={handleReset} className="primary">
             Try Again

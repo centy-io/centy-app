@@ -236,9 +236,8 @@ export function PathContextProvider({ children }: { children: ReactNode }) {
     navigateToProject,
   ])
 
-  return (
-    <PathContext.Provider value={contextValue}>{children}</PathContext.Provider>
-  )
+  const Provider = PathContext.Provider
+  return <Provider value={contextValue}>{children}</Provider>
 }
 
 /**

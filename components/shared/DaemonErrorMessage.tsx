@@ -14,11 +14,11 @@ export function DaemonErrorMessage({
   return (
     <div className={className}>
       <div className="daemon-error-content">
-        <span>{parsed.message}</span>
+        <span className="daemon-error-message">{parsed.message}</span>
         {parsed.tip && <span className="daemon-error-tip">{parsed.tip}</span>}
         {parsed.logs && (
           <span className="daemon-error-logs">
-            Logs: <code>{parsed.logs}</code>
+            Logs: <code className="daemon-error-logs-code">{parsed.logs}</code>
           </span>
         )}
       </div>
