@@ -27,7 +27,7 @@ import type {
   ProjectInfo,
 } from '@/gen/centy_pb'
 
-interface ProjectHandlerOptions {
+export interface ProjectHandlerOptions {
   projects?: ProjectInfo[]
   isInitialized?: boolean
   config?: Config
@@ -116,5 +116,3 @@ export function addProjectHandlers(
 
   return mocker
 }
-
-export type { ProjectHandlerOptions }

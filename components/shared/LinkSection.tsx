@@ -1,6 +1,12 @@
 'use client'
 
-import { useState, useCallback, useEffect, useMemo } from 'react'
+import {
+  useState,
+  useCallback,
+  useEffect,
+  useMemo,
+  type ReactNode,
+} from 'react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { route, type RouteLiteral } from 'nextjs-routes'
@@ -38,7 +44,7 @@ export function LinkSection({
   entityId,
   entityType,
   editable = true,
-}: LinkSectionProps) {
+}: LinkSectionProps): ReactNode {
   const { projectPath } = useProject()
   const params = useParams()
   const [links, setLinks] = useState<LinkType[]>([])
@@ -49,8 +55,10 @@ export function LinkSection({
 
   // Get project context for building routes
   const projectContext = useMemo(() => {
-    const org = params?.organization as string | undefined
-    const project = params?.project as string | undefined
+    const org =
+      typeof params?.organization === 'string' ? params.organization : undefined
+    const project =
+      typeof params?.project === 'string' ? params.project : undefined
     if (org && project) return { organization: org, project }
     return null
   }, [params])
@@ -71,9 +79,10 @@ export function LinkSection({
             pathname: '/[organization]/[project]/docs/[slug]',
             query: { ...projectContext, slug: targetId },
           })
-        default:
+        case 'unknown':
           return '/'
       }
+      return '/'
     },
     [projectContext]
   )
@@ -164,13 +173,13 @@ export function LinkSection({
       .join(' ')
   }
 
-  const getTargetTypeIcon = (targetType: LinkTargetType) => {
+  const getTargetTypeIcon = (targetType: LinkTargetType): string => {
     switch (targetType) {
       case LinkTargetType.ISSUE:
         return '!'
       case LinkTargetType.DOC:
         return 'D'
-      default:
+      case LinkTargetType.UNSPECIFIED:
         return '?'
     }
   }

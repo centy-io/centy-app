@@ -23,8 +23,10 @@ export function useKeyboardNavigation() {
   const params = useParams()
 
   // Extract org and project from URL
-  const org = params?.organization as string | undefined
-  const project = params?.project as string | undefined
+  const org: string | undefined =
+    typeof params?.organization === 'string' ? params.organization : undefined
+  const project: string | undefined =
+    typeof params?.project === 'string' ? params.project : undefined
 
   // Parse path segments from pathname as fallback
   const pathSegments = useMemo(() => {
@@ -90,8 +92,9 @@ export function useKeyboardNavigation() {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       // Don't navigate if user is typing in an input, textarea, or contenteditable
-      const target = event.target as HTMLElement
+      const target = event.target
       if (
+        !(target instanceof HTMLElement) ||
         target.tagName === 'INPUT' ||
         target.tagName === 'TEXTAREA' ||
         target.isContentEditable

@@ -28,8 +28,12 @@ export function CreateDoc() {
 
   // Get the project context from params or resolve from projectPath
   const getProjectContext = useCallback(async () => {
-    const org = params?.organization as string | undefined
-    const project = params?.project as string | undefined
+    const org: string | undefined = Array.isArray(params?.organization)
+      ? params.organization[0]
+      : params?.organization
+    const project: string | undefined = Array.isArray(params?.project)
+      ? params.project[0]
+      : params?.project
 
     if (org && project) {
       return { organization: org, project }

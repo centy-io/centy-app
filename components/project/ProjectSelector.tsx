@@ -61,8 +61,12 @@ export function ProjectSelector() {
   // Get current page from URL for navigation
   const getCurrentPage = () => {
     // Extract org and project from named route params
-    const org = params?.organization as string | undefined
-    const project = params?.project as string | undefined
+    const orgParam = params?.organization
+    const org: string | undefined =
+      typeof orgParam === 'string' ? orgParam : undefined
+    const projectParam = params?.project
+    const project: string | undefined =
+      typeof projectParam === 'string' ? projectParam : undefined
 
     // Parse pathname segments
     const pathSegments = pathname.split('/').filter(Boolean)

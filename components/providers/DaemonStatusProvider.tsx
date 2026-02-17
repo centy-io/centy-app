@@ -18,6 +18,12 @@ import { DEMO_ORG_SLUG, DEMO_PROJECT_PATH } from '@/lib/grpc/demo-data'
 import { EditorType, type EditorInfo } from '@/gen/centy_pb'
 import { trackDaemonConnection } from '@/lib/metrics'
 
+declare global {
+  interface Window {
+    __TEST_VSCODE_AVAILABLE__?: boolean
+  }
+}
+
 type DaemonStatus = 'connected' | 'disconnected' | 'checking' | 'demo'
 
 interface DaemonStatusContextType {
@@ -79,10 +85,9 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
         enableDemoMode()
         setStatus('demo')
         // Set vscodeAvailable for demo mode (check for test override)
-        const testOverride = (
-          window as Window & { __TEST_VSCODE_AVAILABLE__?: boolean }
-        ).__TEST_VSCODE_AVAILABLE__
-        setVscodeAvailable(testOverride ?? true)
+        const testOverride: boolean | undefined =
+          window.__TEST_VSCODE_AVAILABLE__
+        setVscodeAvailable(testOverride !== undefined ? testOverride : true)
         setEditors(createDemoEditors())
         // Clean up URL by removing demo param and adding org/project (preserve current path)
         const newUrl = `${window.location.pathname}?org=${DEMO_ORG_SLUG}&project=${encodeURIComponent(DEMO_PROJECT_PATH)}`
@@ -90,10 +95,9 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
       } else if (isDemoMode()) {
         setStatus('demo')
         // Set vscodeAvailable for demo mode (check for test override)
-        const testOverride = (
-          window as Window & { __TEST_VSCODE_AVAILABLE__?: boolean }
-        ).__TEST_VSCODE_AVAILABLE__
-        setVscodeAvailable(testOverride ?? true)
+        const testOverride: boolean | undefined =
+          window.__TEST_VSCODE_AVAILABLE__
+        setVscodeAvailable(testOverride !== undefined ? testOverride : true)
         setEditors(createDemoEditors())
       }
       setHasMounted(true)
@@ -106,10 +110,8 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
     if (isDemoMode()) {
       setStatus('demo')
       // Check for test override first, then default to true for demo mode
-      const testOverride = (
-        window as Window & { __TEST_VSCODE_AVAILABLE__?: boolean }
-      ).__TEST_VSCODE_AVAILABLE__
-      setVscodeAvailable(testOverride ?? true)
+      const testOverride: boolean | undefined = window.__TEST_VSCODE_AVAILABLE__
+      setVscodeAvailable(testOverride !== undefined ? testOverride : true)
       setEditors(createDemoEditors())
       return
     }

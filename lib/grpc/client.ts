@@ -110,7 +110,8 @@ function wrapWithMetrics(
 // Create a proxy that intercepts calls for metrics and demo mode
 export const centyClient: Client<typeof CentyDaemon> = new Proxy(realClient, {
   get(target, prop: string) {
-    const value = target[prop as keyof typeof target]
+    const clientRecord: Record<string, unknown> = target
+    const value: unknown = clientRecord[prop]
 
     // If in demo mode, use mock handlers
     if (demoModeEnabled) {
@@ -140,11 +141,10 @@ export const centyClient: Client<typeof CentyDaemon> = new Proxy(realClient, {
 
     // Not in demo mode - wrap real client methods with metrics
     if (typeof value === 'function') {
-      const boundFn = value.bind(target)
-      return wrapWithMetrics(
-        boundFn as (...args: unknown[]) => Promise<unknown>,
-        prop
-      )
+      const boundFn: (...args: unknown[]) => Promise<unknown> = (
+        ...args: unknown[]
+      ) => Promise.resolve(value.apply(target, args))
+      return wrapWithMetrics(boundFn, prop)
     }
 
     return value
@@ -153,7 +153,7 @@ export const centyClient: Client<typeof CentyDaemon> = new Proxy(realClient, {
 
 // Expose mock mode API for E2E tests
 if (typeof window !== 'undefined') {
-  ;(window as Window & { __CENTY_MOCK__?: CentyMockAPI }).__CENTY_MOCK__ = {
+  window.__CENTY_MOCK__ = {
     activate: enableDemoMode,
     deactivate: disableDemoMode,
     isActive: isDemoMode,

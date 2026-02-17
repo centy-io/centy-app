@@ -387,7 +387,7 @@ export function Settings() {
                     <h3>Custom Fields</h3>
                     <div className="settings-card">
                       <CustomFieldsEditor
-                        fields={config.customFields as CustomFieldDefinition[]}
+                        fields={config.customFields}
                         onChange={customFields =>
                           updateConfig({ customFields })
                         }
@@ -410,7 +410,7 @@ export function Settings() {
                     <h3>Workspace Settings</h3>
                     <div className="settings-card">
                       <WorkspaceSettingsEditor
-                        value={config.workspace as WorkspaceConfig | undefined}
+                        value={config.workspace}
                         onChange={workspace => updateConfig({ workspace })}
                       />
                     </div>

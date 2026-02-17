@@ -10,15 +10,17 @@ function getCommitSha() {
   }
 }
 
+const { NODE_ENV, COMMIT_SHA, CI } = process.env
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: process.env.NODE_ENV === 'production' ? 'export' : undefined,
+  output: NODE_ENV === 'production' ? 'export' : undefined,
   trailingSlash: true,
   images: {
     unoptimized: true,
   },
   env: {
-    NEXT_PUBLIC_COMMIT_SHA: process.env.COMMIT_SHA || getCommitSha(),
+    NEXT_PUBLIC_COMMIT_SHA: COMMIT_SHA || getCommitSha(),
   },
 }
 
@@ -30,7 +32,7 @@ export default withSentryConfig(withRoutes()(nextConfig), {
   project: 'javascript-nextjs',
 
   // Only print logs for uploading source maps in CI
-  silent: !process.env.CI,
+  silent: !CI,
 
   // For all available options, see:
   // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/

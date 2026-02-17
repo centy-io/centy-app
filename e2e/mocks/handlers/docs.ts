@@ -25,7 +25,7 @@ import type {
   UpdateDocRequest,
 } from '@/gen/centy_pb'
 
-interface DocHandlerOptions {
+export interface DocHandlerOptions {
   docs?: Doc[]
   onCreateDoc?: (request: CreateDocRequest) => Doc
   onUpdateDoc?: (request: UpdateDocRequest, existing: Doc) => Doc
@@ -39,7 +39,7 @@ export function addDocHandlers(
   mocker: GrpcMocker,
   options: DocHandlerOptions = {}
 ): GrpcMocker {
-  const docs = options.docs ?? [...mockDocs]
+  const docs = options.docs !== undefined ? options.docs : [...mockDocs]
 
   // ListDocs
   mocker.addHandler(
@@ -202,5 +202,3 @@ export function addDocHandlers(
 
   return mocker
 }
-
-export type { DocHandlerOptions }

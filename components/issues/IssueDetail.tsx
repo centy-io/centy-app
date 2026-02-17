@@ -1,6 +1,12 @@
 'use client'
 
-import { useState, useCallback, useEffect, useRef } from 'react'
+import {
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+  type ReactElement,
+} from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { create } from '@bufbuild/protobuf'
@@ -39,7 +45,7 @@ interface IssueDetailProps {
   issueNumber: string
 }
 
-export function IssueDetail({ issueNumber }: IssueDetailProps) {
+export function IssueDetail({ issueNumber }: IssueDetailProps): ReactElement {
   const router = useRouter()
   const { projectPath, isLoading: pathLoading } = usePathContext()
   useDaemonStatus() // Used for editor state via EditorSelector
@@ -141,7 +147,10 @@ export function IssueDetail({ issueNumber }: IssueDetailProps) {
     const handleClickOutside = (event: MouseEvent) => {
       if (
         statusDropdownRef.current &&
-        !statusDropdownRef.current.contains(event.target as Node)
+        !(
+          event.target instanceof Node &&
+          statusDropdownRef.current.contains(event.target)
+        )
       ) {
         setShowStatusDropdown(false)
       }
@@ -410,7 +419,7 @@ export function IssueDetail({ issueNumber }: IssueDetailProps) {
     enabled: isEditing && !saving && !!editTitle.trim(),
   })
 
-  const getPriorityClass = (priorityLabel: string) => {
+  const getPriorityClass = (priorityLabel: string): string => {
     switch (priorityLabel.toLowerCase()) {
       case 'high':
       case 'critical':
@@ -420,15 +429,14 @@ export function IssueDetail({ issueNumber }: IssueDetailProps) {
         return 'priority-medium'
       case 'low':
         return 'priority-low'
-      default:
-        if (priorityLabel.startsWith('P') || priorityLabel.startsWith('p')) {
-          const num = parseInt(priorityLabel.slice(1))
-          if (num === 1) return 'priority-high'
-          if (num === 2) return 'priority-medium'
-          return 'priority-low'
-        }
-        return ''
     }
+    if (priorityLabel.startsWith('P') || priorityLabel.startsWith('p')) {
+      const num = parseInt(priorityLabel.slice(1))
+      if (num === 1) return 'priority-high'
+      if (num === 2) return 'priority-medium'
+      return 'priority-low'
+    }
+    return ''
   }
 
   if (!projectPath) {

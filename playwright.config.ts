@@ -1,5 +1,7 @@
 import { defineConfig, devices } from '@playwright/test'
 
+const { CI, PLAYWRIGHT_VISUAL } = process.env
+
 // Visual test snapshot configuration
 // Screenshots are stored next to the pages they test in app/**/screenshot/
 const visualTestConfig = {
@@ -17,9 +19,9 @@ const regularTestConfig = {
 
 export default defineConfig({
   fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 1,
-  workers: process.env.CI ? 1 : undefined,
+  forbidOnly: !!CI,
+  retries: CI ? 2 : 1,
+  workers: CI ? 1 : undefined,
   reporter: [
     ['html', { open: 'never' }],
     ['json', { outputFile: 'playwright-report/results.json' }],
@@ -45,7 +47,7 @@ export default defineConfig({
 
   // Visual tests require consistent environment (Linux).
   // CI is authoritative for screenshots. Local devs should use Docker via `pnpm e2e:visual:docker`
-  projects: process.env.CI
+  projects: CI
     ? [
         // CI: Run regular e2e tests (Chromium)
         {
@@ -94,7 +96,7 @@ export default defineConfig({
         },
         // Local: Visual tests only when PLAYWRIGHT_VISUAL=1
         // Use `pnpm e2e:visual:docker` for consistent results matching CI
-        ...(process.env.PLAYWRIGHT_VISUAL
+        ...(PLAYWRIGHT_VISUAL
           ? [
               {
                 name: 'chromium',
@@ -123,7 +125,7 @@ export default defineConfig({
   webServer: {
     command: 'pnpm dev',
     url: 'http://localhost:5180',
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: !CI,
     timeout: 120000,
   },
 })

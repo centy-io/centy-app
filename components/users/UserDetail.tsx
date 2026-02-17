@@ -27,8 +27,12 @@ export function UserDetail({ userId }: UserDetailProps) {
   const { projectPath } = useProject()
 
   const projectContext = useMemo(() => {
-    const org = params?.organization as string | undefined
-    const project = params?.project as string | undefined
+    const orgParam = params?.organization
+    const org: string | undefined =
+      typeof orgParam === 'string' ? orgParam : undefined
+    const projectParam = params?.project
+    const project: string | undefined =
+      typeof projectParam === 'string' ? projectParam : undefined
     if (org && project) return { organization: org, project }
     return null
   }, [params])

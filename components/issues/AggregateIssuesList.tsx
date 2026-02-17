@@ -37,7 +37,7 @@ interface AggregateIssue extends Issue {
 
 const columnHelper = createColumnHelper<AggregateIssue>()
 
-const getPriorityClass = (priorityLabel: string) => {
+const getPriorityClass = (priorityLabel: string): string => {
   switch (priorityLabel.toLowerCase()) {
     case 'high':
     case 'critical':
@@ -47,15 +47,14 @@ const getPriorityClass = (priorityLabel: string) => {
       return 'priority-medium'
     case 'low':
       return 'priority-low'
-    default:
-      if (priorityLabel.startsWith('P') || priorityLabel.startsWith('p')) {
-        const num = parseInt(priorityLabel.slice(1))
-        if (num === 1) return 'priority-high'
-        if (num === 2) return 'priority-medium'
-        return 'priority-low'
-      }
-      return ''
   }
+  if (priorityLabel.startsWith('P') || priorityLabel.startsWith('p')) {
+    const num = parseInt(priorityLabel.slice(1))
+    if (num === 1) return 'priority-high'
+    if (num === 2) return 'priority-medium'
+    return 'priority-low'
+  }
+  return ''
 }
 
 export function AggregateIssuesList() {
@@ -130,7 +129,7 @@ export function AggregateIssuesList() {
         cell: info => `#${info.getValue()}`,
         enableColumnFilter: true,
         filterFn: (row, columnId, filterValue) => {
-          const value = row.getValue(columnId) as number
+          const value = row.getValue(columnId)
           return String(value).includes(filterValue)
         },
       }),
@@ -169,9 +168,9 @@ export function AggregateIssuesList() {
         },
         enableColumnFilter: true,
         filterFn: (row, columnId, filterValue) => {
-          const status = row.getValue(columnId) as string
-          const selectedValues = filterValue as string[]
-          if (!selectedValues || selectedValues.length === 0) {
+          const status = String(row.getValue(columnId))
+          const selectedValues = Array.isArray(filterValue) ? filterValue : []
+          if (selectedValues.length === 0) {
             return true
           }
           return selectedValues.includes(status)
@@ -190,9 +189,9 @@ export function AggregateIssuesList() {
         },
         enableColumnFilter: true,
         filterFn: (row, columnId, filterValue) => {
-          const priority = (row.getValue(columnId) as string).toLowerCase()
-          const selectedValues = filterValue as string[]
-          if (!selectedValues || selectedValues.length === 0) {
+          const priority = String(row.getValue(columnId)).toLowerCase()
+          const selectedValues = Array.isArray(filterValue) ? filterValue : []
+          if (selectedValues.length === 0) {
             return true
           }
           return selectedValues.includes(priority)
@@ -209,8 +208,8 @@ export function AggregateIssuesList() {
             p3: 3,
             unknown: 4,
           }
-          const a = (rowA.getValue('priority') as string).toLowerCase()
-          const b = (rowB.getValue('priority') as string).toLowerCase()
+          const a = String(rowA.getValue('priority')).toLowerCase()
+          const b = String(rowB.getValue('priority')).toLowerCase()
           return (priorityOrder[a] || 4) - (priorityOrder[b] || 4)
         },
       }),
@@ -227,8 +226,8 @@ export function AggregateIssuesList() {
         },
         enableColumnFilter: false,
         sortingFn: (rowA, rowB) => {
-          const a = rowA.getValue('createdAt') as string
-          const b = rowB.getValue('createdAt') as string
+          const a = String(rowA.getValue('createdAt'))
+          const b = String(rowB.getValue('createdAt'))
           if (!a && !b) return 0
           if (!a) return 1
           if (!b) return -1
@@ -354,20 +353,28 @@ export function AggregateIssuesList() {
                             header.getContext()
                           )}
                           <span className="sort-indicator">
-                            {{
-                              asc: ' \u25B2',
-                              desc: ' \u25BC',
-                            }[header.column.getIsSorted() as string] ?? ''}
+                            {(() => {
+                              const sorted = header.column.getIsSorted()
+                              return sorted === 'asc'
+                                ? ' \u25B2'
+                                : sorted === 'desc'
+                                  ? ' \u25BC'
+                                  : ''
+                            })()}
                           </span>
                         </button>
                         {header.column.getCanFilter() &&
                           (header.column.id === 'status' ? (
                             <MultiSelect
                               options={statusOptions}
-                              value={
-                                (header.column.getFilterValue() as string[]) ??
-                                []
-                              }
+                              value={(() => {
+                                const filterVal = header.column.getFilterValue()
+                                return Array.isArray(filterVal)
+                                  ? filterVal.filter(
+                                      (v): v is string => typeof v === 'string'
+                                    )
+                                  : []
+                              })()}
                               onChange={values =>
                                 header.column.setFilterValue(
                                   values.length > 0 ? values : undefined
@@ -379,10 +386,14 @@ export function AggregateIssuesList() {
                           ) : header.column.id === 'priority' ? (
                             <MultiSelect
                               options={PRIORITY_OPTIONS}
-                              value={
-                                (header.column.getFilterValue() as string[]) ??
-                                []
-                              }
+                              value={(() => {
+                                const filterVal = header.column.getFilterValue()
+                                return Array.isArray(filterVal)
+                                  ? filterVal.filter(
+                                      (v): v is string => typeof v === 'string'
+                                    )
+                                  : []
+                              })()}
                               onChange={values =>
                                 header.column.setFilterValue(
                                   values.length > 0 ? values : undefined
@@ -396,9 +407,12 @@ export function AggregateIssuesList() {
                               type="text"
                               className="column-filter"
                               placeholder="Filter..."
-                              value={
-                                (header.column.getFilterValue() as string) ?? ''
-                              }
+                              value={(() => {
+                                const filterVal = header.column.getFilterValue()
+                                return typeof filterVal === 'string'
+                                  ? filterVal
+                                  : ''
+                              })()}
                               onChange={e =>
                                 header.column.setFilterValue(e.target.value)
                               }

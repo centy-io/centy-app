@@ -46,7 +46,7 @@ export function StandaloneWorkspaceModal({
   const isEditorAvailable = useCallback(
     (type: EditorType): boolean => {
       const editor = editors.find(e => e.editorType === type)
-      return editor?.available ?? false
+      return editor !== undefined ? editor.available : false
     },
     [editors]
   )
@@ -69,7 +69,8 @@ export function StandaloneWorkspaceModal({
     const handleClickOutside = (event: MouseEvent) => {
       if (
         modalRef.current &&
-        !modalRef.current.contains(event.target as Node)
+        event.target instanceof Node &&
+        !modalRef.current.contains(event.target)
       ) {
         onClose()
       }

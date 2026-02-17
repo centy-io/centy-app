@@ -30,7 +30,7 @@ function loadState(projectPath: string): PinnedItemsState {
   try {
     const stored = localStorage.getItem(getStorageKey(projectPath))
     if (!stored) return DEFAULT_STATE
-    const parsed = JSON.parse(stored) as PinnedItemsState
+    const parsed: PinnedItemsState = JSON.parse(stored)
     return {
       items: Array.isArray(parsed.items) ? parsed.items : [],
     }

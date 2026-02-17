@@ -3,7 +3,6 @@
 import { useState, useCallback, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import type { RouteLiteral } from 'nextjs-routes'
 import { create } from '@bufbuild/protobuf'
 import {
   useReactTable,
@@ -46,7 +45,7 @@ const PRIORITY_OPTIONS: MultiSelectOption[] = [
 
 const columnHelper = createColumnHelper<Issue>()
 
-const getPriorityClass = (priorityLabel: string) => {
+const getPriorityClass = (priorityLabel: string): string => {
   switch (priorityLabel.toLowerCase()) {
     case 'high':
     case 'critical':
@@ -56,16 +55,15 @@ const getPriorityClass = (priorityLabel: string) => {
       return 'priority-medium'
     case 'low':
       return 'priority-low'
-    default:
-      // Handle P1, P2, etc. format
-      if (priorityLabel.startsWith('P') || priorityLabel.startsWith('p')) {
-        const num = parseInt(priorityLabel.slice(1))
-        if (num === 1) return 'priority-high'
-        if (num === 2) return 'priority-medium'
-        return 'priority-low'
-      }
-      return ''
   }
+  // Handle P1, P2, etc. format
+  if (priorityLabel.startsWith('P') || priorityLabel.startsWith('p')) {
+    const num = parseInt(priorityLabel.slice(1))
+    if (num === 1) return 'priority-high'
+    if (num === 2) return 'priority-medium'
+    return 'priority-low'
+  }
+  return ''
 }
 
 export function IssuesList() {
@@ -112,16 +110,13 @@ export function IssuesList() {
         header: '#',
         cell: info => {
           const issueId = info.row.original.issueNumber
-          const meta = info.table.options.meta as {
-            copyToClipboard: (text: string, label?: string) => Promise<boolean>
-          }
           return (
             <button
               type="button"
               className="issue-number-copy-btn"
               onClick={e => {
                 e.stopPropagation()
-                meta?.copyToClipboard(issueId, `issue #${info.getValue()}`)
+                void copyToClipboard(issueId, `issue #${info.getValue()}`)
               }}
               title="Click to copy UUID"
             >
@@ -131,19 +126,16 @@ export function IssuesList() {
         },
         enableColumnFilter: true,
         filterFn: (row, columnId, filterValue) => {
-          const value = row.getValue(columnId) as number
+          const value = row.getValue(columnId)
           return String(value).includes(filterValue)
         },
       }),
       columnHelper.accessor('title', {
         header: 'Title',
         cell: info => {
-          const meta = info.table.options.meta as {
-            createLink: (path: string) => RouteLiteral
-          }
           return (
             <Link
-              href={meta.createLink(`/issues/${info.row.original.issueNumber}`)}
+              href={createLink(`/issues/${info.row.original.issueNumber}`)}
               className="issue-title-link"
             >
               {info.getValue()}
@@ -168,10 +160,10 @@ export function IssuesList() {
         },
         enableColumnFilter: true,
         filterFn: (row, columnId, filterValue) => {
-          const status = row.getValue(columnId) as string
+          const status = String(row.getValue(columnId))
           // Multi-select filter: show if status is in selected values
-          const selectedValues = filterValue as string[]
-          if (!selectedValues || selectedValues.length === 0) {
+          const selectedValues = Array.isArray(filterValue) ? filterValue : []
+          if (selectedValues.length === 0) {
             return true // Show all when nothing selected
           }
           return selectedValues.includes(status)
@@ -190,10 +182,10 @@ export function IssuesList() {
         },
         enableColumnFilter: true,
         filterFn: (row, columnId, filterValue) => {
-          const priority = (row.getValue(columnId) as string).toLowerCase()
+          const priority = String(row.getValue(columnId)).toLowerCase()
           // Multi-select filter: show if priority is in selected values
-          const selectedValues = filterValue as string[]
-          if (!selectedValues || selectedValues.length === 0) {
+          const selectedValues = Array.isArray(filterValue) ? filterValue : []
+          if (selectedValues.length === 0) {
             return true // Show all when nothing selected
           }
           return selectedValues.includes(priority)
@@ -210,8 +202,8 @@ export function IssuesList() {
             p3: 3,
             unknown: 4,
           }
-          const a = (rowA.getValue('priority') as string).toLowerCase()
-          const b = (rowB.getValue('priority') as string).toLowerCase()
+          const a = String(rowA.getValue('priority')).toLowerCase()
+          const b = String(rowB.getValue('priority')).toLowerCase()
           return (priorityOrder[a] || 4) - (priorityOrder[b] || 4)
         },
       }),
@@ -228,8 +220,8 @@ export function IssuesList() {
         },
         enableColumnFilter: false,
         sortingFn: (rowA, rowB) => {
-          const a = rowA.getValue('createdAt') as string
-          const b = rowB.getValue('createdAt') as string
+          const a = String(rowA.getValue('createdAt'))
+          const b = String(rowB.getValue('createdAt'))
           if (!a && !b) return 0
           if (!a) return 1
           if (!b) return -1
@@ -252,8 +244,8 @@ export function IssuesList() {
         },
         enableColumnFilter: false,
         sortingFn: (rowA, rowB) => {
-          const a = rowA.getValue('lastSeen') as number
-          const b = rowB.getValue('lastSeen') as number
+          const a = Number(rowA.getValue('lastSeen'))
+          const b = Number(rowB.getValue('lastSeen'))
           // Never-seen issues (0) sort to bottom
           if (a === 0 && b === 0) return 0
           if (a === 0) return 1
@@ -262,7 +254,7 @@ export function IssuesList() {
         },
       }),
     ],
-    [lastSeenMap, stateManager]
+    [lastSeenMap, stateManager, copyToClipboard, createLink]
   )
 
   const table = useReactTable({
@@ -277,10 +269,6 @@ export function IssuesList() {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    meta: {
-      copyToClipboard,
-      createLink,
-    },
   })
 
   const fetchIssues = useCallback(async () => {
@@ -488,20 +476,30 @@ export function IssuesList() {
                                 header.getContext()
                               )}
                               <span className="sort-indicator">
-                                {{
-                                  asc: ' \u25B2',
-                                  desc: ' \u25BC',
-                                }[header.column.getIsSorted() as string] ?? ''}
+                                {(() => {
+                                  const sorted = header.column.getIsSorted()
+                                  return sorted === 'asc'
+                                    ? ' \u25B2'
+                                    : sorted === 'desc'
+                                      ? ' \u25BC'
+                                      : ''
+                                })()}
                               </span>
                             </button>
                             {header.column.getCanFilter() &&
                               (header.column.id === 'status' ? (
                                 <MultiSelect
                                   options={statusOptions}
-                                  value={
-                                    (header.column.getFilterValue() as string[]) ??
-                                    []
-                                  }
+                                  value={(() => {
+                                    const filterVal =
+                                      header.column.getFilterValue()
+                                    return Array.isArray(filterVal)
+                                      ? filterVal.filter(
+                                          (v): v is string =>
+                                            typeof v === 'string'
+                                        )
+                                      : []
+                                  })()}
                                   onChange={values =>
                                     header.column.setFilterValue(
                                       values.length > 0 ? values : undefined
@@ -513,10 +511,16 @@ export function IssuesList() {
                               ) : header.column.id === 'priority' ? (
                                 <MultiSelect
                                   options={PRIORITY_OPTIONS}
-                                  value={
-                                    (header.column.getFilterValue() as string[]) ??
-                                    []
-                                  }
+                                  value={(() => {
+                                    const filterVal =
+                                      header.column.getFilterValue()
+                                    return Array.isArray(filterVal)
+                                      ? filterVal.filter(
+                                          (v): v is string =>
+                                            typeof v === 'string'
+                                        )
+                                      : []
+                                  })()}
                                   onChange={values =>
                                     header.column.setFilterValue(
                                       values.length > 0 ? values : undefined
@@ -530,10 +534,13 @@ export function IssuesList() {
                                   type="text"
                                   className="column-filter"
                                   placeholder="Filter..."
-                                  value={
-                                    (header.column.getFilterValue() as string) ??
-                                    ''
-                                  }
+                                  value={(() => {
+                                    const filterVal =
+                                      header.column.getFilterValue()
+                                    return typeof filterVal === 'string'
+                                      ? filterVal
+                                      : ''
+                                  })()}
                                   onChange={e =>
                                     header.column.setFilterValue(e.target.value)
                                   }

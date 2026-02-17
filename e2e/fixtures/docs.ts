@@ -7,7 +7,7 @@ const FIXED_DATE = '2024-01-15T10:30:00.000Z'
  * Creates a mock doc with default values that can be overridden.
  */
 export function createMockDoc(overrides: Partial<Doc> = {}): Doc {
-  const slug = overrides.slug ?? 'test-doc'
+  const slug = overrides.slug !== undefined ? overrides.slug : 'test-doc'
   const now = FIXED_DATE
 
   const defaultMetadata: DocMetadata = {
@@ -21,8 +21,11 @@ export function createMockDoc(overrides: Partial<Doc> = {}): Doc {
 
   return {
     slug,
-    title: overrides.title ?? `Test Document`,
-    content: overrides.content ?? `# Test Document\n\nThis is test content.`,
+    title: overrides.title !== undefined ? overrides.title : `Test Document`,
+    content:
+      overrides.content !== undefined
+        ? overrides.content
+        : `# Test Document\n\nThis is test content.`,
     metadata: {
       ...defaultMetadata,
       ...overrides.metadata,
@@ -40,11 +43,11 @@ export function createMockDocMetadata(
   const now = FIXED_DATE
 
   return {
-    createdAt: overrides.createdAt ?? now,
-    updatedAt: overrides.updatedAt ?? now,
-    deletedAt: overrides.deletedAt ?? '',
-    isOrgDoc: overrides.isOrgDoc ?? false,
-    orgSlug: overrides.orgSlug ?? '',
+    createdAt: overrides.createdAt !== undefined ? overrides.createdAt : now,
+    updatedAt: overrides.updatedAt !== undefined ? overrides.updatedAt : now,
+    deletedAt: overrides.deletedAt !== undefined ? overrides.deletedAt : '',
+    isOrgDoc: overrides.isOrgDoc !== undefined ? overrides.isOrgDoc : false,
+    orgSlug: overrides.orgSlug !== undefined ? overrides.orgSlug : '',
     $typeName: 'centy.v1.DocMetadata',
   }
 }

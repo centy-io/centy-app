@@ -43,7 +43,9 @@ export function StatusConfigDialog({
           // Pre-select current value if it exists
           if (response.config.workspace) {
             setSelectedOption(
-              response.config.workspace.updateStatusOnOpen ?? false
+              response.config.workspace.updateStatusOnOpen !== undefined
+                ? response.config.workspace.updateStatusOnOpen
+                : false
             )
           }
         } else {
@@ -65,7 +67,8 @@ export function StatusConfigDialog({
     const handleClickOutside = (event: MouseEvent) => {
       if (
         modalRef.current &&
-        !modalRef.current.contains(event.target as Node)
+        event.target instanceof Node &&
+        !modalRef.current.contains(event.target)
       ) {
         onClose()
       }

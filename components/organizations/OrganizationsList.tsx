@@ -101,8 +101,10 @@ export function OrganizationsList() {
         },
         enableColumnFilter: false,
         sortingFn: (rowA, rowB) => {
-          const a = rowA.getValue('createdAt') as string
-          const b = rowB.getValue('createdAt') as string
+          const aVal = rowA.getValue('createdAt')
+          const bVal = rowB.getValue('createdAt')
+          const a: string = typeof aVal === 'string' ? aVal : ''
+          const b: string = typeof bVal === 'string' ? bVal : ''
           if (!a && !b) return 0
           if (!a) return 1
           if (!b) return -1
@@ -298,10 +300,14 @@ export function OrganizationsList() {
                             header.getContext()
                           )}
                           <span className="sort-indicator">
-                            {{
-                              asc: ' \u25B2',
-                              desc: ' \u25BC',
-                            }[header.column.getIsSorted() as string] ?? ''}
+                            {(() => {
+                              const sorted = header.column.getIsSorted()
+                              return sorted === 'asc'
+                                ? ' \u25B2'
+                                : sorted === 'desc'
+                                  ? ' \u25BC'
+                                  : ''
+                            })()}
                           </span>
                         </button>
                         {header.column.getCanFilter() && (
@@ -309,9 +315,12 @@ export function OrganizationsList() {
                             type="text"
                             className="column-filter"
                             placeholder="Filter..."
-                            value={
-                              (header.column.getFilterValue() as string) ?? ''
-                            }
+                            value={(() => {
+                              const filterVal = header.column.getFilterValue()
+                              return typeof filterVal === 'string'
+                                ? filterVal
+                                : ''
+                            })()}
                             onChange={e =>
                               header.column.setFilterValue(e.target.value)
                             }
