@@ -59,14 +59,14 @@ export function addIssueHandlers(
       // Filter by status if provided
       if (request.status) {
         filteredIssues = filteredIssues.filter(
-          i => i.metadata?.status === request.status
+          i => i.metadata && i.metadata.status === request.status
         )
       }
 
       // Filter by priority if provided
       if (request.priority !== undefined && request.priority > 0) {
         filteredIssues = filteredIssues.filter(
-          i => i.metadata?.priority === request.priority
+          i => i.metadata && i.metadata.priority === request.priority
         )
       }
 
@@ -198,11 +198,14 @@ export function addIssueHandlers(
             description: request.description || existing.description,
             metadata: {
               ...existing.metadata!,
-              status: request.status || existing.metadata?.status || 'open',
+              status:
+                request.status ||
+                (existing.metadata && existing.metadata.status) ||
+                'open',
               priority:
                 request.priority !== undefined
                   ? request.priority
-                  : (existing.metadata?.priority ?? 2),
+                  : ((existing.metadata && existing.metadata.priority) ?? 2),
               updatedAt: new Date().toISOString(),
             },
           }

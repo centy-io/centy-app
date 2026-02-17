@@ -23,8 +23,8 @@ export function useKeyboardNavigation() {
   const params = useParams()
 
   // Extract org and project from URL
-  const org = params?.organization as string | undefined
-  const project = params?.project as string | undefined
+  const org = params ? (params.organization as string | undefined) : undefined
+  const project = params ? (params.project as string | undefined) : undefined
 
   // Parse path segments from pathname as fallback
   const pathSegments = useMemo(() => {

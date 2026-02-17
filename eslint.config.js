@@ -21,7 +21,6 @@ export default [
     rules: {
       'import/order': 'off',
       'import/no-namespace': 'off',
-      'no-optional-chaining/no-optional-chaining': 'off',
       'single-export/single-export': 'off',
       'max-lines': 'off',
       'max-lines-per-function': 'off',

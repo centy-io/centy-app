@@ -97,7 +97,10 @@ export function ProjectsGrid() {
       const orgSlug = project.organizationSlug || ''
       if (!groups.has(orgSlug)) {
         const org = organizations.find(o => o.slug === orgSlug)
-        groups.set(orgSlug, { name: org?.name || orgSlug, projects: [] })
+        groups.set(orgSlug, {
+          name: (org ? org.name : '') || orgSlug,
+          projects: [],
+        })
       }
       groups.get(orgSlug)!.projects.push(project)
     }

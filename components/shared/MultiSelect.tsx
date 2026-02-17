@@ -86,7 +86,8 @@ export function MultiSelect({
       return 'All'
     }
     if (value.length === 1) {
-      return options.find(o => o.value === value[0])?.label || value[0]
+      const found = options.find(o => o.value === value[0])
+      return (found ? found.label : '') || value[0]
     }
     return `${value.length} selected`
   }

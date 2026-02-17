@@ -25,8 +25,8 @@ export function CreateUser() {
   const { projectPath, isInitialized } = useProject()
 
   const projectContext = useMemo(() => {
-    const org = params?.organization as string | undefined
-    const project = params?.project as string | undefined
+    const org = params ? (params.organization as string | undefined) : undefined
+    const project = params ? (params.project as string | undefined) : undefined
     if (org && project) return { organization: org, project }
     return null
   }, [params])

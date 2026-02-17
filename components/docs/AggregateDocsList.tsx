@@ -55,12 +55,14 @@ export function AggregateDocsList() {
 
       // Sort by updated date (most recent first)
       allDocs.sort((a, b) => {
-        const dateA = a.metadata?.updatedAt
-          ? new Date(a.metadata.updatedAt).getTime()
-          : 0
-        const dateB = b.metadata?.updatedAt
-          ? new Date(b.metadata.updatedAt).getTime()
-          : 0
+        const dateA =
+          a.metadata && a.metadata.updatedAt
+            ? new Date(a.metadata.updatedAt).getTime()
+            : 0
+        const dateB =
+          b.metadata && b.metadata.updatedAt
+            ? new Date(b.metadata.updatedAt).getTime()
+            : 0
         return dateB - dateA
       })
 
@@ -126,7 +128,7 @@ export function AggregateDocsList() {
               >
                 {doc.title || doc.slug}
               </Link>
-              {doc.metadata?.updatedAt && (
+              {doc.metadata && doc.metadata.updatedAt && (
                 <div className="doc-date">
                   Updated:{' '}
                   {new Date(doc.metadata.updatedAt).toLocaleDateString()}

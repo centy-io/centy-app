@@ -61,8 +61,8 @@ export function ProjectSelector() {
   // Get current page from URL for navigation
   const getCurrentPage = () => {
     // Extract org and project from named route params
-    const org = params?.organization as string | undefined
-    const project = params?.project as string | undefined
+    const org = params ? (params.organization as string | undefined) : undefined
+    const project = params ? (params.project as string | undefined) : undefined
 
     // Parse pathname segments
     const pathSegments = pathname.split('/').filter(Boolean)
@@ -170,7 +170,7 @@ export function ProjectSelector() {
   const getCurrentProjectName = () => {
     if (!projectPath) return 'Select Project'
     const project = projects.find(p => p.path === projectPath)
-    if (project?.name) return project.name
+    if (project && project.name) return project.name
     // Extract folder name from path
     const parts = projectPath.split('/')
     return parts[parts.length - 1] || projectPath
@@ -262,7 +262,10 @@ export function ProjectSelector() {
       const orgSlug = project.organizationSlug || ''
       if (!groups.has(orgSlug)) {
         const org = organizations.find(o => o.slug === orgSlug)
-        groups.set(orgSlug, { name: org?.name || orgSlug, projects: [] })
+        groups.set(orgSlug, {
+          name: (org ? org.name : '') || orgSlug,
+          projects: [],
+        })
       }
       groups.get(orgSlug)!.projects.push(project)
     }
@@ -296,7 +299,7 @@ export function ProjectSelector() {
           sideOffset={4}
           onOpenAutoFocus={e => {
             e.preventDefault()
-            searchInputRef.current?.focus()
+            if (searchInputRef.current) searchInputRef.current.focus()
           }}
         >
           <div className="project-selector-header">

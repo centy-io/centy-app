@@ -29,8 +29,8 @@ export function Header() {
   // Extract org and project from URL
   // New route structure: /[organization]/[project]/...
   // Named params are available as params?.organization and params?.project
-  const org = params?.organization as string | undefined
-  const project = params?.project as string | undefined
+  const org = params ? (params.organization as string | undefined) : undefined
+  const project = params ? (params.project as string | undefined) : undefined
 
   // Fallback: parse pathname for cases where params might not be available
   const pathSegments = useMemo(() => {

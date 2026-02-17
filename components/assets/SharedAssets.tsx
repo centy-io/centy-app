@@ -125,7 +125,7 @@ export function SharedAssets() {
   )
 
   const closePreview = useCallback(() => {
-    if (previewAsset?.url) {
+    if (previewAsset && previewAsset.url) {
       URL.revokeObjectURL(previewAsset.url)
     }
     setPreviewAsset(null)
@@ -146,7 +146,7 @@ export function SharedAssets() {
 
   useEffect(() => {
     return () => {
-      if (previewAsset?.url) {
+      if (previewAsset && previewAsset.url) {
         URL.revokeObjectURL(previewAsset.url)
       }
     }

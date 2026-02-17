@@ -81,14 +81,15 @@ export function EditorSelector({
   const isEditorAvailable = useCallback(
     (type: EditorType): boolean => {
       const editor = getEditorInfo(type)
-      return editor?.available ?? false
+      return editor ? editor.available : false
     },
     [getEditorInfo]
   )
 
   // Get the preferred editor's display info
   const preferredEditorInfo = getEditorInfo(preferredEditor)
-  const preferredEditorName = preferredEditorInfo?.name || 'VS Code'
+  const preferredEditorName =
+    (preferredEditorInfo ? preferredEditorInfo.name : '') || 'VS Code'
   const preferredEditorAvailable = isEditorAvailable(preferredEditor)
 
   // Handle primary button click
@@ -164,7 +165,9 @@ export function EditorSelector({
           disabled={disabled || loading || !preferredEditorAvailable}
           title={
             preferredEditorAvailable
-              ? preferredEditorInfo?.description
+              ? preferredEditorInfo
+                ? preferredEditorInfo.description
+                : ''
               : `${preferredEditorName} is not available`
           }
         >
