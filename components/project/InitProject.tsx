@@ -45,11 +45,11 @@ export function InitProject() {
         title: 'Select Project Folder',
       })
       if (selected) {
-        setProjectPath(selected as string)
+        setProjectPath(selected)
       }
     } catch (err) {
       // User cancelled or error occurred
-      if ((err as Error).name !== 'AbortError') {
+      if (!(err instanceof Error) || err.name !== 'AbortError') {
         console.error('Failed to select folder:', err)
       }
     }

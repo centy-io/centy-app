@@ -25,12 +25,12 @@ export function useAppLink() {
   const pathname = usePathname()
 
   // Extract org and project from named route params
-  const paramOrg = params
-    ? (params.organization as string | undefined)
-    : undefined
-  const paramProject = params
-    ? (params.project as string | undefined)
-    : undefined
+  const rawOrg = params ? params.organization : undefined
+  const paramOrg: string | undefined =
+    typeof rawOrg === 'string' ? rawOrg : undefined
+  const rawProject = params ? params.project : undefined
+  const paramProject: string | undefined =
+    typeof rawProject === 'string' ? rawProject : undefined
 
   // Parse path segments from pathname as fallback
   const pathSegments = useMemo(() => {
@@ -65,18 +65,25 @@ export function useAppLink() {
    */
   const createLink = useCallback(
     (path: string): RouteLiteral => {
+      // Normalize path to not start with /
+      const normalizedPath = path.startsWith('/') ? path.slice(1) : path
+      const pathSegments = normalizedPath.split('/').filter(Boolean)
+
       // If we have project context, prepend org/project to path
       if (org && project) {
-        // Normalize path to not start with /
-        const normalizedPath = path.startsWith('/') ? path.slice(1) : path
         return route({
           pathname: '/[...path]',
-          query: { path: [org, project, ...normalizedPath.split('/')] },
+          query: { path: [org, project, ...pathSegments] },
         })
       }
 
-      // No project context (aggregate view) - return path as-is
-      return path as RouteLiteral
+      // No project context (aggregate view) - use path segments directly
+      return route({
+        pathname: '/[...path]',
+        query: {
+          path: pathSegments.length > 0 ? pathSegments : [normalizedPath],
+        },
+      })
     },
     [org, project]
   )
@@ -113,8 +120,8 @@ export function useAppLink() {
    * @param path - Root path like '/settings' or '/organizations'
    * @returns The path as-is
    */
-  const createRootLink = useCallback((path: string): RouteLiteral => {
-    return (path.startsWith('/') ? path : `/${path}`) as RouteLiteral
+  const createRootLink = useCallback((path: string): string => {
+    return path.startsWith('/') ? path : `/${path}`
   }, [])
 
   /**

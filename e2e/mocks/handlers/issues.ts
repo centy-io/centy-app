@@ -31,7 +31,7 @@ import type {
   UpdateIssueRequest,
 } from '@/gen/centy_pb'
 
-interface IssueHandlerOptions {
+export interface IssueHandlerOptions {
   issues?: Issue[]
   onCreateIssue?: (request: CreateIssueRequest) => Issue
   onUpdateIssue?: (request: UpdateIssueRequest, existing: Issue) => Issue
@@ -45,7 +45,7 @@ export function addIssueHandlers(
   mocker: GrpcMocker,
   options: IssueHandlerOptions = {}
 ): GrpcMocker {
-  const issues = options.issues ?? [...mockIssues]
+  const issues = options.issues !== undefined ? options.issues : [...mockIssues]
   let nextDisplayNumber = issues.length + 1
 
   // ListIssues
@@ -205,7 +205,10 @@ export function addIssueHandlers(
               priority:
                 request.priority !== undefined
                   ? request.priority
-                  : ((existing.metadata && existing.metadata.priority) ?? 2),
+                  : existing.metadata !== undefined &&
+                      existing.metadata.priority !== undefined
+                    ? existing.metadata.priority
+                    : 2,
               updatedAt: new Date().toISOString(),
             },
           }
@@ -261,5 +264,3 @@ export function addIssueHandlers(
 
   return mocker
 }
-
-export type { IssueHandlerOptions }

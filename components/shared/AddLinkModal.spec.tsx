@@ -38,10 +38,11 @@ const createMockLinkTypeInfo = (
 describe('AddLinkModal', () => {
   const mockOnClose = vi.fn()
   const mockOnLinkCreated = vi.fn()
+  const emptyLinks: LinkType[] = []
   const defaultProps = {
     entityId: 'entity-123',
     entityType: 'issue' as const,
-    existingLinks: [] as LinkType[],
+    existingLinks: emptyLinks,
     onClose: mockOnClose,
     onLinkCreated: mockOnLinkCreated,
   }
@@ -368,9 +369,10 @@ describe('AddLinkModal', () => {
         targetId: 'issue-1',
         targetType: LinkTargetType.ISSUE,
         linkType: 'blocks',
+        createdAt: '2026-01-01T00:00:00Z',
         $typeName: 'centy.v1.Link',
         $unknown: undefined,
-      } as LinkType,
+      },
     ]
 
     render(<AddLinkModal {...defaultProps} existingLinks={existingLinks} />)

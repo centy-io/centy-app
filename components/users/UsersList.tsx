@@ -31,6 +31,12 @@ import {
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import { isDaemonUnimplemented } from '@/lib/daemon-error'
 
+declare module '@tanstack/react-table' {
+  interface TableMeta<TData> {
+    getUserRoute: (userId: string) => RouteLiteral | '/'
+  }
+}
+
 const columnHelper = createColumnHelper<User>()
 
 export function UsersList() {
@@ -39,8 +45,12 @@ export function UsersList() {
   const { projectPath, isInitialized, setIsInitialized } = useProject()
 
   const projectContext = useMemo(() => {
-    const org = params ? (params.organization as string | undefined) : undefined
-    const project = params ? (params.project as string | undefined) : undefined
+    const orgParam = params ? params.organization : undefined
+    const org: string | undefined =
+      typeof orgParam === 'string' ? orgParam : undefined
+    const projectParam = params ? params.project : undefined
+    const project: string | undefined =
+      typeof projectParam === 'string' ? projectParam : undefined
     if (org && project) return { organization: org, project }
     return null
   }, [params])
@@ -95,12 +105,10 @@ export function UsersList() {
       columnHelper.accessor('name', {
         header: 'Name',
         cell: info => {
-          const meta = info.table.options.meta as {
-            getUserRoute: (userId: string) => RouteLiteral | '/'
-          }
+          const meta = info.table.options.meta
           return (
             <Link
-              href={meta.getUserRoute(info.row.original.id)}
+              href={meta ? meta.getUserRoute(info.row.original.id) : '/'}
               className="user-name-link"
             >
               {info.getValue()}
@@ -124,7 +132,8 @@ export function UsersList() {
         },
         enableColumnFilter: true,
         filterFn: (row, columnId, filterValue) => {
-          const usernames = row.getValue(columnId) as string[]
+          const val = row.getValue(columnId)
+          const usernames: string[] = Array.isArray(val) ? val : []
           return usernames.some(u =>
             u.toLowerCase().includes(filterValue.toLowerCase())
           )
@@ -138,8 +147,10 @@ export function UsersList() {
         },
         enableColumnFilter: false,
         sortingFn: (rowA, rowB) => {
-          const a = rowA.getValue('createdAt') as string
-          const b = rowB.getValue('createdAt') as string
+          const aVal = rowA.getValue('createdAt')
+          const bVal = rowB.getValue('createdAt')
+          const a: string = typeof aVal === 'string' ? aVal : ''
+          const b: string = typeof bVal === 'string' ? bVal : ''
           if (!a && !b) return 0
           if (!a) return 1
           if (!b) return -1
@@ -401,10 +412,14 @@ export function UsersList() {
                                 header.getContext()
                               )}
                               <span className="sort-indicator">
-                                {{
-                                  asc: ' \u25B2',
-                                  desc: ' \u25BC',
-                                }[header.column.getIsSorted() as string] ?? ''}
+                                {(() => {
+                                  const sorted = header.column.getIsSorted()
+                                  return sorted === 'asc'
+                                    ? ' \u25B2'
+                                    : sorted === 'desc'
+                                      ? ' \u25BC'
+                                      : ''
+                                })()}
                               </span>
                             </button>
                             {header.column.getCanFilter() && (
@@ -412,10 +427,13 @@ export function UsersList() {
                                 type="text"
                                 className="column-filter"
                                 placeholder="Filter..."
-                                value={
-                                  (header.column.getFilterValue() as string) ??
-                                  ''
-                                }
+                                value={(() => {
+                                  const filterVal =
+                                    header.column.getFilterValue()
+                                  return typeof filterVal === 'string'
+                                    ? filterVal
+                                    : ''
+                                })()}
                                 onChange={e =>
                                   header.column.setFilterValue(e.target.value)
                                 }

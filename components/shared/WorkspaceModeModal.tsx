@@ -27,7 +27,8 @@ export function WorkspaceModeModal({
     const handleClickOutside = (event: MouseEvent) => {
       if (
         modalRef.current &&
-        !modalRef.current.contains(event.target as Node)
+        event.target instanceof Node &&
+        !modalRef.current.contains(event.target)
       ) {
         onClose()
       }
