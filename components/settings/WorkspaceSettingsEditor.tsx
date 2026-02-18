@@ -27,12 +27,9 @@ export function WorkspaceSettingsEditor({
               updateStatusOnOpen: e.target.checked,
             })
           }
-          className="workspace-settings-checkbox-input"
         />
         <span className="workspace-settings-checkbox-label">
-          <strong className="workspace-settings-checkbox-title">
-            Update status on open
-          </strong>
+          <strong>Update status on open</strong>
           <span className="workspace-settings-checkbox-description">
             Update status to in-progress when a workspace is opened
           </span>

@@ -25,6 +25,71 @@ interface MultiSelectProps {
   className?: string
 }
 
+function MultiSelectDropdown({
+  refs,
+  floatingStyles,
+  getFloatingProps,
+  allSelected,
+  handleSelectAll,
+  options,
+  value,
+  handleOptionToggle,
+}: {
+  refs: { setFloating: (node: HTMLElement | null) => void }
+  floatingStyles: React.CSSProperties
+  getFloatingProps: () => Record<string, unknown>
+  allSelected: boolean
+  handleSelectAll: () => void
+  options: MultiSelectOption[]
+  value: string[]
+  handleOptionToggle: (optionValue: string) => void
+}) {
+  return (
+    <FloatingPortal>
+      <div
+        ref={refs.setFloating}
+        style={floatingStyles}
+        className="multi-select-dropdown"
+        {...getFloatingProps()}
+      >
+        <label className="multi-select-option select-all">
+          <input
+            type="checkbox"
+            checked={allSelected}
+            onChange={handleSelectAll}
+          />
+          <span>All</span>
+        </label>
+        <div className="multi-select-divider" />
+        {options.map(option => (
+          <label key={option.value} className="multi-select-option">
+            <input
+              type="checkbox"
+              checked={value.includes(option.value)}
+              onChange={() => handleOptionToggle(option.value)}
+            />
+            <span>{option.label}</span>
+          </label>
+        ))}
+      </div>
+    </FloatingPortal>
+  )
+}
+
+function getDisplayText(
+  value: string[],
+  options: MultiSelectOption[],
+  placeholder: string
+) {
+  if (value.length === 0) return placeholder
+  if (value.length === options.length) return 'All'
+  if (value.length === 1) {
+    const found = options.find(o => o.value === value[0])
+    return (found ? found.label : '') || value[0]
+  }
+  return `${value.length} selected`
+}
+
 export function MultiSelect({
   options,
   value,
@@ -43,7 +108,6 @@ export function MultiSelect({
 
   const click = useClick(context)
   const dismiss = useDismiss(context)
-
   const { getReferenceProps, getFloatingProps } = useInteractions([
     click,
     dismiss,
@@ -60,39 +124,16 @@ export function MultiSelect({
   )
 
   const handleSelectAll = useCallback(() => {
-    if (value.length === options.length) {
-      onChange([])
-    } else {
-      onChange(options.map(o => o.value))
-    }
+    onChange(value.length === options.length ? [] : options.map(o => o.value))
   }, [value.length, options, onChange])
 
-  // Close dropdown on Escape key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        setIsOpen(false)
-      }
+      if (e.key === 'Escape' && isOpen) setIsOpen(false)
     }
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [isOpen])
-
-  const getDisplayText = () => {
-    if (value.length === 0) {
-      return placeholder
-    }
-    if (value.length === options.length) {
-      return 'All'
-    }
-    if (value.length === 1) {
-      const found = options.find(o => o.value === value[0])
-      return (found ? found.label : '') || value[0]
-    }
-    return `${value.length} selected`
-  }
-
-  const allSelected = value.length === options.length
 
   return (
     <div className={`multi-select ${className}`}>
@@ -102,43 +143,23 @@ export function MultiSelect({
         className={`multi-select-trigger ${isOpen ? 'open' : ''} ${value.length > 0 ? 'has-value' : ''}`}
         {...getReferenceProps()}
       >
-        <span className="multi-select-text">{getDisplayText()}</span>
+        <span className="multi-select-text">
+          {getDisplayText(value, options, placeholder)}
+        </span>
         <span className="multi-select-arrow">{isOpen ? '▲' : '▼'}</span>
       </button>
 
       {isOpen && (
-        <FloatingPortal>
-          <div
-            ref={refs.setFloating}
-            style={floatingStyles}
-            className="multi-select-dropdown"
-            {...getFloatingProps()}
-          >
-            <label className="multi-select-option select-all">
-              <input
-                className="multi-select-checkbox"
-                type="checkbox"
-                checked={allSelected}
-                onChange={handleSelectAll}
-              />
-              <span className="multi-select-option-label">All</span>
-            </label>
-            <div className="multi-select-divider" />
-            {options.map(option => (
-              <label key={option.value} className="multi-select-option">
-                <input
-                  className="multi-select-checkbox"
-                  type="checkbox"
-                  checked={value.includes(option.value)}
-                  onChange={() => handleOptionToggle(option.value)}
-                />
-                <span className="multi-select-option-label">
-                  {option.label}
-                </span>
-              </label>
-            ))}
-          </div>
-        </FloatingPortal>
+        <MultiSelectDropdown
+          refs={refs}
+          floatingStyles={floatingStyles}
+          getFloatingProps={getFloatingProps}
+          allSelected={value.length === options.length}
+          handleSelectAll={handleSelectAll}
+          options={options}
+          value={value}
+          handleOptionToggle={handleOptionToggle}
+        />
       )}
     </div>
   )

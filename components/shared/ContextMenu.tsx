@@ -19,7 +19,7 @@ export interface ContextMenuProps {
   onClose: () => void
 }
 
-export function ContextMenu({ items, x, y, onClose }: ContextMenuProps) {
+function useContextMenuDismiss(onClose: () => void) {
   const menuRef = useRef<HTMLDivElement>(null)
 
   // Close on click outside
@@ -67,16 +67,15 @@ export function ContextMenu({ items, x, y, onClose }: ContextMenuProps) {
     return () => window.removeEventListener('scroll', handleScroll, true)
   }, [onClose])
 
-  // Adjust position to keep menu in viewport
-  const adjustedPosition = {
-    left: x,
-    top: y,
-  }
+  return menuRef
+}
 
-  // Check if menu would overflow right edge
+function getAdjustedPosition(x: number, y: number, itemCount: number) {
+  const adjustedPosition = { left: x, top: y }
+
   if (typeof window !== 'undefined') {
     const menuWidth = 180 // Approximate width
-    const menuHeight = items.length * 36 + 16 // Approximate height
+    const menuHeight = itemCount * 36 + 16 // Approximate height
 
     if (x + menuWidth > window.innerWidth) {
       adjustedPosition.left = window.innerWidth - menuWidth - 8
@@ -86,6 +85,13 @@ export function ContextMenu({ items, x, y, onClose }: ContextMenuProps) {
       adjustedPosition.top = window.innerHeight - menuHeight - 8
     }
   }
+
+  return adjustedPosition
+}
+
+export function ContextMenu({ items, x, y, onClose }: ContextMenuProps) {
+  const menuRef = useContextMenuDismiss(onClose)
+  const adjustedPosition = getAdjustedPosition(x, y, items.length)
 
   return (
     <FloatingPortal>

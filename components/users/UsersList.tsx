@@ -39,68 +39,172 @@ declare module '@tanstack/react-table' {
 
 const columnHelper = createColumnHelper<User>()
 
-export function UsersList() {
-  const router = useRouter()
-  const params = useParams()
-  const { projectPath, isInitialized, setIsInitialized } = useProject()
+function getCellClassName(columnId: string) {
+  if (columnId === 'name') return 'user-name'
+  if (columnId === 'email') return 'user-email'
+  if (columnId === 'createdAt') return 'user-date'
+  return ''
+}
 
-  const projectContext = useMemo(() => {
-    const orgParam = params ? params.organization : undefined
-    const org: string | undefined =
-      typeof orgParam === 'string' ? orgParam : undefined
-    const projectParam = params ? params.project : undefined
-    const project: string | undefined =
-      typeof projectParam === 'string' ? projectParam : undefined
-    if (org && project) return { organization: org, project }
-    return null
-  }, [params])
+interface UsersTableProps {
+  table: ReturnType<typeof useReactTable<User>>
+  onContextMenu: (e: React.MouseEvent, user: User) => void
+}
 
-  // Helper to create user detail route
-  const getUserRoute = useCallback(
-    (userId: string): RouteLiteral | '/' => {
-      if (projectContext) {
-        return route({
-          pathname: '/[organization]/[project]/users/[userId]',
-          query: { ...projectContext, userId },
-        })
-      }
-      return '/'
-    },
-    [projectContext]
+function UsersTableHeader({
+  table,
+}: {
+  table: ReturnType<typeof useReactTable<User>>
+}) {
+  return (
+    <thead>
+      {table.getHeaderGroups().map(headerGroup => (
+        <tr key={headerGroup.id}>
+          {headerGroup.headers.map(header => (
+            <th key={header.id}>
+              <div className="th-content">
+                <button
+                  type="button"
+                  className={`sort-btn ${header.column.getIsSorted() ? 'sorted' : ''}`}
+                  onClick={header.column.getToggleSortingHandler()}
+                >
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext()
+                  )}
+                  <span className="sort-indicator">
+                    {(() => {
+                      const sorted = header.column.getIsSorted()
+                      return sorted === 'asc'
+                        ? ' \u25B2'
+                        : sorted === 'desc'
+                          ? ' \u25BC'
+                          : ''
+                    })()}
+                  </span>
+                </button>
+                {header.column.getCanFilter() && (
+                  <input
+                    type="text"
+                    className="column-filter"
+                    placeholder="Filter..."
+                    value={(() => {
+                      const filterVal = header.column.getFilterValue()
+                      return typeof filterVal === 'string' ? filterVal : ''
+                    })()}
+                    onChange={e => header.column.setFilterValue(e.target.value)}
+                  />
+                )}
+              </div>
+            </th>
+          ))}
+        </tr>
+      ))}
+    </thead>
   )
+}
 
-  // Helper for new user route
-  const newUserRoute: RouteLiteral | '/' = useMemo(() => {
-    if (projectContext) {
-      return route({
-        pathname: '/[organization]/[project]/users/new',
-        query: projectContext,
-      })
-    }
-    return '/'
-  }, [projectContext])
-
-  const [users, setUsers] = useState<User[]>([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [deleting, setDeleting] = useState(false)
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(
-    null
+function UsersTable({ table, onContextMenu }: UsersTableProps) {
+  return (
+    <div className="users-table">
+      <table>
+        <UsersTableHeader table={table} />
+        <tbody>
+          {table.getRowModel().rows.map(row => (
+            <tr
+              key={row.original.id}
+              onContextMenu={e => onContextMenu(e, row.original)}
+              className="context-menu-row"
+            >
+              {row.getVisibleCells().map(cell => (
+                <td key={cell.id} className={getCellClassName(cell.column.id)}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   )
-  const [showSyncModal, setShowSyncModal] = useState(false)
+}
 
-  // Context menu state
-  const [contextMenu, setContextMenu] = useState<{
-    x: number
-    y: number
-    user: User
-  } | null>(null)
+interface UsersInitializedContentProps {
+  error: string | null
+  showDeleteConfirm: string | null
+  setShowDeleteConfirm: (v: string | null) => void
+  handleDelete: (userId: string) => void
+  deleting: boolean
+  loading: boolean
+  users: User[]
+  newUserRoute: RouteLiteral | '/'
+  setShowSyncModal: (v: boolean) => void
+  table: ReturnType<typeof useReactTable<User>>
+  onContextMenu: (e: React.MouseEvent, user: User) => void
+}
 
-  // TanStack Table state
-  const [sorting, setSorting] = useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+function UsersInitializedContent({
+  error,
+  showDeleteConfirm,
+  setShowDeleteConfirm,
+  handleDelete,
+  deleting,
+  loading,
+  users,
+  newUserRoute,
+  setShowSyncModal,
+  table,
+  onContextMenu,
+}: UsersInitializedContentProps) {
+  return (
+    <>
+      {error && <DaemonErrorMessage error={error} />}
 
-  const columns = useMemo(
+      {showDeleteConfirm && (
+        <div className="delete-confirm">
+          <p>Are you sure you want to delete this user?</p>
+          <div className="delete-confirm-actions">
+            <button
+              onClick={() => setShowDeleteConfirm(null)}
+              className="cancel-btn"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => handleDelete(showDeleteConfirm)}
+              disabled={deleting}
+              className="confirm-delete-btn"
+            >
+              {deleting ? 'Deleting...' : 'Yes, Delete'}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {loading && users.length === 0 ? (
+        <div className="loading">Loading users...</div>
+      ) : users.length === 0 ? (
+        <div className="empty-state">
+          <p>No users found</p>
+          <p>
+            <Link href={newUserRoute}>Create your first user</Link> or{' '}
+            <button
+              onClick={() => setShowSyncModal(true)}
+              className="sync-link-btn"
+            >
+              sync from git history
+            </button>
+          </p>
+        </div>
+      ) : (
+        <UsersTable table={table} onContextMenu={onContextMenu} />
+      )}
+    </>
+  )
+}
+
+function useUserColumns() {
+  return useMemo(
     () => [
       columnHelper.accessor('name', {
         header: 'Name',
@@ -160,31 +264,15 @@ export function UsersList() {
     ],
     []
   )
+}
 
-  const table = useReactTable({
-    data: users,
-    columns,
-    state: {
-      sorting,
-      columnFilters,
-    },
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    meta: {
-      getUserRoute,
-    },
-  })
-
-  const checkInitialized = useCallback(
+function useCheckInitialized(setIsInitialized: (v: boolean | null) => void) {
+  return useCallback(
     async (path: string) => {
       if (!path.trim()) {
         setIsInitialized(null)
         return
       }
-
       try {
         const request = create(IsInitializedRequestSchema, {
           projectPath: path.trim(),
@@ -197,13 +285,17 @@ export function UsersList() {
     },
     [setIsInitialized]
   )
+}
+
+function useFetchUsers(projectPath: string, isInitialized: boolean | null) {
+  const [users, setUsers] = useState<User[]>([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const fetchUsers = useCallback(async () => {
     if (!projectPath.trim() || isInitialized !== true) return
-
     setLoading(true)
     setError(null)
-
     try {
       const request = create(ListUsersRequestSchema, {
         projectPath: projectPath.trim(),
@@ -213,7 +305,6 @@ export function UsersList() {
     } catch (err) {
       const message =
         err instanceof Error ? err.message : 'Failed to connect to daemon'
-      // Check if this is an unimplemented API error
       if (isDaemonUnimplemented(message)) {
         setError(
           'User management is not yet available. Please update your daemon to the latest version.'
@@ -226,33 +317,27 @@ export function UsersList() {
     }
   }, [projectPath, isInitialized])
 
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      checkInitialized(projectPath)
-    }, 300)
-    return () => clearTimeout(timeoutId)
-  }, [projectPath, checkInitialized])
+  return { users, setUsers, loading, error, setError, fetchUsers }
+}
 
-  useEffect(() => {
-    if (isInitialized === true) {
-      fetchUsers()
-    }
-  }, [isInitialized, fetchUsers])
+function useDeleteUser(
+  projectPath: string,
+  setUsers: React.Dispatch<React.SetStateAction<User[]>>,
+  setError: (e: string | null) => void
+) {
+  const [deleting, setDeleting] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(
+    null
+  )
 
   const handleDelete = useCallback(
     async (userId: string) => {
       if (!projectPath) return
-
       setDeleting(true)
       setError(null)
-
       try {
-        const request = create(DeleteUserRequestSchema, {
-          projectPath,
-          userId,
-        })
+        const request = create(DeleteUserRequestSchema, { projectPath, userId })
         const response = await centyClient.deleteUser(request)
-
         if (response.success) {
           setUsers(prev => prev.filter(u => u.id !== userId))
           setShowDeleteConfirm(null)
@@ -267,238 +352,326 @@ export function UsersList() {
         setDeleting(false)
       }
     },
-    [projectPath]
+    [projectPath, setUsers, setError]
   )
+
+  return { deleting, showDeleteConfirm, setShowDeleteConfirm, handleDelete }
+}
+
+function useContextMenuItems(
+  contextMenu: { x: number; y: number; user: User } | null,
+  router: ReturnType<typeof useRouter>,
+  getUserRoute: (userId: string) => RouteLiteral | '/',
+  setContextMenu: (v: null) => void,
+  setShowDeleteConfirm: (v: string) => void
+): ContextMenuItem[] {
+  if (!contextMenu) return []
+  return [
+    {
+      label: 'View',
+      onClick: () => {
+        router.push(getUserRoute(contextMenu.user.id))
+        setContextMenu(null)
+      },
+    },
+    {
+      label: 'Edit',
+      onClick: () => {
+        router.push(getUserRoute(contextMenu.user.id))
+        setContextMenu(null)
+      },
+    },
+    {
+      label: 'Delete',
+      onClick: () => {
+        setShowDeleteConfirm(contextMenu.user.id)
+        setContextMenu(null)
+      },
+      danger: true,
+    },
+  ]
+}
+
+function UsersListHeader({
+  projectPath,
+  isInitialized,
+  loading,
+  fetchUsers,
+  setShowSyncModal,
+  newUserRoute,
+}: {
+  projectPath: string
+  isInitialized: boolean | null
+  loading: boolean
+  fetchUsers: () => void
+  setShowSyncModal: (v: boolean) => void
+  newUserRoute: RouteLiteral | '/'
+}) {
+  return (
+    <div className="users-header">
+      <h2>Users</h2>
+      <div className="header-actions">
+        {projectPath && isInitialized === true && (
+          <>
+            <button
+              onClick={fetchUsers}
+              disabled={loading}
+              className="refresh-btn"
+            >
+              {loading ? 'Loading...' : 'Refresh'}
+            </button>
+            <button onClick={() => setShowSyncModal(true)} className="sync-btn">
+              Sync from Git
+            </button>
+          </>
+        )}
+        <Link href={newUserRoute} className="create-btn">
+          + New User
+        </Link>
+      </div>
+    </div>
+  )
+}
+
+function useListProjectContext(params: ReturnType<typeof useParams>) {
+  const projectContext = useMemo(() => {
+    const orgParam = params ? params.organization : undefined
+    const org: string | undefined =
+      typeof orgParam === 'string' ? orgParam : undefined
+    const projectParam = params ? params.project : undefined
+    const project: string | undefined =
+      typeof projectParam === 'string' ? projectParam : undefined
+    if (org && project) return { organization: org, project }
+    return null
+  }, [params])
+
+  const getUserRoute = useCallback(
+    (userId: string): RouteLiteral | '/' => {
+      if (projectContext) {
+        return route({
+          pathname: '/[organization]/[project]/users/[userId]',
+          query: { ...projectContext, userId },
+        })
+      }
+      return '/'
+    },
+    [projectContext]
+  )
+
+  const newUserRoute: RouteLiteral | '/' = useMemo(() => {
+    if (projectContext) {
+      return route({
+        pathname: '/[organization]/[project]/users/new',
+        query: projectContext,
+      })
+    }
+    return '/'
+  }, [projectContext])
+
+  return { projectContext, getUserRoute, newUserRoute }
+}
+
+function useUsersTable(
+  users: User[],
+  getUserRoute: (userId: string) => RouteLiteral | '/'
+) {
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const columns = useUserColumns()
+
+  return useReactTable({
+    data: users,
+    columns,
+    state: { sorting, columnFilters },
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    meta: { getUserRoute },
+  })
+}
+
+function useUsersListEffects(
+  projectPath: string,
+  isInitialized: boolean | null,
+  setIsInitialized: (v: boolean | null) => void,
+  fetchUsers: () => void
+) {
+  const checkInitialized = useCheckInitialized(setIsInitialized)
+  useEffect(() => {
+    const t = setTimeout(() => {
+      checkInitialized(projectPath)
+    }, 300)
+    return () => clearTimeout(t)
+  }, [projectPath, checkInitialized])
+  useEffect(() => {
+    if (isInitialized === true) fetchUsers()
+  }, [isInitialized, fetchUsers])
+}
+
+function UsersListBody({
+  projectPath,
+  isInitialized,
+  error,
+  showDeleteConfirm,
+  setShowDeleteConfirm,
+  handleDelete,
+  deleting,
+  loading,
+  users,
+  newUserRoute,
+  setShowSyncModal,
+  table,
+  handleContextMenu,
+}: {
+  projectPath: string
+  isInitialized: boolean | null
+  error: string | null
+  showDeleteConfirm: string | null
+  setShowDeleteConfirm: (v: string | null) => void
+  handleDelete: (userId: string) => void
+  deleting: boolean
+  loading: boolean
+  users: User[]
+  newUserRoute: RouteLiteral | '/'
+  setShowSyncModal: (v: boolean) => void
+  table: ReturnType<typeof useReactTable<User>>
+  handleContextMenu: (e: React.MouseEvent, user: User) => void
+}) {
+  return (
+    <>
+      {!projectPath && (
+        <div className="no-project-message">
+          <p>Select a project from the header to view users</p>
+        </div>
+      )}
+      {projectPath && isInitialized === false && (
+        <div className="not-initialized-message">
+          <p>Centy is not initialized in this directory</p>
+          <Link href="/">Initialize Project</Link>
+        </div>
+      )}
+      {projectPath && isInitialized === true && (
+        <UsersInitializedContent
+          error={error}
+          showDeleteConfirm={showDeleteConfirm}
+          setShowDeleteConfirm={setShowDeleteConfirm}
+          handleDelete={handleDelete}
+          deleting={deleting}
+          loading={loading}
+          users={users}
+          newUserRoute={newUserRoute}
+          setShowSyncModal={setShowSyncModal}
+          table={table}
+          onContextMenu={handleContextMenu}
+        />
+      )}
+    </>
+  )
+}
+
+function useUsersListInteractions(
+  router: ReturnType<typeof useRouter>,
+  getUserRoute: (userId: string) => RouteLiteral | '/',
+  setShowDeleteConfirm: (v: string) => void,
+  fetchUsers: () => void
+) {
+  const [showSyncModal, setShowSyncModal] = useState(false)
+  const [contextMenu, setContextMenu] = useState<{
+    x: number
+    y: number
+    user: User
+  } | null>(null)
 
   const handleContextMenu = useCallback((e: React.MouseEvent, user: User) => {
     e.preventDefault()
     setContextMenu({ x: e.clientX, y: e.clientY, user })
   }, [])
-
   const handleSynced = useCallback(
     (createdCount: number) => {
-      if (createdCount > 0) {
-        fetchUsers()
-      }
+      if (createdCount > 0) fetchUsers()
       setShowSyncModal(false)
     },
     [fetchUsers]
   )
+  const contextMenuItems = useContextMenuItems(
+    contextMenu,
+    router,
+    getUserRoute,
+    () => setContextMenu(null),
+    setShowDeleteConfirm
+  )
 
-  const contextMenuItems: ContextMenuItem[] = contextMenu
-    ? [
-        {
-          label: 'View',
-          onClick: () => {
-            router.push(getUserRoute(contextMenu.user.id))
-            setContextMenu(null)
-          },
-        },
-        {
-          label: 'Edit',
-          onClick: () => {
-            router.push(getUserRoute(contextMenu.user.id))
-            setContextMenu(null)
-          },
-        },
-        {
-          label: 'Delete',
-          onClick: () => {
-            setShowDeleteConfirm(contextMenu.user.id)
-            setContextMenu(null)
-          },
-          danger: true,
-        },
-      ]
-    : []
+  return {
+    showSyncModal,
+    setShowSyncModal,
+    contextMenu,
+    setContextMenu,
+    handleContextMenu,
+    handleSynced,
+    contextMenuItems,
+  }
+}
+
+export function UsersList() {
+  const router = useRouter()
+  const params = useParams()
+  const { projectPath, isInitialized, setIsInitialized } = useProject()
+  const { getUserRoute, newUserRoute } = useListProjectContext(params)
+
+  const { users, setUsers, loading, error, setError, fetchUsers } =
+    useFetchUsers(projectPath, isInitialized)
+  const { deleting, showDeleteConfirm, setShowDeleteConfirm, handleDelete } =
+    useDeleteUser(projectPath, setUsers, setError)
+
+  const table = useUsersTable(users, getUserRoute)
+  useUsersListEffects(projectPath, isInitialized, setIsInitialized, fetchUsers)
+
+  const interactions = useUsersListInteractions(
+    router,
+    getUserRoute,
+    setShowDeleteConfirm,
+    fetchUsers
+  )
 
   return (
     <div className="users-list">
-      <div className="users-header">
-        <h2 className="users-title">Users</h2>
-        <div className="header-actions">
-          {projectPath && isInitialized === true && (
-            <>
-              <button
-                onClick={fetchUsers}
-                disabled={loading}
-                className="refresh-btn"
-              >
-                {loading ? 'Loading...' : 'Refresh'}
-              </button>
-              <button
-                onClick={() => setShowSyncModal(true)}
-                className="sync-btn"
-              >
-                Sync from Git
-              </button>
-            </>
-          )}
-          <Link href={newUserRoute} className="create-btn">
-            + New User
-          </Link>
-        </div>
-      </div>
-
-      {!projectPath && (
-        <div className="no-project-message">
-          <p className="no-project-text">
-            Select a project from the header to view users
-          </p>
-        </div>
-      )}
-
-      {projectPath && isInitialized === false && (
-        <div className="not-initialized-message">
-          <p className="not-initialized-text">
-            Centy is not initialized in this directory
-          </p>
-          <Link href="/">Initialize Project</Link>
-        </div>
-      )}
-
-      {projectPath && isInitialized === true && (
-        <>
-          {error && <DaemonErrorMessage error={error} />}
-
-          {showDeleteConfirm && (
-            <div className="delete-confirm">
-              <p className="delete-confirm-text">
-                Are you sure you want to delete this user?
-              </p>
-              <div className="delete-confirm-actions">
-                <button
-                  onClick={() => setShowDeleteConfirm(null)}
-                  className="cancel-btn"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={() => handleDelete(showDeleteConfirm)}
-                  disabled={deleting}
-                  className="confirm-delete-btn"
-                >
-                  {deleting ? 'Deleting...' : 'Yes, Delete'}
-                </button>
-              </div>
-            </div>
-          )}
-
-          {loading && users.length === 0 ? (
-            <div className="loading">Loading users...</div>
-          ) : users.length === 0 ? (
-            <div className="empty-state">
-              <p className="empty-state-title">No users found</p>
-              <p className="empty-state-hint">
-                <Link href={newUserRoute}>Create your first user</Link> or{' '}
-                <button
-                  onClick={() => setShowSyncModal(true)}
-                  className="sync-link-btn"
-                >
-                  sync from git history
-                </button>
-              </p>
-            </div>
-          ) : (
-            <div className="users-table">
-              <table className="users-table-element">
-                <thead className="users-table-head">
-                  {table.getHeaderGroups().map(headerGroup => (
-                    <tr key={headerGroup.id} className="users-table-header-row">
-                      {headerGroup.headers.map(header => (
-                        <th key={header.id} className="users-table-header-cell">
-                          <div className="th-content">
-                            <button
-                              type="button"
-                              className={`sort-btn ${header.column.getIsSorted() ? 'sorted' : ''}`}
-                              onClick={header.column.getToggleSortingHandler()}
-                            >
-                              {flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
-                              <span className="sort-indicator">
-                                {(() => {
-                                  const sorted = header.column.getIsSorted()
-                                  return sorted === 'asc'
-                                    ? ' \u25B2'
-                                    : sorted === 'desc'
-                                      ? ' \u25BC'
-                                      : ''
-                                })()}
-                              </span>
-                            </button>
-                            {header.column.getCanFilter() && (
-                              <input
-                                type="text"
-                                className="column-filter"
-                                placeholder="Filter..."
-                                value={(() => {
-                                  const filterVal =
-                                    header.column.getFilterValue()
-                                  return typeof filterVal === 'string'
-                                    ? filterVal
-                                    : ''
-                                })()}
-                                onChange={e =>
-                                  header.column.setFilterValue(e.target.value)
-                                }
-                              />
-                            )}
-                          </div>
-                        </th>
-                      ))}
-                    </tr>
-                  ))}
-                </thead>
-                <tbody className="users-table-body">
-                  {table.getRowModel().rows.map(row => (
-                    <tr
-                      key={row.original.id}
-                      onContextMenu={e => handleContextMenu(e, row.original)}
-                      className="context-menu-row"
-                    >
-                      {row.getVisibleCells().map(cell => (
-                        <td
-                          key={cell.id}
-                          className={
-                            cell.column.id === 'name'
-                              ? 'user-name'
-                              : cell.column.id === 'email'
-                                ? 'user-email'
-                                : cell.column.id === 'createdAt'
-                                  ? 'user-date'
-                                  : ''
-                          }
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </>
-      )}
-
-      {contextMenu && (
+      <UsersListHeader
+        projectPath={projectPath}
+        isInitialized={isInitialized}
+        loading={loading}
+        fetchUsers={fetchUsers}
+        setShowSyncModal={interactions.setShowSyncModal}
+        newUserRoute={newUserRoute}
+      />
+      <UsersListBody
+        projectPath={projectPath}
+        isInitialized={isInitialized}
+        error={error}
+        showDeleteConfirm={showDeleteConfirm}
+        setShowDeleteConfirm={setShowDeleteConfirm}
+        handleDelete={handleDelete}
+        deleting={deleting}
+        loading={loading}
+        users={users}
+        newUserRoute={newUserRoute}
+        setShowSyncModal={interactions.setShowSyncModal}
+        table={table}
+        handleContextMenu={interactions.handleContextMenu}
+      />
+      {interactions.contextMenu && (
         <ContextMenu
-          items={contextMenuItems}
-          x={contextMenu.x}
-          y={contextMenu.y}
-          onClose={() => setContextMenu(null)}
+          items={interactions.contextMenuItems}
+          x={interactions.contextMenu.x}
+          y={interactions.contextMenu.y}
+          onClose={() => interactions.setContextMenu(null)}
         />
       )}
-
-      {showSyncModal && (
+      {interactions.showSyncModal && (
         <SyncUsersModal
-          onClose={() => setShowSyncModal(false)}
-          onSynced={handleSynced}
+          onClose={() => interactions.setShowSyncModal(false)}
+          onSynced={interactions.handleSynced}
         />
       )}
     </div>

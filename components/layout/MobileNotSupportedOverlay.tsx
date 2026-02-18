@@ -30,7 +30,6 @@ export function MobileNotSupportedOverlay() {
       <div className="mobile-not-supported-content">
         <div className="mobile-not-supported-icon">
           <svg
-            className="mobile-not-supported-svg"
             xmlns="http://www.w3.org/2000/svg"
             width="48"
             height="48"
@@ -41,24 +40,9 @@ export function MobileNotSupportedOverlay() {
             strokeLinecap="round"
             strokeLinejoin="round"
           >
-            <rect
-              className="mobile-svg-phone"
-              x="5"
-              y="2"
-              width="14"
-              height="20"
-              rx="2"
-              ry="2"
-            />
+            <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+            <line x1="12" y1="18" x2="12.01" y2="18" />
             <line
-              className="mobile-svg-dot"
-              x1="12"
-              y1="18"
-              x2="12.01"
-              y2="18"
-            />
-            <line
-              className="mobile-svg-cross"
               x1="2"
               y1="2"
               x2="22"
@@ -68,8 +52,8 @@ export function MobileNotSupportedOverlay() {
             />
           </svg>
         </div>
-        <h2 className="mobile-not-supported-title">Mobile Not Supported</h2>
-        <p className="mobile-not-supported-description">
+        <h2>Mobile Not Supported</h2>
+        <p>
           Centy is designed for local computer use with Git integration for
           version control and collaboration.
         </p>
@@ -77,7 +61,7 @@ export function MobileNotSupportedOverlay() {
           We have plans to support mobile workflows in the future.
         </p>
         <div className="mobile-not-supported-recommendation">
-          <p className="mobile-not-supported-recommendation-text">
+          <p>
             For the best experience, please use Centy on a desktop or laptop
             computer.
           </p>

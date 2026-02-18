@@ -18,13 +18,9 @@ vi.mock('@/components/providers/ProjectProvider', () => ({
 
 vi.mock('./AddLinkModal', () => ({
   AddLinkModal: vi.fn(({ onClose, onLinkCreated }) => (
-    <div className="add-link-modal-mock" data-testid="add-link-modal">
-      <button className="add-link-modal-close" onClick={onClose}>
-        Close Modal
-      </button>
-      <button className="add-link-modal-create" onClick={onLinkCreated}>
-        Create Link
-      </button>
+    <div data-testid="add-link-modal">
+      <button onClick={onClose}>Close Modal</button>
+      <button onClick={onLinkCreated}>Create Link</button>
     </div>
   )),
 }))

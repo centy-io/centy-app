@@ -15,8 +15,105 @@ import {
 } from '@/gen/centy_pb'
 import { UNGROUPED_ORG_MARKER } from '@/lib/project-resolver'
 
-export function ProjectsGrid() {
-  const router = useRouter()
+interface ProjectCardProps {
+  project: ProjectInfo
+  onToggleFavorite: (e: React.MouseEvent, project: ProjectInfo) => void
+  onClick: (project: ProjectInfo) => void
+}
+
+function ProjectCard({ project, onToggleFavorite, onClick }: ProjectCardProps) {
+  return (
+    <div
+      key={project.path}
+      className="project-card"
+      onClick={() => onClick(project)}
+    >
+      <div className="project-card-header">
+        <h3 className="project-name">{project.name}</h3>
+        <button
+          className={`favorite-btn ${project.isFavorite ? 'active' : ''}`}
+          onClick={e => onToggleFavorite(e, project)}
+          title={
+            project.isFavorite ? 'Remove from favorites' : 'Add to favorites'
+          }
+        >
+          {project.isFavorite ? '★' : '☆'}
+        </button>
+      </div>
+
+      {!project.initialized && (
+        <div className="project-badge not-initialized">Not initialized</div>
+      )}
+
+      {project.initialized && (
+        <div className="project-stats">
+          <div className="project-stat">
+            <span className="stat-icon">📋</span>
+            <span className="stat-label">Issues</span>
+            <span className="stat-value">{project.issueCount}</span>
+          </div>
+          <div className="project-stat">
+            <span className="stat-icon">📄</span>
+            <span className="stat-label">Docs</span>
+            <span className="stat-value">{project.docCount}</span>
+          </div>
+        </div>
+      )}
+
+      <div className="project-path" title={project.displayPath}>
+        {project.displayPath}
+      </div>
+    </div>
+  )
+}
+
+interface OrgGroupProps {
+  orgSlug: string
+  group: { name: string; projects: ProjectInfo[] }
+  onToggleFavorite: (e: React.MouseEvent, project: ProjectInfo) => void
+  onProjectClick: (project: ProjectInfo) => void
+}
+
+function OrgGroup({
+  orgSlug,
+  group,
+  onToggleFavorite,
+  onProjectClick,
+}: OrgGroupProps) {
+  return (
+    <div key={orgSlug || '__ungrouped'} className="project-org-group">
+      <div className="org-group-header">
+        <h2>
+          {orgSlug ? (
+            <>
+              <span className="org-icon">🏢</span>
+              {group.name}
+            </>
+          ) : (
+            <>
+              <span className="org-icon">📁</span>
+              {group.name}
+            </>
+          )}
+        </h2>
+        <span className="org-project-count">{group.projects.length}</span>
+      </div>
+
+      <div className="projects-grid">
+        {group.projects.map(project => (
+          <ProjectCard
+            key={project.path}
+            project={project}
+            onToggleFavorite={onToggleFavorite}
+            onClick={onProjectClick}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function useProjectsData() {
   const [projects, setProjects] = useState<ProjectInfo[]>([])
   const [organizations, setOrganizations] = useState<Organization[]>([])
   const [loading, setLoading] = useState(true)
@@ -75,18 +172,21 @@ export function ProjectsGrid() {
     }
   }
 
-  const handleProjectClick = (project: ProjectInfo) => {
-    const orgSlug = project.organizationSlug || UNGROUPED_ORG_MARKER
-    router.push(
-      route({
-        pathname: '/[organization]/[project]/issues',
-        query: { organization: orgSlug, project: project.name },
-      })
-    )
+  return {
+    projects,
+    organizations,
+    loading,
+    error,
+    fetchData,
+    handleToggleFavorite,
   }
+}
 
-  // Group projects by organization
-  const groupedProjects = useMemo(() => {
+function useGroupedProjects(
+  projects: ProjectInfo[],
+  organizations: Organization[]
+) {
+  return useMemo(() => {
     const groups: Map<string, { name: string; projects: ProjectInfo[] }> =
       new Map()
 
@@ -126,11 +226,72 @@ export function ProjectsGrid() {
 
     return sortedGroups
   }, [projects, organizations])
+}
+
+function ProjectsGridEmpty() {
+  return (
+    <div className="projects-grid-empty">
+      <h2>No projects found</h2>
+      <p>
+        <Link href="/project/init">Initialize a project</Link> with Centy to see
+        it here, or{' '}
+        <Link href="/organizations/new">create an organization</Link> to get
+        started.
+      </p>
+    </div>
+  )
+}
+
+interface ProjectsGridHeaderProps {
+  onRefresh: () => void
+}
+
+function ProjectsGridHeader({ onRefresh }: ProjectsGridHeaderProps) {
+  return (
+    <div className="projects-grid-header">
+      <h1>Projects</h1>
+      <div className="projects-grid-actions">
+        <button onClick={onRefresh} className="refresh-btn">
+          Refresh
+        </button>
+        <Link href="/project/init" className="init-project-btn">
+          + Init Project
+        </Link>
+        <Link href="/organizations/new" className="create-org-btn">
+          + New Organization
+        </Link>
+      </div>
+    </div>
+  )
+}
+
+export function ProjectsGrid() {
+  const router = useRouter()
+  const {
+    projects,
+    organizations,
+    loading,
+    error,
+    fetchData,
+    handleToggleFavorite,
+  } = useProjectsData()
+
+  const groupedProjects = useGroupedProjects(projects, organizations)
+
+  const handleProjectClick = (project: ProjectInfo) => {
+    const orgSlug = project.organizationSlug || UNGROUPED_ORG_MARKER
+    router.push(
+      route({
+        pathname: '/[organization]/[project]/issues',
+        query: { organization: orgSlug, project: project.name },
+      })
+    )
+  }
 
   if (loading) {
     return (
       <div className="projects-grid-loading">
-        <p className="projects-grid-loading-message">Loading projects...</p>
+        <p>Loading projects...</p>
       </div>
     )
   }
@@ -138,7 +299,7 @@ export function ProjectsGrid() {
   if (error) {
     return (
       <div className="projects-grid-error">
-        <p className="projects-grid-error-message">Error: {error}</p>
+        <p>Error: {error}</p>
         <button onClick={fetchData} className="retry-btn">
           Retry
         </button>
@@ -147,105 +308,21 @@ export function ProjectsGrid() {
   }
 
   if (projects.length === 0) {
-    return (
-      <div className="projects-grid-empty">
-        <h2 className="projects-grid-empty-title">No projects found</h2>
-        <p className="projects-grid-empty-message">
-          <Link href="/project/init">Initialize a project</Link> with Centy to
-          see it here, or{' '}
-          <Link href="/organizations/new">create an organization</Link> to get
-          started.
-        </p>
-      </div>
-    )
+    return <ProjectsGridEmpty />
   }
 
   return (
     <div className="projects-grid-container">
-      <div className="projects-grid-header">
-        <h1 className="projects-grid-title">Projects</h1>
-        <div className="projects-grid-actions">
-          <button onClick={fetchData} className="refresh-btn">
-            Refresh
-          </button>
-          <Link href="/project/init" className="init-project-btn">
-            + Init Project
-          </Link>
-          <Link href="/organizations/new" className="create-org-btn">
-            + New Organization
-          </Link>
-        </div>
-      </div>
+      <ProjectsGridHeader onRefresh={fetchData} />
 
       {groupedProjects.map(([orgSlug, group]) => (
-        <div key={orgSlug || '__ungrouped'} className="project-org-group">
-          <div className="org-group-header">
-            <h2 className="org-group-title">
-              {orgSlug ? (
-                <>
-                  <span className="org-icon">🏢</span>
-                  {group.name}
-                </>
-              ) : (
-                <>
-                  <span className="org-icon">📁</span>
-                  {group.name}
-                </>
-              )}
-            </h2>
-            <span className="org-project-count">{group.projects.length}</span>
-          </div>
-
-          <div className="projects-grid">
-            {group.projects.map(project => (
-              <div
-                key={project.path}
-                className="project-card"
-                onClick={() => handleProjectClick(project)}
-              >
-                <div className="project-card-header">
-                  <h3 className="project-name">{project.name}</h3>
-                  <button
-                    className={`favorite-btn ${project.isFavorite ? 'active' : ''}`}
-                    onClick={e => handleToggleFavorite(e, project)}
-                    title={
-                      project.isFavorite
-                        ? 'Remove from favorites'
-                        : 'Add to favorites'
-                    }
-                  >
-                    {project.isFavorite ? '★' : '☆'}
-                  </button>
-                </div>
-
-                {!project.initialized && (
-                  <div className="project-badge not-initialized">
-                    Not initialized
-                  </div>
-                )}
-
-                {project.initialized && (
-                  <div className="project-stats">
-                    <div className="project-stat">
-                      <span className="stat-icon">📋</span>
-                      <span className="stat-label">Issues</span>
-                      <span className="stat-value">{project.issueCount}</span>
-                    </div>
-                    <div className="project-stat">
-                      <span className="stat-icon">📄</span>
-                      <span className="stat-label">Docs</span>
-                      <span className="stat-value">{project.docCount}</span>
-                    </div>
-                  </div>
-                )}
-
-                <div className="project-path" title={project.displayPath}>
-                  {project.displayPath}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        <OrgGroup
+          key={orgSlug || '__ungrouped'}
+          orgSlug={orgSlug}
+          group={group}
+          onToggleFavorite={handleToggleFavorite}
+          onProjectClick={handleProjectClick}
+        />
       ))}
 
       <div className="projects-grid-footer">

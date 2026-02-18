@@ -19,12 +19,8 @@ function generateSlug(name: string): string {
     .replace(/^-|-$/g, '')
 }
 
-export function CreateUser() {
-  const router = useRouter()
-  const params = useParams()
-  const { projectPath, isInitialized } = useProject()
-
-  const projectContext = useMemo(() => {
+function useProjectContext(params: ReturnType<typeof useParams>) {
+  return useMemo(() => {
     const orgParam = params ? params.organization : undefined
     const org: string | undefined =
       typeof orgParam === 'string' ? orgParam : undefined
@@ -34,8 +30,12 @@ export function CreateUser() {
     if (org && project) return { organization: org, project }
     return null
   }, [params])
+}
 
-  const usersListUrl: RouteLiteral | '/' = useMemo(() => {
+function useUsersListUrl(
+  projectContext: { organization: string; project: string } | null
+) {
+  return useMemo((): RouteLiteral | '/' => {
     if (projectContext) {
       return route({
         pathname: '/[organization]/[project]/users',
@@ -44,40 +44,131 @@ export function CreateUser() {
     }
     return '/'
   }, [projectContext])
+}
 
-  const [name, setName] = useState('')
-  const [userId, setUserId] = useState('')
-  const [userIdManuallySet, setUserIdManuallySet] = useState(false)
-  const [email, setEmail] = useState('')
-  const [gitUsernames, setGitUsernames] = useState<string[]>([])
+interface GitUsernamesFieldProps {
+  gitUsernames: string[]
+  onAdd: () => void
+  onRemove: (index: number) => void
+  onChange: (index: number, value: string) => void
+}
+
+function GitUsernamesField({
+  gitUsernames,
+  onAdd,
+  onRemove,
+  onChange,
+}: GitUsernamesFieldProps) {
+  return (
+    <div className="form-group">
+      <label>Git Usernames</label>
+      <div className="git-usernames-list">
+        {gitUsernames.map((username, index) => (
+          <div key={index} className="git-username-item">
+            <input
+              type="text"
+              value={username}
+              onChange={e => onChange(index, e.target.value)}
+              placeholder="Git username"
+            />
+            <button
+              type="button"
+              onClick={() => onRemove(index)}
+              className="remove-git-username-btn"
+              title="Remove"
+            >
+              &times;
+            </button>
+          </div>
+        ))}
+        <button type="button" onClick={onAdd} className="add-git-username-btn">
+          + Add Git Username
+        </button>
+      </div>
+    </div>
+  )
+}
+
+function handleDaemonError(message: string, setError: (error: string) => void) {
+  if (isDaemonUnimplemented(message)) {
+    setError(
+      'User management is not yet available. Please update your daemon to the latest version.'
+    )
+  } else {
+    setError(message)
+  }
+}
+
+interface CreateUserFormFieldsProps {
+  name: string
+  setName: (v: string) => void
+  userId: string
+  onUserIdChange: (v: string) => void
+  email: string
+  setEmail: (v: string) => void
+}
+
+function CreateUserFormFields({
+  name,
+  setName,
+  userId,
+  onUserIdChange,
+  email,
+  setEmail,
+}: CreateUserFormFieldsProps) {
+  return (
+    <>
+      <div className="form-group">
+        <label htmlFor="name">
+          Name <span className="required">*</span>
+        </label>
+        <input
+          id="name"
+          type="text"
+          value={name}
+          onChange={e => setName(e.target.value)}
+          placeholder="Display name"
+          required
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="userId">User ID</label>
+        <input
+          id="userId"
+          type="text"
+          value={userId}
+          onChange={e => onUserIdChange(e.target.value)}
+          placeholder="Auto-generated from name"
+        />
+        <span className="form-hint">
+          Unique identifier (slug format). Leave empty to auto-generate.
+        </span>
+      </div>
+      <div className="form-group">
+        <label htmlFor="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          placeholder="Email address (optional)"
+        />
+      </div>
+    </>
+  )
+}
+
+function useCreateUserSubmit(
+  projectPath: string,
+  name: string,
+  userId: string,
+  email: string,
+  gitUsernames: string[],
+  projectContext: { organization: string; project: string } | null,
+  router: ReturnType<typeof useRouter>
+) {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
-
-  // Auto-generate slug from name if not manually set
-  useEffect(() => {
-    if (!userIdManuallySet && name) {
-      setUserId(generateSlug(name))
-    }
-  }, [name, userIdManuallySet])
-
-  const handleUserIdChange = (value: string) => {
-    setUserId(value)
-    setUserIdManuallySet(true)
-  }
-
-  const handleAddGitUsername = () => {
-    setGitUsernames([...gitUsernames, ''])
-  }
-
-  const handleRemoveGitUsername = (index: number) => {
-    setGitUsernames(gitUsernames.filter((_, i) => i !== index))
-  }
-
-  const handleGitUsernameChange = (index: number, value: string) => {
-    const updated = [...gitUsernames]
-    updated[index] = value
-    setGitUsernames(updated)
-  }
 
   const handleSubmit = useCallback(async () => {
     if (!projectPath || !name.trim()) return
@@ -107,29 +198,151 @@ export function CreateUser() {
           router.push('/')
         }
       } else {
-        const errorMsg = response.error || 'Failed to create user'
-        if (isDaemonUnimplemented(errorMsg)) {
-          setError(
-            'User management is not yet available. Please update your daemon to the latest version.'
-          )
-        } else {
-          setError(errorMsg)
-        }
+        handleDaemonError(response.error || 'Failed to create user', setError)
       }
     } catch (err) {
       const message =
         err instanceof Error ? err.message : 'Failed to connect to daemon'
-      if (isDaemonUnimplemented(message)) {
-        setError(
-          'User management is not yet available. Please update your daemon to the latest version.'
-        )
-      } else {
-        setError(message)
-      }
+      handleDaemonError(message, setError)
     } finally {
       setSaving(false)
     }
   }, [projectPath, name, userId, email, gitUsernames, router, projectContext])
+
+  return { saving, error, handleSubmit }
+}
+
+function useGitUsernames() {
+  const [gitUsernames, setGitUsernames] = useState<string[]>([])
+
+  const handleAdd = () => {
+    setGitUsernames([...gitUsernames, ''])
+  }
+  const handleRemove = (index: number) => {
+    setGitUsernames(gitUsernames.filter((_, i) => i !== index))
+  }
+  const handleChange = (index: number, value: string) => {
+    const updated = [...gitUsernames]
+    updated[index] = value
+    setGitUsernames(updated)
+  }
+
+  return { gitUsernames, handleAdd, handleRemove, handleChange }
+}
+
+interface CreateUserFormProps {
+  usersListUrl: RouteLiteral | '/'
+  saving: boolean
+  error: string | null
+  name: string
+  setName: (v: string) => void
+  userId: string
+  setUserId: (v: string) => void
+  setUserIdManuallySet: (v: boolean) => void
+  email: string
+  setEmail: (v: string) => void
+  gitUsernames: string[]
+  handleAdd: () => void
+  handleRemove: (index: number) => void
+  handleChange: (index: number, value: string) => void
+  handleSubmit: () => void
+}
+
+function CreateUserForm({
+  usersListUrl,
+  saving,
+  error,
+  name,
+  setName,
+  userId,
+  setUserId,
+  setUserIdManuallySet,
+  email,
+  setEmail,
+  gitUsernames,
+  handleAdd,
+  handleRemove,
+  handleChange,
+  handleSubmit,
+}: CreateUserFormProps) {
+  return (
+    <div className="create-user">
+      <div className="create-user-header">
+        <Link href={usersListUrl} className="back-link">
+          Back to Users
+        </Link>
+        <h2>Create New User</h2>
+      </div>
+      {error && <DaemonErrorMessage error={error} />}
+      <form
+        onSubmit={e => {
+          e.preventDefault()
+          handleSubmit()
+        }}
+        className="create-user-form"
+      >
+        <CreateUserFormFields
+          name={name}
+          setName={setName}
+          userId={userId}
+          onUserIdChange={v => {
+            setUserId(v)
+            setUserIdManuallySet(true)
+          }}
+          email={email}
+          setEmail={setEmail}
+        />
+        <GitUsernamesField
+          gitUsernames={gitUsernames}
+          onAdd={handleAdd}
+          onRemove={handleRemove}
+          onChange={handleChange}
+        />
+        <div className="form-actions">
+          <Link href={usersListUrl} className="cancel-btn">
+            Cancel
+          </Link>
+          <button
+            type="submit"
+            disabled={saving || !name.trim()}
+            className="save-btn"
+          >
+            {saving ? 'Creating...' : 'Create User'}
+          </button>
+        </div>
+      </form>
+    </div>
+  )
+}
+
+export function CreateUser() {
+  const router = useRouter()
+  const params = useParams()
+  const { projectPath, isInitialized } = useProject()
+  const projectContext = useProjectContext(params)
+  const usersListUrl = useUsersListUrl(projectContext)
+
+  const [name, setName] = useState('')
+  const [userId, setUserId] = useState('')
+  const [userIdManuallySet, setUserIdManuallySet] = useState(false)
+  const [email, setEmail] = useState('')
+  const { gitUsernames, handleAdd, handleRemove, handleChange } =
+    useGitUsernames()
+  const { saving, error, handleSubmit } = useCreateUserSubmit(
+    projectPath,
+    name,
+    userId,
+    email,
+    gitUsernames,
+    projectContext,
+    router
+  )
+
+  useEffect(() => {
+    if (!userIdManuallySet && name) {
+      setUserId(generateSlug(name))
+    }
+  }, [name, userIdManuallySet])
 
   useSaveShortcut({
     onSave: handleSubmit,
@@ -151,9 +364,7 @@ export function CreateUser() {
     return (
       <div className="create-user">
         <div className="not-initialized-message">
-          <p className="not-initialized-text">
-            Centy is not initialized in this directory
-          </p>
+          <p>Centy is not initialized in this directory</p>
           <Link href="/">Initialize Project</Link>
         </div>
       </div>
@@ -161,114 +372,22 @@ export function CreateUser() {
   }
 
   return (
-    <div className="create-user">
-      <div className="create-user-header">
-        <Link href={usersListUrl} className="back-link">
-          Back to Users
-        </Link>
-        <h2 className="create-user-title">Create New User</h2>
-      </div>
-
-      {error && <DaemonErrorMessage error={error} />}
-
-      <form
-        onSubmit={e => {
-          e.preventDefault()
-          handleSubmit()
-        }}
-        className="create-user-form"
-      >
-        <div className="form-group">
-          <label htmlFor="name" className="form-label">
-            Name <span className="required">*</span>
-          </label>
-          <input
-            id="name"
-            type="text"
-            value={name}
-            onChange={e => setName(e.target.value)}
-            placeholder="Display name"
-            required
-            className="form-input"
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="userId" className="form-label">
-            User ID
-          </label>
-          <input
-            id="userId"
-            type="text"
-            value={userId}
-            onChange={e => handleUserIdChange(e.target.value)}
-            placeholder="Auto-generated from name"
-            className="form-input"
-          />
-          <span className="form-hint">
-            Unique identifier (slug format). Leave empty to auto-generate.
-          </span>
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="email" className="form-label">
-            Email
-          </label>
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            placeholder="Email address (optional)"
-            className="form-input"
-          />
-        </div>
-
-        <div className="form-group">
-          <label className="form-label">Git Usernames</label>
-          <div className="git-usernames-list">
-            {gitUsernames.map((username, index) => (
-              <div key={index} className="git-username-item">
-                <input
-                  type="text"
-                  value={username}
-                  onChange={e => handleGitUsernameChange(index, e.target.value)}
-                  placeholder="Git username"
-                  className="git-username-input"
-                />
-                <button
-                  type="button"
-                  onClick={() => handleRemoveGitUsername(index)}
-                  className="remove-git-username-btn"
-                  title="Remove"
-                >
-                  &times;
-                </button>
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={handleAddGitUsername}
-              className="add-git-username-btn"
-            >
-              + Add Git Username
-            </button>
-          </div>
-        </div>
-
-        <div className="form-actions">
-          <Link href={usersListUrl} className="cancel-btn">
-            Cancel
-          </Link>
-          <button
-            type="submit"
-            disabled={saving || !name.trim()}
-            className="save-btn"
-          >
-            {saving ? 'Creating...' : 'Create User'}
-          </button>
-        </div>
-      </form>
-    </div>
+    <CreateUserForm
+      usersListUrl={usersListUrl}
+      saving={saving}
+      error={error}
+      name={name}
+      setName={setName}
+      userId={userId}
+      setUserId={setUserId}
+      setUserIdManuallySet={setUserIdManuallySet}
+      email={email}
+      setEmail={setEmail}
+      gitUsernames={gitUsernames}
+      handleAdd={handleAdd}
+      handleRemove={handleRemove}
+      handleChange={handleChange}
+      handleSubmit={handleSubmit}
+    />
   )
 }
