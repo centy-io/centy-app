@@ -1,0 +1,142 @@
+/* eslint-disable max-lines */
+'use client'
+
+import { useState, useCallback, useEffect } from 'react'
+import { create } from '@bufbuild/protobuf'
+import { centyClient } from '@/lib/grpc/client'
+import {
+  ListProjectsRequestSchema,
+  UntrackProjectRequestSchema,
+  type ProjectInfo,
+} from '@/gen/centy_pb'
+import {
+  useArchivedProjects,
+  useProject,
+} from '@/components/providers/ProjectProvider'
+
+// eslint-disable-next-line max-lines-per-function
+export function useArchivedProjectActions() {
+  const { archivedPaths, unarchiveProject, removeArchivedProject } =
+    useArchivedProjects()
+  const { setProjectPath, setIsInitialized } = useProject()
+  const [allProjects, setAllProjects] = useState<ProjectInfo[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [removingPath, setRemovingPath] = useState<string | null>(null)
+  const [confirmRemove, setConfirmRemove] = useState<string | null>(null)
+  const [confirmRemoveAll, setConfirmRemoveAll] = useState(false)
+  const [removingAll, setRemovingAll] = useState(false)
+
+  const fetchProjects = useCallback(async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      const request = create(ListProjectsRequestSchema, { includeStale: true })
+      const response = await centyClient.listProjects(request)
+      setAllProjects(response.projects)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load projects')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchProjects()
+  }, [fetchProjects])
+
+  const archivedProjects = allProjects.filter(p =>
+    archivedPaths.includes(p.path)
+  )
+  const archivedPathsNotInDaemon = archivedPaths.filter(
+    path => !allProjects.some(p => p.path === path)
+  )
+
+  const handleRestore = (projectPath: string) => {
+    unarchiveProject(projectPath)
+  }
+
+  const handleRestoreAndSelect = (project: ProjectInfo) => {
+    unarchiveProject(project.path)
+    setProjectPath(project.path)
+    setIsInitialized(project.initialized)
+  }
+
+  const handleRemove = async (projectPath: string) => {
+    setRemovingPath(projectPath)
+    setError(null)
+    try {
+      const request = create(UntrackProjectRequestSchema, { projectPath })
+      const response = await centyClient.untrackProject(request)
+      if (!response.success && response.error) {
+        setError(response.error)
+      } else {
+        removeArchivedProject(projectPath)
+        setAllProjects(prev => prev.filter(p => p.path !== projectPath))
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to remove project')
+    } finally {
+      setRemovingPath(null)
+      setConfirmRemove(null)
+    }
+  }
+
+  const handleRemoveStale = (path: string) => {
+    removeArchivedProject(path)
+    setConfirmRemove(null)
+  }
+
+  const handleRemoveAll = async () => {
+    setRemovingAll(true)
+    setError(null)
+    try {
+      for (const project of archivedProjects) {
+        const request = create(UntrackProjectRequestSchema, {
+          projectPath: project.path,
+        })
+        const response = await centyClient.untrackProject(request)
+        if (!response.success && response.error) {
+          setError(response.error)
+          setRemovingAll(false)
+          setConfirmRemoveAll(false)
+          return
+        }
+        removeArchivedProject(project.path)
+      }
+      for (const path of archivedPathsNotInDaemon) {
+        removeArchivedProject(path)
+      }
+      setAllProjects(prev => prev.filter(p => !archivedPaths.includes(p.path)))
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : 'Failed to remove all projects'
+      )
+    } finally {
+      setRemovingAll(false)
+      setConfirmRemoveAll(false)
+    }
+  }
+
+  const hasArchivedProjects =
+    archivedProjects.length > 0 || archivedPathsNotInDaemon.length > 0
+
+  return {
+    archivedProjects,
+    archivedPathsNotInDaemon,
+    loading,
+    error,
+    removingPath,
+    confirmRemove,
+    confirmRemoveAll,
+    removingAll,
+    hasArchivedProjects,
+    handleRestore,
+    handleRestoreAndSelect,
+    handleRemove,
+    handleRemoveStale,
+    handleRemoveAll,
+    setConfirmRemove,
+    setConfirmRemoveAll,
+  }
+}

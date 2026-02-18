@@ -3,38 +3,11 @@
 import { usePathname, useRouter } from 'next/navigation'
 import { useMemo, useEffect, type ReactNode } from 'react'
 import Link from 'next/link'
-import { route, type RouteLiteral } from 'nextjs-routes'
 import { PathContextProvider } from '@/components/providers/PathContextProvider'
-
-// Components for different route types
-import { IssuesList } from '@/components/issues/IssuesList'
-import { IssueDetail } from '@/components/issues/IssueDetail'
-import { CreateIssue } from '@/components/issues/CreateIssue'
-import { DocsList } from '@/components/docs/DocsList'
-import { DocDetail } from '@/components/docs/DocDetail'
-import { CreateDoc } from '@/components/docs/CreateDoc'
-import { UsersList } from '@/components/users/UsersList'
-import { UserDetail } from '@/components/users/UserDetail'
-import { CreateUser } from '@/components/users/CreateUser'
-import { SharedAssets } from '@/components/assets/SharedAssets'
-import { ProjectConfig } from '@/components/settings/ProjectConfig'
-
-// Routes that require project context (no longer accessible at root level)
-const PROJECT_SCOPED_ROUTES = new Set(['issues', 'docs', 'users'])
-
-interface RouteResult {
-  content: ReactNode
-  shouldRedirect: boolean
-  redirectTo: RouteLiteral | null
-}
-
-function contentResult(content: ReactNode): RouteResult {
-  return { content, shouldRedirect: false, redirectTo: null }
-}
-
-function redirectResult(redirectTo: RouteLiteral): RouteResult {
-  return { content: null, shouldRedirect: true, redirectTo }
-}
+import {
+  PROJECT_SCOPED_ROUTES,
+  resolveRoute,
+} from './CatchAllRouter.routeConfig'
 
 /**
  * Component displayed when a project-scoped route is accessed without project context
@@ -63,72 +36,6 @@ function ProjectContextRequired({ requestedPage }: { requestedPage: string }) {
   )
 }
 
-function resolveIssuesRoute(rest: string[]): RouteResult {
-  if (rest[0] === 'new') return contentResult(<CreateIssue />)
-  if (rest[0]) return contentResult(<IssueDetail issueNumber={rest[0]} />)
-  return contentResult(<IssuesList />)
-}
-
-function resolveDocsRoute(rest: string[]): RouteResult {
-  if (rest[0] === 'new') return contentResult(<CreateDoc />)
-  if (rest[0]) return contentResult(<DocDetail slug={rest[0]} />)
-  return contentResult(<DocsList />)
-}
-
-function resolveUsersRoute(rest: string[]): RouteResult {
-  if (rest[0] === 'new') return contentResult(<CreateUser />)
-  if (rest[0]) return contentResult(<UserDetail userId={rest[0]} />)
-  return contentResult(<UsersList />)
-}
-
-function resolveProjectRoute(
-  org: string,
-  project: string,
-  pageType: string | undefined,
-  rest: string[]
-): RouteResult {
-  switch (pageType) {
-    case 'issues':
-      return resolveIssuesRoute(rest)
-    case 'docs':
-      return resolveDocsRoute(rest)
-    case 'users':
-      return resolveUsersRoute(rest)
-    case 'assets':
-      return contentResult(<SharedAssets />)
-    case 'config':
-      return contentResult(<ProjectConfig />)
-    case undefined:
-      // Just org/project - redirect to issues
-      return redirectResult(
-        route({
-          pathname: '/[organization]/[project]/issues',
-          query: { organization: org, project },
-        })
-      )
-  }
-
-  return contentResult(<div className="not-found">Page not found</div>)
-}
-
-function resolveRoute(pathname: string): RouteResult {
-  const segments = pathname.split('/').filter(Boolean)
-
-  // Check if this is a single-segment project-scoped route (e.g., /issues, /docs)
-  if (segments.length === 1 && PROJECT_SCOPED_ROUTES.has(segments[0])) {
-    return contentResult(<ProjectContextRequired requestedPage={segments[0]} />)
-  }
-
-  // Need at least org/project to be a project-scoped route
-  if (segments.length < 2) {
-    return contentResult(<div className="not-found">Page not found</div>)
-  }
-
-  // Extract org, project, and remaining path
-  const [org, project, pageType, ...rest] = segments
-  return resolveProjectRoute(org, project, pageType, rest)
-}
-
 /**
  * Client-side router for catch-all paths
  *
@@ -142,10 +49,20 @@ export function CatchAllRouter(): ReactNode {
   const pathname = usePathname()
   const router = useRouter()
 
-  const { content, shouldRedirect, redirectTo } = useMemo(
-    () => resolveRoute(pathname),
-    [pathname]
-  )
+  const { content, shouldRedirect, redirectTo } = useMemo(() => {
+    const segments = pathname.split('/').filter(Boolean)
+
+    // Handle single-segment project-scoped routes specially
+    if (segments.length === 1 && PROJECT_SCOPED_ROUTES.has(segments[0])) {
+      return {
+        content: <ProjectContextRequired requestedPage={segments[0]} />,
+        shouldRedirect: false,
+        redirectTo: null,
+      }
+    }
+
+    return resolveRoute(pathname)
+  }, [pathname])
 
   useEffect(() => {
     if (shouldRedirect && redirectTo) {

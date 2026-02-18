@@ -1,125 +1,13 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
 import Link from 'next/link'
-import { create } from '@bufbuild/protobuf'
-import { centyClient } from '@/lib/grpc/client'
-import { ListDocsRequestSchema, type Doc } from '@/gen/centy_pb'
-import { getProjects } from '@/lib/project-resolver'
 import { useAppLink } from '@/hooks/useAppLink'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
-
-interface AggregateDoc extends Doc {
-  projectName: string
-  orgSlug: string | null
-  projectPath: string
-}
-
-function useAggregateDocs() {
-  const [docs, setDocs] = useState<AggregateDoc[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  const fetchAllDocs = useCallback(async () => {
-    setLoading(true)
-    setError(null)
-
-    try {
-      const projects = await getProjects()
-      const initializedProjects = projects.filter(p => p.initialized)
-
-      const docPromises = initializedProjects.map(async project => {
-        try {
-          const request = create(ListDocsRequestSchema, {
-            projectPath: project.path,
-          })
-          const response = await centyClient.listDocs(request)
-          return response.docs.map(doc => ({
-            ...doc,
-            projectName: project.name,
-            orgSlug: project.organizationSlug || null,
-            projectPath: project.path,
-          }))
-        } catch {
-          console.warn(`Failed to fetch docs from ${project.name}`)
-          return []
-        }
-      })
-
-      const docArrays = await Promise.all(docPromises)
-      const allDocs = docArrays.flat()
-
-      allDocs.sort((a, b) => {
-        const dateA =
-          a.metadata && a.metadata.updatedAt
-            ? new Date(a.metadata.updatedAt).getTime()
-            : 0
-        const dateB =
-          b.metadata && b.metadata.updatedAt
-            ? new Date(b.metadata.updatedAt).getTime()
-            : 0
-        return dateB - dateA
-      })
-
-      setDocs(allDocs)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch docs')
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    fetchAllDocs()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  return { docs, loading, error, fetchAllDocs }
-}
-
-function DocCard({
-  doc,
-  createProjectLink,
-}: {
-  doc: AggregateDoc
-  createProjectLink: (
-    orgSlug: string | null,
-    projectName: string,
-    path: string
-  ) => string
-}) {
-  return (
-    <div className="doc-card">
-      <div className="doc-project">
-        <Link
-          href={createProjectLink(doc.orgSlug, doc.projectName, 'docs')}
-          className="project-link"
-        >
-          {doc.projectName}
-        </Link>
-      </div>
-      <Link
-        href={createProjectLink(
-          doc.orgSlug,
-          doc.projectName,
-          `docs/${doc.slug}`
-        )}
-        className="doc-title"
-      >
-        {doc.title || doc.slug}
-      </Link>
-      {doc.metadata && doc.metadata.updatedAt && (
-        <div className="doc-date">
-          Updated: {new Date(doc.metadata.updatedAt).toLocaleDateString()}
-        </div>
-      )}
-    </div>
-  )
-}
+import { useAggregateDocsData } from './useAggregateDocsData'
 
 export function AggregateDocsList() {
   const { createProjectLink } = useAppLink()
-  const { docs, loading, error, fetchAllDocs } = useAggregateDocs()
+  const { docs, loading, error, fetchAllDocs } = useAggregateDocsData()
 
   return (
     <div className="docs-list">
@@ -151,11 +39,32 @@ export function AggregateDocsList() {
       ) : (
         <div className="docs-grid">
           {docs.map(doc => (
-            <DocCard
-              key={`${doc.projectPath}-${doc.slug}`}
-              doc={doc}
-              createProjectLink={createProjectLink}
-            />
+            <div key={`${doc.projectPath}-${doc.slug}`} className="doc-card">
+              <div className="doc-project">
+                <Link
+                  href={createProjectLink(doc.orgSlug, doc.projectName, 'docs')}
+                  className="project-link"
+                >
+                  {doc.projectName}
+                </Link>
+              </div>
+              <Link
+                href={createProjectLink(
+                  doc.orgSlug,
+                  doc.projectName,
+                  `docs/${doc.slug}`
+                )}
+                className="doc-title"
+              >
+                {doc.title || doc.slug}
+              </Link>
+              {doc.metadata && doc.metadata.updatedAt && (
+                <div className="doc-date">
+                  Updated:{' '}
+                  {new Date(doc.metadata.updatedAt).toLocaleDateString()}
+                </div>
+              )}
+            </div>
           ))}
         </div>
       )}
