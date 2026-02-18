@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 'use client'
 
 import Link from 'next/link'
@@ -28,6 +29,7 @@ interface OrganizationDetailViewProps {
   handleCancelEdit: () => void
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function OrganizationDetailView(props: OrganizationDetailViewProps) {
   const {
     organization,

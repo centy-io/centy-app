@@ -6,6 +6,7 @@ import { route } from 'nextjs-routes'
 import type { NavLinks } from './types'
 import { ROOT_ROUTES } from './types'
 
+// eslint-disable-next-line max-lines-per-function
 export function useHeaderNav() {
   const pathname = usePathname()
   const params = useParams()

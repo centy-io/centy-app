@@ -10,6 +10,7 @@ interface CustomFieldsEditorProps {
   onChange: (fields: CustomFieldDefinition[]) => void
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function CustomFieldsEditor({
   fields,
   onChange,

@@ -10,6 +10,7 @@ import {
   type DaemonInfo,
 } from '@/gen/centy_pb'
 
+// eslint-disable-next-line max-lines-per-function
 export function useDaemonActions() {
   const [daemonInfo, setDaemonInfo] = useState<DaemonInfo | null>(null)
   const [error, setError] = useState<string | null>(null)

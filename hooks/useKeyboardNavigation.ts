@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 'use client'
 
 import { useEffect, useCallback, useMemo } from 'react'
@@ -17,12 +18,10 @@ const ROOT_ROUTES = new Set([
   'project',
 ])
 
-export function useKeyboardNavigation() {
+function useProjectContext() {
   const pathname = usePathname()
-  const router = useRouter()
   const params = useParams()
 
-  // Extract org and project from URL
   const rawOrg = params ? params.organization : undefined
   const org: string | undefined =
     typeof rawOrg === 'string' ? rawOrg : undefined
@@ -30,12 +29,10 @@ export function useKeyboardNavigation() {
   const project: string | undefined =
     typeof rawProject === 'string' ? rawProject : undefined
 
-  // Parse path segments from pathname as fallback
   const pathSegments = useMemo(() => {
     return pathname.split('/').filter(Boolean)
   }, [pathname])
 
-  // Determine if we're in a project context
   const hasProjectContext = useMemo(() => {
     if (org && project) return true
     if (pathSegments.length >= 2 && !ROOT_ROUTES.has(pathSegments[0])) {
@@ -44,16 +41,21 @@ export function useKeyboardNavigation() {
     return false
   }, [org, project, pathSegments])
 
-  // Get effective org and project
   const effectiveOrg = org || (hasProjectContext ? pathSegments[0] : undefined)
   const effectiveProject =
     project || (hasProjectContext ? pathSegments[1] : undefined)
 
-  // Get current page within project context
+  return { pathSegments, hasProjectContext, effectiveOrg, effectiveProject }
+}
+
+export function useKeyboardNavigation() {
+  const router = useRouter()
+  const { pathSegments, hasProjectContext, effectiveOrg, effectiveProject } =
+    useProjectContext()
+
   const getCurrentPageIndex = useCallback(() => {
     if (!hasProjectContext) return -1
 
-    // Current page is the third segment (after org/project)
     const currentPage = pathSegments[2] || 'issues'
     return PROJECT_SCOPED_PAGES.findIndex(page => currentPage.startsWith(page))
   }, [hasProjectContext, pathSegments])
@@ -93,7 +95,6 @@ export function useKeyboardNavigation() {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      // Don't navigate if user is typing in an input, textarea, or contenteditable
       const target = event.target
       if (
         !(target instanceof HTMLElement) ||
@@ -104,12 +105,10 @@ export function useKeyboardNavigation() {
         return
       }
 
-      // Don't navigate if modifier keys are pressed
       if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) {
         return
       }
 
-      // Only enable keyboard navigation when we have project context
       if (!hasProjectContext) return
 
       if (event.key === 'ArrowLeft') {

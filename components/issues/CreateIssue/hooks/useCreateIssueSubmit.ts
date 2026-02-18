@@ -6,6 +6,7 @@ import { centyClient } from '@/lib/grpc/client'
 import { CreateIssueRequestSchema } from '@/gen/centy_pb'
 import type { UseCreateIssueSubmitParams } from '../CreateIssue.types'
 
+// eslint-disable-next-line max-lines-per-function
 export function useCreateIssueSubmit({
   projectPath,
   title,

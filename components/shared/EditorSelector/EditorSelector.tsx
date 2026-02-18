@@ -7,6 +7,7 @@ import { useEditorSelector } from './useEditorSelector'
 import { VscodeIcon, TerminalIcon } from './EditorIcons'
 import { EditorDropdown } from './EditorDropdown'
 
+// eslint-disable-next-line max-lines-per-function
 export function EditorSelector({
   onOpenInVscode,
   onOpenInTerminal,

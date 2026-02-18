@@ -12,6 +12,7 @@ interface StateListEditorProps {
   onDefaultChange: (defaultState: string) => void
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function StateListEditor({
   states,
   stateColors,

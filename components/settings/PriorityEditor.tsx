@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 'use client'
 
 import { ColorPicker } from '@/components/shared/ColorPicker'
@@ -29,20 +30,57 @@ function getPriorityLabel(level: number, totalLevels: number): string {
   return `P${level}`
 }
 
+function getColor(colors: Record<string, string>, level: number): string {
+  return (
+    colors[String(level)] || DEFAULT_PRIORITY_COLORS[String(level)] || '#888888'
+  )
+}
+
+function cleanupColors(
+  colors: Record<string, string>,
+  newLevels: number
+): Record<string, string> {
+  const newColors: Record<string, string> = {}
+  for (let i = 1; i <= newLevels; i++) {
+    if (colors[String(i)]) {
+      newColors[String(i)] = colors[String(i)]
+    }
+  }
+  return newColors
+}
+
+interface PriorityItemProps {
+  level: number
+  totalLevels: number
+  color: string
+  onColorChange: (color: string) => void
+}
+
+function PriorityItem({
+  level,
+  totalLevels,
+  color,
+  onColorChange,
+}: PriorityItemProps) {
+  return (
+    <div className="priority-item">
+      <div className="priority-preview" style={{ backgroundColor: color }}>
+        {getPriorityLabel(level, totalLevels)}
+      </div>
+
+      <span className="priority-level-label">Priority {level}</span>
+
+      <ColorPicker value={color} onChange={onColorChange} />
+    </div>
+  )
+}
+
 export function PriorityEditor({
   levels,
   colors,
   onLevelsChange,
   onColorsChange,
 }: PriorityEditorProps) {
-  const getColor = (level: number) => {
-    return (
-      colors[String(level)] ||
-      DEFAULT_PRIORITY_COLORS[String(level)] ||
-      '#888888'
-    )
-  }
-
   const handleColorChange = (level: number, color: string) => {
     onColorsChange({
       ...colors,
@@ -52,14 +90,7 @@ export function PriorityEditor({
 
   const handleLevelsChange = (newLevels: number) => {
     onLevelsChange(newLevels)
-    // Clean up colors for levels that no longer exist
-    const newColors: Record<string, string> = {}
-    for (let i = 1; i <= newLevels; i++) {
-      if (colors[String(i)]) {
-        newColors[String(i)] = colors[String(i)]
-      }
-    }
-    onColorsChange(newColors)
+    onColorsChange(cleanupColors(colors, newLevels))
   }
 
   const priorityLevels = Array.from({ length: levels }, (_, i) => i + 1)
@@ -84,21 +115,13 @@ export function PriorityEditor({
 
       <div className="priority-list">
         {priorityLevels.map(level => (
-          <div key={level} className="priority-item">
-            <div
-              className="priority-preview"
-              style={{ backgroundColor: getColor(level) }}
-            >
-              {getPriorityLabel(level, levels)}
-            </div>
-
-            <span className="priority-level-label">Priority {level}</span>
-
-            <ColorPicker
-              value={getColor(level)}
-              onChange={color => handleColorChange(level, color)}
-            />
-          </div>
+          <PriorityItem
+            key={level}
+            level={level}
+            totalLevels={levels}
+            color={getColor(colors, level)}
+            onColorChange={color => handleColorChange(level, color)}
+          />
         ))}
       </div>
 

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 'use client'
 
 import { useCallback, useEffect } from 'react'
@@ -12,6 +13,7 @@ interface SyncUsersModalProps {
   onSynced: (createdCount: number) => void
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function SyncUsersModal({ onClose, onSynced }: SyncUsersModalProps) {
   const sync = useSyncUsers()
 

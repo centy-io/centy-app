@@ -6,6 +6,7 @@ import { TextEditor } from '@/components/shared/TextEditor'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import type { CreateIssueFormProps } from './CreateIssue.types'
 
+// eslint-disable-next-line max-lines-per-function
 export function CreateIssueForm({
   projectPath,
   title,

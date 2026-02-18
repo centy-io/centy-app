@@ -7,6 +7,7 @@ import { TTL_OPTIONS } from './StandaloneWorkspaceModal.types'
 import { useStandaloneWorkspace } from './useStandaloneWorkspace'
 import { EditorPicker } from './EditorPicker'
 
+// eslint-disable-next-line max-lines-per-function
 export function StandaloneWorkspaceModal(props: StandaloneWorkspaceModalProps) {
   const state = useStandaloneWorkspace(props)
 

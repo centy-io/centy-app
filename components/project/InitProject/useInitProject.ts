@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 'use client'
 
 import { useState, useCallback, useEffect } from 'react'
@@ -14,6 +15,7 @@ import {
 } from '@/gen/centy_pb'
 import type { InitStep } from './InitProject.types'
 
+// eslint-disable-next-line max-lines-per-function
 export function useInitProject() {
   const [projectPath, setProjectPath] = useState('')
   const [step, setStep] = useState<InitStep>('input')

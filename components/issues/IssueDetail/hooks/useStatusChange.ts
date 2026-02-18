@@ -3,6 +3,7 @@ import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
 import { UpdateIssueRequestSchema, type Issue } from '@/gen/centy_pb'
 
+// eslint-disable-next-line max-lines-per-function
 export function useStatusChange(
   projectPath: string,
   issueNumber: string,

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 'use client'
 
 import { useState, useCallback, useEffect, useMemo } from 'react'
@@ -23,6 +24,7 @@ import { isDaemonUnimplemented } from '@/lib/daemon-error'
 import type { ContextMenuState } from './OrganizationsList.types'
 import { getColumns } from './columns'
 
+// eslint-disable-next-line max-lines-per-function
 export function useOrganizationsList() {
   const router = useRouter()
   const [organizations, setOrganizations] = useState<Organization[]>([])

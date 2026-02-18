@@ -22,7 +22,6 @@ export default [
       'import/order': 'off',
       'import/no-namespace': 'off',
       'single-export/single-export': 'off',
-      'max-lines-per-function': 'off',
       'default/no-default-params': 'off',
       'security/detect-object-injection': 'off',
       'ddd/require-spec-file': 'off',

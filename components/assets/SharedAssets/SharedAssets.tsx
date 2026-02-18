@@ -14,6 +14,7 @@ const formatFileSize = (bytes: bigint | number) => {
   return `${(size / (1024 * 1024)).toFixed(1)} MB`
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function SharedAssets() {
   const { projectPath, isInitialized, setIsInitialized } = useProject()
   const shared = useSharedAssets(projectPath, isInitialized, setIsInitialized)

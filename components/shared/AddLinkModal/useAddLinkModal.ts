@@ -11,6 +11,7 @@ import { useEntitySearch } from './useEntitySearch'
 import { useModalDismiss } from './useModalDismiss'
 import { useCreateLink } from './useCreateLink'
 
+// eslint-disable-next-line max-lines-per-function
 export function useAddLinkModal({
   entityId,
   entityType,

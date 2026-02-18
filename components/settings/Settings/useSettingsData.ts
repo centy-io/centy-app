@@ -5,6 +5,7 @@ import type { Config, Manifest } from '@/gen/centy_pb'
 import { checkProjectInitialized, fetchProjectData } from './settingsApi'
 import { useConfigMutations } from './useConfigMutations'
 
+// eslint-disable-next-line max-lines-per-function
 export function useSettingsData(
   projectPath: string,
   isInitialized: boolean | null,

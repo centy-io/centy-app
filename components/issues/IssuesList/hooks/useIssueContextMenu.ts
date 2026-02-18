@@ -5,6 +5,7 @@ import { usePinnedItems } from '@/hooks/usePinnedItems'
 import { buildContextMenuItems } from './buildContextMenuItems'
 import { useIssueMoveActions } from './useIssueMoveActions'
 
+// eslint-disable-next-line max-lines-per-function
 export function useIssueContextMenu(
   projectPath: string,
   fetchIssues: () => void

@@ -9,6 +9,7 @@ interface ProjectTitleEditorProps {
   projectPath: string
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function ProjectTitleEditor({ projectPath }: ProjectTitleEditorProps) {
   const {
     projectInfo,

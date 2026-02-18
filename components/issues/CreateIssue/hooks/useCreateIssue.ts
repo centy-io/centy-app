@@ -12,6 +12,7 @@ import type {
 import { useProjectContext } from './useProjectContext'
 import { useCreateIssueSubmit } from './useCreateIssueSubmit'
 
+// eslint-disable-next-line max-lines-per-function
 export function useCreateIssue() {
   const { projectPath, isInitialized, setIsInitialized } = useProject()
   const stateManager = useStateManager()

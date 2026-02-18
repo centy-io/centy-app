@@ -6,6 +6,7 @@ interface ToolbarBlockButtonsProps {
   editor: Editor
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function ToolbarBlockButtons({ editor }: ToolbarBlockButtonsProps) {
   return (
     <>

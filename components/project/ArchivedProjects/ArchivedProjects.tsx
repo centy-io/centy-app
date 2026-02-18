@@ -6,6 +6,7 @@ import { useArchivedProjectActions } from './useArchivedProjectActions'
 import { ArchivedProjectItem } from './ArchivedProjectItem'
 import { ArchivedStaleItem } from './ArchivedStaleItem'
 
+// eslint-disable-next-line max-lines-per-function
 export function ArchivedProjects() {
   const state = useArchivedProjectActions()
 

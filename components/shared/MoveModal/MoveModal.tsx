@@ -5,6 +5,7 @@ import '@/styles/components/MoveModal.css'
 import type { MoveModalProps } from './MoveModal.types'
 import { useMoveModal } from './useMoveModal'
 
+// eslint-disable-next-line max-lines-per-function
 export function MoveModal(props: MoveModalProps) {
   const state = useMoveModal(props)
 

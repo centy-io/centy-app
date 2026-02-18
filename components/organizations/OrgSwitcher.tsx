@@ -11,6 +11,7 @@ import {
 import { useOrganization } from '@/components/providers/OrganizationProvider'
 import { OrgSwitcherDropdown } from './OrgSwitcher.dropdown'
 
+// eslint-disable-next-line max-lines-per-function
 export function OrgSwitcher() {
   const {
     selectedOrgSlug,

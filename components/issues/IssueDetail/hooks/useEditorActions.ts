@@ -7,6 +7,7 @@ import {
   type Issue,
 } from '@/gen/centy_pb'
 
+// eslint-disable-next-line max-lines-per-function
 export function useEditorActions(
   projectPath: string,
   issue: Issue | null,

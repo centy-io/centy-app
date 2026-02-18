@@ -6,6 +6,7 @@ import { ViewContent } from './ViewContent'
 import { Metadata } from './Metadata'
 import type { IssueDetailBodyProps } from './IssueDetailBody.types'
 
+// eslint-disable-next-line max-lines-per-function
 export function IssueDetailBody({
   issue,
   projectPath,

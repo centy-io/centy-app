@@ -8,6 +8,7 @@ import {
 } from '@/components/settings/Settings/settingsApi'
 import { useConfigMutations } from '@/components/settings/Settings/useConfigMutations'
 
+// eslint-disable-next-line max-lines-per-function
 export function useProjectConfigData(
   projectPath: string,
   isInitialized: boolean | null,

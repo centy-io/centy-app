@@ -8,6 +8,7 @@ import { UNGROUPED_ORG_MARKER } from '@/lib/project-resolver'
 import { useProjectsData } from './useProjectsData'
 import { OrgGroup } from './OrgGroup'
 
+// eslint-disable-next-line max-lines-per-function
 export function ProjectsGrid() {
   const router = useRouter()
   const {

@@ -5,6 +5,7 @@ import { AssetUploader } from '@/components/assets/AssetUploader'
 import { TextEditor } from '@/components/shared/TextEditor'
 import type { EditFormProps } from './IssueDetail.types'
 
+// eslint-disable-next-line max-lines-per-function
 export function EditForm({
   projectPath,
   issueNumber,

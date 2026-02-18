@@ -20,6 +20,7 @@ interface CreateUserFormProps {
   usersListUrl: RouteLiteral | '/'
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function CreateUserForm({
   name,
   setName,

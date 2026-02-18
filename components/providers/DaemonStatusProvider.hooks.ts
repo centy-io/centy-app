@@ -19,6 +19,7 @@ import {
   buildDemoRedirectUrl,
 } from './DaemonStatusProvider.helpers'
 
+// eslint-disable-next-line max-lines-per-function
 export function useDaemonStatusState() {
   const [status, setStatus] = useState<DaemonStatus>('checking')
   const [lastChecked, setLastChecked] = useState<Date | null>(null)

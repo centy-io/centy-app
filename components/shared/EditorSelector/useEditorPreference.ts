@@ -3,6 +3,7 @@ import { EditorType, type EditorInfo } from '@/gen/centy_pb'
 import { useDaemonStatus } from '@/components/providers/DaemonStatusProvider'
 import { EDITOR_PREFERENCE_KEY } from './EditorSelector.types'
 
+// eslint-disable-next-line max-lines-per-function
 export function useEditorPreference() {
   const { editors } = useDaemonStatus()
   const [showDropdown, setShowDropdown] = useState(false)

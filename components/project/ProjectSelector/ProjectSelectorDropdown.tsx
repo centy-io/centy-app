@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 'use client'
 
 import Link from 'next/link'
@@ -27,6 +28,7 @@ interface ProjectSelectorDropdownProps {
   toggleOrgCollapse: (orgSlug: string) => void
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function ProjectSelectorDropdown(props: ProjectSelectorDropdownProps) {
   const {
     loading,

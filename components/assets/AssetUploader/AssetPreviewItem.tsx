@@ -12,12 +12,7 @@ interface AssetPreviewItemProps {
   onRemove: () => void
 }
 
-export function AssetPreviewItem({
-  asset,
-  projectPath,
-  issueId,
-  onRemove,
-}: AssetPreviewItemProps) {
+function useAssetPreview(asset: Asset, projectPath: string, issueId: string) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -38,9 +33,7 @@ export function AssetPreviewItem({
           const response = await centyClient.getAsset(request)
           if (mounted && response.data) {
             const bytes = new Uint8Array(response.data)
-            const blob = new Blob([bytes], {
-              type: asset.mimeType,
-            })
+            const blob = new Blob([bytes], { type: asset.mimeType })
             setPreviewUrl(URL.createObjectURL(blob))
           }
         } catch (err) {
@@ -63,24 +56,57 @@ export function AssetPreviewItem({
       ? 'video'
       : 'pdf'
 
+  return { previewUrl, loading, type }
+}
+
+function AssetPreviewContent({
+  loading,
+  type,
+  previewUrl,
+  filename,
+}: {
+  loading: boolean
+  type: string
+  previewUrl: string | null
+  filename: string
+}) {
+  if (loading) return <div className="asset-loading">Loading...</div>
+  if (type === 'image' && previewUrl) {
+    return (
+      <img src={previewUrl} alt={filename} className="asset-preview-image" />
+    )
+  }
+  if (type === 'video' && previewUrl) {
+    return <video src={previewUrl} className="asset-preview-video" muted />
+  }
+  return (
+    <div className="asset-preview-pdf">
+      <span className="asset-preview-pdf-icon">PDF</span>
+      <span className="asset-preview-pdf-name">{filename}</span>
+    </div>
+  )
+}
+
+export function AssetPreviewItem({
+  asset,
+  projectPath,
+  issueId,
+  onRemove,
+}: AssetPreviewItemProps) {
+  const { previewUrl, loading, type } = useAssetPreview(
+    asset,
+    projectPath,
+    issueId
+  )
+
   return (
     <div className="asset-preview">
-      {loading ? (
-        <div className="asset-loading">Loading...</div>
-      ) : type === 'image' && previewUrl ? (
-        <img
-          src={previewUrl}
-          alt={asset.filename}
-          className="asset-preview-image"
-        />
-      ) : type === 'video' && previewUrl ? (
-        <video src={previewUrl} className="asset-preview-video" muted />
-      ) : (
-        <div className="asset-preview-pdf">
-          <span className="asset-preview-pdf-icon">PDF</span>
-          <span className="asset-preview-pdf-name">{asset.filename}</span>
-        </div>
-      )}
+      <AssetPreviewContent
+        loading={loading}
+        type={type}
+        previewUrl={previewUrl}
+        filename={asset.filename}
+      />
       <div className="asset-overlay">
         <button
           className="asset-remove-btn"

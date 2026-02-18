@@ -21,6 +21,7 @@ function formatError(err: unknown): string {
   return message
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function useUsersData() {
   const { projectPath, isInitialized, setIsInitialized } = useProject()
   const [users, setUsers] = useState<User[]>([])

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 'use client'
 
 import { useState, useCallback, useEffect } from 'react'
@@ -13,6 +14,7 @@ import {
   useProject,
 } from '@/components/providers/ProjectProvider'
 
+// eslint-disable-next-line max-lines-per-function
 export function useArchivedProjectActions() {
   const { archivedPaths, unarchiveProject, removeArchivedProject } =
     useArchivedProjects()

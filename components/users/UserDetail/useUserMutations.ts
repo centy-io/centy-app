@@ -19,6 +19,7 @@ function formatError(err: unknown): string {
     : msg
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function useUserMutations(
   projectPath: string,
   userId: string,

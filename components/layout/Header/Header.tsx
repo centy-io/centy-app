@@ -13,6 +13,7 @@ import { useMobileMenu } from './useMobileMenu'
 import { DesktopNav } from './DesktopNav'
 import { MobileMenu } from './MobileMenu'
 
+// eslint-disable-next-line max-lines-per-function
 export function Header() {
   const { hasExplicitSelection } = useOrganization()
   const {

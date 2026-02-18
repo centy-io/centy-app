@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 'use client'
 
 import { useState, useCallback, useEffect } from 'react'
@@ -22,6 +23,7 @@ function formatErr(err: unknown): string {
     : m
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function useOrganizationDetail(orgSlug: string) {
   const router = useRouter()
   const [organization, setOrganization] = useState<Organization | null>(null)

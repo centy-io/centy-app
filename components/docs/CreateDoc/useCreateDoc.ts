@@ -13,6 +13,7 @@ interface UseCreateDocParams {
   } | null>
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function useCreateDoc({
   projectPath,
   getProjectContext,

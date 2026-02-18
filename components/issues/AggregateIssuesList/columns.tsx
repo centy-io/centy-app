@@ -6,6 +6,7 @@ import { getPriorityClass } from './utils'
 
 const columnHelper = createColumnHelper<AggregateIssue>()
 
+// eslint-disable-next-line max-lines-per-function
 export function createAggregateColumns(
   stateManager: { getStateClass: (status: string) => string },
   createProjectLink: (

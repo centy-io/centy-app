@@ -12,6 +12,7 @@ interface DaemonInfoSectionProps {
   onShutdown: () => void
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function DaemonInfoSection({
   daemonInfo,
   restarting,

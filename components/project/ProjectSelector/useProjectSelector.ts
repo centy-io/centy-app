@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 'use client'
 
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react'
@@ -12,6 +13,7 @@ import {
 } from './ProjectSelector.types'
 import { useProjectActions } from './useProjectActions'
 
+// eslint-disable-next-line max-lines-per-function
 export function useProjectSelector() {
   const { isArchived } = useArchivedProjects()
   const { selectedOrgSlug, organizations } = useOrganization()

@@ -8,6 +8,7 @@ import { saveTitle, clearTitle, type TitleActionResult } from './titleActions'
 
 export type TitleScope = 'user' | 'project'
 
+// eslint-disable-next-line max-lines-per-function
 export function useProjectTitle(projectPath: string) {
   const [projectInfo, setProjectInfo] = useState<ProjectInfo | null>(null)
   const [userTitle, setUserTitle] = useState('')

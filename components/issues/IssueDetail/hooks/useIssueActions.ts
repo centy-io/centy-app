@@ -17,6 +17,7 @@ interface UseIssueActionsParams {
   setError: (error: string | null) => void
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function useIssueActions({
   projectPath,
   issueNumber,

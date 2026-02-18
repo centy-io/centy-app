@@ -5,6 +5,7 @@ import { ListProjectsRequestSchema, type ProjectInfo } from '@/gen/centy_pb'
 import type { MoveModalProps } from './MoveModal.types'
 import { useMoveAction } from './useMoveAction'
 
+// eslint-disable-next-line max-lines-per-function
 export function useMoveModal({
   entityType,
   entityId,

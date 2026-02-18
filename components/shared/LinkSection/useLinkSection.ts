@@ -10,6 +10,7 @@ import { useProject } from '@/components/providers/ProjectProvider'
 import { targetTypeToProto } from './LinkSection.types'
 import { useLinkRoutes } from './useLinkRoutes'
 
+// eslint-disable-next-line max-lines-per-function
 export function useLinkSection(entityId: string, entityType: 'issue' | 'doc') {
   const { projectPath } = useProject()
   const { buildLinkRoute } = useLinkRoutes()

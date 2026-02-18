@@ -6,6 +6,7 @@ import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import { useProjectContext } from './useProjectContext'
 import { useCreateDoc } from './useCreateDoc'
 
+// eslint-disable-next-line max-lines-per-function
 export function CreateDoc() {
   const { projectPath, isInitialized, getProjectContext } = useProjectContext()
 

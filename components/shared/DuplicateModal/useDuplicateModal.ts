@@ -5,6 +5,7 @@ import { ListProjectsRequestSchema, type ProjectInfo } from '@/gen/centy_pb'
 import type { DuplicateModalProps } from './DuplicateModal.types'
 import { useDuplicateAction } from './useDuplicateAction'
 
+// eslint-disable-next-line max-lines-per-function
 export function useDuplicateModal({
   entityType,
   entityId,

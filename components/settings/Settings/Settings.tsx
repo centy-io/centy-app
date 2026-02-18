@@ -11,6 +11,7 @@ import { useSettingsData } from './useSettingsData'
 import { ConfigSections } from './ConfigSections'
 import { ManifestSection } from './ManifestSection'
 
+// eslint-disable-next-line max-lines-per-function
 export function Settings() {
   const { projectPath, isInitialized, setIsInitialized } = useProject()
 

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 'use client'
 
 import { useState, useCallback, useEffect, useMemo } from 'react'
@@ -18,6 +19,7 @@ function formatError(err: unknown): string {
     : msg
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function useCreateUser() {
   const router = useRouter()
   const params = useParams()

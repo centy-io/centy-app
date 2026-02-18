@@ -11,6 +11,7 @@ interface CustomFieldFormProps {
   onCancel: () => void
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function CustomFieldForm({
   field,
   existingNames,

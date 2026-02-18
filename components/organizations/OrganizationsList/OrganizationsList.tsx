@@ -6,6 +6,7 @@ import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import { useOrganizationsList } from './useOrganizationsList'
 import { OrganizationsTable } from './OrganizationsTable'
 
+// eslint-disable-next-line max-lines-per-function
 export function OrganizationsList() {
   const state = useOrganizationsList()
 

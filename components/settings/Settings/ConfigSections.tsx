@@ -14,6 +14,7 @@ interface ConfigSectionsProps {
   onReset: () => void
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function ConfigSections({
   config,
   saving,

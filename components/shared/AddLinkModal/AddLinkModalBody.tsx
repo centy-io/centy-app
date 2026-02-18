@@ -7,6 +7,7 @@ interface AddLinkModalBodyProps {
   state: ReturnType<typeof useAddLinkModal>
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function AddLinkModalBody({ state }: AddLinkModalBodyProps) {
   return (
     <>

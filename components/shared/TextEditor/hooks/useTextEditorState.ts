@@ -5,6 +5,7 @@ import { useAsciidocConverter } from './useAsciidocConverter'
 import { markdownToHtml, htmlToMarkdown } from '../utils/markdownParser'
 import { createEditorExtensions } from '../constants'
 
+// eslint-disable-next-line max-lines-per-function
 export function useTextEditorState({
   value,
   onChange,

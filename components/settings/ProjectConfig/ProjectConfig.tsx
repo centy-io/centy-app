@@ -13,6 +13,7 @@ import { useProjectConfigData } from './useProjectConfigData'
 import { useProjectOrg } from './useProjectOrg'
 import { OrgSection } from './OrgSection'
 
+// eslint-disable-next-line max-lines-per-function
 export function ProjectConfig() {
   const { projectPath, isInitialized, setIsInitialized } = useProject()
   const { organizations, refreshOrganizations } = useOrganization()

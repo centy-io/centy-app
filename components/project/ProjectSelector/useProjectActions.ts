@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 'use client'
 
 import { useCallback } from 'react'
@@ -26,6 +27,7 @@ interface UseProjectActionsParams {
   manualPath: string
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function useProjectActions(params: UseProjectActionsParams) {
   const router = useRouter()
   const routeParams = useParams()

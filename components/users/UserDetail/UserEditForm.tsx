@@ -9,6 +9,7 @@ interface UserEditFormProps {
   setEditGitUsernames: (value: string[]) => void
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function UserEditForm({
   editName,
   setEditName,

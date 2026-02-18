@@ -9,6 +9,7 @@ interface DuplicateModalBodyProps {
   state: ReturnType<typeof useDuplicateModal>
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function DuplicateModalBody({ props, state }: DuplicateModalBodyProps) {
   return (
     <div className="move-modal-body">

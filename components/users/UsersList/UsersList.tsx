@@ -12,6 +12,7 @@ import { useUsersData } from './useUsersData'
 import { useUserRoutes } from './useProjectRoutes'
 import { UsersListContent } from './UsersListContent'
 
+// eslint-disable-next-line max-lines-per-function
 export function UsersList() {
   const router = useRouter()
   const data = useUsersData()

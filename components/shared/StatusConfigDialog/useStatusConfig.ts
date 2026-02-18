@@ -8,6 +8,7 @@ import {
 } from '@/gen/centy_pb'
 import { useModalDismiss } from './useModalDismiss'
 
+// eslint-disable-next-line max-lines-per-function
 export function useStatusConfig(
   projectPath: string,
   onClose: () => void,

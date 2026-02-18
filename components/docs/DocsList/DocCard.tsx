@@ -13,6 +13,7 @@ interface DocCardProps {
   onDeleteConfirm: (slug: string) => void
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function DocCard({
   doc,
   deleteConfirm,

@@ -16,6 +16,7 @@ interface OrgSwitcherDropdownProps {
   onClose: () => void
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function OrgSwitcherDropdown({
   refs,
   floatingStyles,
