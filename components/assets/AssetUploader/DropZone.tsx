@@ -1,30 +1,32 @@
 'use client'
 
-import type { RefObject } from 'react'
+import { useState, type RefObject } from 'react'
 
 interface DropZoneProps {
-  isDragging: boolean
   fileInputRef: RefObject<HTMLInputElement | null>
-  onDragOver: (e: React.DragEvent) => void
-  onDragLeave: (e: React.DragEvent) => void
-  onDrop: (e: React.DragEvent) => void
   onFilesSelected: (files: FileList) => void
 }
 
-export function DropZone({
-  isDragging,
-  fileInputRef,
-  onDragOver,
-  onDragLeave,
-  onDrop,
-  onFilesSelected,
-}: DropZoneProps) {
+export function DropZone({ fileInputRef, onFilesSelected }: DropZoneProps) {
+  const [isDragging, setIsDragging] = useState(false)
   return (
     <div
       className={`drop-zone ${isDragging ? 'dragging' : ''}`}
-      onDragOver={onDragOver}
-      onDragLeave={onDragLeave}
-      onDrop={onDrop}
+      onDragOver={e => {
+        e.preventDefault()
+        setIsDragging(true)
+      }}
+      onDragLeave={e => {
+        e.preventDefault()
+        setIsDragging(false)
+      }}
+      onDrop={e => {
+        e.preventDefault()
+        setIsDragging(false)
+        if (e.dataTransfer.files.length > 0) {
+          onFilesSelected(e.dataTransfer.files)
+        }
+      }}
       onClick={() => {
         if (fileInputRef.current) fileInputRef.current.click()
       }}

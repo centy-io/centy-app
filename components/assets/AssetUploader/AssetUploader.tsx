@@ -32,7 +32,6 @@ export const AssetUploader = forwardRef<
     initialAssets,
     mode,
   })
-
   const { handleFiles } = useAssetHandlers({
     uploader,
     targetId,
@@ -40,7 +39,6 @@ export const AssetUploader = forwardRef<
     onPendingChange,
     ref,
   })
-
   const { removeAsset, removePending } = useAssetRemoval({
     uploader,
     projectPath,
@@ -52,21 +50,7 @@ export const AssetUploader = forwardRef<
   return (
     <div className="asset-uploader">
       <DropZone
-        isDragging={uploader.isDragging}
         fileInputRef={uploader.fileInputRef}
-        onDragOver={e => {
-          e.preventDefault()
-          uploader.setIsDragging(true)
-        }}
-        onDragLeave={e => {
-          e.preventDefault()
-          uploader.setIsDragging(false)
-        }}
-        onDrop={e => {
-          e.preventDefault()
-          uploader.setIsDragging(false)
-          if (e.dataTransfer.files.length > 0) handleFiles(e.dataTransfer.files)
-        }}
         onFilesSelected={handleFiles}
       />
       {uploader.error && (

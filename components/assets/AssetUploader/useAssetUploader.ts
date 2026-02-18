@@ -23,7 +23,6 @@ export function useAssetUploader({
 }: UseAssetUploaderOptions) {
   const [assets, setAssets] = useState<Asset[]>(initialAssets)
   const [pendingAssets, setPendingAssets] = useState<PendingAsset[]>([])
-  const [isDragging, setIsDragging] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -80,8 +79,6 @@ export function useAssetUploader({
     setAssets,
     pendingAssets,
     setPendingAssets,
-    isDragging,
-    setIsDragging,
     error,
     setError,
     fileInputRef,
