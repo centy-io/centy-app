@@ -1,8 +1,8 @@
 'use client'
 
-import { type Issue } from '@/gen/centy_pb'
 import { DEMO_ISSUES_PART1 } from './issues-part1'
 import { DEMO_ISSUES_PART2 } from './issues-part2'
+import { type Issue } from '@/gen/centy_pb'
 
 // Combine issue parts into the full array
 export const DEMO_ISSUES: Issue[] = [...DEMO_ISSUES_PART1, ...DEMO_ISSUES_PART2]

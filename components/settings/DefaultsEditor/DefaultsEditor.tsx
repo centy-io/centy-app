@@ -72,8 +72,9 @@ function AddDefaultRow({
 export function DefaultsEditor({
   value,
   onChange,
-  suggestedKeys = [],
+  suggestedKeys,
 }: DefaultsEditorProps) {
+  const resolvedSuggestedKeys = suggestedKeys !== undefined ? suggestedKeys : []
   const [newKey, setNewKey] = useState('')
   const [newValue, setNewValue] = useState('')
 
@@ -91,6 +92,7 @@ export function DefaultsEditor({
 
   const handleRemove = (key: string) => {
     const newDefaults = { ...value }
+    // eslint-disable-next-line security/detect-object-injection
     delete newDefaults[key]
     onChange(newDefaults)
   }
@@ -108,7 +110,8 @@ export function DefaultsEditor({
     handleAdd()
   }
 
-  const availableKeys = suggestedKeys.filter(k => !value[k])
+  // eslint-disable-next-line security/detect-object-injection
+  const availableKeys = resolvedSuggestedKeys.filter(k => !value[k])
 
   return (
     <div className="defaults-editor">

@@ -1,6 +1,14 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import type { DaemonStatus } from './DaemonStatusProvider.types'
+import {
+  CHECK_INTERVAL_MS,
+  createFallbackEditors,
+  applyDemoState,
+  buildDemoUrl,
+  buildDemoRedirectUrl,
+} from './DaemonStatusProvider.helpers'
 import {
   centyClient,
   enableDemoMode,
@@ -10,14 +18,6 @@ import {
 import { DEMO_ORG_SLUG, DEMO_PROJECT_PATH } from '@/lib/grpc/demo-data'
 import type { EditorInfo } from '@/gen/centy_pb'
 import { trackDaemonConnection } from '@/lib/metrics'
-import type { DaemonStatus } from './DaemonStatusProvider.types'
-import {
-  CHECK_INTERVAL_MS,
-  createFallbackEditors,
-  applyDemoState,
-  buildDemoUrl,
-  buildDemoRedirectUrl,
-} from './DaemonStatusProvider.helpers'
 
 // eslint-disable-next-line max-lines-per-function
 export function useDaemonStatusState() {

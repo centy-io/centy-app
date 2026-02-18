@@ -1,5 +1,5 @@
-import { EditorType, type EditorInfo } from '@/gen/centy_pb'
 import type { DaemonStatus } from './DaemonStatusProvider.types'
+import { EditorType, type EditorInfo } from '@/gen/centy_pb'
 
 export const CHECK_INTERVAL_MS = 10000 // Check every 10 seconds
 

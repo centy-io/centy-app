@@ -3,7 +3,6 @@
 import { useMemo, type ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
 import { route } from 'nextjs-routes'
-import { UNGROUPED_ORG_MARKER } from '@/lib/project-resolver'
 import { PathContext } from './PathContextProvider.hooks'
 import {
   buildAggregateContext,
@@ -14,6 +13,7 @@ import {
   useUrlParams,
   useProjectResolution,
 } from './PathContextProvider.useResolve'
+import { UNGROUPED_ORG_MARKER } from '@/lib/project-resolver'
 
 // Re-export hooks for consumers
 export {
@@ -32,12 +32,13 @@ export function PathContextProvider({ children }: { children: ReactNode }) {
   )
 
   const navigateToProject = useMemo(() => {
-    return (orgSlug: string | null, projectName: string, page = 'issues') => {
+    return (orgSlug: string | null, projectName: string, page?: string) => {
+      const resolvedPage = page !== undefined ? page : 'issues'
       const o = orgSlug !== null ? orgSlug : UNGROUPED_ORG_MARKER
       router.push(
         route({
           pathname: '/[...path]',
-          query: { path: [o, projectName, page] },
+          query: { path: [o, projectName, resolvedPage] },
         })
       )
     }

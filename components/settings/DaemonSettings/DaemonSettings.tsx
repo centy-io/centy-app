@@ -1,13 +1,14 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import { DaemonHelpSection } from './DaemonHelpSection'
 import {
   getCurrentDaemonUrl,
   setDaemonUrl,
   resetDaemonUrl,
   isUsingDefaultDaemonUrl,
+  DEFAULT_DAEMON_URL,
 } from '@/lib/grpc/client'
-import { DaemonHelpSection } from './DaemonHelpSection'
 
 export function DaemonSettings() {
   const initialUrl = useMemo(() => getCurrentDaemonUrl(), [])
@@ -44,7 +45,7 @@ export function DaemonSettings() {
             type="text"
             value={url}
             onChange={e => setUrl(e.target.value)}
-            placeholder="http://localhost:50051"
+            placeholder={DEFAULT_DAEMON_URL}
           />
           <button
             onClick={handleSave}

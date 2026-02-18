@@ -6,15 +6,15 @@ import {
   getFilteredRowModel,
 } from '@tanstack/react-table'
 import type { RouteLiteral } from 'nextjs-routes'
+import { createBaseColumns } from '../columns'
+import { createPriorityColumn } from '../priorityColumn'
+import { createCreatedAtColumn, createLastSeenColumn } from '../dateColumns'
 import type { Issue } from '@/gen/centy_pb'
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard'
 import { useLastSeenIssues } from '@/hooks/useLastSeenIssues'
 import { useIssueTableSettings } from '@/hooks/useIssueTableSettings'
 import { useStateManager } from '@/lib/state'
 import type { MultiSelectOption } from '@/components/shared/MultiSelect'
-import { createBaseColumns } from '../columns'
-import { createPriorityColumn } from '../priorityColumn'
-import { createCreatedAtColumn, createLastSeenColumn } from '../dateColumns'
 
 export function useIssuesTable(
   issues: Issue[],

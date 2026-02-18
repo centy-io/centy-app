@@ -1,11 +1,11 @@
 import type { GrpcMocker } from '../../../utils/mock-grpc'
+import type { IssueHandlerOptions } from './types'
 import type { Issue, Manifest } from '@/gen/centy_pb'
 import {
   DeleteIssueRequestSchema,
   DeleteIssueResponseSchema,
 } from '@/gen/centy_pb'
 import type { DeleteIssueResponse } from '@/gen/centy_pb'
-import type { IssueHandlerOptions } from './types'
 
 /**
  * Adds the DeleteIssue handler to the GrpcMocker.

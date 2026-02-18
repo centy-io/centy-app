@@ -1,8 +1,8 @@
 'use client'
 
 import { useCallback } from 'react'
-import type { Config } from '@/gen/centy_pb'
 import { saveConfig } from './settingsApi'
+import type { Config } from '@/gen/centy_pb'
 
 interface ConfigState {
   config: Config | null

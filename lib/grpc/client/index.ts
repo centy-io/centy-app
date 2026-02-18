@@ -14,6 +14,7 @@ export {
   getCurrentDaemonUrl,
   isUsingDefaultDaemonUrl,
   resetDaemonUrl,
+  DEFAULT_DAEMON_URL,
 } from './daemon-url'
 
 // Re-export client

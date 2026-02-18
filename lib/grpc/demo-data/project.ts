@@ -1,7 +1,7 @@
 'use client'
 
-import { type ProjectInfo } from '@/gen/centy_pb'
 import { DEMO_PROJECT_PATH } from './constants'
+import { type ProjectInfo } from '@/gen/centy_pb'
 
 // Demo project
 export const DEMO_PROJECT: ProjectInfo = {

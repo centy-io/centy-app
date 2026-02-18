@@ -1,10 +1,10 @@
 import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import type { ContextMenuState } from './types'
 import { useAppLink } from '@/hooks/useAppLink'
 import { usePinnedItems } from '@/hooks/usePinnedItems'
 import type { Doc } from '@/gen/centy_pb'
 import type { ContextMenuItem } from '@/components/shared/ContextMenu'
-import type { ContextMenuState } from './types'
 
 export function useDocsContextMenu() {
   const router = useRouter()

@@ -225,7 +225,8 @@ describe('LinkSection', () => {
 
   it('should show error message when loading fails', async () => {
     const mockListLinks = vi.mocked(centyClient.listLinks)
-    mockListLinks.mockRejectedValue(new Error('Network error'))
+    const errorMessage = 'Network error'
+    mockListLinks.mockRejectedValue(new Error(errorMessage))
 
     render(<LinkSection entityId="entity-1" entityType="issue" />)
 

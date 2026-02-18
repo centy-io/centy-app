@@ -1,8 +1,8 @@
 'use client'
 
-import type { ProjectInfo } from '@/gen/centy_pb'
 import type { GroupedProjects } from './ProjectSelector.types'
 import { ProjectItem } from './ProjectItem'
+import type { ProjectInfo } from '@/gen/centy_pb'
 
 interface ProjectGroupListProps {
   groupedProjects: NonNullable<GroupedProjects>

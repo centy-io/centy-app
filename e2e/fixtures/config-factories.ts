@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import type { Config, ProjectInfo, Manifest } from '@/gen/centy_pb'
 
 // Fixed date for deterministic visual tests
@@ -6,23 +7,36 @@ const FIXED_DATE = '2024-01-15T10:30:00.000Z'
 /**
  * Creates a mock config with default values that can be overridden.
  */
-export function createMockConfig(overrides: Partial<Config> = {}): Config {
+export function createMockConfig(overrides?: Partial<Config>): Config {
+  const resolvedOverrides = overrides !== undefined ? overrides : {}
   return {
     customFields:
-      overrides.customFields !== undefined ? overrides.customFields : [],
-    defaults: overrides.defaults !== undefined ? overrides.defaults : {},
+      resolvedOverrides.customFields !== undefined
+        ? resolvedOverrides.customFields
+        : [],
+    defaults:
+      resolvedOverrides.defaults !== undefined
+        ? resolvedOverrides.defaults
+        : {},
     priorityLevels:
-      overrides.priorityLevels !== undefined ? overrides.priorityLevels : 3,
+      resolvedOverrides.priorityLevels !== undefined
+        ? resolvedOverrides.priorityLevels
+        : 3,
     allowedStates:
-      overrides.allowedStates !== undefined
-        ? overrides.allowedStates
+      resolvedOverrides.allowedStates !== undefined
+        ? resolvedOverrides.allowedStates
         : ['open', 'in-progress', 'for-validation', 'closed'],
     defaultState:
-      overrides.defaultState !== undefined ? overrides.defaultState : 'open',
-    version: overrides.version !== undefined ? overrides.version : '1.0.0',
+      resolvedOverrides.defaultState !== undefined
+        ? resolvedOverrides.defaultState
+        : 'open',
+    version:
+      resolvedOverrides.version !== undefined
+        ? resolvedOverrides.version
+        : '1.0.0',
     stateColors:
-      overrides.stateColors !== undefined
-        ? overrides.stateColors
+      resolvedOverrides.stateColors !== undefined
+        ? resolvedOverrides.stateColors
         : {
             open: '#22c55e',
             'in-progress': '#3b82f6',
@@ -30,24 +44,28 @@ export function createMockConfig(overrides: Partial<Config> = {}): Config {
             closed: '#6b7280',
           },
     priorityColors:
-      overrides.priorityColors !== undefined
-        ? overrides.priorityColors
+      resolvedOverrides.priorityColors !== undefined
+        ? resolvedOverrides.priorityColors
         : {
             high: '#ef4444',
             medium: '#f59e0b',
             low: '#22c55e',
           },
     workspace:
-      overrides.workspace !== undefined
-        ? overrides.workspace
+      resolvedOverrides.workspace !== undefined
+        ? resolvedOverrides.workspace
         : {
             $typeName: 'centy.v1.WorkspaceConfig',
           },
     customLinkTypes:
-      overrides.customLinkTypes !== undefined ? overrides.customLinkTypes : [],
+      resolvedOverrides.customLinkTypes !== undefined
+        ? resolvedOverrides.customLinkTypes
+        : [],
     defaultEditor:
-      overrides.defaultEditor !== undefined ? overrides.defaultEditor : '',
-    hooks: overrides.hooks !== undefined ? overrides.hooks : [],
+      resolvedOverrides.defaultEditor !== undefined
+        ? resolvedOverrides.defaultEditor
+        : '',
+    hooks: resolvedOverrides.hooks !== undefined ? resolvedOverrides.hooks : [],
     $typeName: 'centy.v1.Config',
   }
 }
@@ -56,40 +74,66 @@ export function createMockConfig(overrides: Partial<Config> = {}): Config {
  * Creates a mock project info object.
  */
 export function createMockProjectInfo(
-  overrides: Partial<ProjectInfo> = {}
+  overrides?: Partial<ProjectInfo>
 ): ProjectInfo {
+  const resolvedOverrides = overrides !== undefined ? overrides : {}
   const now = FIXED_DATE
 
   return {
-    path: overrides.path !== undefined ? overrides.path : '/test/project',
+    path:
+      resolvedOverrides.path !== undefined
+        ? resolvedOverrides.path
+        : '/test/project',
     firstAccessed:
-      overrides.firstAccessed !== undefined ? overrides.firstAccessed : now,
+      resolvedOverrides.firstAccessed !== undefined
+        ? resolvedOverrides.firstAccessed
+        : now,
     lastAccessed:
-      overrides.lastAccessed !== undefined ? overrides.lastAccessed : now,
-    issueCount: overrides.issueCount !== undefined ? overrides.issueCount : 0,
-    docCount: overrides.docCount !== undefined ? overrides.docCount : 0,
+      resolvedOverrides.lastAccessed !== undefined
+        ? resolvedOverrides.lastAccessed
+        : now,
+    issueCount:
+      resolvedOverrides.issueCount !== undefined
+        ? resolvedOverrides.issueCount
+        : 0,
+    docCount:
+      resolvedOverrides.docCount !== undefined ? resolvedOverrides.docCount : 0,
     initialized:
-      overrides.initialized !== undefined ? overrides.initialized : true,
-    name: overrides.name !== undefined ? overrides.name : 'Test Project',
+      resolvedOverrides.initialized !== undefined
+        ? resolvedOverrides.initialized
+        : true,
+    name:
+      resolvedOverrides.name !== undefined
+        ? resolvedOverrides.name
+        : 'Test Project',
     isFavorite:
-      overrides.isFavorite !== undefined ? overrides.isFavorite : false,
+      resolvedOverrides.isFavorite !== undefined
+        ? resolvedOverrides.isFavorite
+        : false,
     isArchived:
-      overrides.isArchived !== undefined ? overrides.isArchived : false,
+      resolvedOverrides.isArchived !== undefined
+        ? resolvedOverrides.isArchived
+        : false,
     displayPath:
-      overrides.displayPath !== undefined
-        ? overrides.displayPath
+      resolvedOverrides.displayPath !== undefined
+        ? resolvedOverrides.displayPath
         : '/test/project',
     organizationSlug:
-      overrides.organizationSlug !== undefined
-        ? overrides.organizationSlug
+      resolvedOverrides.organizationSlug !== undefined
+        ? resolvedOverrides.organizationSlug
         : '',
     organizationName:
-      overrides.organizationName !== undefined
-        ? overrides.organizationName
+      resolvedOverrides.organizationName !== undefined
+        ? resolvedOverrides.organizationName
         : '',
-    userTitle: overrides.userTitle !== undefined ? overrides.userTitle : '',
+    userTitle:
+      resolvedOverrides.userTitle !== undefined
+        ? resolvedOverrides.userTitle
+        : '',
     projectTitle:
-      overrides.projectTitle !== undefined ? overrides.projectTitle : '',
+      resolvedOverrides.projectTitle !== undefined
+        ? resolvedOverrides.projectTitle
+        : '',
     $typeName: 'centy.v1.ProjectInfo',
   }
 }
@@ -97,18 +141,27 @@ export function createMockProjectInfo(
 /**
  * Creates a mock manifest object.
  */
-export function createMockManifest(
-  overrides: Partial<Manifest> = {}
-): Manifest {
+export function createMockManifest(overrides?: Partial<Manifest>): Manifest {
+  const resolvedOverrides = overrides !== undefined ? overrides : {}
   const now = FIXED_DATE
 
   return {
     schemaVersion:
-      overrides.schemaVersion !== undefined ? overrides.schemaVersion : 1,
+      resolvedOverrides.schemaVersion !== undefined
+        ? resolvedOverrides.schemaVersion
+        : 1,
     centyVersion:
-      overrides.centyVersion !== undefined ? overrides.centyVersion : '1.0.0',
-    createdAt: overrides.createdAt !== undefined ? overrides.createdAt : now,
-    updatedAt: overrides.updatedAt !== undefined ? overrides.updatedAt : now,
+      resolvedOverrides.centyVersion !== undefined
+        ? resolvedOverrides.centyVersion
+        : '1.0.0',
+    createdAt:
+      resolvedOverrides.createdAt !== undefined
+        ? resolvedOverrides.createdAt
+        : now,
+    updatedAt:
+      resolvedOverrides.updatedAt !== undefined
+        ? resolvedOverrides.updatedAt
+        : now,
     $typeName: 'centy.v1.Manifest',
   }
 }

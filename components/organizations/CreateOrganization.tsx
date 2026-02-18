@@ -5,13 +5,13 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { route } from 'nextjs-routes'
 import { create } from '@bufbuild/protobuf'
+import { CreateOrganizationForm } from './CreateOrganization.form'
 import { centyClient } from '@/lib/grpc/client'
 import { CreateOrganizationRequestSchema } from '@/gen/centy_pb'
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import { isDaemonUnimplemented } from '@/lib/daemon-error'
 import { generateSlug } from '@/lib/generate-slug'
-import { CreateOrganizationForm } from './CreateOrganization.form'
 
 // eslint-disable-next-line max-lines-per-function
 export function CreateOrganization() {

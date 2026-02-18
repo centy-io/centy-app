@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { useParams } from 'next/navigation'
-import { useProjectPathToUrl } from '@/components/providers/PathContextProvider'
 import type { ProjectContext } from '../CreateIssue.types'
+import { useProjectPathToUrl } from '@/components/providers/PathContextProvider'
 
 export function useProjectContext(projectPath: string) {
   const params = useParams()

@@ -1,7 +1,7 @@
 'use client'
 
-import { EditorType } from '@/gen/centy_pb'
 import { VscodeIcon, TerminalIcon } from './EditorIcons'
+import { EditorType } from '@/gen/centy_pb'
 
 interface EditorPickerProps {
   selectedEditor: EditorType

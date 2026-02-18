@@ -1,13 +1,13 @@
 'use client'
 
-import { usePathContext } from '@/components/providers/PathContextProvider'
-import { useAppLink } from '@/hooks/useAppLink'
 import { useDocsData } from './useDocsData'
 import { useDocsContextMenu } from './useDocsContextMenu'
 import { useDocsNavigation } from './useDocsNavigation'
 import { DocsListHeader } from './DocsListHeader'
 import { DocsListContent } from './DocsListContent'
 import { DocsListModals } from './DocsListModals'
+import { useAppLink } from '@/hooks/useAppLink'
+import { usePathContext } from '@/components/providers/PathContextProvider'
 
 export function DocsList() {
   const { projectPath, isInitialized } = usePathContext()

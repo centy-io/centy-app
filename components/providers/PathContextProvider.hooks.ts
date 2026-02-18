@@ -2,9 +2,10 @@
 
 import { useState, useContext } from 'react'
 import { createContext } from 'react'
-import { resolveProjectPath } from '@/lib/project-resolver'
 import type { PathContextType } from './PathContextProvider.types'
 import { LAST_PROJECT_STORAGE_KEY } from './PathContextProvider.types'
+import { resolveProjectPath } from '@/lib/project-resolver'
+import { PathContextProviderError } from '@/lib/errors'
 
 export const PathContext = createContext<PathContextType | null>(null)
 
@@ -14,7 +15,7 @@ export const PathContext = createContext<PathContextType | null>(null)
 export function usePathContext() {
   const context = useContext(PathContext)
   if (!context) {
-    throw new Error('usePathContext must be used within a PathContextProvider')
+    throw new PathContextProviderError()
   }
   return context
 }

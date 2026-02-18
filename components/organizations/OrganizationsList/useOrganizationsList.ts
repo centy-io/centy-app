@@ -13,6 +13,8 @@ import {
   type SortingState,
   type ColumnFiltersState,
 } from '@tanstack/react-table'
+import type { ContextMenuState } from './OrganizationsList.types'
+import { getColumns } from './columns'
 import { centyClient } from '@/lib/grpc/client'
 import {
   ListOrganizationsRequestSchema,
@@ -21,8 +23,6 @@ import {
 } from '@/gen/centy_pb'
 import type { ContextMenuItem } from '@/components/shared/ContextMenu'
 import { isDaemonUnimplemented } from '@/lib/daemon-error'
-import type { ContextMenuState } from './OrganizationsList.types'
-import { getColumns } from './columns'
 
 // eslint-disable-next-line max-lines-per-function
 export function useOrganizationsList() {

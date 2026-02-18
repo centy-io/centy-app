@@ -1,5 +1,5 @@
-import type { Issue } from '@/gen/centy_pb'
 import { createMockIssue, createMockIssueMetadata } from './factories'
+import type { Issue } from '@/gen/centy_pb'
 
 /**
  * Factory functions for common test scenarios.
@@ -9,8 +9,8 @@ export const createIssueScenario = {
   empty: (): Issue[] => [],
 
   /** Returns a single issue */
-  single: (overrides: Partial<Issue> = {}): Issue[] => [
-    createMockIssue(overrides),
+  single: (overrides?: Partial<Issue>): Issue[] => [
+    createMockIssue(overrides !== undefined ? overrides : {}),
   ],
 
   /** Returns multiple issues */

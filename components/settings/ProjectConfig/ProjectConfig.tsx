@@ -2,6 +2,9 @@
 
 import { useEffect } from 'react'
 import Link from 'next/link'
+import { useProjectConfigData } from './useProjectConfigData'
+import { useProjectOrg } from './useProjectOrg'
+import { OrgSection } from './OrgSection'
 import { useProject } from '@/components/providers/ProjectProvider'
 import { useOrganization } from '@/components/providers/OrganizationProvider'
 import { ProjectTitleEditor } from '@/components/settings/ProjectTitleEditor'
@@ -9,9 +12,6 @@ import { AgentConfigEditor } from '@/components/settings/AgentConfigEditor'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import { ConfigSections } from '@/components/settings/Settings/ConfigSections'
 import { ManifestSection } from '@/components/settings/Settings/ManifestSection'
-import { useProjectConfigData } from './useProjectConfigData'
-import { useProjectOrg } from './useProjectOrg'
-import { OrgSection } from './OrgSection'
 
 // eslint-disable-next-line max-lines-per-function
 export function ProjectConfig() {

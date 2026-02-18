@@ -1,10 +1,10 @@
 'use client'
 
-import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import '@/styles/components/StatusConfigDialog.css'
 import type { StatusConfigDialogProps } from './StatusConfigDialog.types'
 import { useStatusConfig } from './useStatusConfig'
 import { StatusConfigOptions } from './StatusConfigOptions'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 export function StatusConfigDialog({
   projectPath,

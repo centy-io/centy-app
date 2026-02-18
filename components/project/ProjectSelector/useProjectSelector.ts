@@ -3,15 +3,15 @@
 
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react'
 import { create } from '@bufbuild/protobuf'
-import { centyClient } from '@/lib/grpc/client'
-import { ListProjectsRequestSchema, type ProjectInfo } from '@/gen/centy_pb'
-import { useArchivedProjects } from '@/components/providers/ProjectProvider'
-import { useOrganization } from '@/components/providers/OrganizationProvider'
 import {
   COLLAPSED_ORGS_KEY,
   type GroupedProjects,
 } from './ProjectSelector.types'
 import { useProjectActions } from './useProjectActions'
+import { centyClient } from '@/lib/grpc/client'
+import { ListProjectsRequestSchema, type ProjectInfo } from '@/gen/centy_pb'
+import { useArchivedProjects } from '@/components/providers/ProjectProvider'
+import { useOrganization } from '@/components/providers/OrganizationProvider'
 
 // eslint-disable-next-line max-lines-per-function
 export function useProjectSelector() {

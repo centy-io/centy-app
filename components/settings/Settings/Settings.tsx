@@ -1,15 +1,15 @@
 'use client'
 
 import Link from 'next/link'
+import { useSettingsData } from './useSettingsData'
+import { ConfigSections } from './ConfigSections'
+import { ManifestSection } from './ManifestSection'
 import { useProject } from '@/components/providers/ProjectProvider'
 import { DaemonSettings } from '@/components/settings/DaemonSettings'
 import { ProjectTitleEditor } from '@/components/settings/ProjectTitleEditor'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import { DaemonInfoSection } from '@/components/settings/GeneralSettings/DaemonInfoSection'
 import { useDaemonActions } from '@/components/settings/GeneralSettings/useDaemonActions'
-import { useSettingsData } from './useSettingsData'
-import { ConfigSections } from './ConfigSections'
-import { ManifestSection } from './ManifestSection'
 
 // eslint-disable-next-line max-lines-per-function
 export function Settings() {

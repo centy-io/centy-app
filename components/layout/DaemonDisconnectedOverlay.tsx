@@ -3,9 +3,9 @@
 
 import { useState } from 'react'
 import { useDaemonStatus } from '@/components/providers/DaemonStatusProvider'
+import { DAEMON_INSTALL_URL } from '@/lib/constants/urls'
 
-const INSTALL_COMMAND =
-  'curl -fsSL https://github.com/centy-io/installer/releases/latest/download/install.sh | sh'
+const INSTALL_COMMAND = `curl -fsSL ${DAEMON_INSTALL_URL} | sh`
 
 function DisconnectedIcon() {
   return (

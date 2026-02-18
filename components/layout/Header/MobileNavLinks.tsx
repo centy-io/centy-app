@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import type { NavLinks } from './types'
+import { DOCS_URL } from '@/lib/constants/urls'
 
 interface MobileNavLinksProps {
   navLinks: NavLinks | null
@@ -67,7 +68,7 @@ export function MobileNavLinks({
           Settings
         </Link>
         <a
-          href="https://docs.centy.io"
+          href={DOCS_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="external-link"

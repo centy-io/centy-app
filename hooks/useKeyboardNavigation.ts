@@ -76,6 +76,7 @@ export function useKeyboardNavigation() {
           currentIndex < PROJECT_SCOPED_PAGES.length - 1 ? currentIndex + 1 : 0
       }
 
+      // eslint-disable-next-line security/detect-object-injection
       const newPage = PROJECT_SCOPED_PAGES[newIndex]
       router.push(
         route({

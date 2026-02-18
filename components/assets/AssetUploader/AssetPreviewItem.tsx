@@ -1,7 +1,7 @@
 'use client'
 
-import type { Asset } from '@/gen/centy_pb'
 import { useAssetPreview } from './useAssetPreview'
+import type { Asset } from '@/gen/centy_pb'
 
 interface AssetPreviewItemProps {
   asset: Asset

@@ -2,10 +2,10 @@
 
 import { useCallback, useEffect } from 'react'
 import { create } from '@bufbuild/protobuf'
-import { centyClient } from '@/lib/grpc/client'
-import { DeleteAssetRequestSchema, type Asset } from '@/gen/centy_pb'
 import type { PendingAsset } from './types'
 import type { useAssetUploader } from './useAssetUploader'
+import { centyClient } from '@/lib/grpc/client'
+import { DeleteAssetRequestSchema, type Asset } from '@/gen/centy_pb'
 
 type UploaderState = ReturnType<typeof useAssetUploader>
 

@@ -1,10 +1,10 @@
 'use client'
 
 import Link from 'next/link'
-import { ContextMenu } from '@/components/shared/ContextMenu'
-import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import { useOrganizationsList } from './useOrganizationsList'
 import { OrganizationsTable } from './OrganizationsTable'
+import { ContextMenu } from '@/components/shared/ContextMenu'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 // eslint-disable-next-line max-lines-per-function
 export function OrganizationsList() {

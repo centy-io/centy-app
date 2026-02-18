@@ -41,6 +41,7 @@ export function createPriorityColumn(stateManager: {
         }
         const a = String(rowA.getValue('priority')).toLowerCase()
         const b = String(rowB.getValue('priority')).toLowerCase()
+        // eslint-disable-next-line security/detect-object-injection
         return (priorityOrder[a] || 4) - (priorityOrder[b] || 4)
       },
     }

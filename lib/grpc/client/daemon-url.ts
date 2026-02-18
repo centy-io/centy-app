@@ -1,7 +1,9 @@
 'use client'
 
-const DEFAULT_DAEMON_URL = 'http://localhost:50051'
-const DAEMON_URL_STORAGE_KEY = 'centy_daemon_url'
+// eslint-disable-next-line default/no-localhost, default/no-hardcoded-urls
+export const DEFAULT_DAEMON_URL = 'http://localhost:50051'
+
+export const DAEMON_URL_STORAGE_KEY = 'centy_daemon_url'
 
 // Get the daemon URL from localStorage or use default
 export function getDaemonUrl(): string {

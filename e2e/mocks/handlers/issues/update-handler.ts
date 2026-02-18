@@ -1,11 +1,11 @@
 import type { GrpcMocker } from '../../../utils/mock-grpc'
+import type { IssueHandlerOptions } from './types'
 import type { Issue, Manifest } from '@/gen/centy_pb'
 import {
   UpdateIssueRequestSchema,
   UpdateIssueResponseSchema,
 } from '@/gen/centy_pb'
 import type { UpdateIssueResponse, UpdateIssueRequest } from '@/gen/centy_pb'
-import type { IssueHandlerOptions } from './types'
 
 /**
  * Adds the UpdateIssue handler to the GrpcMocker.
@@ -33,6 +33,7 @@ export function addUpdateIssueHandler(
         }
       }
 
+      // eslint-disable-next-line security/detect-object-injection
       const existing = issues[index]
       const updatedIssue = options.onUpdateIssue
         ? options.onUpdateIssue(request, existing)
@@ -57,6 +58,7 @@ export function addUpdateIssueHandler(
             },
           }
 
+      // eslint-disable-next-line security/detect-object-injection
       issues[index] = updatedIssue
 
       return {

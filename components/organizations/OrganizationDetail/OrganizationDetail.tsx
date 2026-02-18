@@ -1,11 +1,11 @@
 'use client'
 
 import Link from 'next/link'
-import { useSaveShortcut } from '@/hooks/useSaveShortcut'
-import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import type { OrganizationDetailProps } from './OrganizationDetail.types'
 import { useOrganizationDetail } from './useOrganizationDetail'
 import { OrganizationDetailView } from './OrganizationDetailView'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
+import { useSaveShortcut } from '@/hooks/useSaveShortcut'
 
 export function OrganizationDetail({ orgSlug }: OrganizationDetailProps) {
   const state = useOrganizationDetail(orgSlug)

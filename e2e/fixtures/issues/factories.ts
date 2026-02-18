@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import type { Issue, IssueMetadata } from '@/gen/centy_pb'
 
 /**
@@ -8,9 +9,12 @@ const FIXED_DATE = '2024-01-15T10:30:00.000Z'
 /**
  * Creates a mock issue with default values that can be overridden.
  */
-export function createMockIssue(overrides: Partial<Issue> = {}): Issue {
+export function createMockIssue(overrides?: Partial<Issue>): Issue {
+  const resolvedOverrides = overrides !== undefined ? overrides : {}
   const displayNumber =
-    overrides.displayNumber !== undefined ? overrides.displayNumber : 1
+    resolvedOverrides.displayNumber !== undefined
+      ? resolvedOverrides.displayNumber
+      : 1
   const now = FIXED_DATE
 
   const defaultMetadata: IssueMetadata = {
@@ -30,23 +34,26 @@ export function createMockIssue(overrides: Partial<Issue> = {}): Issue {
   }
 
   return {
-    id: overrides.id !== undefined ? overrides.id : `issue-${displayNumber}`,
+    id:
+      resolvedOverrides.id !== undefined
+        ? resolvedOverrides.id
+        : `issue-${displayNumber}`,
     displayNumber,
     issueNumber:
-      overrides.issueNumber !== undefined
-        ? overrides.issueNumber
+      resolvedOverrides.issueNumber !== undefined
+        ? resolvedOverrides.issueNumber
         : `uuid-${displayNumber}`,
     title:
-      overrides.title !== undefined
-        ? overrides.title
+      resolvedOverrides.title !== undefined
+        ? resolvedOverrides.title
         : `Test Issue ${displayNumber}`,
     description:
-      overrides.description !== undefined
-        ? overrides.description
+      resolvedOverrides.description !== undefined
+        ? resolvedOverrides.description
         : `Description for issue ${displayNumber}`,
     metadata: {
       ...defaultMetadata,
-      ...overrides.metadata,
+      ...resolvedOverrides.metadata,
     },
     $typeName: 'centy.v1.Issue',
   }
@@ -56,30 +63,60 @@ export function createMockIssue(overrides: Partial<Issue> = {}): Issue {
  * Creates a mock issue metadata object.
  */
 export function createMockIssueMetadata(
-  overrides: Partial<IssueMetadata> = {}
+  overrides?: Partial<IssueMetadata>
 ): IssueMetadata {
+  const resolvedMetaOverrides = overrides !== undefined ? overrides : {}
   const now = FIXED_DATE
 
   return {
     displayNumber:
-      overrides.displayNumber !== undefined ? overrides.displayNumber : 1,
-    status: overrides.status !== undefined ? overrides.status : 'open',
-    priority: overrides.priority !== undefined ? overrides.priority : 2,
+      resolvedMetaOverrides.displayNumber !== undefined
+        ? resolvedMetaOverrides.displayNumber
+        : 1,
+    status:
+      resolvedMetaOverrides.status !== undefined
+        ? resolvedMetaOverrides.status
+        : 'open',
+    priority:
+      resolvedMetaOverrides.priority !== undefined
+        ? resolvedMetaOverrides.priority
+        : 2,
     priorityLabel:
-      overrides.priorityLabel !== undefined
-        ? overrides.priorityLabel
+      resolvedMetaOverrides.priorityLabel !== undefined
+        ? resolvedMetaOverrides.priorityLabel
         : 'medium',
-    createdAt: overrides.createdAt !== undefined ? overrides.createdAt : now,
-    updatedAt: overrides.updatedAt !== undefined ? overrides.updatedAt : now,
+    createdAt:
+      resolvedMetaOverrides.createdAt !== undefined
+        ? resolvedMetaOverrides.createdAt
+        : now,
+    updatedAt:
+      resolvedMetaOverrides.updatedAt !== undefined
+        ? resolvedMetaOverrides.updatedAt
+        : now,
     customFields:
-      overrides.customFields !== undefined ? overrides.customFields : {},
-    draft: overrides.draft !== undefined ? overrides.draft : false,
-    deletedAt: overrides.deletedAt !== undefined ? overrides.deletedAt : '',
+      resolvedMetaOverrides.customFields !== undefined
+        ? resolvedMetaOverrides.customFields
+        : {},
+    draft:
+      resolvedMetaOverrides.draft !== undefined
+        ? resolvedMetaOverrides.draft
+        : false,
+    deletedAt:
+      resolvedMetaOverrides.deletedAt !== undefined
+        ? resolvedMetaOverrides.deletedAt
+        : '',
     isOrgIssue:
-      overrides.isOrgIssue !== undefined ? overrides.isOrgIssue : false,
-    orgSlug: overrides.orgSlug !== undefined ? overrides.orgSlug : '',
+      resolvedMetaOverrides.isOrgIssue !== undefined
+        ? resolvedMetaOverrides.isOrgIssue
+        : false,
+    orgSlug:
+      resolvedMetaOverrides.orgSlug !== undefined
+        ? resolvedMetaOverrides.orgSlug
+        : '',
     orgDisplayNumber:
-      overrides.orgDisplayNumber !== undefined ? overrides.orgDisplayNumber : 0,
+      resolvedMetaOverrides.orgDisplayNumber !== undefined
+        ? resolvedMetaOverrides.orgDisplayNumber
+        : 0,
     $typeName: 'centy.v1.IssueMetadata',
   }
 }

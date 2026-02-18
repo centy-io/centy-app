@@ -3,12 +3,12 @@
 import type { ReactElement } from 'react'
 import type { HeaderGroup } from '@tanstack/react-table'
 import { flexRender } from '@tanstack/react-table'
+import { PRIORITY_OPTIONS } from './IssuesList.types'
 import {
   MultiSelect,
   type MultiSelectOption,
 } from '@/components/shared/MultiSelect'
 import type { Issue } from '@/gen/centy_pb'
-import { PRIORITY_OPTIONS } from './IssuesList.types'
 
 interface IssuesTableHeaderProps {
   headerGroups: HeaderGroup<Issue>[]

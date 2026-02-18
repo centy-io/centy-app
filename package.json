@@ -78,6 +78,7 @@
     "cspell": "^9.2.1",
     "eslint": "^9.39.1",
     "eslint-config-agent": "2.0.0",
+    "eslint-import-resolver-typescript": "^4.4.4",
     "husky": "^9.1.7",
     "jsdom": "^26.1.0",
     "knip": "^5.66.2",

@@ -7,14 +7,14 @@ import {
   getSortedRowModel,
   getFilteredRowModel,
 } from '@tanstack/react-table'
-import { useAppLink } from '@/hooks/useAppLink'
-import { useStateManager } from '@/lib/state'
-import type { MultiSelectOption } from '@/components/shared/MultiSelect'
-import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import { useAggregateIssues } from './hooks/useAggregateIssues'
 import { createAggregateColumns } from './columns'
 import { createPriorityColumn, createCreatedAtColumn } from './dateColumns'
 import { AggregateTable } from './AggregateTable'
+import { useAppLink } from '@/hooks/useAppLink'
+import { useStateManager } from '@/lib/state'
+import type { MultiSelectOption } from '@/components/shared/MultiSelect'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 export function AggregateIssuesList() {
   const stateManager = useStateManager()

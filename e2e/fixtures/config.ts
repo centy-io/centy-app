@@ -1,9 +1,9 @@
-import type { Config, ProjectInfo, Manifest } from '@/gen/centy_pb'
 import {
   createMockConfig,
   createMockProjectInfo,
   createMockManifest,
 } from './config-factories'
+import type { Config, ProjectInfo, Manifest } from '@/gen/centy_pb'
 
 export {
   createMockConfig,
@@ -34,8 +34,8 @@ export const createProjectScenario = {
   empty: (): ProjectInfo[] => [],
 
   /** Returns a single project */
-  single: (overrides: Partial<ProjectInfo> = {}): ProjectInfo[] => [
-    createMockProjectInfo(overrides),
+  single: (overrides?: Partial<ProjectInfo>): ProjectInfo[] => [
+    createMockProjectInfo(overrides !== undefined ? overrides : {}),
   ],
 
   /** Returns multiple projects */

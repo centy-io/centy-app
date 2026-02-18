@@ -7,10 +7,8 @@ interface UseSaveShortcutOptions {
   enabled?: boolean
 }
 
-export function useSaveShortcut({
-  onSave,
-  enabled = true,
-}: UseSaveShortcutOptions) {
+export function useSaveShortcut({ onSave, enabled }: UseSaveShortcutOptions) {
+  const resolvedEnabled = enabled !== undefined ? enabled : true
   const onSaveRef = useRef(onSave)
 
   useEffect(() => {
@@ -31,12 +29,12 @@ export function useSaveShortcut({
       // Always prevent browser save dialog
       event.preventDefault()
 
-      if (enabled) {
+      if (resolvedEnabled) {
         onSaveRef.current()
       }
     }
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [enabled])
+  }, [resolvedEnabled])
 }

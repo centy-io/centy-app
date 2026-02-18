@@ -3,10 +3,10 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { route } from 'nextjs-routes'
-import type { ProjectInfo } from '@/gen/centy_pb'
-import { UNGROUPED_ORG_MARKER } from '@/lib/project-resolver'
 import { useProjectsData } from './useProjectsData'
 import { OrgGroup } from './OrgGroup'
+import type { ProjectInfo } from '@/gen/centy_pb'
+import { UNGROUPED_ORG_MARKER } from '@/lib/project-resolver'
 
 // eslint-disable-next-line max-lines-per-function
 export function ProjectsGrid() {

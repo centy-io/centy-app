@@ -1,7 +1,7 @@
 'use client'
 
-import type { ProjectInfo } from '@/gen/centy_pb'
 import { ProjectItem } from './ProjectItem'
+import type { ProjectInfo } from '@/gen/centy_pb'
 
 interface ProjectFlatListProps {
   projects: ProjectInfo[]

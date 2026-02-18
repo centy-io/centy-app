@@ -1,6 +1,6 @@
 import { createColumnHelper } from '@tanstack/react-table'
-import type { Issue } from '@/gen/centy_pb'
 import { getPriorityClass } from './IssuesList.types'
+import type { Issue } from '@/gen/centy_pb'
 
 const columnHelper = createColumnHelper<Issue>()
 
@@ -40,6 +40,7 @@ export function createPriorityColumn() {
       sortingFn: (rowA, rowB) => {
         const a = String(rowA.getValue('priority')).toLowerCase()
         const b = String(rowB.getValue('priority')).toLowerCase()
+        // eslint-disable-next-line security/detect-object-injection
         return (PRIORITY_ORDER[a] || 4) - (PRIORITY_ORDER[b] || 4)
       },
     }

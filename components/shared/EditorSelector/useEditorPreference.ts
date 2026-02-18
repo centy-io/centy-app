@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
+import { EDITOR_PREFERENCE_KEY } from './EditorSelector.types'
 import { EditorType, type EditorInfo } from '@/gen/centy_pb'
 import { useDaemonStatus } from '@/components/providers/DaemonStatusProvider'
-import { EDITOR_PREFERENCE_KEY } from './EditorSelector.types'
 
 // eslint-disable-next-line max-lines-per-function
 export function useEditorPreference() {

@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { useProject } from '@/components/providers/ProjectProvider'
-import { useAppLink } from '@/hooks/useAppLink'
 import { useDocFetch } from './useDocFetch'
 import { useDocSave } from './useDocSave'
 import { useDocDelete } from './useDocDelete'
 import { useDocNavigation } from './useDocNavigation'
+import { useAppLink } from '@/hooks/useAppLink'
+import { useProject } from '@/components/providers/ProjectProvider'
 
 export function useDocDetail(slug: string) {
   const { projectPath } = useProject()

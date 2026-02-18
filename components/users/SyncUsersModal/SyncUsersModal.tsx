@@ -2,11 +2,11 @@
 'use client'
 
 import { useCallback, useEffect } from 'react'
-import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
-import { isDaemonUnimplemented } from '@/lib/daemon-error'
 import { useSyncUsers } from './useSyncUsers'
 import { SyncPreview } from './SyncPreview'
 import { SyncResults } from './SyncResults'
+import { isDaemonUnimplemented } from '@/lib/daemon-error'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 interface SyncUsersModalProps {
   onClose: () => void

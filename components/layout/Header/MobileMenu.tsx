@@ -1,11 +1,11 @@
 'use client'
 
+import type { NavLinks } from './types'
+import { MobileNavLinks } from './MobileNavLinks'
 import { ThemeToggle } from '@/components/shared/ThemeToggle'
 import { DaemonStatusIndicator } from '@/components/shared/DaemonStatusIndicator'
 import { OrgSwitcher } from '@/components/organizations/OrgSwitcher'
 import { ProjectSelector } from '@/components/project/ProjectSelector'
-import type { NavLinks } from './types'
-import { MobileNavLinks } from './MobileNavLinks'
 
 interface MobileMenuProps {
   mobileMenuOpen: boolean

@@ -8,6 +8,7 @@ import {
   useEffect,
   type ReactNode,
 } from 'react'
+import { ProjectProviderError } from '@/lib/errors'
 
 interface ProjectContextType {
   projectPath: string
@@ -62,7 +63,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
 export function useProject() {
   const context = useContext(ProjectContext)
   if (!context) {
-    throw new Error('useProject must be used within a ProjectProvider')
+    throw new ProjectProviderError()
   }
   return context
 }

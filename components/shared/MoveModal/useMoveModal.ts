@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { create } from '@bufbuild/protobuf'
-import { centyClient } from '@/lib/grpc/client'
-import { ListProjectsRequestSchema, type ProjectInfo } from '@/gen/centy_pb'
 import type { MoveModalProps } from './MoveModal.types'
 import { useMoveAction } from './useMoveAction'
+import { centyClient } from '@/lib/grpc/client'
+import { ListProjectsRequestSchema, type ProjectInfo } from '@/gen/centy_pb'
 
 // eslint-disable-next-line max-lines-per-function
 export function useMoveModal({

@@ -2,15 +2,15 @@
 
 import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { type User } from '@/gen/centy_pb'
-import {
-  ContextMenu,
-  type ContextMenuItem,
-} from '@/components/shared/ContextMenu'
 import { SyncUsersModal } from '../SyncUsersModal'
 import { useUsersData } from './useUsersData'
 import { useUserRoutes } from './useProjectRoutes'
 import { UsersListContent } from './UsersListContent'
+import {
+  ContextMenu,
+  type ContextMenuItem,
+} from '@/components/shared/ContextMenu'
+import { type User } from '@/gen/centy_pb'
 
 // eslint-disable-next-line max-lines-per-function
 export function UsersList() {

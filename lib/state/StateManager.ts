@@ -27,8 +27,8 @@ export class StateManager {
     StateManager.DEFAULT_STATE = 'open'
   }
 
-  constructor(config: Config | null = null) {
-    this.config = config
+  constructor(config?: Config | null) {
+    this.config = config !== undefined ? config : null
   }
 
   /**
@@ -63,9 +63,11 @@ export class StateManager {
   getStateColor(state: string): string {
     const configColor =
       this.config && this.config.stateColors
-        ? this.config.stateColors[state]
+        ? // eslint-disable-next-line security/detect-object-injection
+          this.config.stateColors[state]
         : undefined
     if (configColor) return configColor
+    // eslint-disable-next-line security/detect-object-injection
     return StateManager.DEFAULT_COLORS[state] || '#888888'
   }
 
@@ -100,6 +102,7 @@ export class StateManager {
     if (
       this.config &&
       this.config.stateColors &&
+      // eslint-disable-next-line security/detect-object-injection
       this.config.stateColors[state]
     ) {
       return 'status-custom'

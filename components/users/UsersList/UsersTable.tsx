@@ -11,9 +11,9 @@ import {
 } from '@tanstack/react-table'
 import { useState, useMemo } from 'react'
 import { type RouteLiteral } from 'nextjs-routes'
+import { createUserColumns } from './columns'
 import { type User } from '@/gen/centy_pb'
 import { SortableTableHeader } from '@/components/shared/SortableTableHeader'
-import { createUserColumns } from './columns'
 
 interface UsersTableProps {
   users: User[]

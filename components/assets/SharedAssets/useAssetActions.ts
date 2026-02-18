@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useCallback, useEffect } from 'react'
-import type { Asset } from '@/gen/centy_pb'
 import { deleteSharedAsset, loadAssetPreview } from './sharedAssetsApi'
+import type { Asset } from '@/gen/centy_pb'
 
 interface PreviewAsset {
   asset: Asset

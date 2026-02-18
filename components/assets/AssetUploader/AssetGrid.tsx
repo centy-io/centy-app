@@ -1,9 +1,9 @@
 'use client'
 
-import type { Asset } from '@/gen/centy_pb'
 import type { PendingAsset } from './types'
 import { AssetPreviewItem } from './AssetPreviewItem'
 import { PendingAssetPreviewItem } from './PendingAssetPreviewItem'
+import type { Asset } from '@/gen/centy_pb'
 
 interface AssetGridProps {
   assets: Asset[]

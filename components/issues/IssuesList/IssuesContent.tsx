@@ -4,10 +4,10 @@ import type { ReactElement } from 'react'
 import Link from 'next/link'
 import type { Table as TanstackTable } from '@tanstack/react-table'
 import type { RouteLiteral } from 'nextjs-routes'
+import { IssuesTable } from './IssuesTable'
 import type { Issue } from '@/gen/centy_pb'
 import type { MultiSelectOption } from '@/components/shared/MultiSelect'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
-import { IssuesTable } from './IssuesTable'
 
 interface IssuesContentProps {
   projectPath: string

@@ -2,17 +2,18 @@
 
 import { type ReactNode } from 'react'
 import { AddLinkModal } from '../AddLinkModal/index'
-import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import type { LinkSectionProps } from './LinkSection.types'
 import { useLinkSection } from './useLinkSection'
 import { groupLinksByType } from './linkHelpers'
 import { LinkGroupList } from './LinkGroupList'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 export function LinkSection({
   entityId,
   entityType,
-  editable = true,
+  editable,
 }: LinkSectionProps): ReactNode {
+  const resolvedEditable = editable !== undefined ? editable : true
   const state = useLinkSection(entityId, entityType)
   const groupedLinks = groupLinksByType(state.links)
 
@@ -29,7 +30,7 @@ export function LinkSection({
     <div className="link-section">
       <div className="link-section-header">
         <h3>Links</h3>
-        {editable && (
+        {resolvedEditable && (
           <button
             className="link-add-btn"
             onClick={() => state.setShowAddModal(true)}
@@ -52,7 +53,7 @@ export function LinkSection({
       ) : (
         <LinkGroupList
           groupedLinks={groupedLinks}
-          editable={editable}
+          editable={resolvedEditable}
           deletingLinkId={state.deletingLinkId}
           buildLinkRoute={state.buildLinkRoute}
           onDeleteLink={state.handleDeleteLink}

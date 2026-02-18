@@ -3,11 +3,11 @@
 import { useState, useCallback, useEffect } from 'react'
 import { type RouteLiteral } from 'nextjs-routes'
 import { create } from '@bufbuild/protobuf'
+import { useUserMutations } from './useUserMutations'
 import { centyClient } from '@/lib/grpc/client'
 import { GetUserRequestSchema, type User } from '@/gen/centy_pb'
 import { useProject } from '@/components/providers/ProjectProvider'
 import { isDaemonUnimplemented } from '@/lib/daemon-error'
-import { useUserMutations } from './useUserMutations'
 
 function formatError(err: unknown): string {
   const msg = err instanceof Error ? err.message : 'Failed to connect to daemon'

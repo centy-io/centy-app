@@ -1,13 +1,13 @@
 import { useState, useCallback, useEffect } from 'react'
 import { create } from '@bufbuild/protobuf'
+import type { EntityItem } from './AddLinkModal.types'
+import { filterAndMapIssues, filterAndMapDocs } from './entityFilters'
 import { centyClient } from '@/lib/grpc/client'
 import {
   ListIssuesRequestSchema,
   ListDocsRequestSchema,
   type Link as LinkType,
 } from '@/gen/centy_pb'
-import type { EntityItem } from './AddLinkModal.types'
-import { filterAndMapIssues, filterAndMapDocs } from './entityFilters'
 
 export function useEntitySearch(
   projectPath: string,

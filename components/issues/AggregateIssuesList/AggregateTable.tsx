@@ -3,9 +3,9 @@
 import type { ReactElement } from 'react'
 import type { Table as TanstackTable } from '@tanstack/react-table'
 import { flexRender } from '@tanstack/react-table'
-import type { MultiSelectOption } from '@/components/shared/MultiSelect'
 import type { AggregateIssue } from './AggregateIssuesList.types'
 import { TableHeader } from './TableHeader'
+import type { MultiSelectOption } from '@/components/shared/MultiSelect'
 
 interface AggregateTableProps {
   table: TanstackTable<AggregateIssue>

@@ -1,9 +1,10 @@
 'use client'
 
 import { createContext, useContext, type ReactNode } from 'react'
-import { DEMO_PROJECT_PATH } from '@/lib/grpc/demo-data'
 import type { DaemonStatusContextType } from './DaemonStatusProvider.types'
 import { useDaemonStatusState } from './DaemonStatusProvider.hooks'
+import { DEMO_PROJECT_PATH } from '@/lib/grpc/demo-data'
+import { DaemonStatusProviderError } from '@/lib/errors'
 
 const DaemonStatusContext = createContext<DaemonStatusContextType | null>(null)
 
@@ -39,9 +40,7 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
 export function useDaemonStatus() {
   const context = useContext(DaemonStatusContext)
   if (!context) {
-    throw new Error(
-      'useDaemonStatus must be used within a DaemonStatusProvider'
-    )
+    throw new DaemonStatusProviderError()
   }
   return context
 }

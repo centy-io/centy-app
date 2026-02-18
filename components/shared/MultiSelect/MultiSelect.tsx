@@ -8,9 +8,12 @@ export function MultiSelect({
   options,
   value,
   onChange,
-  placeholder = 'Select...',
-  className = '',
+  placeholder,
+  className,
 }: MultiSelectProps) {
+  const resolvedPlaceholder =
+    placeholder !== undefined ? placeholder : 'Select...'
+  const resolvedClassName = className !== undefined ? className : ''
   const {
     isOpen,
     refs,
@@ -24,14 +27,16 @@ export function MultiSelect({
   } = useMultiSelect(options, value, onChange)
 
   return (
-    <div className={`multi-select ${className}`}>
+    <div className={`multi-select ${resolvedClassName}`}>
       <button
         ref={refs.setReference}
         type="button"
         className={`multi-select-trigger ${isOpen ? 'open' : ''} ${value.length > 0 ? 'has-value' : ''}`}
         {...getReferenceProps()}
       >
-        <span className="multi-select-text">{getDisplayText(placeholder)}</span>
+        <span className="multi-select-text">
+          {getDisplayText(resolvedPlaceholder)}
+        </span>
         <span className="multi-select-arrow">
           {isOpen ? '\u25B2' : '\u25BC'}
         </span>

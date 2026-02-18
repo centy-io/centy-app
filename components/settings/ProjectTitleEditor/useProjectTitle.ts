@@ -2,9 +2,9 @@
 
 import { useState, useCallback, useEffect } from 'react'
 import { create } from '@bufbuild/protobuf'
+import { saveTitle, clearTitle, type TitleActionResult } from './titleActions'
 import { centyClient } from '@/lib/grpc/client'
 import { ListProjectsRequestSchema, type ProjectInfo } from '@/gen/centy_pb'
-import { saveTitle, clearTitle, type TitleActionResult } from './titleActions'
 
 export type TitleScope = 'user' | 'project'
 

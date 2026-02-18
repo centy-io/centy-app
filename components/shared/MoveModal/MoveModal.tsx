@@ -1,9 +1,9 @@
 'use client'
 
-import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import '@/styles/components/MoveModal.css'
 import type { MoveModalProps } from './MoveModal.types'
 import { useMoveModal } from './useMoveModal'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 // eslint-disable-next-line max-lines-per-function
 export function MoveModal(props: MoveModalProps) {

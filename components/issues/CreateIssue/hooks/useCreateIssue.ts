@@ -1,5 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { create } from '@bufbuild/protobuf'
+import { useProjectContext } from './useProjectContext'
+import { useCreateIssueSubmit } from './useCreateIssueSubmit'
 import { centyClient } from '@/lib/grpc/client'
 import { IsInitializedRequestSchema } from '@/gen/centy_pb'
 import { useProject } from '@/components/providers/ProjectProvider'
@@ -9,8 +11,6 @@ import type {
   AssetUploaderHandle,
   PendingAsset,
 } from '@/components/assets/AssetUploader'
-import { useProjectContext } from './useProjectContext'
-import { useCreateIssueSubmit } from './useCreateIssueSubmit'
 
 // eslint-disable-next-line max-lines-per-function
 export function useCreateIssue() {

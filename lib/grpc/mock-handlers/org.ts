@@ -7,6 +7,7 @@ import type {
   GetOrganizationRequest,
   Organization,
 } from '@/gen/centy_pb'
+import { OrganizationNotFoundError } from '@/lib/errors'
 
 export async function listOrganizations(
   _request: ListOrganizationsRequest
@@ -26,5 +27,5 @@ export async function getOrganization(
   if (request.slug === DEMO_ORGANIZATION.slug) {
     return DEMO_ORGANIZATION
   }
-  throw new Error(`Organization ${request.slug} not found`)
+  throw new OrganizationNotFoundError(request.slug)
 }

@@ -1,24 +1,26 @@
 'use client'
 
-import { EditorType } from '@/gen/centy_pb'
 import '@/styles/components/EditorSelector.css'
 import type { EditorSelectorProps } from './EditorSelector.types'
 import { useEditorSelector } from './useEditorSelector'
 import { VscodeIcon, TerminalIcon } from './EditorIcons'
 import { EditorDropdown } from './EditorDropdown'
+import { EditorType } from '@/gen/centy_pb'
 
 // eslint-disable-next-line max-lines-per-function
 export function EditorSelector({
   onOpenInVscode,
   onOpenInTerminal,
-  disabled = false,
-  loading = false,
+  disabled,
+  loading,
 }: EditorSelectorProps) {
+  const resolvedDisabled = disabled !== undefined ? disabled : false
+  const resolvedLoading = loading !== undefined ? loading : false
   const state = useEditorSelector(
     onOpenInVscode,
     onOpenInTerminal,
-    disabled,
-    loading
+    resolvedDisabled,
+    resolvedLoading
   )
 
   if (!state.hasAnyAvailable && state.editors.length > 0) {
@@ -42,7 +44,11 @@ export function EditorSelector({
         <button
           className={`editor-primary-btn ${state.preferredEditor === EditorType.TERMINAL ? 'terminal' : 'vscode'}`}
           onClick={state.handlePrimaryClick}
-          disabled={disabled || loading || !state.preferredEditorAvailable}
+          disabled={
+            resolvedDisabled ||
+            resolvedLoading ||
+            !state.preferredEditorAvailable
+          }
           title={
             state.preferredEditorAvailable
               ? state.preferredEditorInfo
@@ -58,12 +64,14 @@ export function EditorSelector({
               <VscodeIcon />
             )}
           </span>
-          {loading ? 'Opening...' : `Open in ${state.preferredEditorName}`}
+          {resolvedLoading
+            ? 'Opening...'
+            : `Open in ${state.preferredEditorName}`}
         </button>
         <button
           className={`editor-dropdown-btn ${state.preferredEditor === EditorType.TERMINAL ? 'terminal' : 'vscode'}`}
           onClick={() => state.setShowDropdown(!state.showDropdown)}
-          disabled={disabled || loading}
+          disabled={resolvedDisabled || resolvedLoading}
           aria-label="Select editor"
           aria-expanded={state.showDropdown}
           aria-haspopup="listbox"

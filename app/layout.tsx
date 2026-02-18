@@ -12,6 +12,7 @@ import '@fontsource/noto-sans/500.css'
 import '@fontsource/noto-sans/600.css'
 import '@fontsource/noto-sans/700.css'
 import '@/styles/globals.css'
+import { GOOGLE_ANALYTICS_URL } from '@/lib/constants/urls'
 
 export const metadata: Metadata = {
   title: 'Centy',
@@ -30,10 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className="root-html">
       <head className="root-head">
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-ZV5SD70Z2D"
-          strategy="afterInteractive"
-        />
+        <Script src={GOOGLE_ANALYTICS_URL} strategy="afterInteractive" />
         <Script id="google-analytics" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];

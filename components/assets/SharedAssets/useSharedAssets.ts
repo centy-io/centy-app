@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useCallback, useEffect } from 'react'
-import type { Asset } from '@/gen/centy_pb'
 import { checkProjectInitialized, fetchSharedAssets } from './sharedAssetsApi'
 import { useAssetActions } from './useAssetActions'
+import type { Asset } from '@/gen/centy_pb'
 
 export function useSharedAssets(
   projectPath: string,

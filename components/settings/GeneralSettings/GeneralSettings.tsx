@@ -1,10 +1,10 @@
 'use client'
 
+import { useDaemonActions } from './useDaemonActions'
+import { DaemonInfoSection } from './DaemonInfoSection'
 import { DaemonSettings } from '@/components/settings/DaemonSettings'
 import { AgentConfigEditor } from '@/components/settings/AgentConfigEditor'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
-import { useDaemonActions } from './useDaemonActions'
-import { DaemonInfoSection } from './DaemonInfoSection'
 
 const { NEXT_PUBLIC_COMMIT_SHA } = process.env
 

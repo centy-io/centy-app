@@ -1,11 +1,11 @@
 'use client'
 
-import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import '@/styles/components/StandaloneWorkspaceModal.css'
 import type { StandaloneWorkspaceModalProps } from './StandaloneWorkspaceModal.types'
 import { TTL_OPTIONS } from './StandaloneWorkspaceModal.types'
 import { useStandaloneWorkspace } from './useStandaloneWorkspace'
 import { EditorPicker } from './EditorPicker'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 // eslint-disable-next-line max-lines-per-function
 export function StandaloneWorkspaceModal(props: StandaloneWorkspaceModalProps) {

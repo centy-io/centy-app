@@ -1,5 +1,5 @@
-import type { Issue, Doc, Link as LinkType } from '@/gen/centy_pb'
 import type { EntityItem } from './AddLinkModal.types'
+import type { Issue, Doc, Link as LinkType } from '@/gen/centy_pb'
 
 export function filterAndMapIssues(
   issues: Issue[],

@@ -19,9 +19,13 @@ export type { IssueHandlerOptions } from './types'
  */
 export function addIssueHandlers(
   mocker: GrpcMocker,
-  options: IssueHandlerOptions = {}
+  options?: IssueHandlerOptions
 ): GrpcMocker {
-  const issues = options.issues !== undefined ? options.issues : [...mockIssues]
+  const resolvedOptions = options !== undefined ? options : {}
+  const issues =
+    resolvedOptions.issues !== undefined
+      ? resolvedOptions.issues
+      : [...mockIssues]
   let nextDisplayNumber = issues.length + 1
   const manifest = mockManifest
 
@@ -33,11 +37,11 @@ export function addIssueHandlers(
     mocker,
     issues,
     manifest,
-    options,
+    resolvedOptions,
     () => nextDisplayNumber++
   )
-  addUpdateIssueHandler(mocker, issues, manifest, options)
-  addDeleteIssueHandler(mocker, issues, manifest, options)
+  addUpdateIssueHandler(mocker, issues, manifest, resolvedOptions)
+  addDeleteIssueHandler(mocker, issues, manifest, resolvedOptions)
 
   return mocker
 }
