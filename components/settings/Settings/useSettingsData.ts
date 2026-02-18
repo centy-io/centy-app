@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useCallback, useEffect } from 'react'
-import type { Config, Manifest } from '@/gen/centy_pb'
 import { checkProjectInitialized, fetchProjectData } from './settingsApi'
 import { useConfigMutations } from './useConfigMutations'
+import type { Config, Manifest } from '@/gen/centy_pb'
 
 // eslint-disable-next-line max-lines-per-function
 export function useSettingsData(

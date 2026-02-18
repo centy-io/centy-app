@@ -2,10 +2,10 @@
 
 import { useEffect, useCallback, useSyncExternalStore } from 'react'
 import { create } from '@bufbuild/protobuf'
+import type { ConfigSnapshot, CacheState } from './useConfig.types'
 import { centyClient } from '@/lib/grpc/client'
 import { GetConfigRequestSchema } from '@/gen/centy_pb'
 import { usePathContext } from '@/components/providers/PathContextProvider'
-import type { ConfigSnapshot, CacheState } from './useConfig.types'
 
 const configCache = new Map<string, CacheState>()
 
@@ -59,12 +59,16 @@ function notifyListeners(projectPath: string) {
   cache.listeners.forEach(listener => listener())
 }
 
-async function fetchConfig(projectPath: string, force = false): Promise<void> {
+async function fetchConfig(
+  projectPath: string,
+  force?: boolean
+): Promise<void> {
   if (!projectPath) return
 
   const cache = getOrCreateCache(projectPath)
+  const resolvedForce = force !== undefined ? force : false
 
-  if (cache.loading || (cache.config && !force)) return
+  if (cache.loading || (cache.config && !resolvedForce)) return
 
   cache.loading = true
   cache.error = null
@@ -77,7 +81,6 @@ async function fetchConfig(projectPath: string, force = false): Promise<void> {
     const response = await centyClient.getConfig(request)
     if (response.config) {
       cache.config = response.config
-      cache.error = null
     } else {
       cache.error = response.error || 'Failed to load config'
     }

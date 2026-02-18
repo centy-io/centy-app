@@ -1,7 +1,7 @@
 'use client'
 
-import { EditorType, type EditorInfo } from '@/gen/centy_pb'
 import { VscodeIcon, TerminalIcon } from './EditorIcons'
+import { EditorType, type EditorInfo } from '@/gen/centy_pb'
 
 interface EditorDropdownProps {
   editors: EditorInfo[]

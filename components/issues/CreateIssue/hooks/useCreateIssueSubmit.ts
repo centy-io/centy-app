@@ -2,9 +2,9 @@ import { useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { create } from '@bufbuild/protobuf'
 import { route } from 'nextjs-routes'
+import type { UseCreateIssueSubmitParams } from '../CreateIssue.types'
 import { centyClient } from '@/lib/grpc/client'
 import { CreateIssueRequestSchema } from '@/gen/centy_pb'
-import type { UseCreateIssueSubmitParams } from '../CreateIssue.types'
 
 // eslint-disable-next-line max-lines-per-function
 export function useCreateIssueSubmit({

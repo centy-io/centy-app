@@ -23,7 +23,7 @@ export async function measureAsync<T>(
         return result
       } catch (error) {
         span.setStatus({ code: 2, message: 'error' })
-        throw error
+        throw error instanceof Error ? error : new Error(String(error))
       }
     }
   )
@@ -32,11 +32,9 @@ export async function measureAsync<T>(
 /**
  * Error tracking with context
  */
-export function trackError(
-  error: Error,
-  context: Record<string, unknown> = {}
-) {
+export function trackError(error: Error, context?: Record<string, unknown>) {
+  const resolvedContext = context !== undefined ? context : {}
   captureException(error, {
-    extra: context,
+    extra: resolvedContext,
   })
 }

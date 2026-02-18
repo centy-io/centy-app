@@ -1,37 +1,142 @@
+/* eslint-disable max-lines */
 'use client'
 
-import * as projectHandlers from './project'
-import * as issueHandlers from './issue'
-import * as docHandlers from './doc'
-import * as userHandlers from './user'
-import * as orgHandlers from './org'
-import * as configHandlers from './config'
-import * as linkHandlers from './link'
-import * as assetHandlers from './asset'
-import * as writeHandlers from './write'
-import * as daemonHandlers from './daemon'
-import * as orgWriteHandlers from './org-write'
-import * as stubHandlers from './stub'
-import * as workspaceHandlers from './workspace'
-import * as entityOpsHandlers from './entity-ops'
+import { listProjects, getProjectInfo, isInitialized } from './project'
+import { listIssues, getIssue, getIssueByDisplayNumber } from './issue'
+import { listDocs, getDoc } from './doc'
+import { listUsers, getUser } from './user'
+import { listOrganizations, getOrganization } from './org'
+import { getConfig, getDaemonInfo } from './config'
+import { listLinks, getAvailableLinkTypes } from './link'
+import { listAssets, listSharedAssets } from './asset'
+import {
+  createIssue,
+  updateIssue,
+  deleteIssue,
+  createDoc,
+  updateDoc,
+  deleteDoc,
+  updateConfig,
+  createUser,
+  updateUser,
+  deleteUser,
+} from './write'
+import {
+  shutdown,
+  restart,
+  init,
+  registerProject,
+  untrackProject,
+  setProjectFavorite,
+  setProjectArchived,
+  setProjectOrganization,
+  setProjectUserTitle,
+  setProjectTitle,
+} from './daemon'
+import {
+  createOrganization,
+  updateOrganization,
+  deleteOrganization,
+  syncUsers,
+  createLink,
+  deleteLink,
+  addAsset,
+  deleteAsset,
+  getAsset,
+} from './org-write'
+import {
+  getManifest,
+  getNextIssueNumber,
+  getProjectVersion,
+  getFeatureStatus,
+  listUncompactedIssues,
+  getInstruction,
+  getCompact,
+  spawnAgent,
+} from './stub'
+import {
+  openInTempVscode,
+  openInTempTerminal,
+  getSupportedEditors,
+} from './workspace'
+import {
+  moveIssue,
+  duplicateIssue,
+  moveDoc,
+  duplicateDoc,
+  advancedSearch,
+  getIssuesByUuid,
+  getDocsBySlug,
+} from './entity-ops'
 import { type MockHandlers } from './types'
 
 export type { MockHandlers } from './types'
 
 // Mock handlers for all RPC methods
 export const mockHandlers: MockHandlers = {
-  ...projectHandlers,
-  ...issueHandlers,
-  ...docHandlers,
-  ...userHandlers,
-  ...orgHandlers,
-  ...configHandlers,
-  ...linkHandlers,
-  ...assetHandlers,
-  ...writeHandlers,
-  ...daemonHandlers,
-  ...orgWriteHandlers,
-  ...stubHandlers,
-  ...workspaceHandlers,
-  ...entityOpsHandlers,
+  listProjects,
+  getProjectInfo,
+  isInitialized,
+  listIssues,
+  getIssue,
+  getIssueByDisplayNumber,
+  listDocs,
+  getDoc,
+  listUsers,
+  getUser,
+  listOrganizations,
+  getOrganization,
+  getConfig,
+  getDaemonInfo,
+  listLinks,
+  getAvailableLinkTypes,
+  listAssets,
+  listSharedAssets,
+  createIssue,
+  updateIssue,
+  deleteIssue,
+  createDoc,
+  updateDoc,
+  deleteDoc,
+  updateConfig,
+  createUser,
+  updateUser,
+  deleteUser,
+  shutdown,
+  restart,
+  init,
+  registerProject,
+  untrackProject,
+  setProjectFavorite,
+  setProjectArchived,
+  setProjectOrganization,
+  setProjectUserTitle,
+  setProjectTitle,
+  createOrganization,
+  updateOrganization,
+  deleteOrganization,
+  syncUsers,
+  createLink,
+  deleteLink,
+  addAsset,
+  deleteAsset,
+  getAsset,
+  getManifest,
+  getNextIssueNumber,
+  getProjectVersion,
+  getFeatureStatus,
+  listUncompactedIssues,
+  getInstruction,
+  getCompact,
+  spawnAgent,
+  openInTempVscode,
+  openInTempTerminal,
+  getSupportedEditors,
+  moveIssue,
+  duplicateIssue,
+  moveDoc,
+  duplicateDoc,
+  advancedSearch,
+  getIssuesByUuid,
+  getDocsBySlug,
 }

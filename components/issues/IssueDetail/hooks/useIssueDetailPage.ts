@@ -1,15 +1,15 @@
 import { useState, useCallback } from 'react'
-import { usePathContext } from '@/components/providers/PathContextProvider'
-import { useDaemonStatus } from '@/components/providers/DaemonStatusProvider'
-import { useCopyToClipboard } from '@/hooks/useCopyToClipboard'
-import { useStateManager } from '@/lib/state'
-import { useSaveShortcut } from '@/hooks/useSaveShortcut'
 import { useIssueDetail } from './useIssueDetail'
 import { useEditState } from './useEditState'
 import { useIssueActions } from './useIssueActions'
 import { useEditorActions } from './useEditorActions'
 import { useStatusChange } from './useStatusChange'
 import { useIssueNavigation } from './useIssueNavigation'
+import { useSaveShortcut } from '@/hooks/useSaveShortcut'
+import { useStateManager } from '@/lib/state'
+import { useCopyToClipboard } from '@/hooks/useCopyToClipboard'
+import { useDaemonStatus } from '@/components/providers/DaemonStatusProvider'
+import { usePathContext } from '@/components/providers/PathContextProvider'
 
 export function useIssueDetailPage(issueNumber: string) {
   const { projectPath, isLoading: pathLoading } = usePathContext()

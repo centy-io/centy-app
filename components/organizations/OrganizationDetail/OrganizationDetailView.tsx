@@ -2,9 +2,9 @@
 'use client'
 
 import Link from 'next/link'
+import { OrganizationReadView } from './OrganizationReadView'
 import type { Organization, ProjectInfo } from '@/gen/centy_pb'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
-import { OrganizationReadView } from './OrganizationReadView'
 
 interface OrganizationDetailViewProps {
   organization: Organization

@@ -1,10 +1,10 @@
 import { useState, useCallback, useEffect, useMemo } from 'react'
 import { create } from '@bufbuild/protobuf'
+import type { AggregateIssue } from '../AggregateIssuesList.types'
+import { useOrgDisplayText } from './useOrgDisplayText'
 import { centyClient } from '@/lib/grpc/client'
 import { ListIssuesRequestSchema } from '@/gen/centy_pb'
 import { getProjects } from '@/lib/project-resolver'
-import type { AggregateIssue } from '../AggregateIssuesList.types'
-import { useOrgDisplayText } from './useOrgDisplayText'
 
 export function useAggregateIssues() {
   const { selectedOrgSlug, getOrgDisplayName, getOrgNoteText, getEmptyText } =

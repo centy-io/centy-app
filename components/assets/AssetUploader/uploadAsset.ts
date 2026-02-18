@@ -1,7 +1,7 @@
 import { create } from '@bufbuild/protobuf'
+import type { PendingAsset } from './types'
 import { centyClient } from '@/lib/grpc/client'
 import { AddAssetRequestSchema, type Asset } from '@/gen/centy_pb'
-import type { PendingAsset } from './types'
 
 interface UploadResult {
   success: boolean

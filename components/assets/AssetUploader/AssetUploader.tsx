@@ -18,18 +18,19 @@ export const AssetUploader = forwardRef<
     prId,
     onAssetsChange,
     onPendingChange,
-    initialAssets = [],
+    initialAssets,
     mode,
   },
   ref
 ) {
+  const resolvedInitialAssets = initialAssets !== undefined ? initialAssets : []
   const targetId = issueId || prId
   const uploader = useAssetUploader({
     projectPath,
     targetId,
     onAssetsChange,
     onPendingChange,
-    initialAssets,
+    initialAssets: resolvedInitialAssets,
     mode,
   })
   const { handleFiles } = useAssetHandlers({

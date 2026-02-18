@@ -2,12 +2,12 @@
 
 import Link from 'next/link'
 import { type RouteLiteral } from 'nextjs-routes'
-import { type User } from '@/gen/centy_pb'
-import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
-import { DeleteConfirmDialog } from '@/components/shared/DeleteConfirmDialog'
 import { UsersTable } from './UsersTable'
 import { UsersListHeader } from './UsersListHeader'
 import { UsersEmptyState } from './UsersEmptyState'
+import { type User } from '@/gen/centy_pb'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
+import { DeleteConfirmDialog } from '@/components/shared/DeleteConfirmDialog'
 
 interface UsersListContentProps {
   projectPath: string

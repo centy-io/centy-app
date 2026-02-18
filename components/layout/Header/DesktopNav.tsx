@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import type { NavLinks } from './types'
+import { DOCS_URL } from '@/lib/constants/urls'
 
 interface DesktopNavProps {
   navLinks: NavLinks | null
@@ -63,7 +64,7 @@ export function DesktopNav({ navLinks, pathname, isActive }: DesktopNavProps) {
           Settings
         </Link>
         <a
-          href="https://docs.centy.io"
+          href={DOCS_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="external-link"

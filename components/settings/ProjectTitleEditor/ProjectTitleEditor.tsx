@@ -1,8 +1,8 @@
 'use client'
 
-import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import { useProjectTitle } from './useProjectTitle'
 import { TitlePreview } from './TitlePreview'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import '@/styles/components/ProjectTitleEditor.css'
 
 interface ProjectTitleEditorProps {

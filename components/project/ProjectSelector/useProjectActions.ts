@@ -5,6 +5,7 @@ import { useCallback } from 'react'
 import { useRouter, useParams, usePathname } from 'next/navigation'
 import { route } from 'nextjs-routes'
 import { create } from '@bufbuild/protobuf'
+import { ROOT_ROUTES } from './ProjectSelector.types'
 import { centyClient } from '@/lib/grpc/client'
 import {
   RegisterProjectRequestSchema,
@@ -16,7 +17,6 @@ import {
   useArchivedProjects,
 } from '@/components/providers/ProjectProvider'
 import { UNGROUPED_ORG_MARKER } from '@/lib/project-resolver'
-import { ROOT_ROUTES } from './ProjectSelector.types'
 
 interface UseProjectActionsParams {
   projects: ProjectInfo[]

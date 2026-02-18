@@ -1,9 +1,9 @@
 'use client'
 
 import Link from 'next/link'
-import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import { useCreateUser } from './useCreateUser'
 import { CreateUserForm } from './CreateUserForm'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 export function CreateUser() {
   const state = useCreateUser()

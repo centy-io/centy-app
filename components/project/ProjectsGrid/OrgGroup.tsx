@@ -1,7 +1,7 @@
 'use client'
 
-import type { ProjectInfo } from '@/gen/centy_pb'
 import { ProjectCard } from './ProjectCard'
+import type { ProjectInfo } from '@/gen/centy_pb'
 
 interface OrgGroupProps {
   orgSlug: string

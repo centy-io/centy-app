@@ -41,21 +41,26 @@ export async function setupDemoMode(page: Page): Promise<void> {
  */
 export async function setupMockedPage(
   page: Page,
-  options: SetupOptions = {}
+  options?: SetupOptions
 ): Promise<GrpcMocker> {
+  const resolvedOptions = options !== undefined ? options : {}
   const mocker = new GrpcMocker(page)
 
   // Add handlers
   addProjectHandlers(mocker, {
-    projects: options.projects,
+    projects: resolvedOptions.projects,
     isInitialized:
-      options.isInitialized !== undefined ? options.isInitialized : true,
+      resolvedOptions.isInitialized !== undefined
+        ? resolvedOptions.isInitialized
+        : true,
   })
-  addIssueHandlers(mocker, { issues: options.issues })
-  addDocHandlers(mocker, { docs: options.docs })
+  addIssueHandlers(mocker, { issues: resolvedOptions.issues })
+  addDocHandlers(mocker, { docs: resolvedOptions.docs })
   addDaemonHandlers(mocker, {
     vscodeAvailable:
-      options.vscodeAvailable !== undefined ? options.vscodeAvailable : true,
+      resolvedOptions.vscodeAvailable !== undefined
+        ? resolvedOptions.vscodeAvailable
+        : true,
   })
 
   // Setup route interception

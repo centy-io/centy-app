@@ -1,9 +1,9 @@
 'use client'
 
-import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import type { AddLinkModalProps } from './AddLinkModal.types'
 import { useAddLinkModal } from './useAddLinkModal'
 import { AddLinkModalBody } from './AddLinkModalBody'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 export function AddLinkModal(props: AddLinkModalProps) {
   const state = useAddLinkModal(props)

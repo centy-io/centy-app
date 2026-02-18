@@ -1,7 +1,7 @@
 'use client'
 
-import { type Issue } from '@/gen/centy_pb'
 import { createIssueMetadata } from './issue-helpers'
+import { type Issue } from '@/gen/centy_pb'
 
 // Demo issues part 1 (issues 1-3)
 export const DEMO_ISSUES_PART1: Issue[] = [

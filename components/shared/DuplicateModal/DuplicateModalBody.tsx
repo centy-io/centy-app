@@ -1,8 +1,8 @@
 'use client'
 
-import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import type { DuplicateModalProps } from './DuplicateModal.types'
 import type { useDuplicateModal } from './useDuplicateModal'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 interface DuplicateModalBodyProps {
   props: DuplicateModalProps

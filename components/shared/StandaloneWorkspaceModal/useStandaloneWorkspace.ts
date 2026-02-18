@@ -1,9 +1,9 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
-import { EditorType } from '@/gen/centy_pb'
-import { useDaemonStatus } from '@/components/providers/DaemonStatusProvider'
 import type { StandaloneWorkspaceModalProps } from './StandaloneWorkspaceModal.types'
 import { useModalDismiss } from './useModalDismiss'
 import { useCreateWorkspace } from './useCreateWorkspace'
+import { useDaemonStatus } from '@/components/providers/DaemonStatusProvider'
+import { EditorType } from '@/gen/centy_pb'
 
 export function useStandaloneWorkspace({
   projectPath,

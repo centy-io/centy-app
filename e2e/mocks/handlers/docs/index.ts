@@ -13,16 +13,18 @@ export type { DocHandlerOptions } from './types'
  */
 export function addDocHandlers(
   mocker: GrpcMocker,
-  options: DocHandlerOptions = {}
+  options?: DocHandlerOptions
 ): GrpcMocker {
-  const docs = options.docs !== undefined ? options.docs : [...mockDocs]
+  const resolvedOptions = options !== undefined ? options : {}
+  const docs =
+    resolvedOptions.docs !== undefined ? resolvedOptions.docs : [...mockDocs]
   const manifest = mockManifest
 
   addListDocsHandler(mocker, docs)
   addGetDocHandler(mocker, docs)
-  addCreateDocHandler(mocker, docs, manifest, options)
-  addUpdateDocHandler(mocker, docs, manifest, options)
-  addDeleteDocHandler(mocker, docs, manifest, options)
+  addCreateDocHandler(mocker, docs, manifest, resolvedOptions)
+  addUpdateDocHandler(mocker, docs, manifest, resolvedOptions)
+  addDeleteDocHandler(mocker, docs, manifest, resolvedOptions)
 
   return mocker
 }

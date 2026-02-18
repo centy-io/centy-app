@@ -236,7 +236,8 @@ describe('IssuesList', () => {
 
   it('should handle network errors', async () => {
     const mockListIssues = vi.mocked(centyClient.listIssues)
-    mockListIssues.mockRejectedValue(new Error('Connection refused'))
+    const errorMessage = 'Connection refused'
+    mockListIssues.mockRejectedValue(new Error(errorMessage))
 
     mockUsePathContext.mockReturnValue({
       projectPath: '/test/path',

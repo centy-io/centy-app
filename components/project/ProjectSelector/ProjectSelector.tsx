@@ -1,6 +1,11 @@
 'use client'
 
-import * as Popover from '@radix-ui/react-popover'
+import {
+  Root as PopoverRoot,
+  Trigger as PopoverTrigger,
+  Portal as PopoverPortal,
+  Content as PopoverContent,
+} from '@radix-ui/react-popover'
 import { useProjectSelector } from './useProjectSelector'
 import { ProjectSelectorDropdown } from './ProjectSelectorDropdown'
 
@@ -8,8 +13,8 @@ export function ProjectSelector() {
   const state = useProjectSelector()
 
   return (
-    <Popover.Root open={state.isOpen} onOpenChange={state.setIsOpen}>
-      <Popover.Trigger asChild>
+    <PopoverRoot open={state.isOpen} onOpenChange={state.setIsOpen}>
+      <PopoverTrigger asChild>
         <button className="project-selector-trigger" aria-haspopup="listbox">
           <span className="project-icon">{'\uD83D\uDCC1'}</span>
           <span className="project-name">{state.getCurrentProjectName()}</span>
@@ -17,9 +22,9 @@ export function ProjectSelector() {
             {state.isOpen ? '\u25B2' : '\u25BC'}
           </span>
         </button>
-      </Popover.Trigger>
-      <Popover.Portal>
-        <Popover.Content
+      </PopoverTrigger>
+      <PopoverPortal>
+        <PopoverContent
           className="project-selector-dropdown"
           align="start"
           sideOffset={4}
@@ -49,8 +54,8 @@ export function ProjectSelector() {
             handleArchiveProject={state.handleArchiveProject}
             toggleOrgCollapse={state.toggleOrgCollapse}
           />
-        </Popover.Content>
-      </Popover.Portal>
-    </Popover.Root>
+        </PopoverContent>
+      </PopoverPortal>
+    </PopoverRoot>
   )
 }

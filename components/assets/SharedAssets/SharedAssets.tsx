@@ -1,11 +1,11 @@
 'use client'
 
 import Link from 'next/link'
-import { useProject } from '@/components/providers/ProjectProvider'
-import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import { useSharedAssets } from './useSharedAssets'
 import { SharedAssetCard } from './SharedAssetCard'
 import { PreviewModal } from './PreviewModal'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
+import { useProject } from '@/components/providers/ProjectProvider'
 
 const formatFileSize = (bytes: bigint | number) => {
   const size = Number(bytes)

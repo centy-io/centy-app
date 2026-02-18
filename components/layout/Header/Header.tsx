@@ -2,16 +2,16 @@
 
 import Link from 'next/link'
 import { route } from 'nextjs-routes'
+import { useHeaderNav } from './useHeaderNav'
+import { useMobileMenu } from './useMobileMenu'
+import { DesktopNav } from './DesktopNav'
+import { MobileMenu } from './MobileMenu'
 import { DaemonStatusIndicator } from '@/components/shared/DaemonStatusIndicator'
 import { ThemeToggle } from '@/components/shared/ThemeToggle'
 import { OrgSwitcher } from '@/components/organizations/OrgSwitcher'
 import { ProjectSelector } from '@/components/project/ProjectSelector'
 import { useOrganization } from '@/components/providers/OrganizationProvider'
 import { UNGROUPED_ORG_MARKER } from '@/lib/project-resolver'
-import { useHeaderNav } from './useHeaderNav'
-import { useMobileMenu } from './useMobileMenu'
-import { DesktopNav } from './DesktopNav'
-import { MobileMenu } from './MobileMenu'
 
 // eslint-disable-next-line max-lines-per-function
 export function Header() {

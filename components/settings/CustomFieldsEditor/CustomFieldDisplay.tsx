@@ -1,5 +1,5 @@
-import type { CustomFieldDefinition } from '@/gen/centy_pb'
 import { FIELD_TYPES } from './constants'
+import type { CustomFieldDefinition } from '@/gen/centy_pb'
 
 interface CustomFieldDisplayProps {
   field: CustomFieldDefinition

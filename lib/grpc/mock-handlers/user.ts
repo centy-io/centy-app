@@ -7,6 +7,7 @@ import type {
   GetUserRequest,
   User,
 } from '@/gen/centy_pb'
+import { UserNotFoundError } from '@/lib/errors'
 
 export async function listUsers(
   request: ListUsersRequest
@@ -35,5 +36,5 @@ export async function getUser(request: GetUserRequest): Promise<User> {
   if (user) {
     return user
   }
-  throw new Error(`User ${request.userId} not found`)
+  throw new UserNotFoundError(request.userId)
 }

@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import type { CustomFieldDefinition } from '@/gen/centy_pb'
 import { EnumValuesEditor } from './EnumValuesEditor'
 import { DefaultValueField } from './DefaultValueField'
 import { CustomFieldFormFields } from './CustomFieldFormFields'
+import type { CustomFieldDefinition } from '@/gen/centy_pb'
 
 interface CustomFieldFormProps {
   field?: CustomFieldDefinition

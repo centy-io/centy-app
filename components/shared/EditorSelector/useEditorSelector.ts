@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
-import { EditorType } from '@/gen/centy_pb'
 import { useEditorPreference } from './useEditorPreference'
+import { EditorType } from '@/gen/centy_pb'
 
 export function useEditorSelector(
   onOpenInVscode: () => Promise<void>,

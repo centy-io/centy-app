@@ -3,11 +3,11 @@
 import { usePathname, useRouter } from 'next/navigation'
 import { useMemo, useEffect, type ReactNode } from 'react'
 import Link from 'next/link'
-import { PathContextProvider } from '@/components/providers/PathContextProvider'
 import {
   PROJECT_SCOPED_ROUTES,
   resolveRoute,
 } from './CatchAllRouter.routeConfig'
+import { PathContextProvider } from '@/components/providers/PathContextProvider'
 
 /**
  * Component displayed when a project-scoped route is accessed without project context

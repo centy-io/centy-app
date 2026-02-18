@@ -1,3 +1,4 @@
+import type { ContextMenuState } from './types'
 import type { Doc } from '@/gen/centy_pb'
 import {
   ContextMenu,
@@ -5,7 +6,6 @@ import {
 } from '@/components/shared/ContextMenu'
 import { MoveModal } from '@/components/shared/MoveModal'
 import { DuplicateModal } from '@/components/shared/DuplicateModal'
-import type { ContextMenuState } from './types'
 
 interface DocsListModalsProps {
   projectPath: string

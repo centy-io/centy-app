@@ -1,9 +1,9 @@
 import type { GrpcMocker } from '../../../utils/mock-grpc'
+import { createMockDoc } from '../../../fixtures/docs'
+import type { DocHandlerOptions } from './types'
 import type { Doc, Manifest } from '@/gen/centy_pb'
 import { CreateDocRequestSchema, CreateDocResponseSchema } from '@/gen/centy_pb'
 import type { CreateDocResponse, CreateDocRequest } from '@/gen/centy_pb'
-import { createMockDoc } from '../../../fixtures/docs'
-import type { DocHandlerOptions } from './types'
 
 /**
  * Adds the CreateDoc handler to the GrpcMocker.

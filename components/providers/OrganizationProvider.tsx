@@ -9,13 +9,14 @@ import {
   type ReactNode,
 } from 'react'
 import { create } from '@bufbuild/protobuf'
+import type { OrganizationContextType } from './OrganizationProvider.types'
 import { centyClient } from '@/lib/grpc/client'
 import {
   ListOrganizationsRequestSchema,
   type Organization,
 } from '@/gen/centy_pb'
 import { isDaemonUnimplemented } from '@/lib/daemon-error'
-import type { OrganizationContextType } from './OrganizationProvider.types'
+import { OrganizationProviderError } from '@/lib/errors'
 
 const OrganizationContext = createContext<OrganizationContextType | null>(null)
 
@@ -108,9 +109,7 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
 export function useOrganization() {
   const context = useContext(OrganizationContext)
   if (!context) {
-    throw new Error(
-      'useOrganization must be used within an OrganizationProvider'
-    )
+    throw new OrganizationProviderError()
   }
   return context
 }

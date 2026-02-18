@@ -6,9 +6,12 @@ export function groupLinksByType(
 ): Record<string, LinkType[]> {
   return links.reduce<Record<string, LinkType[]>>((acc, link) => {
     const type = link.linkType || 'related'
+    // eslint-disable-next-line security/detect-object-injection
     if (!acc[type]) {
+      // eslint-disable-next-line security/detect-object-injection
       acc[type] = []
     }
+    // eslint-disable-next-line security/detect-object-injection
     acc[type].push(link)
     return acc
   }, {})

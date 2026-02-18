@@ -77,8 +77,9 @@ export function useHeaderNav() {
     return null
   }, [hasProjectContext, effectiveOrg, effectiveProject])
 
-  const isActive = (href: string, checkPrefix = true) => {
-    if (checkPrefix) {
+  const isActive = (href: string, checkPrefix?: boolean) => {
+    const resolvedCheckPrefix = checkPrefix !== undefined ? checkPrefix : true
+    if (resolvedCheckPrefix) {
       if (hasProjectContext) {
         const page = href.split('/').slice(3).join('/')
         const currentPage = pathname.split('/').slice(3).join('/')

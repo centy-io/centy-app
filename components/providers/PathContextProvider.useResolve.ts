@@ -2,11 +2,11 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import { useParams, usePathname } from 'next/navigation'
-import { resolveProject, type ProjectResolution } from '@/lib/project-resolver'
 import {
   LAST_PROJECT_STORAGE_KEY,
   ROOT_ROUTES,
 } from './PathContextProvider.types'
+import { resolveProject, type ProjectResolution } from '@/lib/project-resolver'
 
 export function useUrlParams() {
   const params = useParams()

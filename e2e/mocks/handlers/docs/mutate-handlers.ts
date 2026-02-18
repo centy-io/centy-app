@@ -1,4 +1,5 @@
 import type { GrpcMocker } from '../../../utils/mock-grpc'
+import type { DocHandlerOptions } from './types'
 import type { Doc, Manifest } from '@/gen/centy_pb'
 import {
   UpdateDocRequestSchema,
@@ -11,7 +12,6 @@ import type {
   DeleteDocResponse,
   UpdateDocRequest,
 } from '@/gen/centy_pb'
-import type { DocHandlerOptions } from './types'
 
 /**
  * Adds the UpdateDoc handler to the GrpcMocker.
@@ -39,6 +39,7 @@ export function addUpdateDocHandler(
         }
       }
 
+      // eslint-disable-next-line security/detect-object-injection
       const existing = docs[index]
       const updatedDoc = options.onUpdateDoc
         ? options.onUpdateDoc(request, existing)
@@ -53,6 +54,7 @@ export function addUpdateDocHandler(
             },
           }
 
+      // eslint-disable-next-line security/detect-object-injection
       docs[index] = updatedDoc
 
       return {

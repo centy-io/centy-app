@@ -1,10 +1,10 @@
 'use client'
 
 import Link from 'next/link'
-import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import { useArchivedProjectActions } from './useArchivedProjectActions'
 import { ArchivedProjectItem } from './ArchivedProjectItem'
 import { ArchivedStaleItem } from './ArchivedStaleItem'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 // eslint-disable-next-line max-lines-per-function
 export function ArchivedProjects() {

@@ -7,12 +7,14 @@ interface DaemonErrorMessageProps {
 
 export function DaemonErrorMessage({
   error,
-  className = 'error-message',
+  className,
 }: DaemonErrorMessageProps) {
+  const resolvedClassName =
+    className !== undefined ? className : 'error-message'
   const parsed = parseDaemonError(error)
 
   return (
-    <div className={className}>
+    <div className={resolvedClassName}>
       <div className="daemon-error-content">
         <span>{parsed.message}</span>
         {parsed.tip && <span className="daemon-error-tip">{parsed.tip}</span>}

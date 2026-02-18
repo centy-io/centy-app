@@ -2,11 +2,11 @@
 
 import type { ReactElement, RefObject } from 'react'
 import type { RouteLiteral } from 'nextjs-routes'
-import type { Issue, Asset } from '@/gen/centy_pb'
-import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import { Header } from './Header'
 import { DeleteConfirmation } from './DeleteConfirmation'
 import { IssueDetailBody } from './IssueDetailBody'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
+import type { Issue, Asset } from '@/gen/centy_pb'
 
 interface IssueDetailContentProps {
   issue: Issue

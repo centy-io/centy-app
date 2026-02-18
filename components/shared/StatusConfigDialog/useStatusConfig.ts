@@ -1,12 +1,12 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { create } from '@bufbuild/protobuf'
+import { useModalDismiss } from './useModalDismiss'
 import { centyClient } from '@/lib/grpc/client'
 import {
   GetConfigRequestSchema,
   UpdateConfigRequestSchema,
   type Config,
 } from '@/gen/centy_pb'
-import { useModalDismiss } from './useModalDismiss'
 
 // eslint-disable-next-line max-lines-per-function
 export function useStatusConfig(

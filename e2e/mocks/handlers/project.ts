@@ -4,6 +4,7 @@ import {
   mockManifest,
   mockProjectInfo,
 } from '../../fixtures/config'
+import type { ProjectHandlerOptions } from './project-types'
 import {
   ListProjectsRequestSchema,
   ListProjectsResponseSchema,
@@ -23,7 +24,6 @@ import type {
   GetManifestResponse,
   GetProjectInfoResponse,
 } from '@/gen/centy_pb'
-import type { ProjectHandlerOptions } from './project-types'
 
 export type { ProjectHandlerOptions } from './project-types'
 
@@ -32,14 +32,15 @@ export type { ProjectHandlerOptions } from './project-types'
  */
 export function addProjectHandlers(
   mocker: GrpcMocker,
-  options: ProjectHandlerOptions = {}
+  options?: ProjectHandlerOptions
 ): GrpcMocker {
+  const resolvedOptions = options !== undefined ? options : {}
   const {
     projects = [mockProjectInfo],
     isInitialized = true,
     config = mockConfig,
     manifest = mockManifest,
-  } = options
+  } = resolvedOptions
 
   // ListProjects - Also used as health check by DaemonStatusProvider
   mocker.addHandler(

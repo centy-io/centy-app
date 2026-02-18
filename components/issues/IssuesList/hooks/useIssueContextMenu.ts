@@ -1,9 +1,9 @@
 import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import type { Issue } from '@/gen/centy_pb'
-import { usePinnedItems } from '@/hooks/usePinnedItems'
 import { buildContextMenuItems } from './buildContextMenuItems'
 import { useIssueMoveActions } from './useIssueMoveActions'
+import type { Issue } from '@/gen/centy_pb'
+import { usePinnedItems } from '@/hooks/usePinnedItems'
 
 // eslint-disable-next-line max-lines-per-function
 export function useIssueContextMenu(

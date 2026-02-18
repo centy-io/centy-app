@@ -11,9 +11,10 @@ export interface DaemonHandlerOptions {
  */
 export function addDaemonHandlers(
   mocker: GrpcMocker,
-  options: DaemonHandlerOptions = {}
+  options?: DaemonHandlerOptions
 ): GrpcMocker {
-  const { vscodeAvailable = true } = options
+  const resolvedOptions = options !== undefined ? options : {}
+  const { vscodeAvailable = true } = resolvedOptions
 
   // GetDaemonInfo - provides daemon version and VS Code availability
   mocker.addHandler(

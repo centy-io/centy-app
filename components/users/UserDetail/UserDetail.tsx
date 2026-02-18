@@ -3,9 +3,6 @@
 import { useMemo } from 'react'
 import { useParams } from 'next/navigation'
 import { route, type RouteLiteral } from 'nextjs-routes'
-import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
-import { DeleteConfirmDialog } from '@/components/shared/DeleteConfirmDialog'
-import { useSaveShortcut } from '@/hooks/useSaveShortcut'
 import { useUserData } from './useUserData'
 import { UserEditForm } from './UserEditForm'
 import { UserMetadata } from './UserMetadata'
@@ -16,6 +13,9 @@ import {
   ErrorState,
   NotFoundState,
 } from './UserDetailStates'
+import { useSaveShortcut } from '@/hooks/useSaveShortcut'
+import { DeleteConfirmDialog } from '@/components/shared/DeleteConfirmDialog'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 interface UserDetailProps {
   userId: string

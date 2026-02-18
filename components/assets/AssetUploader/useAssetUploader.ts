@@ -1,10 +1,10 @@
 'use client'
 
 import { useState, useCallback, useRef, useEffect } from 'react'
-import type { Asset } from '@/gen/centy_pb'
 import type { PendingAsset } from './types'
 import { ALLOWED_TYPES, MAX_FILE_SIZE } from './types'
 import { uploadAssetToServer } from './uploadAsset'
+import type { Asset } from '@/gen/centy_pb'
 
 interface UseAssetUploaderOptions {
   projectPath: string

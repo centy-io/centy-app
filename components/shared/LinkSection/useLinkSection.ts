@@ -1,5 +1,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import { create } from '@bufbuild/protobuf'
+import { targetTypeToProto } from './LinkSection.types'
+import { useLinkRoutes } from './useLinkRoutes'
 import { centyClient } from '@/lib/grpc/client'
 import {
   ListLinksRequestSchema,
@@ -7,8 +9,6 @@ import {
   type Link as LinkType,
 } from '@/gen/centy_pb'
 import { useProject } from '@/components/providers/ProjectProvider'
-import { targetTypeToProto } from './LinkSection.types'
-import { useLinkRoutes } from './useLinkRoutes'
 
 // eslint-disable-next-line max-lines-per-function
 export function useLinkSection(entityId: string, entityType: 'issue' | 'doc') {
@@ -28,6 +28,7 @@ export function useLinkSection(entityId: string, entityType: 'issue' | 'doc') {
       const request = create(ListLinksRequestSchema, {
         projectPath,
         entityId,
+        // eslint-disable-next-line security/detect-object-injection
         entityType: targetTypeToProto[entityType],
       })
       const response = await centyClient.listLinks(request)
@@ -53,6 +54,7 @@ export function useLinkSection(entityId: string, entityType: 'issue' | 'doc') {
         const request = create(DeleteLinkRequestSchema, {
           projectPath,
           sourceId: entityId,
+          // eslint-disable-next-line security/detect-object-injection
           sourceType: targetTypeToProto[entityType],
           targetId: link.targetId,
           targetType: link.targetType,

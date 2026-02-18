@@ -1,29 +1,33 @@
 import { useCallback, useState, useEffect } from 'react'
 import { useEditor } from '@tiptap/react'
 import type { TextEditorProps, EditorMode } from '../TextEditor.types'
-import { useAsciidocConverter } from './useAsciidocConverter'
 import { markdownToHtml, htmlToMarkdown } from '../utils/markdownParser'
 import { createEditorExtensions } from '../constants'
+import { useAsciidocConverter } from './useAsciidocConverter'
 
 // eslint-disable-next-line max-lines-per-function
 export function useTextEditorState({
   value,
   onChange,
-  format = 'md',
-  mode = 'edit',
+  format,
+  mode,
   onModeChange,
-  placeholder = 'Write your content...',
+  placeholder,
 }: TextEditorProps) {
-  const [currentMode, setCurrentMode] = useState<EditorMode>(mode)
+  const resolvedFormat = format !== undefined ? format : 'md'
+  const resolvedMode = mode !== undefined ? mode : 'edit'
+  const resolvedPlaceholder =
+    placeholder !== undefined ? placeholder : 'Write your content...'
+  const [currentMode, setCurrentMode] = useState<EditorMode>(resolvedMode)
   const [isRawMode, setIsRawMode] = useState(false)
 
-  const markdownContent = useAsciidocConverter(value, format)
+  const markdownContent = useAsciidocConverter(value, resolvedFormat)
   const [rawValue, setRawValue] = useState(markdownContent)
 
   const isEditable = currentMode === 'edit'
 
   const editor = useEditor({
-    extensions: createEditorExtensions(isEditable, placeholder),
+    extensions: createEditorExtensions(isEditable, resolvedPlaceholder),
     content: markdownToHtml(markdownContent),
     editable: isEditable,
     immediatelyRender: false,
@@ -43,7 +47,8 @@ export function useTextEditorState({
   }, [editor, currentMode])
 
   useEffect(() => {
-    setCurrentMode(mode)
+    setCurrentMode(resolvedMode)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode])
 
   useEffect(() => {

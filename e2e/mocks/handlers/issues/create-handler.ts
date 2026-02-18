@@ -1,12 +1,12 @@
 import type { GrpcMocker } from '../../../utils/mock-grpc'
+import { createMockIssue } from '../../../fixtures/issues'
+import type { IssueHandlerOptions } from './types'
 import type { Issue, Manifest } from '@/gen/centy_pb'
 import {
   CreateIssueRequestSchema,
   CreateIssueResponseSchema,
 } from '@/gen/centy_pb'
 import type { CreateIssueResponse, CreateIssueRequest } from '@/gen/centy_pb'
-import { createMockIssue } from '../../../fixtures/issues'
-import type { IssueHandlerOptions } from './types'
 
 /**
  * Adds the CreateIssue handler to the GrpcMocker.

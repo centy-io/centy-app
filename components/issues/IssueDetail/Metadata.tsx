@@ -1,10 +1,10 @@
 'use client'
 
 import type { ReactElement, RefObject } from 'react'
-import type { Issue } from '@/gen/centy_pb'
-import { AssigneeSelector } from '@/components/users/AssigneeSelector'
 import { StatusDropdown } from './StatusDropdown'
 import { getPriorityClass } from './IssueDetail.types'
+import type { Issue } from '@/gen/centy_pb'
+import { AssigneeSelector } from '@/components/users/AssigneeSelector'
 
 interface MetadataProps {
   issue: Issue

@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import type { DocDetailProps } from './types'
 import { useDocDetail } from './useDocDetail'
 import { HeaderActions } from './HeaderActions'
@@ -10,6 +9,7 @@ import { DocDetailView } from './DocDetailView'
 import { DocDetailEditForm } from './DocDetailEditForm'
 import { DocDetailModals } from './DocDetailModals'
 import { DocDetailStates } from './DocDetailStates'
+import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 export function DocDetail({ slug }: DocDetailProps) {
   const state = useDocDetail(slug)

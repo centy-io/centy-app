@@ -1,9 +1,9 @@
 'use client'
 
 import Link from 'next/link'
+import { useAggregateDocsData } from './useAggregateDocsData'
 import { useAppLink } from '@/hooks/useAppLink'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
-import { useAggregateDocsData } from './useAggregateDocsData'
 
 export function AggregateDocsList() {
   const { createProjectLink } = useAppLink()

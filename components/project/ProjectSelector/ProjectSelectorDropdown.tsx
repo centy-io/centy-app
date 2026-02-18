@@ -2,10 +2,10 @@
 'use client'
 
 import Link from 'next/link'
-import type { ProjectInfo } from '@/gen/centy_pb'
 import type { GroupedProjects } from './ProjectSelector.types'
 import { ProjectGroupList } from './ProjectGroupList'
 import { ProjectFlatList } from './ProjectFlatList'
+import type { ProjectInfo } from '@/gen/centy_pb'
 
 interface ProjectSelectorDropdownProps {
   loading: boolean

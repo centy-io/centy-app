@@ -4,6 +4,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import { open } from '@tauri-apps/plugin-dialog'
 import { create } from '@bufbuild/protobuf'
+import type { InitStep } from './InitProject.types'
 import { centyClient } from '@/lib/grpc/client'
 import {
   InitRequestSchema,
@@ -13,7 +14,6 @@ import {
   type ReconciliationPlan,
   type InitResponse,
 } from '@/gen/centy_pb'
-import type { InitStep } from './InitProject.types'
 
 // eslint-disable-next-line max-lines-per-function
 export function useInitProject() {

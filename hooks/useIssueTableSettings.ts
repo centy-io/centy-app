@@ -2,13 +2,13 @@
 
 import { useCallback, useSyncExternalStore } from 'react'
 import type { SortingState, ColumnFiltersState } from '@tanstack/react-table'
-import { useProject } from '@/components/providers/ProjectProvider'
 import {
   subscribe,
   getSnapshot,
   getServerSnapshot,
   updateSettings,
 } from './useIssueTableSettings.store'
+import { useProject } from '@/components/providers/ProjectProvider'
 
 export function useIssueTableSettings() {
   const { projectPath } = useProject()

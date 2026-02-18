@@ -8,8 +8,8 @@ import {
   shift,
   offset,
 } from '@floating-ui/react'
-import { useOrganization } from '@/components/providers/OrganizationProvider'
 import { OrgSwitcherDropdown } from './OrgSwitcher.dropdown'
+import { useOrganization } from '@/components/providers/OrganizationProvider'
 
 // eslint-disable-next-line max-lines-per-function
 export function OrgSwitcher() {

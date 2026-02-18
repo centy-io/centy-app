@@ -1,11 +1,11 @@
 import { create } from '@bufbuild/protobuf'
+import type { TitleScope } from './useProjectTitle'
 import { centyClient } from '@/lib/grpc/client'
 import {
   SetProjectUserTitleRequestSchema,
   SetProjectTitleRequestSchema,
   type ProjectInfo,
 } from '@/gen/centy_pb'
-import type { TitleScope } from './useProjectTitle'
 
 export interface TitleActionResult {
   success: boolean

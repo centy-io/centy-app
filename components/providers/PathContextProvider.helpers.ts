@@ -1,8 +1,8 @@
+import type { PathContextType } from './PathContextProvider.types'
 import {
   UNGROUPED_ORG_MARKER,
   type ProjectResolution,
 } from '@/lib/project-resolver'
-import type { PathContextType } from './PathContextProvider.types'
 
 type NavigateFn = PathContextType['navigateToProject']
 

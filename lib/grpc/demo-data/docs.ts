@@ -1,7 +1,7 @@
 'use client'
 
-import { type Doc } from '@/gen/centy_pb'
 import { createDocMetadata } from './doc-helpers'
+import { type Doc } from '@/gen/centy_pb'
 
 // Demo docs
 export const DEMO_DOCS: Doc[] = [

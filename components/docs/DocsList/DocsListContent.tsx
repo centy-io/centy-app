@@ -1,8 +1,8 @@
 import Link from 'next/link'
+import { DocCard } from './DocCard'
 import type { Doc } from '@/gen/centy_pb'
 import { useAppLink } from '@/hooks/useAppLink'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
-import { DocCard } from './DocCard'
 
 interface DocsListContentProps {
   projectPath: string

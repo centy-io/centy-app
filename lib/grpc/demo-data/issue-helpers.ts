@@ -9,9 +9,11 @@ export function createIssueMetadata(
   priority: number,
   createdAt: string,
   updatedAt: string,
-  customFields: Record<string, string> = {},
-  draft = false
+  customFields?: Record<string, string>,
+  draft?: boolean
 ): IssueMetadata {
+  const resolvedCustomFields = customFields !== undefined ? customFields : {}
+  const resolvedDraft = draft !== undefined ? draft : false
   return {
     $typeName: 'centy.v1.IssueMetadata',
     displayNumber,
@@ -20,8 +22,8 @@ export function createIssueMetadata(
     priorityLabel: priority === 1 ? 'high' : priority === 2 ? 'medium' : 'low',
     createdAt,
     updatedAt,
-    customFields,
-    draft,
+    customFields: resolvedCustomFields,
+    draft: resolvedDraft,
     deletedAt: '',
     isOrgIssue: false,
     orgSlug: '',

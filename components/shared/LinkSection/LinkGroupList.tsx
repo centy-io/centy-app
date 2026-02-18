@@ -1,10 +1,10 @@
 'use client'
 
 import Link from 'next/link'
-import { type Link as LinkType, LinkTargetType } from '@/gen/centy_pb'
 import type { RouteLiteral } from 'nextjs-routes'
 import { protoToTargetType } from './LinkSection.types'
 import { getLinkTypeDisplay, getTargetTypeIcon } from './linkHelpers'
+import { type Link as LinkType, LinkTargetType } from '@/gen/centy_pb'
 
 interface LinkGroupListProps {
   groupedLinks: Record<string, LinkType[]>

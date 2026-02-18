@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect, useMemo } from 'react'
 import { create } from '@bufbuild/protobuf'
+import { type GroupedProject, groupProjects } from './groupProjects'
 import { centyClient } from '@/lib/grpc/client'
 import {
   ListProjectsRequestSchema,
@@ -10,7 +11,6 @@ import {
   type ProjectInfo,
   type Organization,
 } from '@/gen/centy_pb'
-import { type GroupedProject, groupProjects } from './groupProjects'
 
 export function useProjectsData() {
   const [projects, setProjects] = useState<ProjectInfo[]>([])

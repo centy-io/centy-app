@@ -24,6 +24,7 @@ export function DaemonStatusIndicator() {
     },
   }
 
+  // eslint-disable-next-line security/detect-object-injection
   const config = statusConfig[status]
 
   return (

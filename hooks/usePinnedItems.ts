@@ -1,7 +1,6 @@
 'use client'
 
 import { useCallback, useSyncExternalStore } from 'react'
-import { usePathContext } from '@/components/providers/PathContextProvider'
 import type { PinnedItem } from './usePinnedItems.types'
 import {
   subscribe,
@@ -9,6 +8,7 @@ import {
   getServerSnapshot,
   updateState,
 } from './usePinnedItems.store'
+import { usePathContext } from '@/components/providers/PathContextProvider'
 
 export type { PinnedItem } from './usePinnedItems.types'
 

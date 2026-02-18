@@ -3,9 +3,9 @@
 import type { ReactElement } from 'react'
 import type { Table as TanstackTable } from '@tanstack/react-table'
 import { flexRender } from '@tanstack/react-table'
+import { IssuesTableHeader } from './IssuesTableHeader'
 import type { Issue } from '@/gen/centy_pb'
 import type { MultiSelectOption } from '@/components/shared/MultiSelect'
-import { IssuesTableHeader } from './IssuesTableHeader'
 
 interface IssuesTableProps {
   table: TanstackTable<Issue>

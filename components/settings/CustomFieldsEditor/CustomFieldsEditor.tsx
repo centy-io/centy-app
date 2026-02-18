@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import type { CustomFieldDefinition } from '@/gen/centy_pb'
 import { CustomFieldForm } from './CustomFieldForm'
 import { CustomFieldDisplay } from './CustomFieldDisplay'
+import type { CustomFieldDefinition } from '@/gen/centy_pb'
 
 interface CustomFieldsEditorProps {
   fields: CustomFieldDefinition[]
@@ -25,6 +25,7 @@ export function CustomFieldsEditor({
 
   const handleUpdate = (index: number, field: CustomFieldDefinition) => {
     const newFields = [...fields]
+    // eslint-disable-next-line security/detect-object-injection
     newFields[index] = field
     onChange(newFields)
     setEditingIndex(null)
@@ -37,20 +38,22 @@ export function CustomFieldsEditor({
   const handleMoveUp = (index: number) => {
     if (index === 0) return
     const newFields = [...fields]
-    ;[newFields[index - 1], newFields[index]] = [
-      newFields[index],
-      newFields[index - 1],
-    ]
+    const tmp = newFields[index - 1]
+    // eslint-disable-next-line security/detect-object-injection
+    newFields[index - 1] = newFields[index]
+    // eslint-disable-next-line security/detect-object-injection
+    newFields[index] = tmp
     onChange(newFields)
   }
 
   const handleMoveDown = (index: number) => {
     if (index === fields.length - 1) return
     const newFields = [...fields]
-    ;[newFields[index], newFields[index + 1]] = [
-      newFields[index + 1],
-      newFields[index],
-    ]
+    // eslint-disable-next-line security/detect-object-injection
+    const tmp = newFields[index]
+    // eslint-disable-next-line security/detect-object-injection
+    newFields[index] = newFields[index + 1]
+    newFields[index + 1] = tmp
     onChange(newFields)
   }
 

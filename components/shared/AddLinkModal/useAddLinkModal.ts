@@ -1,15 +1,15 @@
 import { useState, useEffect, useRef } from 'react'
 import { create } from '@bufbuild/protobuf'
-import { centyClient } from '@/lib/grpc/client'
-import {
-  GetAvailableLinkTypesRequestSchema,
-  type LinkTypeInfo,
-} from '@/gen/centy_pb'
-import { useProject } from '@/components/providers/ProjectProvider'
 import type { AddLinkModalProps, EntityItem } from './AddLinkModal.types'
 import { useEntitySearch } from './useEntitySearch'
 import { useModalDismiss } from './useModalDismiss'
 import { useCreateLink } from './useCreateLink'
+import { useProject } from '@/components/providers/ProjectProvider'
+import {
+  GetAvailableLinkTypesRequestSchema,
+  type LinkTypeInfo,
+} from '@/gen/centy_pb'
+import { centyClient } from '@/lib/grpc/client'
 
 // eslint-disable-next-line max-lines-per-function
 export function useAddLinkModal({
