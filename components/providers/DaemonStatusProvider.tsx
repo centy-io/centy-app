@@ -18,6 +18,12 @@ import { DEMO_ORG_SLUG, DEMO_PROJECT_PATH } from '@/lib/grpc/demo-data'
 import { EditorType, type EditorInfo } from '@/gen/centy_pb'
 import { trackDaemonConnection } from '@/lib/metrics'
 
+declare global {
+  interface Window {
+    __TEST_VSCODE_AVAILABLE__?: boolean
+  }
+}
+
 type DaemonStatus = 'connected' | 'disconnected' | 'checking' | 'demo'
 
 interface DaemonStatusContextType {
@@ -61,10 +67,8 @@ function createDemoEditors(): EditorInfo[] {
 
 // Helper to get the test override for vscode availability
 function getTestVscodeOverride(): boolean {
-  const testOverride = (
-    window as Window & { __TEST_VSCODE_AVAILABLE__?: boolean }
-  ).__TEST_VSCODE_AVAILABLE__
-  return testOverride ?? true
+  const testOverride: boolean | undefined = window.__TEST_VSCODE_AVAILABLE__
+  return testOverride !== undefined ? testOverride : true
 }
 
 // Apply demo mode state to setters

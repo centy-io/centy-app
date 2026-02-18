@@ -32,7 +32,6 @@ export default [
       'error/require-custom-error': 'off',
       'error/no-generic-error': 'off',
       'error/no-throw-literal': 'off',
-      'no-restricted-syntax': 'off',
       'custom/jsx-classname-required': 'off',
     },
   },

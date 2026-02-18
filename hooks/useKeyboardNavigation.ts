@@ -21,8 +21,12 @@ function useProjectContext() {
   const pathname = usePathname()
   const params = useParams()
 
-  const org = params ? (params.organization as string | undefined) : undefined
-  const project = params ? (params.project as string | undefined) : undefined
+  const rawOrg = params ? params.organization : undefined
+  const org: string | undefined =
+    typeof rawOrg === 'string' ? rawOrg : undefined
+  const rawProject = params ? params.project : undefined
+  const project: string | undefined =
+    typeof rawProject === 'string' ? rawProject : undefined
 
   const pathSegments = useMemo(() => {
     return pathname.split('/').filter(Boolean)
@@ -90,8 +94,9 @@ export function useKeyboardNavigation() {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      const target = event.target as HTMLElement
+      const target = event.target
       if (
+        !(target instanceof HTMLElement) ||
         target.tagName === 'INPUT' ||
         target.tagName === 'TEXTAREA' ||
         target.isContentEditable

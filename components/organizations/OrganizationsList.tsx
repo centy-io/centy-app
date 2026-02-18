@@ -69,6 +69,59 @@ function getCellClassName(columnId: string) {
   return ''
 }
 
+function OrgTableHeader({
+  table,
+}: {
+  table: ReturnType<typeof useReactTable<Organization>>
+}) {
+  return (
+    <thead>
+      {table.getHeaderGroups().map(headerGroup => (
+        <tr key={headerGroup.id}>
+          {headerGroup.headers.map(header => (
+            <th key={header.id}>
+              <div className="th-content">
+                <button
+                  type="button"
+                  className={`sort-btn ${header.column.getIsSorted() ? 'sorted' : ''}`}
+                  onClick={header.column.getToggleSortingHandler()}
+                >
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext()
+                  )}
+                  <span className="sort-indicator">
+                    {(() => {
+                      const sorted = header.column.getIsSorted()
+                      return sorted === 'asc'
+                        ? ' ▲'
+                        : sorted === 'desc'
+                          ? ' ▼'
+                          : ''
+                    })()}
+                  </span>
+                </button>
+                {header.column.getCanFilter() && (
+                  <input
+                    type="text"
+                    className="column-filter"
+                    placeholder="Filter..."
+                    value={(() => {
+                      const filterVal = header.column.getFilterValue()
+                      return typeof filterVal === 'string' ? filterVal : ''
+                    })()}
+                    onChange={e => header.column.setFilterValue(e.target.value)}
+                  />
+                )}
+              </div>
+            </th>
+          ))}
+        </tr>
+      ))}
+    </thead>
+  )
+}
+
 function OrganizationsTable({
   table,
   handleContextMenu,
@@ -79,45 +132,7 @@ function OrganizationsTable({
   return (
     <div className="organizations-table">
       <table>
-        <thead>
-          {table.getHeaderGroups().map(headerGroup => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => (
-                <th key={header.id}>
-                  <div className="th-content">
-                    <button
-                      type="button"
-                      className={`sort-btn ${header.column.getIsSorted() ? 'sorted' : ''}`}
-                      onClick={header.column.getToggleSortingHandler()}
-                    >
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                      <span className="sort-indicator">
-                        {{
-                          asc: ' ▲',
-                          desc: ' ▼',
-                        }[header.column.getIsSorted() as string] ?? ''}
-                      </span>
-                    </button>
-                    {header.column.getCanFilter() && (
-                      <input
-                        type="text"
-                        className="column-filter"
-                        placeholder="Filter..."
-                        value={(header.column.getFilterValue() as string) ?? ''}
-                        onChange={e =>
-                          header.column.setFilterValue(e.target.value)
-                        }
-                      />
-                    )}
-                  </div>
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
+        <OrgTableHeader table={table} />
         <tbody>
           {table.getRowModel().rows.map(row => (
             <tr
@@ -187,8 +202,10 @@ function buildColumns() {
       },
       enableColumnFilter: false,
       sortingFn: (rowA, rowB) => {
-        const a = rowA.getValue('createdAt') as string
-        const b = rowB.getValue('createdAt') as string
+        const aVal = rowA.getValue('createdAt')
+        const bVal = rowB.getValue('createdAt')
+        const a: string = typeof aVal === 'string' ? aVal : ''
+        const b: string = typeof bVal === 'string' ? bVal : ''
         if (!a && !b) return 0
         if (!a) return 1
         if (!b) return -1

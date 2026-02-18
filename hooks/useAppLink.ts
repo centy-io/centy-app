@@ -24,12 +24,12 @@ function useOrgAndProject() {
   const params = useParams()
   const pathname = usePathname()
 
-  const paramOrg = params
-    ? (params.organization as string | undefined)
-    : undefined
-  const paramProject = params
-    ? (params.project as string | undefined)
-    : undefined
+  const rawOrg = params ? params.organization : undefined
+  const paramOrg: string | undefined =
+    typeof rawOrg === 'string' ? rawOrg : undefined
+  const rawProject = params ? params.project : undefined
+  const paramProject: string | undefined =
+    typeof rawProject === 'string' ? rawProject : undefined
 
   const pathSegments = useMemo(() => {
     return pathname.split('/').filter(Boolean)
@@ -59,15 +59,22 @@ export function useAppLink() {
 
   const createLink = useCallback(
     (path: string): RouteLiteral => {
+      const normalizedPath = path.startsWith('/') ? path.slice(1) : path
+      const pathSegments = normalizedPath.split('/').filter(Boolean)
+
       if (org && project) {
-        const normalizedPath = path.startsWith('/') ? path.slice(1) : path
         return route({
           pathname: '/[...path]',
-          query: { path: [org, project, ...normalizedPath.split('/')] },
+          query: { path: [org, project, ...pathSegments] },
         })
       }
 
-      return path as RouteLiteral
+      return route({
+        pathname: '/[...path]',
+        query: {
+          path: pathSegments.length > 0 ? pathSegments : [normalizedPath],
+        },
+      })
     },
     [org, project]
   )
@@ -88,8 +95,8 @@ export function useAppLink() {
     []
   )
 
-  const createRootLink = useCallback((path: string): RouteLiteral => {
-    return (path.startsWith('/') ? path : `/${path}`) as RouteLiteral
+  const createRootLink = useCallback((path: string): string => {
+    return path.startsWith('/') ? path : `/${path}`
   }, [])
 
   const hasProjectContext = Boolean(org && project)

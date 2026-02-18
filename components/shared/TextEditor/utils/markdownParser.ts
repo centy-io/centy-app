@@ -10,7 +10,8 @@ const turndownService = new TurndownService({
 turndownService.addRule('codeBlock', {
   filter: ['pre'],
   replacement: function (content, node) {
-    const codeNode = (node as HTMLElement).querySelector('code')
+    const codeNode =
+      node instanceof HTMLElement ? node.querySelector('code') : null
     const classMatch =
       codeNode && codeNode.className
         ? codeNode.className.match(/language-(\w+)/)

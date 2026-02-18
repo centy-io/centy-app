@@ -31,7 +31,11 @@ function useClickOutside(
 ) {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (ref.current && !ref.current.contains(event.target as Node)) {
+      if (
+        ref.current &&
+        event.target instanceof Node &&
+        !ref.current.contains(event.target)
+      ) {
         onClose()
       }
     }
@@ -281,7 +285,7 @@ function useEditorAvailability() {
   const isEditorAvailable = useCallback(
     (type: EditorType): boolean => {
       const editor = editors.find(e => e.editorType === type)
-      return editor ? editor.available : false
+      return editor !== undefined ? editor.available : false
     },
     [editors]
   )

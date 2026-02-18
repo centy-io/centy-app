@@ -23,8 +23,14 @@ function useProjectContext() {
   const projectPathToUrl = useProjectPathToUrl()
 
   return useCallback(async (): Promise<ProjectContext> => {
-    const org = params ? (params.organization as string | undefined) : undefined
-    const project = params ? (params.project as string | undefined) : undefined
+    const orgParam = params ? params.organization : undefined
+    const org: string | undefined = Array.isArray(orgParam)
+      ? orgParam[0]
+      : orgParam
+    const projectParam = params ? params.project : undefined
+    const project: string | undefined = Array.isArray(projectParam)
+      ? projectParam[0]
+      : projectParam
 
     if (org && project) {
       return { organization: org, project }

@@ -13,6 +13,8 @@ import { DaemonSettings } from '@/components/settings/DaemonSettings'
 import { AgentConfigEditor } from '@/components/settings/AgentConfigEditor'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
+const { NEXT_PUBLIC_COMMIT_SHA } = process.env
+
 interface ConfirmDialogProps {
   message: string
   danger?: boolean
@@ -262,7 +264,7 @@ export function GeneralSettings() {
         onShutdown={handleShutdown}
       />
 
-      {process.env.NEXT_PUBLIC_COMMIT_SHA && (
+      {NEXT_PUBLIC_COMMIT_SHA && (
         <section className="settings-section">
           <h3>App Information</h3>
           <div className="settings-card">
@@ -270,7 +272,7 @@ export function GeneralSettings() {
               <div className="info-item">
                 <span className="info-label">Commit SHA</span>
                 <span className="info-value commit-sha">
-                  {process.env.NEXT_PUBLIC_COMMIT_SHA.slice(0, 7)}
+                  {NEXT_PUBLIC_COMMIT_SHA.slice(0, 7)}
                 </span>
               </div>
             </div>

@@ -11,21 +11,21 @@ export interface StateOption {
  * Handles default states, custom states from config, colors, and formatting.
  */
 export class StateManager {
-  private static readonly DEFAULT_STATES = [
-    'open',
-    'in-progress',
-    'closed',
-  ] as const
-
-  private static readonly DEFAULT_COLORS: Record<string, string> = {
-    open: '#10b981',
-    'in-progress': '#f59e0b',
-    closed: '#6b7280',
-  }
-
-  private static readonly DEFAULT_STATE = 'open'
+  private static DEFAULT_STATES: readonly ['open', 'in-progress', 'closed']
+  private static DEFAULT_COLORS: Record<string, string>
+  private static DEFAULT_STATE: string
 
   private config: Config | null
+
+  static {
+    StateManager.DEFAULT_STATES = ['open', 'in-progress', 'closed'] as const
+    StateManager.DEFAULT_COLORS = {
+      open: '#10b981',
+      'in-progress': '#f59e0b',
+      closed: '#6b7280',
+    }
+    StateManager.DEFAULT_STATE = 'open'
+  }
 
   constructor(config: Config | null = null) {
     this.config = config
@@ -111,9 +111,8 @@ export class StateManager {
         return 'status-in-progress'
       case 'closed':
         return 'status-closed'
-      default:
-        return ''
     }
+    return ''
   }
 
   /**

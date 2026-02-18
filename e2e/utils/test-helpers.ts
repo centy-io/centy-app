@@ -48,12 +48,14 @@ export async function setupMockedPage(
   // Add handlers
   addProjectHandlers(mocker, {
     projects: options.projects,
-    isInitialized: options.isInitialized ?? true,
+    isInitialized:
+      options.isInitialized !== undefined ? options.isInitialized : true,
   })
   addIssueHandlers(mocker, { issues: options.issues })
   addDocHandlers(mocker, { docs: options.docs })
   addDaemonHandlers(mocker, {
-    vscodeAvailable: options.vscodeAvailable ?? true,
+    vscodeAvailable:
+      options.vscodeAvailable !== undefined ? options.vscodeAvailable : true,
   })
 
   // Setup route interception

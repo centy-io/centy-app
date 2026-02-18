@@ -1,6 +1,12 @@
 'use client'
 
-import { useState, useCallback, useEffect, useMemo } from 'react'
+import {
+  useState,
+  useCallback,
+  useEffect,
+  useMemo,
+  type ReactNode,
+} from 'react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { route, type RouteLiteral } from 'nextjs-routes'
@@ -34,12 +40,17 @@ const protoToTargetType: Record<LinkTargetType, string> = {
   [LinkTargetType.DOC]: 'doc',
 }
 
-function useLinkRouteBuilder() {
+function useLinkRouteBuilder(): (
+  targetType: LinkTargetType,
+  targetId: string
+) => RouteLiteral | '/' {
   const params = useParams()
 
   const projectContext = useMemo(() => {
-    const org = params ? (params.organization as string | undefined) : undefined
-    const project = params ? (params.project as string | undefined) : undefined
+    const orgParam = params ? params.organization : undefined
+    const org = typeof orgParam === 'string' ? orgParam : undefined
+    const projectParam = params ? params.project : undefined
+    const project = typeof projectParam === 'string' ? projectParam : undefined
     if (org && project) return { organization: org, project }
     return null
   }, [params])
@@ -59,9 +70,10 @@ function useLinkRouteBuilder() {
             pathname: '/[organization]/[project]/docs/[slug]',
             query: { ...projectContext, slug: targetId },
           })
-        default:
+        case 'unknown':
           return '/'
       }
+      return '/'
     },
     [projectContext]
   )
@@ -163,13 +175,13 @@ function getLinkTypeDisplay(linkType: string) {
     .join(' ')
 }
 
-function getTargetTypeIcon(targetType: LinkTargetType) {
+function getTargetTypeIcon(targetType: LinkTargetType): string {
   switch (targetType) {
     case LinkTargetType.ISSUE:
       return '!'
     case LinkTargetType.DOC:
       return 'D'
-    default:
+    case LinkTargetType.UNSPECIFIED:
       return '?'
   }
 }

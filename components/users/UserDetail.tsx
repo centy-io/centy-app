@@ -412,8 +412,12 @@ function DeleteConfirmBar({
 
 function useDetailProjectContext(params: ReturnType<typeof useParams>) {
   const projectContext = useMemo(() => {
-    const org = params ? (params.organization as string | undefined) : undefined
-    const project = params ? (params.project as string | undefined) : undefined
+    const orgParam = params ? params.organization : undefined
+    const org: string | undefined =
+      typeof orgParam === 'string' ? orgParam : undefined
+    const projectParam = params ? params.project : undefined
+    const project: string | undefined =
+      typeof projectParam === 'string' ? projectParam : undefined
     if (org && project) return { organization: org, project }
     return null
   }, [params])

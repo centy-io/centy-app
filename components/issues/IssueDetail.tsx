@@ -1,6 +1,12 @@
 'use client'
 
-import { useState, useCallback, useEffect, useRef } from 'react'
+import {
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+  type ReactElement,
+} from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { create } from '@bufbuild/protobuf'
@@ -39,7 +45,7 @@ interface IssueDetailProps {
   issueNumber: string
 }
 
-const getPriorityClass = (priorityLabel: string) => {
+const getPriorityClass = (priorityLabel: string): string => {
   switch (priorityLabel.toLowerCase()) {
     case 'high':
     case 'critical':
@@ -49,15 +55,14 @@ const getPriorityClass = (priorityLabel: string) => {
       return 'priority-medium'
     case 'low':
       return 'priority-low'
-    default:
-      if (priorityLabel.startsWith('P') || priorityLabel.startsWith('p')) {
-        const num = parseInt(priorityLabel.slice(1))
-        if (num === 1) return 'priority-high'
-        if (num === 2) return 'priority-medium'
-        return 'priority-low'
-      }
-      return ''
   }
+  if (priorityLabel.startsWith('P') || priorityLabel.startsWith('p')) {
+    const num = parseInt(priorityLabel.slice(1))
+    if (num === 1) return 'priority-high'
+    if (num === 2) return 'priority-medium'
+    return 'priority-low'
+  }
+  return ''
 }
 
 function DeleteConfirmSection({
@@ -847,7 +852,10 @@ function useClickOutside(
 ) {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (ref.current && !ref.current.contains(event.target as Node)) {
+      if (
+        ref.current &&
+        !(event.target instanceof Node && ref.current.contains(event.target))
+      ) {
         onOutside()
       }
     }

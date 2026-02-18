@@ -3,7 +3,7 @@
 import { usePathname, useRouter } from 'next/navigation'
 import { useMemo, useEffect, type ReactNode } from 'react'
 import Link from 'next/link'
-import { route } from 'nextjs-routes'
+import { route, type RouteLiteral } from 'nextjs-routes'
 import { PathContextProvider } from '@/components/providers/PathContextProvider'
 
 // Components for different route types
@@ -25,14 +25,14 @@ const PROJECT_SCOPED_ROUTES = new Set(['issues', 'docs', 'users'])
 interface RouteResult {
   content: ReactNode
   shouldRedirect: boolean
-  redirectTo: string | null
+  redirectTo: RouteLiteral | null
 }
 
 function contentResult(content: ReactNode): RouteResult {
   return { content, shouldRedirect: false, redirectTo: null }
 }
 
-function redirectResult(redirectTo: string): RouteResult {
+function redirectResult(redirectTo: RouteLiteral): RouteResult {
   return { content: null, shouldRedirect: true, redirectTo }
 }
 
@@ -106,9 +106,9 @@ function resolveProjectRoute(
           query: { organization: org, project },
         })
       )
-    default:
-      return contentResult(<div className="not-found">Page not found</div>)
   }
+
+  return contentResult(<div className="not-found">Page not found</div>)
 }
 
 function resolveRoute(pathname: string): RouteResult {
@@ -138,7 +138,7 @@ function resolveRoute(pathname: string): RouteResult {
  * Routes like /issues, /docs, /users require project context
  * and will show a message directing users to select a project.
  */
-export function CatchAllRouter() {
+export function CatchAllRouter(): ReactNode {
   const pathname = usePathname()
   const router = useRouter()
 

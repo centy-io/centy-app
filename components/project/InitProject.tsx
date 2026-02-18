@@ -396,10 +396,10 @@ async function selectTauriFolder(
       title: 'Select Project Folder',
     })
     if (selected) {
-      setProjectPath(selected as string)
+      setProjectPath(typeof selected === 'string' ? selected : String(selected))
     }
   } catch (err) {
-    if ((err as Error).name !== 'AbortError') {
+    if (!(err instanceof Error) || err.name !== 'AbortError') {
       console.error('Failed to select folder:', err)
     }
   }

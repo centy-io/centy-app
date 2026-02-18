@@ -23,12 +23,11 @@ function useEditorPreference() {
     const timeoutId = setTimeout(() => {
       const saved = localStorage.getItem(EDITOR_PREFERENCE_KEY)
       if (!saved) return
-      const editorType = parseInt(saved, 10) as EditorType
-      if (
-        editorType === EditorType.VSCODE ||
-        editorType === EditorType.TERMINAL
-      ) {
-        setPreferredEditor(editorType)
+      const parsedValue = parseInt(saved, 10)
+      if (parsedValue === EditorType.VSCODE) {
+        setPreferredEditor(EditorType.VSCODE)
+      } else if (parsedValue === EditorType.TERMINAL) {
+        setPreferredEditor(EditorType.TERMINAL)
       }
     }, 0)
     return () => clearTimeout(timeoutId)
@@ -51,7 +50,8 @@ function useDropdownClose(
     const handleClickOutside = (event: MouseEvent) => {
       if (
         dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
+        event.target instanceof Node &&
+        !dropdownRef.current.contains(event.target)
       ) {
         setShowDropdown(false)
       }
@@ -85,7 +85,7 @@ function useEditorActions(
   const isEditorAvailable = useCallback(
     (type: EditorType): boolean => {
       const editor = getEditorInfo(type)
-      return editor ? editor.available : false
+      return editor !== undefined ? editor.available : false
     },
     [getEditorInfo]
   )

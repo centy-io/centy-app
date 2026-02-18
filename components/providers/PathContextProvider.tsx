@@ -65,8 +65,12 @@ function useUrlParams() {
   const pathname = usePathname()
 
   // Extract org and project from named route params
-  const org = params ? (params.organization as string | undefined) : undefined
-  const project = params ? (params.project as string | undefined) : undefined
+  const orgParam = params ? params.organization : undefined
+  const org: string | undefined =
+    typeof orgParam === 'string' ? orgParam : undefined
+  const projectParam = params ? params.project : undefined
+  const project: string | undefined =
+    typeof projectParam === 'string' ? projectParam : undefined
 
   // Parse path segments from pathname as fallback
   const pathSegments = useMemo(() => {
@@ -203,8 +207,13 @@ function usePathContextValue(
 
     // Still loading or error state
     return {
-      orgSlug: urlOrg === UNGROUPED_ORG_MARKER ? null : (urlOrg ?? null),
-      projectName: urlProject ?? null,
+      orgSlug:
+        urlOrg === UNGROUPED_ORG_MARKER
+          ? null
+          : urlOrg !== undefined
+            ? urlOrg
+            : null,
+      projectName: urlProject !== undefined ? urlProject : null,
       projectPath: '',
       isInitialized: null,
       displayPath: '',
@@ -243,7 +252,7 @@ export function PathContextProvider({ children }: { children: ReactNode }) {
   // Navigate to a different project
   const navigateToProject = useMemo(() => {
     return (orgSlug: string | null, projectName: string, page = 'issues') => {
-      const org = orgSlug ?? UNGROUPED_ORG_MARKER
+      const org = orgSlug !== null ? orgSlug : UNGROUPED_ORG_MARKER
       router.push(
         route({
           pathname: '/[...path]',

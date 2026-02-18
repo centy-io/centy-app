@@ -3,7 +3,6 @@
 import { useState, useCallback, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import type { RouteLiteral } from 'nextjs-routes'
 import { create } from '@bufbuild/protobuf'
 import {
   useReactTable,
@@ -46,7 +45,7 @@ const PRIORITY_OPTIONS: MultiSelectOption[] = [
 
 const columnHelper = createColumnHelper<Issue>()
 
-const getPriorityClass = (priorityLabel: string) => {
+const getPriorityClass = (priorityLabel: string): string => {
   switch (priorityLabel.toLowerCase()) {
     case 'high':
     case 'critical':
@@ -56,16 +55,15 @@ const getPriorityClass = (priorityLabel: string) => {
       return 'priority-medium'
     case 'low':
       return 'priority-low'
-    default:
-      // Handle P1, P2, etc. format
-      if (priorityLabel.startsWith('P') || priorityLabel.startsWith('p')) {
-        const num = parseInt(priorityLabel.slice(1))
-        if (num === 1) return 'priority-high'
-        if (num === 2) return 'priority-medium'
-        return 'priority-low'
-      }
-      return ''
   }
+  // Handle P1, P2, etc. format
+  if (priorityLabel.startsWith('P') || priorityLabel.startsWith('p')) {
+    const num = parseInt(priorityLabel.slice(1))
+    if (num === 1) return 'priority-high'
+    if (num === 2) return 'priority-medium'
+    return 'priority-low'
+  }
+  return ''
 }
 
 const PRIORITY_ORDER: Record<string, number> = {
@@ -85,9 +83,9 @@ const multiSelectFilterFn = (
   columnId: string,
   filterValue: unknown
 ) => {
-  const val = (row.getValue(columnId) as string).toLowerCase()
-  const selected = filterValue as string[]
-  if (!selected || selected.length === 0) return true
+  const val = String(row.getValue(columnId)).toLowerCase()
+  const selected = Array.isArray(filterValue) ? filterValue : []
+  if (selected.length === 0) return true
   return selected.includes(val)
 }
 
@@ -95,8 +93,8 @@ const prioritySortFn = (
   rowA: { getValue: (id: string) => unknown },
   rowB: { getValue: (id: string) => unknown }
 ) => {
-  const a = (rowA.getValue('priority') as string).toLowerCase()
-  const b = (rowB.getValue('priority') as string).toLowerCase()
+  const a = String(rowA.getValue('priority')).toLowerCase()
+  const b = String(rowB.getValue('priority')).toLowerCase()
   return (PRIORITY_ORDER[a] || 4) - (PRIORITY_ORDER[b] || 4)
 }
 
@@ -104,31 +102,30 @@ const dateSortFn = (
   rowA: { getValue: (id: string) => unknown },
   rowB: { getValue: (id: string) => unknown }
 ) => {
-  const a = rowA.getValue('createdAt') as string
-  const b = rowB.getValue('createdAt') as string
+  const a = String(rowA.getValue('createdAt'))
+  const b = String(rowB.getValue('createdAt'))
   if (!a && !b) return 0
   if (!a) return 1
   if (!b) return -1
   return new Date(a).getTime() - new Date(b).getTime()
 }
 
-function buildIdAndTitleColumns() {
+function buildIdAndTitleColumns(
+  copyToClipboard: (text: string, label?: string) => Promise<boolean>,
+  createLink: (path: string) => RouteLiteral
+) {
   return [
     columnHelper.accessor('displayNumber', {
       header: '#',
       cell: info => {
         const issueId = info.row.original.issueNumber
-        const meta = info.table.options.meta as {
-          copyToClipboard: (text: string, label?: string) => Promise<boolean>
-        }
         return (
           <button
             type="button"
             className="issue-number-copy-btn"
             onClick={e => {
               e.stopPropagation()
-              if (meta)
-                meta.copyToClipboard(issueId, `issue #${info.getValue()}`)
+              void copyToClipboard(issueId, `issue #${info.getValue()}`)
             }}
             title="Click to copy UUID"
           >
@@ -138,25 +135,20 @@ function buildIdAndTitleColumns() {
       },
       enableColumnFilter: true,
       filterFn: (row, columnId, filterValue) => {
-        const value = row.getValue(columnId) as number
+        const value = row.getValue(columnId)
         return String(value).includes(filterValue)
       },
     }),
     columnHelper.accessor('title', {
       header: 'Title',
-      cell: info => {
-        const meta = info.table.options.meta as {
-          createLink: (path: string) => RouteLiteral
-        }
-        return (
-          <Link
-            href={meta.createLink(`/issues/${info.row.original.issueNumber}`)}
-            className="issue-title-link"
-          >
-            {info.getValue()}
-          </Link>
-        )
-      },
+      cell: info => (
+        <Link
+          href={createLink(`/issues/${info.row.original.issueNumber}`)}
+          className="issue-title-link"
+        >
+          {info.getValue()}
+        </Link>
+      ),
       enableColumnFilter: true,
       filterFn: 'includesString',
     }),
@@ -167,8 +159,8 @@ const lastSeenSortFn = (
   rowA: { getValue: (id: string) => unknown },
   rowB: { getValue: (id: string) => unknown }
 ) => {
-  const a = rowA.getValue('lastSeen') as number
-  const b = rowB.getValue('lastSeen') as number
+  const a = Number(rowA.getValue('lastSeen'))
+  const b = Number(rowB.getValue('lastSeen'))
   if (a === 0 && b === 0) return 0
   if (a === 0) return 1
   if (b === 0) return -1
@@ -264,10 +256,12 @@ function buildMetadataColumns(
 
 function buildColumns(
   lastSeenMap: Record<string, number>,
-  stateManager: ReturnType<typeof useStateManager>
+  stateManager: ReturnType<typeof useStateManager>,
+  copyToClipboard: (text: string, label?: string) => Promise<boolean>,
+  createLink: (path: string) => RouteLiteral
 ) {
   return [
-    ...buildIdAndTitleColumns(),
+    ...buildIdAndTitleColumns(copyToClipboard, createLink),
     ...buildMetadataColumns(stateManager, lastSeenMap),
   ]
 }
@@ -294,7 +288,11 @@ function ColumnFilterControl({
     return (
       <MultiSelect
         options={statusOptions}
-        value={(filterValue as string[]) ?? []}
+        value={(() => {
+          return Array.isArray(filterValue)
+            ? filterValue.filter((v): v is string => typeof v === 'string')
+            : []
+        })()}
         onChange={values =>
           setFilterValue(values.length > 0 ? values : undefined)
         }
@@ -307,7 +305,11 @@ function ColumnFilterControl({
     return (
       <MultiSelect
         options={PRIORITY_OPTIONS}
-        value={(filterValue as string[]) ?? []}
+        value={(() => {
+          return Array.isArray(filterValue)
+            ? filterValue.filter((v): v is string => typeof v === 'string')
+            : []
+        })()}
         onChange={values =>
           setFilterValue(values.length > 0 ? values : undefined)
         }
@@ -321,7 +323,9 @@ function ColumnFilterControl({
       type="text"
       className="column-filter"
       placeholder="Filter..."
-      value={(filterValue as string) ?? ''}
+      value={(() => {
+        return typeof filterValue === 'string' ? filterValue : ''
+      })()}
       onChange={e => setFilterValue(e.target.value)}
     />
   )
@@ -537,8 +541,14 @@ function useIssuesListCoreState() {
     [deps.stateManager]
   )
   const columns = useMemo(
-    () => buildColumns(deps.lastSeenMap, deps.stateManager),
-    [deps.lastSeenMap, deps.stateManager]
+    () =>
+      buildColumns(
+        deps.lastSeenMap,
+        deps.stateManager,
+        deps.copyToClipboard,
+        deps.createLink
+      ),
+    [deps.lastSeenMap, deps.stateManager, deps.copyToClipboard, deps.createLink]
   )
 
   const table = useReactTable({
@@ -550,10 +560,6 @@ function useIssuesListCoreState() {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    meta: {
-      copyToClipboard: deps.copyToClipboard,
-      createLink: deps.createLink,
-    },
   })
 
   return {

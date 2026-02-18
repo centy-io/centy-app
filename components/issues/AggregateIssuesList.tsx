@@ -37,7 +37,7 @@ interface AggregateIssue extends Issue {
 
 const columnHelper = createColumnHelper<AggregateIssue>()
 
-const getPriorityClass = (priorityLabel: string) => {
+const getPriorityClass = (priorityLabel: string): string => {
   switch (priorityLabel.toLowerCase()) {
     case 'high':
     case 'critical':
@@ -47,15 +47,14 @@ const getPriorityClass = (priorityLabel: string) => {
       return 'priority-medium'
     case 'low':
       return 'priority-low'
-    default:
-      if (priorityLabel.startsWith('P') || priorityLabel.startsWith('p')) {
-        const num = parseInt(priorityLabel.slice(1))
-        if (num === 1) return 'priority-high'
-        if (num === 2) return 'priority-medium'
-        return 'priority-low'
-      }
-      return ''
   }
+  if (priorityLabel.startsWith('P') || priorityLabel.startsWith('p')) {
+    const num = parseInt(priorityLabel.slice(1))
+    if (num === 1) return 'priority-high'
+    if (num === 2) return 'priority-medium'
+    return 'priority-low'
+  }
+  return ''
 }
 
 type CreateProjectLinkFn = (
@@ -81,9 +80,9 @@ const aggMultiSelectFilter = (
   columnId: string,
   filterValue: unknown
 ) => {
-  const val = row.getValue(columnId) as string
-  const selected = filterValue as string[]
-  if (!selected || selected.length === 0) return true
+  const val = String(row.getValue(columnId))
+  const selected = Array.isArray(filterValue) ? filterValue : []
+  if (selected.length === 0) return true
   return selected.includes(val)
 }
 
@@ -92,9 +91,9 @@ const aggPriorityMultiSelectFilter = (
   columnId: string,
   filterValue: unknown
 ) => {
-  const priority = (row.getValue(columnId) as string).toLowerCase()
-  const selected = filterValue as string[]
-  if (!selected || selected.length === 0) return true
+  const priority = String(row.getValue(columnId)).toLowerCase()
+  const selected = Array.isArray(filterValue) ? filterValue : []
+  if (selected.length === 0) return true
   return selected.includes(priority)
 }
 
@@ -121,7 +120,7 @@ function buildAggregateIdColumns(createProjectLink: CreateProjectLinkFn) {
       cell: info => `#${info.getValue()}`,
       enableColumnFilter: true,
       filterFn: (row, columnId, filterValue) => {
-        const value = row.getValue(columnId) as number
+        const value = row.getValue(columnId)
         return String(value).includes(filterValue)
       },
     }),
@@ -183,8 +182,8 @@ function buildAggregateMetaColumns(
         enableColumnFilter: true,
         filterFn: aggPriorityMultiSelectFilter,
         sortingFn: (rowA, rowB) => {
-          const a = (rowA.getValue('priority') as string).toLowerCase()
-          const b = (rowB.getValue('priority') as string).toLowerCase()
+          const a = String(rowA.getValue('priority')).toLowerCase()
+          const b = String(rowB.getValue('priority')).toLowerCase()
           return (AGG_PRIORITY_ORDER[a] || 4) - (AGG_PRIORITY_ORDER[b] || 4)
         },
       }
@@ -204,8 +203,8 @@ function buildAggregateMetaColumns(
         },
         enableColumnFilter: false,
         sortingFn: (rowA, rowB) => {
-          const a = rowA.getValue('createdAt') as string
-          const b = rowB.getValue('createdAt') as string
+          const a = String(rowA.getValue('createdAt'))
+          const b = String(rowB.getValue('createdAt'))
           if (!a && !b) return 0
           if (!a) return 1
           if (!b) return -1
@@ -249,7 +248,12 @@ function AggregateColumnFilter({
     return (
       <MultiSelect
         options={statusOptions}
-        value={(filterValue as string[]) ?? []}
+        value={(() => {
+          const filterVal = filterValue
+          return Array.isArray(filterVal)
+            ? filterVal.filter((v): v is string => typeof v === 'string')
+            : []
+        })()}
         onChange={values =>
           setFilterValue(values.length > 0 ? values : undefined)
         }
@@ -262,7 +266,12 @@ function AggregateColumnFilter({
     return (
       <MultiSelect
         options={PRIORITY_OPTIONS}
-        value={(filterValue as string[]) ?? []}
+        value={(() => {
+          const filterVal = filterValue
+          return Array.isArray(filterVal)
+            ? filterVal.filter((v): v is string => typeof v === 'string')
+            : []
+        })()}
         onChange={values =>
           setFilterValue(values.length > 0 ? values : undefined)
         }
@@ -276,10 +285,19 @@ function AggregateColumnFilter({
       type="text"
       className="column-filter"
       placeholder="Filter..."
-      value={(filterValue as string) ?? ''}
+      value={(() => {
+        const filterVal = filterValue
+        return typeof filterVal === 'string' ? filterVal : ''
+      })()}
       onChange={e => setFilterValue(e.target.value)}
     />
   )
+}
+
+function getAggregateSortIndicator(sorted: false | 'asc' | 'desc') {
+  if (sorted === 'asc') return ' \u25B2'
+  if (sorted === 'desc') return ' \u25BC'
+  return ''
 }
 
 function AggregateTableView({
@@ -308,10 +326,7 @@ function AggregateTableView({
                         header.getContext()
                       )}
                       <span className="sort-indicator">
-                        {{
-                          asc: ' \u25B2',
-                          desc: ' \u25BC',
-                        }[header.column.getIsSorted() as string] ?? ''}
+                        {getAggregateSortIndicator(header.column.getIsSorted())}
                       </span>
                     </button>
                     {header.column.getCanFilter() && (

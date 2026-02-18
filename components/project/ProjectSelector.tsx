@@ -312,8 +312,12 @@ function useCurrentPage() {
   const pathname = usePathname()
 
   return () => {
-    const org = params ? (params.organization as string | undefined) : undefined
-    const project = params ? (params.project as string | undefined) : undefined
+    const orgParam = params ? params.organization : undefined
+    const org: string | undefined =
+      typeof orgParam === 'string' ? orgParam : undefined
+    const projectParam = params ? params.project : undefined
+    const project: string | undefined =
+      typeof projectParam === 'string' ? projectParam : undefined
     const pathSegments = pathname.split('/').filter(Boolean)
 
     if (org && project) {

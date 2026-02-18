@@ -11,10 +11,11 @@ type GrpcHandler<Req extends DescMessage, Res extends DescMessage> = (
   request: MessageShape<Req>
 ) => MessageShape<Res> | Promise<MessageShape<Res>>
 
-interface HandlerConfig<Req extends DescMessage, Res extends DescMessage> {
-  requestSchema: Req
-  responseSchema: Res
-  handler: GrpcHandler<Req, Res>
+interface HandlerConfig {
+  requestSchema: DescMessage
+  responseSchema: DescMessage
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  handler: (request: any) => any
 }
 
 /**
@@ -23,14 +24,15 @@ interface HandlerConfig<Req extends DescMessage, Res extends DescMessage> {
  */
 export class GrpcMocker {
   private page: Page
-  private handlers: Map<string, HandlerConfig<DescMessage, DescMessage>> =
-    new Map()
+  private handlers: Map<string, HandlerConfig>
   private daemonUrl: string
-  private isSetup = false
+  private isSetup: boolean
 
   constructor(page: Page, daemonUrl = 'http://localhost:50051') {
     this.page = page
     this.daemonUrl = daemonUrl
+    this.handlers = new Map()
+    this.isSetup = false
   }
 
   /**
@@ -42,11 +44,12 @@ export class GrpcMocker {
     responseSchema: Res,
     handler: GrpcHandler<Req, Res>
   ): this {
-    this.handlers.set(method, {
+    const config: HandlerConfig = {
       requestSchema,
       responseSchema,
       handler,
-    } as HandlerConfig<DescMessage, DescMessage>)
+    }
+    this.handlers.set(method, config)
     return this
   }
 

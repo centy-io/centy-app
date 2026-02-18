@@ -134,8 +134,11 @@ function useOrgSwitcherDropdown(refreshOrganizations: () => void) {
     if (!isOpen) return
 
     const handleClickOutside = (e: MouseEvent) => {
-      const target = e.target as HTMLElement
-      if (!target.closest('.org-switcher-container')) {
+      const target = e.target
+      if (
+        !(target instanceof HTMLElement) ||
+        !target.closest('.org-switcher-container')
+      ) {
         setIsOpen(false)
       }
     }
