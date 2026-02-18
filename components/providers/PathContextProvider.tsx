@@ -60,16 +60,8 @@ const ROOT_ROUTES = new Set([
   'project',
 ])
 
-/**
- * Provider that extracts org/project from URL path and resolves to project info
- *
- * Expected route structure:
- * - /[organization]/[project]/... - Project-scoped pages (issues, docs, users)
- * - /organizations, /settings, etc. - Root-level pages that don't require project context
- */
-export function PathContextProvider({ children }: { children: ReactNode }) {
+function useUrlParams() {
   const params = useParams()
-  const router = useRouter()
   const pathname = usePathname()
 
   // Extract org and project from named route params
@@ -108,10 +100,16 @@ export function PathContextProvider({ children }: { children: ReactNode }) {
     return undefined
   }, [project, pathSegments])
 
-  // Determine if this is an aggregate view (no org/project in URL)
   const isAggregateView = !urlOrg || !urlProject
 
-  // State for resolved project info
+  return { urlOrg, urlProject, isAggregateView }
+}
+
+function useProjectResolution(
+  urlOrg: string | undefined,
+  urlProject: string | undefined,
+  isAggregateView: boolean
+) {
   const [resolution, setResolution] = useState<ProjectResolution | null>(null)
   const [isLoading, setIsLoading] = useState(!isAggregateView)
   const [error, setError] = useState<string | null>(null)
@@ -166,21 +164,19 @@ export function PathContextProvider({ children }: { children: ReactNode }) {
     }
   }, [urlOrg, urlProject, isAggregateView])
 
-  // Navigate to a different project
-  const navigateToProject = useMemo(() => {
-    return (orgSlug: string | null, projectName: string, page = 'issues') => {
-      const org = orgSlug !== null ? orgSlug : UNGROUPED_ORG_MARKER
-      router.push(
-        route({
-          pathname: '/[...path]',
-          query: { path: [org, projectName, page] },
-        })
-      )
-    }
-  }, [router])
+  return { resolution, isLoading, error }
+}
 
-  // Build context value
-  const contextValue = useMemo<PathContextType>(() => {
+function usePathContextValue(
+  urlOrg: string | undefined,
+  urlProject: string | undefined,
+  isAggregateView: boolean,
+  resolution: ProjectResolution | null,
+  isLoading: boolean,
+  error: string | null,
+  navigateToProject: PathContextType['navigateToProject']
+): PathContextType {
+  return useMemo<PathContextType>(() => {
     if (isAggregateView) {
       return {
         orgSlug: null,
@@ -235,9 +231,50 @@ export function PathContextProvider({ children }: { children: ReactNode }) {
     error,
     navigateToProject,
   ])
+}
 
-  const Provider = PathContext.Provider
-  return <Provider value={contextValue}>{children}</Provider>
+/**
+ * Provider that extracts org/project from URL path and resolves to project info
+ *
+ * Expected route structure:
+ * - /[organization]/[project]/... - Project-scoped pages (issues, docs, users)
+ * - /organizations, /settings, etc. - Root-level pages that don't require project context
+ */
+export function PathContextProvider({ children }: { children: ReactNode }) {
+  const router = useRouter()
+  const { urlOrg, urlProject, isAggregateView } = useUrlParams()
+  const { resolution, isLoading, error } = useProjectResolution(
+    urlOrg,
+    urlProject,
+    isAggregateView
+  )
+
+  // Navigate to a different project
+  const navigateToProject = useMemo(() => {
+    return (orgSlug: string | null, projectName: string, page = 'issues') => {
+      const org = orgSlug !== null ? orgSlug : UNGROUPED_ORG_MARKER
+      router.push(
+        route({
+          pathname: '/[...path]',
+          query: { path: [org, projectName, page] },
+        })
+      )
+    }
+  }, [router])
+
+  const contextValue = usePathContextValue(
+    urlOrg,
+    urlProject,
+    isAggregateView,
+    resolution,
+    isLoading,
+    error,
+    navigateToProject
+  )
+
+  return (
+    <PathContext.Provider value={contextValue}>{children}</PathContext.Provider>
+  )
 }
 
 /**

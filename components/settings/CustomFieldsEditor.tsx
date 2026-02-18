@@ -15,10 +15,15 @@ const FIELD_TYPES = [
   { value: 'enum', label: 'Select (Enum)' },
 ]
 
-export function CustomFieldsEditor({
-  fields,
-  onChange,
-}: CustomFieldsEditorProps) {
+function getFieldTypeLabel(fieldType: string): string {
+  const found = FIELD_TYPES.find(t => t.value === fieldType)
+  return found ? found.label : fieldType
+}
+
+function useCustomFieldsEditor(
+  fields: CustomFieldDefinition[],
+  onChange: (fields: CustomFieldDefinition[]) => void
+) {
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
   const [isAdding, setIsAdding] = useState(false)
 
@@ -57,6 +62,35 @@ export function CustomFieldsEditor({
     ]
     onChange(newFields)
   }
+
+  return {
+    editingIndex,
+    setEditingIndex,
+    isAdding,
+    setIsAdding,
+    handleAdd,
+    handleUpdate,
+    handleRemove,
+    handleMoveUp,
+    handleMoveDown,
+  }
+}
+
+export function CustomFieldsEditor({
+  fields,
+  onChange,
+}: CustomFieldsEditorProps) {
+  const {
+    editingIndex,
+    setEditingIndex,
+    isAdding,
+    setIsAdding,
+    handleAdd,
+    handleUpdate,
+    handleRemove,
+    handleMoveUp,
+    handleMoveDown,
+  } = useCustomFieldsEditor(fields, onChange)
 
   return (
     <div className="custom-fields-editor">
@@ -114,6 +148,43 @@ export function CustomFieldsEditor({
   )
 }
 
+interface MoveButtonsProps {
+  index: number
+  totalCount: number
+  onMoveUp: () => void
+  onMoveDown: () => void
+}
+
+function MoveButtons({
+  index,
+  totalCount,
+  onMoveUp,
+  onMoveDown,
+}: MoveButtonsProps) {
+  return (
+    <div className="custom-field-move-btns">
+      <button
+        type="button"
+        onClick={onMoveUp}
+        disabled={index === 0}
+        className="custom-field-move-btn"
+        title="Move up"
+      >
+        &uarr;
+      </button>
+      <button
+        type="button"
+        onClick={onMoveDown}
+        disabled={index === totalCount - 1}
+        className="custom-field-move-btn"
+        title="Move down"
+      >
+        &darr;
+      </button>
+    </div>
+  )
+}
+
 interface CustomFieldDisplayProps {
   field: CustomFieldDefinition
   index: number
@@ -133,35 +204,17 @@ function CustomFieldDisplay({
   onMoveUp,
   onMoveDown,
 }: CustomFieldDisplayProps) {
-  const typeLabel =
-    (() => {
-      const found = FIELD_TYPES.find(t => t.value === field.fieldType)
-      return found ? found.label : ''
-    })() || field.fieldType
+  const typeLabel = getFieldTypeLabel(field.fieldType)
 
   return (
     <div className="custom-field-display">
       <div className="custom-field-header">
-        <div className="custom-field-move-btns">
-          <button
-            type="button"
-            onClick={onMoveUp}
-            disabled={index === 0}
-            className="custom-field-move-btn"
-            title="Move up"
-          >
-            &uarr;
-          </button>
-          <button
-            type="button"
-            onClick={onMoveDown}
-            disabled={index === totalCount - 1}
-            className="custom-field-move-btn"
-            title="Move down"
-          >
-            &darr;
-          </button>
-        </div>
+        <MoveButtons
+          index={index}
+          totalCount={totalCount}
+          onMoveUp={onMoveUp}
+          onMoveDown={onMoveDown}
+        />
 
         <span className="custom-field-name">{field.name}</span>
 
@@ -187,27 +240,34 @@ function CustomFieldDisplay({
         </div>
       </div>
 
-      <div className="custom-field-details">
-        {field.defaultValue && (
-          <span className="custom-field-detail-default">
-            Default:{' '}
-            <code className="custom-field-detail-code">
-              {field.defaultValue}
+      <CustomFieldDetails field={field} />
+    </div>
+  )
+}
+
+interface CustomFieldDetailsProps {
+  field: CustomFieldDefinition
+}
+
+function CustomFieldDetails({ field }: CustomFieldDetailsProps) {
+  return (
+    <div className="custom-field-details">
+      {field.defaultValue && (
+        <span>
+          Default: <code>{field.defaultValue}</code>
+        </span>
+      )}
+      {field.fieldType === 'enum' && field.enumValues.length > 0 && (
+        <span>
+          Options:{' '}
+          {field.enumValues.map((v, i) => (
+            <code key={v}>
+              {v}
+              {i < field.enumValues.length - 1 ? ', ' : ''}
             </code>
-          </span>
-        )}
-        {field.fieldType === 'enum' && field.enumValues.length > 0 && (
-          <span className="custom-field-detail-options">
-            Options:{' '}
-            {field.enumValues.map((v, i) => (
-              <code key={v} className="custom-field-detail-code">
-                {v}
-                {i < field.enumValues.length - 1 ? ', ' : ''}
-              </code>
-            ))}
-          </span>
-        )}
-      </div>
+          ))}
+        </span>
+      )}
     </div>
   )
 }
@@ -219,12 +279,7 @@ interface CustomFieldFormProps {
   onCancel: () => void
 }
 
-function CustomFieldForm({
-  field,
-  existingNames,
-  onSave,
-  onCancel,
-}: CustomFieldFormProps) {
+function useCustomFieldForm(field?: CustomFieldDefinition) {
   const [name, setName] = useState(field ? field.name : '')
   const [fieldType, setFieldType] = useState(field ? field.fieldType : 'string')
   const [required, setRequired] = useState(field ? field.required : false)
@@ -235,6 +290,46 @@ function CustomFieldForm({
     field ? field.enumValues : []
   )
   const [newEnumValue, setNewEnumValue] = useState('')
+
+  const handleAddEnumValue = () => {
+    const trimmed = newEnumValue.trim()
+    if (!trimmed || enumValues.includes(trimmed)) return
+    setEnumValues([...enumValues, trimmed])
+    setNewEnumValue('')
+  }
+
+  const handleRemoveEnumValue = (value: string) => {
+    setEnumValues(enumValues.filter(v => v !== value))
+    if (defaultValue === value) {
+      setDefaultValue('')
+    }
+  }
+
+  return {
+    name,
+    setName,
+    fieldType,
+    setFieldType,
+    required,
+    setRequired,
+    defaultValue,
+    setDefaultValue,
+    enumValues,
+    newEnumValue,
+    setNewEnumValue,
+    handleAddEnumValue,
+    handleRemoveEnumValue,
+  }
+}
+
+function CustomFieldForm({
+  field,
+  existingNames,
+  onSave,
+  onCancel,
+}: CustomFieldFormProps) {
+  const formState = useCustomFieldForm(field)
+  const { name, fieldType, required, defaultValue, enumValues } = formState
 
   const isValid =
     name.trim() &&
@@ -253,153 +348,13 @@ function CustomFieldForm({
     })
   }
 
-  const handleAddEnumValue = () => {
-    const trimmed = newEnumValue.trim()
-    if (!trimmed || enumValues.includes(trimmed)) return
-    setEnumValues([...enumValues, trimmed])
-    setNewEnumValue('')
-  }
-
-  const handleRemoveEnumValue = (value: string) => {
-    setEnumValues(enumValues.filter(v => v !== value))
-    if (defaultValue === value) {
-      setDefaultValue('')
-    }
-  }
-
   return (
     <div className="custom-field-form">
-      <div className="custom-field-form-row">
-        <div className="custom-field-form-group">
-          <label className="custom-field-form-label">Name</label>
-          <input
-            type="text"
-            value={name}
-            onChange={e => setName(e.target.value)}
-            placeholder="field_name"
-            className="custom-field-form-input"
-          />
-        </div>
+      <CustomFieldFormRow formState={formState} />
 
-        <div className="custom-field-form-group">
-          <label className="custom-field-form-label">Type</label>
-          <select
-            value={fieldType}
-            onChange={e => setFieldType(e.target.value)}
-            className="custom-field-form-select"
-          >
-            {FIELD_TYPES.map(t => (
-              <option
-                key={t.value}
-                value={t.value}
-                className="custom-field-form-option"
-              >
-                {t.label}
-              </option>
-            ))}
-          </select>
-        </div>
+      {fieldType === 'enum' && <EnumSection formState={formState} />}
 
-        <div className="custom-field-form-group custom-field-form-checkbox">
-          <label className="custom-field-form-label">
-            <input
-              type="checkbox"
-              checked={required}
-              onChange={e => setRequired(e.target.checked)}
-              className="custom-field-form-checkbox-input"
-            />
-            Required
-          </label>
-        </div>
-      </div>
-
-      {fieldType === 'enum' && (
-        <div className="custom-field-enum-section">
-          <label className="custom-field-form-label">Options</label>
-          <div className="custom-field-enum-list">
-            {enumValues.map(value => (
-              <span key={value} className="custom-field-enum-tag">
-                {value}
-                <button
-                  type="button"
-                  onClick={() => handleRemoveEnumValue(value)}
-                  className="custom-field-enum-remove-btn"
-                >
-                  &times;
-                </button>
-              </span>
-            ))}
-          </div>
-          <div className="custom-field-enum-add">
-            <input
-              type="text"
-              value={newEnumValue}
-              onChange={e => setNewEnumValue(e.target.value)}
-              onKeyDown={e => {
-                if (e.key !== 'Enter') return
-                e.preventDefault()
-                handleAddEnumValue()
-              }}
-              placeholder="Add option..."
-              className="custom-field-form-input"
-            />
-            <button
-              type="button"
-              onClick={handleAddEnumValue}
-              disabled={
-                !newEnumValue.trim() || enumValues.includes(newEnumValue.trim())
-              }
-              className="custom-field-enum-add-btn"
-            >
-              Add
-            </button>
-          </div>
-        </div>
-      )}
-
-      <div className="custom-field-form-group">
-        <label className="custom-field-form-label">Default Value</label>
-        {fieldType === 'enum' ? (
-          <select
-            value={defaultValue}
-            onChange={e => setDefaultValue(e.target.value)}
-            className="custom-field-form-select"
-          >
-            <option value="" className="custom-field-form-option">
-              No default
-            </option>
-            {enumValues.map(v => (
-              <option key={v} value={v} className="custom-field-form-option">
-                {v}
-              </option>
-            ))}
-          </select>
-        ) : fieldType === 'boolean' ? (
-          <select
-            value={defaultValue}
-            onChange={e => setDefaultValue(e.target.value)}
-            className="custom-field-form-select"
-          >
-            <option value="" className="custom-field-form-option">
-              No default
-            </option>
-            <option value="true" className="custom-field-form-option">
-              True
-            </option>
-            <option value="false" className="custom-field-form-option">
-              False
-            </option>
-          </select>
-        ) : (
-          <input
-            type={fieldType === 'number' ? 'number' : 'text'}
-            value={defaultValue}
-            onChange={e => setDefaultValue(e.target.value)}
-            placeholder={fieldType === 'number' ? '0' : 'Default value...'}
-            className="custom-field-form-input"
-          />
-        )}
-      </div>
+      <DefaultValueField formState={formState} />
 
       <div className="custom-field-form-actions">
         <button type="button" onClick={onCancel} className="secondary">
@@ -414,6 +369,157 @@ function CustomFieldForm({
           {field ? 'Update' : 'Add'} Field
         </button>
       </div>
+    </div>
+  )
+}
+
+type CustomFieldFormState = ReturnType<typeof useCustomFieldForm>
+
+interface CustomFieldFormRowProps {
+  formState: CustomFieldFormState
+}
+
+function CustomFieldFormRow({ formState }: CustomFieldFormRowProps) {
+  const { name, setName, fieldType, setFieldType, required, setRequired } =
+    formState
+
+  return (
+    <div className="custom-field-form-row">
+      <div className="custom-field-form-group">
+        <label>Name</label>
+        <input
+          type="text"
+          value={name}
+          onChange={e => setName(e.target.value)}
+          placeholder="field_name"
+          className="custom-field-form-input"
+        />
+      </div>
+
+      <div className="custom-field-form-group">
+        <label>Type</label>
+        <select
+          value={fieldType}
+          onChange={e => setFieldType(e.target.value)}
+          className="custom-field-form-select"
+        >
+          {FIELD_TYPES.map(t => (
+            <option key={t.value} value={t.value}>
+              {t.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="custom-field-form-group custom-field-form-checkbox">
+        <label>
+          <input
+            type="checkbox"
+            checked={required}
+            onChange={e => setRequired(e.target.checked)}
+          />
+          Required
+        </label>
+      </div>
+    </div>
+  )
+}
+
+interface EnumSectionProps {
+  formState: CustomFieldFormState
+}
+
+function EnumSection({ formState }: EnumSectionProps) {
+  const {
+    enumValues,
+    newEnumValue,
+    setNewEnumValue,
+    handleAddEnumValue,
+    handleRemoveEnumValue,
+  } = formState
+
+  return (
+    <div className="custom-field-enum-section">
+      <label>Options</label>
+      <div className="custom-field-enum-list">
+        {enumValues.map(value => (
+          <span key={value} className="custom-field-enum-tag">
+            {value}
+            <button type="button" onClick={() => handleRemoveEnumValue(value)}>
+              &times;
+            </button>
+          </span>
+        ))}
+      </div>
+      <div className="custom-field-enum-add">
+        <input
+          type="text"
+          value={newEnumValue}
+          onChange={e => setNewEnumValue(e.target.value)}
+          onKeyDown={e => {
+            if (e.key !== 'Enter') return
+            e.preventDefault()
+            handleAddEnumValue()
+          }}
+          placeholder="Add option..."
+          className="custom-field-form-input"
+        />
+        <button
+          type="button"
+          onClick={handleAddEnumValue}
+          disabled={
+            !newEnumValue.trim() || enumValues.includes(newEnumValue.trim())
+          }
+        >
+          Add
+        </button>
+      </div>
+    </div>
+  )
+}
+
+interface DefaultValueFieldProps {
+  formState: CustomFieldFormState
+}
+
+function DefaultValueField({ formState }: DefaultValueFieldProps) {
+  const { fieldType, defaultValue, setDefaultValue, enumValues } = formState
+
+  return (
+    <div className="custom-field-form-group">
+      <label>Default Value</label>
+      {fieldType === 'enum' ? (
+        <select
+          value={defaultValue}
+          onChange={e => setDefaultValue(e.target.value)}
+          className="custom-field-form-select"
+        >
+          <option value="">No default</option>
+          {enumValues.map(v => (
+            <option key={v} value={v}>
+              {v}
+            </option>
+          ))}
+        </select>
+      ) : fieldType === 'boolean' ? (
+        <select
+          value={defaultValue}
+          onChange={e => setDefaultValue(e.target.value)}
+          className="custom-field-form-select"
+        >
+          <option value="">No default</option>
+          <option value="true">True</option>
+          <option value="false">False</option>
+        </select>
+      ) : (
+        <input
+          type={fieldType === 'number' ? 'number' : 'text'}
+          value={defaultValue}
+          onChange={e => setDefaultValue(e.target.value)}
+          placeholder={fieldType === 'number' ? '0' : 'Default value...'}
+          className="custom-field-form-input"
+        />
+      )}
     </div>
   )
 }

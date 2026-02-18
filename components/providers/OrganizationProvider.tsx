@@ -99,9 +99,8 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  const Provider = OrganizationContext.Provider
   return (
-    <Provider
+    <OrganizationContext.Provider
       value={{
         selectedOrgSlug,
         setSelectedOrgSlug,
@@ -113,7 +112,7 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
       }}
     >
       {children}
-    </Provider>
+    </OrganizationContext.Provider>
   )
 }
 

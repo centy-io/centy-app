@@ -23,7 +23,6 @@ export default [
       'import/no-namespace': 'off',
       'single-export/single-export': 'off',
       'max-lines': 'off',
-      'max-lines-per-function': 'off',
       'default/no-default-params': 'off',
       'security/detect-object-injection': 'off',
       'ddd/require-spec-file': 'off',
@@ -33,6 +32,7 @@ export default [
       'error/require-custom-error': 'off',
       'error/no-generic-error': 'off',
       'error/no-throw-literal': 'off',
+      'custom/jsx-classname-required': 'off',
     },
   },
   {

@@ -66,20 +66,463 @@ const getPriorityClass = (priorityLabel: string): string => {
   return ''
 }
 
-export function IssuesList() {
+const PRIORITY_ORDER: Record<string, number> = {
+  high: 1,
+  critical: 1,
+  p1: 1,
+  medium: 2,
+  normal: 2,
+  p2: 2,
+  low: 3,
+  p3: 3,
+  unknown: 4,
+}
+
+const multiSelectFilterFn = (
+  row: { getValue: (id: string) => unknown },
+  columnId: string,
+  filterValue: unknown
+) => {
+  const val = String(row.getValue(columnId)).toLowerCase()
+  const selected = Array.isArray(filterValue) ? filterValue : []
+  if (selected.length === 0) return true
+  return selected.includes(val)
+}
+
+const prioritySortFn = (
+  rowA: { getValue: (id: string) => unknown },
+  rowB: { getValue: (id: string) => unknown }
+) => {
+  const a = String(rowA.getValue('priority')).toLowerCase()
+  const b = String(rowB.getValue('priority')).toLowerCase()
+  return (PRIORITY_ORDER[a] || 4) - (PRIORITY_ORDER[b] || 4)
+}
+
+const dateSortFn = (
+  rowA: { getValue: (id: string) => unknown },
+  rowB: { getValue: (id: string) => unknown }
+) => {
+  const a = String(rowA.getValue('createdAt'))
+  const b = String(rowB.getValue('createdAt'))
+  if (!a && !b) return 0
+  if (!a) return 1
+  if (!b) return -1
+  return new Date(a).getTime() - new Date(b).getTime()
+}
+
+function buildIdAndTitleColumns(
+  copyToClipboard: (text: string, label?: string) => Promise<boolean>,
+  createLink: (path: string) => RouteLiteral
+) {
+  return [
+    columnHelper.accessor('displayNumber', {
+      header: '#',
+      cell: info => {
+        const issueId = info.row.original.issueNumber
+        return (
+          <button
+            type="button"
+            className="issue-number-copy-btn"
+            onClick={e => {
+              e.stopPropagation()
+              void copyToClipboard(issueId, `issue #${info.getValue()}`)
+            }}
+            title="Click to copy UUID"
+          >
+            #{info.getValue()}
+          </button>
+        )
+      },
+      enableColumnFilter: true,
+      filterFn: (row, columnId, filterValue) => {
+        const value = row.getValue(columnId)
+        return String(value).includes(filterValue)
+      },
+    }),
+    columnHelper.accessor('title', {
+      header: 'Title',
+      cell: info => (
+        <Link
+          href={createLink(`/issues/${info.row.original.issueNumber}`)}
+          className="issue-title-link"
+        >
+          {info.getValue()}
+        </Link>
+      ),
+      enableColumnFilter: true,
+      filterFn: 'includesString',
+    }),
+  ]
+}
+
+const lastSeenSortFn = (
+  rowA: { getValue: (id: string) => unknown },
+  rowB: { getValue: (id: string) => unknown }
+) => {
+  const a = Number(rowA.getValue('lastSeen'))
+  const b = Number(rowB.getValue('lastSeen'))
+  if (a === 0 && b === 0) return 0
+  if (a === 0) return 1
+  if (b === 0) return -1
+  return a - b
+}
+
+function buildStatusAndPriorityColumns(
+  stateManager: ReturnType<typeof useStateManager>
+) {
+  return [
+    columnHelper.accessor(
+      row => (row.metadata && row.metadata.status) || 'unknown',
+      {
+        id: 'status',
+        header: 'Status',
+        cell: info => (
+          <span
+            className={`status-badge ${stateManager.getStateClass(info.getValue())}`}
+          >
+            {info.getValue()}
+          </span>
+        ),
+        enableColumnFilter: true,
+        filterFn: multiSelectFilterFn,
+      }
+    ),
+    columnHelper.accessor(
+      row => (row.metadata && row.metadata.priorityLabel) || 'unknown',
+      {
+        id: 'priority',
+        header: 'Priority',
+        cell: info => (
+          <span
+            className={`priority-badge ${getPriorityClass(info.getValue())}`}
+          >
+            {info.getValue()}
+          </span>
+        ),
+        enableColumnFilter: true,
+        filterFn: multiSelectFilterFn,
+        sortingFn: prioritySortFn,
+      }
+    ),
+  ]
+}
+
+function buildDateAndLastSeenColumns(lastSeenMap: Record<string, number>) {
+  return [
+    columnHelper.accessor(
+      row => (row.metadata && row.metadata.createdAt) || '',
+      {
+        id: 'createdAt',
+        header: 'Created',
+        cell: info => {
+          const date = info.getValue()
+          return (
+            <span className="issue-date-text">
+              {date ? new Date(date).toLocaleDateString() : '-'}
+            </span>
+          )
+        },
+        enableColumnFilter: false,
+        sortingFn: dateSortFn,
+      }
+    ),
+    columnHelper.accessor(row => lastSeenMap[row.id] || 0, {
+      id: 'lastSeen',
+      header: 'Last Seen',
+      cell: info => {
+        const timestamp = info.getValue()
+        if (!timestamp) return <span className="issue-not-seen">Never</span>
+        return (
+          <span className="issue-date-text">
+            {new Date(timestamp).toLocaleDateString()}
+          </span>
+        )
+      },
+      enableColumnFilter: false,
+      sortingFn: lastSeenSortFn,
+    }),
+  ]
+}
+
+function buildMetadataColumns(
+  stateManager: ReturnType<typeof useStateManager>,
+  lastSeenMap: Record<string, number>
+) {
+  return [
+    ...buildStatusAndPriorityColumns(stateManager),
+    ...buildDateAndLastSeenColumns(lastSeenMap),
+  ]
+}
+
+function buildColumns(
+  lastSeenMap: Record<string, number>,
+  stateManager: ReturnType<typeof useStateManager>,
+  copyToClipboard: (text: string, label?: string) => Promise<boolean>,
+  createLink: (path: string) => RouteLiteral
+) {
+  return [
+    ...buildIdAndTitleColumns(copyToClipboard, createLink),
+    ...buildMetadataColumns(stateManager, lastSeenMap),
+  ]
+}
+
+function getCellClassName(columnId: string) {
+  if (columnId === 'displayNumber') return 'issue-number'
+  if (columnId === 'title') return 'issue-title'
+  if (columnId === 'createdAt') return 'issue-date'
+  return ''
+}
+
+function ColumnFilterControl({
+  columnId,
+  filterValue,
+  setFilterValue,
+  statusOptions,
+}: {
+  columnId: string
+  filterValue: unknown
+  setFilterValue: (val: unknown) => void
+  statusOptions: MultiSelectOption[]
+}) {
+  if (columnId === 'status') {
+    return (
+      <MultiSelect
+        options={statusOptions}
+        value={(() => {
+          return Array.isArray(filterValue)
+            ? filterValue.filter((v): v is string => typeof v === 'string')
+            : []
+        })()}
+        onChange={values =>
+          setFilterValue(values.length > 0 ? values : undefined)
+        }
+        placeholder="All"
+        className="column-filter-multi"
+      />
+    )
+  }
+  if (columnId === 'priority') {
+    return (
+      <MultiSelect
+        options={PRIORITY_OPTIONS}
+        value={(() => {
+          return Array.isArray(filterValue)
+            ? filterValue.filter((v): v is string => typeof v === 'string')
+            : []
+        })()}
+        onChange={values =>
+          setFilterValue(values.length > 0 ? values : undefined)
+        }
+        placeholder="All"
+        className="column-filter-multi"
+      />
+    )
+  }
+  return (
+    <input
+      type="text"
+      className="column-filter"
+      placeholder="Filter..."
+      value={(() => {
+        return typeof filterValue === 'string' ? filterValue : ''
+      })()}
+      onChange={e => setFilterValue(e.target.value)}
+    />
+  )
+}
+
+function getSortIndicator(sorted: false | 'asc' | 'desc') {
+  if (sorted === 'asc') return ' \u25B2'
+  if (sorted === 'desc') return ' \u25BC'
+  return ''
+}
+
+function IssuesTableHead({
+  table,
+  statusOptions,
+}: {
+  table: ReturnType<typeof useReactTable<Issue>>
+  statusOptions: MultiSelectOption[]
+}) {
+  return (
+    <thead>
+      {table.getHeaderGroups().map(headerGroup => (
+        <tr key={headerGroup.id}>
+          {headerGroup.headers.map(header => (
+            <th key={header.id}>
+              <div className="th-content">
+                <button
+                  type="button"
+                  className={`sort-btn ${header.column.getIsSorted() ? 'sorted' : ''}`}
+                  onClick={header.column.getToggleSortingHandler()}
+                >
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext()
+                  )}
+                  <span className="sort-indicator">
+                    {getSortIndicator(header.column.getIsSorted())}
+                  </span>
+                </button>
+                {header.column.getCanFilter() && (
+                  <ColumnFilterControl
+                    columnId={header.column.id}
+                    filterValue={header.column.getFilterValue()}
+                    setFilterValue={header.column.setFilterValue}
+                    statusOptions={statusOptions}
+                  />
+                )}
+              </div>
+            </th>
+          ))}
+        </tr>
+      ))}
+    </thead>
+  )
+}
+
+function IssuesTableView({
+  table,
+  statusOptions,
+  onContextMenu,
+}: {
+  table: ReturnType<typeof useReactTable<Issue>>
+  statusOptions: MultiSelectOption[]
+  onContextMenu: (e: React.MouseEvent, issue: Issue) => void
+}) {
+  return (
+    <div className="issues-table">
+      <table>
+        <IssuesTableHead table={table} statusOptions={statusOptions} />
+        <tbody>
+          {table.getRowModel().rows.map(row => (
+            <tr
+              key={row.original.issueNumber}
+              onContextMenu={e => onContextMenu(e, row.original)}
+              className="context-menu-row"
+            >
+              {row.getVisibleCells().map(cell => (
+                <td key={cell.id} className={getCellClassName(cell.column.id)}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+function IssuesListModals({
+  projectPath,
+  selectedIssue,
+  showMoveModal,
+  showDuplicateModal,
+  showStandaloneModal,
+  contextMenu,
+  contextMenuItems,
+  onCloseMoveModal,
+  onMoved,
+  onCloseDuplicateModal,
+  onDuplicated,
+  onCloseStandaloneModal,
+  onCloseContextMenu,
+}: {
+  projectPath: string
+  selectedIssue: Issue | null
+  showMoveModal: boolean
+  showDuplicateModal: boolean
+  showStandaloneModal: boolean
+  contextMenu: { x: number; y: number; issue: Issue } | null
+  contextMenuItems: ContextMenuItem[]
+  onCloseMoveModal: () => void
+  onMoved: (targetProjectPath: string) => void
+  onCloseDuplicateModal: () => void
+  onDuplicated: (newIssueId: string, targetProjectPath: string) => void
+  onCloseStandaloneModal: () => void
+  onCloseContextMenu: () => void
+}) {
+  return (
+    <>
+      {contextMenu && (
+        <ContextMenu
+          items={contextMenuItems}
+          x={contextMenu.x}
+          y={contextMenu.y}
+          onClose={onCloseContextMenu}
+        />
+      )}
+
+      {showMoveModal && selectedIssue && (
+        <MoveModal
+          entityType="issue"
+          entityId={selectedIssue.id}
+          entityTitle={selectedIssue.title}
+          currentProjectPath={projectPath}
+          onClose={onCloseMoveModal}
+          onMoved={onMoved}
+        />
+      )}
+
+      {showDuplicateModal && selectedIssue && (
+        <DuplicateModal
+          entityType="issue"
+          entityId={selectedIssue.id}
+          entityTitle={selectedIssue.title}
+          currentProjectPath={projectPath}
+          onClose={onCloseDuplicateModal}
+          onDuplicated={onDuplicated}
+        />
+      )}
+
+      {showStandaloneModal && projectPath && (
+        <StandaloneWorkspaceModal
+          projectPath={projectPath}
+          onClose={onCloseStandaloneModal}
+        />
+      )}
+    </>
+  )
+}
+
+function useIssuesListDeps() {
   const router = useRouter()
   const { projectPath, isInitialized } = usePathContext()
   const resolvePathToUrl = useProjectPathToUrl()
   const stateManager = useStateManager()
-  const [issues, setIssues] = useState<Issue[]>([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
   const { copyToClipboard } = useCopyToClipboard()
   const { createLink, createProjectLink } = useAppLink()
   const { lastSeenMap } = useLastSeenIssues()
   const { pinItem, unpinItem, isPinned } = usePinnedItems()
+  const { sorting, setSorting, columnFilters, setColumnFilters } =
+    useIssueTableSettings()
 
-  // Context menu state
+  return {
+    router,
+    projectPath,
+    isInitialized,
+    resolvePathToUrl,
+    stateManager,
+    copyToClipboard,
+    createLink,
+    createProjectLink,
+    lastSeenMap,
+    pinItem,
+    unpinItem,
+    isPinned,
+    sorting,
+    setSorting,
+    columnFilters,
+    setColumnFilters,
+  }
+}
+
+function useIssuesListCoreState() {
+  const deps = useIssuesListDeps()
+  const [issues, setIssues] = useState<Issue[]>([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [contextMenu, setContextMenu] = useState<{
     x: number
     y: number
@@ -90,559 +533,318 @@ export function IssuesList() {
   const [showStandaloneModal, setShowStandaloneModal] = useState(false)
   const [selectedIssue, setSelectedIssue] = useState<Issue | null>(null)
 
-  // TanStack Table state - persisted per-project
-  const { sorting, setSorting, columnFilters, setColumnFilters } =
-    useIssueTableSettings()
-
-  // Convert config states to MultiSelect options format
   const statusOptions: MultiSelectOption[] = useMemo(
     () =>
-      stateManager.getStateOptions().map(opt => ({
-        value: opt.value,
-        label: opt.label,
-      })),
-    [stateManager]
+      deps.stateManager
+        .getStateOptions()
+        .map(opt => ({ value: opt.value, label: opt.label })),
+    [deps.stateManager]
   )
-
   const columns = useMemo(
-    () => [
-      columnHelper.accessor('displayNumber', {
-        header: '#',
-        cell: info => {
-          const issueId = info.row.original.issueNumber
-          return (
-            <button
-              type="button"
-              className="issue-number-copy-btn"
-              onClick={e => {
-                e.stopPropagation()
-                void copyToClipboard(issueId, `issue #${info.getValue()}`)
-              }}
-              title="Click to copy UUID"
-            >
-              #{info.getValue()}
-            </button>
-          )
-        },
-        enableColumnFilter: true,
-        filterFn: (row, columnId, filterValue) => {
-          const value = row.getValue(columnId)
-          return String(value).includes(filterValue)
-        },
-      }),
-      columnHelper.accessor('title', {
-        header: 'Title',
-        cell: info => {
-          return (
-            <Link
-              href={createLink(`/issues/${info.row.original.issueNumber}`)}
-              className="issue-title-link"
-            >
-              {info.getValue()}
-            </Link>
-          )
-        },
-        enableColumnFilter: true,
-        filterFn: 'includesString',
-      }),
-      columnHelper.accessor(
-        row => (row.metadata && row.metadata.status) || 'unknown',
-        {
-          id: 'status',
-          header: 'Status',
-          cell: info => {
-            const status = info.getValue()
-            return (
-              <span
-                className={`status-badge ${stateManager.getStateClass(status)}`}
-              >
-                {status}
-              </span>
-            )
-          },
-          enableColumnFilter: true,
-          filterFn: (row, columnId, filterValue) => {
-            const status = String(row.getValue(columnId))
-            // Multi-select filter: show if status is in selected values
-            const selectedValues = Array.isArray(filterValue) ? filterValue : []
-            if (selectedValues.length === 0) {
-              return true // Show all when nothing selected
-            }
-            return selectedValues.includes(status)
-          },
-        }
+    () =>
+      buildColumns(
+        deps.lastSeenMap,
+        deps.stateManager,
+        deps.copyToClipboard,
+        deps.createLink
       ),
-      columnHelper.accessor(
-        row => (row.metadata && row.metadata.priorityLabel) || 'unknown',
-        {
-          id: 'priority',
-          header: 'Priority',
-          cell: info => {
-            const priority = info.getValue()
-            return (
-              <span className={`priority-badge ${getPriorityClass(priority)}`}>
-                {priority}
-              </span>
-            )
-          },
-          enableColumnFilter: true,
-          filterFn: (row, columnId, filterValue) => {
-            const priority = String(row.getValue(columnId)).toLowerCase()
-            // Multi-select filter: show if priority is in selected values
-            const selectedValues = Array.isArray(filterValue) ? filterValue : []
-            if (selectedValues.length === 0) {
-              return true // Show all when nothing selected
-            }
-            return selectedValues.includes(priority)
-          },
-          sortingFn: (rowA, rowB) => {
-            const priorityOrder: Record<string, number> = {
-              high: 1,
-              critical: 1,
-              p1: 1,
-              medium: 2,
-              normal: 2,
-              p2: 2,
-              low: 3,
-              p3: 3,
-              unknown: 4,
-            }
-            const a = String(rowA.getValue('priority')).toLowerCase()
-            const b = String(rowB.getValue('priority')).toLowerCase()
-            return (priorityOrder[a] || 4) - (priorityOrder[b] || 4)
-          },
-        }
-      ),
-      columnHelper.accessor(
-        row => (row.metadata && row.metadata.createdAt) || '',
-        {
-          id: 'createdAt',
-          header: 'Created',
-          cell: info => {
-            const date = info.getValue()
-            return (
-              <span className="issue-date-text">
-                {date ? new Date(date).toLocaleDateString() : '-'}
-              </span>
-            )
-          },
-          enableColumnFilter: false,
-          sortingFn: (rowA, rowB) => {
-            const a = String(rowA.getValue('createdAt'))
-            const b = String(rowB.getValue('createdAt'))
-            if (!a && !b) return 0
-            if (!a) return 1
-            if (!b) return -1
-            return new Date(a).getTime() - new Date(b).getTime()
-          },
-        }
-      ),
-      columnHelper.accessor(row => lastSeenMap[row.id] || 0, {
-        id: 'lastSeen',
-        header: 'Last Seen',
-        cell: info => {
-          const timestamp = info.getValue()
-          if (!timestamp) {
-            return <span className="issue-not-seen">Never</span>
-          }
-          return (
-            <span className="issue-date-text">
-              {new Date(timestamp).toLocaleDateString()}
-            </span>
-          )
-        },
-        enableColumnFilter: false,
-        sortingFn: (rowA, rowB) => {
-          const a = Number(rowA.getValue('lastSeen'))
-          const b = Number(rowB.getValue('lastSeen'))
-          // Never-seen issues (0) sort to bottom
-          if (a === 0 && b === 0) return 0
-          if (a === 0) return 1
-          if (b === 0) return -1
-          return a - b
-        },
-      }),
-    ],
-    [lastSeenMap, stateManager, copyToClipboard, createLink]
+    [deps.lastSeenMap, deps.stateManager, deps.copyToClipboard, deps.createLink]
   )
 
   const table = useReactTable({
     data: issues,
     columns,
-    state: {
-      sorting,
-      columnFilters,
-    },
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
+    state: { sorting: deps.sorting, columnFilters: deps.columnFilters },
+    onSortingChange: deps.setSorting,
+    onColumnFiltersChange: deps.setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
   })
 
+  return {
+    ...deps,
+    issues,
+    setIssues,
+    loading,
+    setLoading,
+    error,
+    setError,
+    table,
+    statusOptions,
+    contextMenu,
+    setContextMenu,
+    showMoveModal,
+    setShowMoveModal,
+    showDuplicateModal,
+    setShowDuplicateModal,
+    showStandaloneModal,
+    setShowStandaloneModal,
+    selectedIssue,
+    setSelectedIssue,
+  }
+}
+
+function useFetchIssues(s: ReturnType<typeof useIssuesListCoreState>) {
   const fetchIssues = useCallback(async () => {
-    if (!projectPath.trim() || isInitialized !== true) return
-
-    setLoading(true)
-    setError(null)
-
+    if (!s.projectPath.trim() || s.isInitialized !== true) return
+    s.setLoading(true)
+    s.setError(null)
     try {
       const request = create(ListIssuesRequestSchema, {
-        projectPath: projectPath.trim(),
+        projectPath: s.projectPath.trim(),
       })
       const response = await centyClient.listIssues(request)
-      setIssues(response.issues)
+      s.setIssues(response.issues)
     } catch (err) {
-      setError(
+      s.setError(
         err instanceof Error ? err.message : 'Failed to connect to daemon'
       )
     } finally {
-      setLoading(false)
+      s.setLoading(false)
     }
-  }, [projectPath, isInitialized])
+  }, [s])
 
   useEffect(() => {
-    if (isInitialized === true) {
+    if (s.isInitialized === true) {
       fetchIssues()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isInitialized, projectPath])
+  }, [s.isInitialized, s.projectPath])
 
-  const handleContextMenu = useCallback((e: React.MouseEvent, issue: Issue) => {
-    e.preventDefault()
-    setContextMenu({ x: e.clientX, y: e.clientY, issue })
-  }, [])
+  return fetchIssues
+}
 
-  const handleMoveIssue = useCallback((issue: Issue) => {
-    setSelectedIssue(issue)
-    setShowMoveModal(true)
-    setContextMenu(null)
-  }, [])
+function useIssuesListContextMenuHandlers(
+  s: ReturnType<typeof useIssuesListCoreState>
+) {
+  const handleContextMenu = useCallback(
+    (e: React.MouseEvent, issue: Issue) => {
+      e.preventDefault()
+      s.setContextMenu({ x: e.clientX, y: e.clientY, issue })
+    },
+    [s]
+  )
+  const handleMoveIssue = useCallback(
+    (issue: Issue) => {
+      s.setSelectedIssue(issue)
+      s.setShowMoveModal(true)
+      s.setContextMenu(null)
+    },
+    [s]
+  )
+  const handleDuplicateIssue = useCallback(
+    (issue: Issue) => {
+      s.setSelectedIssue(issue)
+      s.setShowDuplicateModal(true)
+      s.setContextMenu(null)
+    },
+    [s]
+  )
+  return { handleContextMenu, handleMoveIssue, handleDuplicateIssue }
+}
 
-  const handleDuplicateIssue = useCallback((issue: Issue) => {
-    setSelectedIssue(issue)
-    setShowDuplicateModal(true)
-    setContextMenu(null)
-  }, [])
-
+function useIssuesListNavHandlers(
+  s: ReturnType<typeof useIssuesListCoreState>,
+  fetchIssues: () => Promise<void>
+) {
   const handleMoved = useCallback(
     async (targetProjectPath: string) => {
-      // Resolve path to org/project for URL navigation
-      const result = await resolvePathToUrl(targetProjectPath)
+      const result = await s.resolvePathToUrl(targetProjectPath)
       if (result) {
-        const url = createProjectLink(
-          result.orgSlug,
-          result.projectName,
-          'issues'
+        s.router.push(
+          s.createProjectLink(result.orgSlug, result.projectName, 'issues')
         )
-        router.push(url)
       } else {
-        // Fallback to root if resolution fails
-        router.push('/')
+        s.router.push('/')
       }
     },
-    [resolvePathToUrl, createProjectLink, router]
+    [s]
   )
-
   const handleDuplicated = useCallback(
     async (newIssueId: string, targetProjectPath: string) => {
-      if (targetProjectPath === projectPath) {
-        // Same project - refresh and navigate to new issue
+      if (targetProjectPath === s.projectPath) {
         fetchIssues()
-        router.push(createLink(`/issues/${newIssueId}`))
+        s.router.push(s.createLink(`/issues/${newIssueId}`))
       } else {
-        // Different project - resolve and redirect
-        const result = await resolvePathToUrl(targetProjectPath)
+        const result = await s.resolvePathToUrl(targetProjectPath)
         if (result) {
-          const url = createProjectLink(
-            result.orgSlug,
-            result.projectName,
-            `issues/${newIssueId}`
+          s.router.push(
+            s.createProjectLink(
+              result.orgSlug,
+              result.projectName,
+              `issues/${newIssueId}`
+            )
           )
-          router.push(url)
         } else {
-          router.push('/')
+          s.router.push('/')
         }
       }
-      setShowDuplicateModal(false)
-      setSelectedIssue(null)
+      s.setShowDuplicateModal(false)
+      s.setSelectedIssue(null)
     },
-    [
-      projectPath,
-      router,
-      fetchIssues,
-      createLink,
-      resolvePathToUrl,
-      createProjectLink,
-    ]
+    [s, fetchIssues]
   )
+  return { handleMoved, handleDuplicated }
+}
 
-  const contextMenuItems: ContextMenuItem[] = contextMenu
-    ? [
-        {
-          label: isPinned(contextMenu.issue.issueNumber) ? 'Unpin' : 'Pin',
-          onClick: () => {
-            if (isPinned(contextMenu.issue.issueNumber)) {
-              unpinItem(contextMenu.issue.issueNumber)
-            } else {
-              pinItem({
-                id: contextMenu.issue.issueNumber,
-                type: 'issue',
-                title: contextMenu.issue.title,
-                displayNumber: contextMenu.issue.displayNumber,
-              })
-            }
-            setContextMenu(null)
-          },
-        },
-        {
-          label: 'View',
-          onClick: () => {
-            router.push(createLink(`/issues/${contextMenu.issue.id}`))
-            setContextMenu(null)
-          },
-        },
-        {
-          label: 'Move',
-          onClick: () => handleMoveIssue(contextMenu.issue),
-        },
-        {
-          label: 'Duplicate',
-          onClick: () => handleDuplicateIssue(contextMenu.issue),
-        },
-      ]
-    : []
+function useIssuesListState() {
+  const s = useIssuesListCoreState()
+  const fetchIssues = useFetchIssues(s)
+  const contextMenuHandlers = useIssuesListContextMenuHandlers(s)
+  const navHandlers = useIssuesListNavHandlers(s, fetchIssues)
+
+  return {
+    ...s,
+    fetchIssues,
+    ...contextMenuHandlers,
+    ...navHandlers,
+  }
+}
+
+function buildContextMenuItems(
+  state: ReturnType<typeof useIssuesListState>
+): ContextMenuItem[] {
+  if (!state.contextMenu) return []
+  const issue = state.contextMenu.issue
+  return [
+    {
+      label: state.isPinned(issue.issueNumber) ? 'Unpin' : 'Pin',
+      onClick: () => {
+        if (state.isPinned(issue.issueNumber)) {
+          state.unpinItem(issue.issueNumber)
+        } else {
+          state.pinItem({
+            id: issue.issueNumber,
+            type: 'issue',
+            title: issue.title,
+            displayNumber: issue.displayNumber,
+          })
+        }
+        state.setContextMenu(null)
+      },
+    },
+    {
+      label: 'View',
+      onClick: () => {
+        state.router.push(state.createLink(`/issues/${issue.id}`))
+        state.setContextMenu(null)
+      },
+    },
+    { label: 'Move', onClick: () => state.handleMoveIssue(issue) },
+    { label: 'Duplicate', onClick: () => state.handleDuplicateIssue(issue) },
+  ]
+}
+
+function IssuesListHeader({
+  state,
+}: {
+  state: ReturnType<typeof useIssuesListState>
+}) {
+  return (
+    <div className="issues-header">
+      <h2>Issues</h2>
+      <div className="header-actions">
+        {state.projectPath && state.isInitialized === true && (
+          <button
+            onClick={state.fetchIssues}
+            disabled={state.loading}
+            className="refresh-btn"
+          >
+            {state.loading ? 'Loading...' : 'Refresh'}
+          </button>
+        )}
+        <button
+          onClick={() => state.setShowStandaloneModal(true)}
+          className="workspace-btn"
+          title="Create a standalone workspace without an issue"
+        >
+          + New Workspace
+        </button>
+        <Link href={state.createLink('/issues/new')} className="create-btn">
+          + New Issue
+        </Link>
+      </div>
+    </div>
+  )
+}
+
+function IssuesListContent({
+  state,
+}: {
+  state: ReturnType<typeof useIssuesListState>
+}) {
+  if (!state.projectPath) {
+    return (
+      <div className="no-project-message">
+        <p>Select a project from the header to view issues</p>
+      </div>
+    )
+  }
+
+  if (state.isInitialized === false) {
+    return (
+      <div className="not-initialized-message">
+        <p>Centy is not initialized in this directory</p>
+        <Link href={state.createLink('/')}>Initialize Project</Link>
+      </div>
+    )
+  }
+
+  if (state.isInitialized !== true) return null
+
+  return (
+    <>
+      {state.error && <DaemonErrorMessage error={state.error} />}
+      {state.loading && state.issues.length === 0 ? (
+        <div className="loading">Loading issues...</div>
+      ) : state.issues.length === 0 ? (
+        <div className="empty-state">
+          <p>No issues found</p>
+          <Link href={state.createLink('/issues/new')}>
+            Create your first issue
+          </Link>
+        </div>
+      ) : (
+        <IssuesTableView
+          table={state.table}
+          statusOptions={state.statusOptions}
+          onContextMenu={state.handleContextMenu}
+        />
+      )}
+    </>
+  )
+}
+
+export function IssuesList() {
+  const state = useIssuesListState()
+  const contextMenuItems = buildContextMenuItems(state)
 
   return (
     <div className="issues-list">
-      <div className="issues-header">
-        <h2 className="issues-heading">Issues</h2>
-        <div className="header-actions">
-          {projectPath && isInitialized === true && (
-            <button
-              onClick={fetchIssues}
-              disabled={loading}
-              className="refresh-btn"
-            >
-              {loading ? 'Loading...' : 'Refresh'}
-            </button>
-          )}
-          <button
-            onClick={() => setShowStandaloneModal(true)}
-            className="workspace-btn"
-            title="Create a standalone workspace without an issue"
-          >
-            + New Workspace
-          </button>
-          <Link href={createLink('/issues/new')} className="create-btn">
-            + New Issue
-          </Link>
-        </div>
-      </div>
-
-      {!projectPath && (
-        <div className="no-project-message">
-          <p className="no-project-text">
-            Select a project from the header to view issues
-          </p>
-        </div>
-      )}
-
-      {projectPath && isInitialized === false && (
-        <div className="not-initialized-message">
-          <p className="not-initialized-text">
-            Centy is not initialized in this directory
-          </p>
-          <Link href={createLink('/')}>Initialize Project</Link>
-        </div>
-      )}
-
-      {projectPath && isInitialized === true && (
-        <>
-          {error && <DaemonErrorMessage error={error} />}
-
-          {loading && issues.length === 0 ? (
-            <div className="loading">Loading issues...</div>
-          ) : issues.length === 0 ? (
-            <div className="empty-state">
-              <p className="empty-state-message">No issues found</p>
-              <Link href={createLink('/issues/new')}>
-                Create your first issue
-              </Link>
-            </div>
-          ) : (
-            <div className="issues-table">
-              <table className="issues-data-table">
-                <thead className="issues-data-thead">
-                  {table.getHeaderGroups().map(headerGroup => (
-                    <tr key={headerGroup.id} className="issues-header-row">
-                      {headerGroup.headers.map(header => (
-                        <th key={header.id} className="issues-th">
-                          <div className="th-content">
-                            <button
-                              type="button"
-                              className={`sort-btn ${header.column.getIsSorted() ? 'sorted' : ''}`}
-                              onClick={header.column.getToggleSortingHandler()}
-                            >
-                              {flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
-                              <span className="sort-indicator">
-                                {(() => {
-                                  const sorted = header.column.getIsSorted()
-                                  return sorted === 'asc'
-                                    ? ' \u25B2'
-                                    : sorted === 'desc'
-                                      ? ' \u25BC'
-                                      : ''
-                                })()}
-                              </span>
-                            </button>
-                            {header.column.getCanFilter() &&
-                              (header.column.id === 'status' ? (
-                                <MultiSelect
-                                  options={statusOptions}
-                                  value={(() => {
-                                    const filterVal =
-                                      header.column.getFilterValue()
-                                    return Array.isArray(filterVal)
-                                      ? filterVal.filter(
-                                          (v): v is string =>
-                                            typeof v === 'string'
-                                        )
-                                      : []
-                                  })()}
-                                  onChange={values =>
-                                    header.column.setFilterValue(
-                                      values.length > 0 ? values : undefined
-                                    )
-                                  }
-                                  placeholder="All"
-                                  className="column-filter-multi"
-                                />
-                              ) : header.column.id === 'priority' ? (
-                                <MultiSelect
-                                  options={PRIORITY_OPTIONS}
-                                  value={(() => {
-                                    const filterVal =
-                                      header.column.getFilterValue()
-                                    return Array.isArray(filterVal)
-                                      ? filterVal.filter(
-                                          (v): v is string =>
-                                            typeof v === 'string'
-                                        )
-                                      : []
-                                  })()}
-                                  onChange={values =>
-                                    header.column.setFilterValue(
-                                      values.length > 0 ? values : undefined
-                                    )
-                                  }
-                                  placeholder="All"
-                                  className="column-filter-multi"
-                                />
-                              ) : (
-                                <input
-                                  type="text"
-                                  className="column-filter"
-                                  placeholder="Filter..."
-                                  value={(() => {
-                                    const filterVal =
-                                      header.column.getFilterValue()
-                                    return typeof filterVal === 'string'
-                                      ? filterVal
-                                      : ''
-                                  })()}
-                                  onChange={e =>
-                                    header.column.setFilterValue(e.target.value)
-                                  }
-                                />
-                              ))}
-                          </div>
-                        </th>
-                      ))}
-                    </tr>
-                  ))}
-                </thead>
-                <tbody className="issues-data-tbody">
-                  {table.getRowModel().rows.map(row => (
-                    <tr
-                      key={row.original.issueNumber}
-                      onContextMenu={e => handleContextMenu(e, row.original)}
-                      className="context-menu-row"
-                    >
-                      {row.getVisibleCells().map(cell => (
-                        <td
-                          key={cell.id}
-                          className={
-                            cell.column.id === 'displayNumber'
-                              ? 'issue-number'
-                              : cell.column.id === 'title'
-                                ? 'issue-title'
-                                : cell.column.id === 'createdAt'
-                                  ? 'issue-date'
-                                  : ''
-                          }
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </>
-      )}
-
-      {contextMenu && (
-        <ContextMenu
-          items={contextMenuItems}
-          x={contextMenu.x}
-          y={contextMenu.y}
-          onClose={() => setContextMenu(null)}
-        />
-      )}
-
-      {showMoveModal && selectedIssue && (
-        <MoveModal
-          entityType="issue"
-          entityId={selectedIssue.id}
-          entityTitle={selectedIssue.title}
-          currentProjectPath={projectPath}
-          onClose={() => {
-            setShowMoveModal(false)
-            setSelectedIssue(null)
-          }}
-          onMoved={handleMoved}
-        />
-      )}
-
-      {showDuplicateModal && selectedIssue && (
-        <DuplicateModal
-          entityType="issue"
-          entityId={selectedIssue.id}
-          entityTitle={selectedIssue.title}
-          currentProjectPath={projectPath}
-          onClose={() => {
-            setShowDuplicateModal(false)
-            setSelectedIssue(null)
-          }}
-          onDuplicated={handleDuplicated}
-        />
-      )}
-
-      {showStandaloneModal && projectPath && (
-        <StandaloneWorkspaceModal
-          projectPath={projectPath}
-          onClose={() => setShowStandaloneModal(false)}
-        />
-      )}
+      <IssuesListHeader state={state} />
+      <IssuesListContent state={state} />
+      <IssuesListModals
+        projectPath={state.projectPath}
+        selectedIssue={state.selectedIssue}
+        showMoveModal={state.showMoveModal}
+        showDuplicateModal={state.showDuplicateModal}
+        showStandaloneModal={state.showStandaloneModal}
+        contextMenu={state.contextMenu}
+        contextMenuItems={contextMenuItems}
+        onCloseMoveModal={() => {
+          state.setShowMoveModal(false)
+          state.setSelectedIssue(null)
+        }}
+        onMoved={state.handleMoved}
+        onCloseDuplicateModal={() => {
+          state.setShowDuplicateModal(false)
+          state.setSelectedIssue(null)
+        }}
+        onDuplicated={state.handleDuplicated}
+        onCloseStandaloneModal={() => state.setShowStandaloneModal(false)}
+        onCloseContextMenu={() => state.setContextMenu(null)}
+      />
     </div>
   )
 }

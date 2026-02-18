@@ -50,13 +50,12 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  const Provider = ProjectContext.Provider
   return (
-    <Provider
+    <ProjectContext.Provider
       value={{ projectPath, setProjectPath, isInitialized, setIsInitialized }}
     >
       {children}
-    </Provider>
+    </ProjectContext.Provider>
   )
 }
 

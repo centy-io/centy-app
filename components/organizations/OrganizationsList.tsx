@@ -30,7 +30,339 @@ import { isDaemonUnimplemented } from '@/lib/daemon-error'
 
 const columnHelper = createColumnHelper<Organization>()
 
-export function OrganizationsList() {
+function DeleteConfirmDialog({
+  deleteError,
+  deleting,
+  onCancel,
+  onConfirm,
+}: {
+  deleteError: string | null
+  deleting: boolean
+  onCancel: () => void
+  onConfirm: () => void
+}) {
+  return (
+    <div className="delete-confirm">
+      <p>Are you sure you want to delete this organization?</p>
+      {deleteError && <p className="delete-error-message">{deleteError}</p>}
+      <div className="delete-confirm-actions">
+        <button onClick={onCancel} className="cancel-btn">
+          Cancel
+        </button>
+        <button
+          onClick={onConfirm}
+          disabled={deleting}
+          className="confirm-delete-btn"
+        >
+          {deleting ? 'Deleting...' : 'Yes, Delete'}
+        </button>
+      </div>
+    </div>
+  )
+}
+
+function getCellClassName(columnId: string) {
+  if (columnId === 'name') return 'org-name'
+  if (columnId === 'slug') return 'org-slug'
+  if (columnId === 'projectCount') return 'org-projects'
+  if (columnId === 'createdAt') return 'org-date'
+  return ''
+}
+
+function OrgTableHeader({
+  table,
+}: {
+  table: ReturnType<typeof useReactTable<Organization>>
+}) {
+  return (
+    <thead>
+      {table.getHeaderGroups().map(headerGroup => (
+        <tr key={headerGroup.id}>
+          {headerGroup.headers.map(header => (
+            <th key={header.id}>
+              <div className="th-content">
+                <button
+                  type="button"
+                  className={`sort-btn ${header.column.getIsSorted() ? 'sorted' : ''}`}
+                  onClick={header.column.getToggleSortingHandler()}
+                >
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext()
+                  )}
+                  <span className="sort-indicator">
+                    {(() => {
+                      const sorted = header.column.getIsSorted()
+                      return sorted === 'asc'
+                        ? ' ▲'
+                        : sorted === 'desc'
+                          ? ' ▼'
+                          : ''
+                    })()}
+                  </span>
+                </button>
+                {header.column.getCanFilter() && (
+                  <input
+                    type="text"
+                    className="column-filter"
+                    placeholder="Filter..."
+                    value={(() => {
+                      const filterVal = header.column.getFilterValue()
+                      return typeof filterVal === 'string' ? filterVal : ''
+                    })()}
+                    onChange={e => header.column.setFilterValue(e.target.value)}
+                  />
+                )}
+              </div>
+            </th>
+          ))}
+        </tr>
+      ))}
+    </thead>
+  )
+}
+
+function OrganizationsTable({
+  table,
+  handleContextMenu,
+}: {
+  table: ReturnType<typeof useReactTable<Organization>>
+  handleContextMenu: (e: React.MouseEvent, org: Organization) => void
+}) {
+  return (
+    <div className="organizations-table">
+      <table>
+        <OrgTableHeader table={table} />
+        <tbody>
+          {table.getRowModel().rows.map(row => (
+            <tr
+              key={row.original.slug}
+              onContextMenu={e => handleContextMenu(e, row.original)}
+              className="context-menu-row"
+            >
+              {row.getVisibleCells().map(cell => (
+                <td key={cell.id} className={getCellClassName(cell.column.id)}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+function buildColumns() {
+  return [
+    columnHelper.accessor('name', {
+      header: 'Name',
+      cell: info => (
+        <Link
+          href={route({
+            pathname: '/organizations/[orgSlug]',
+            query: { orgSlug: info.row.original.slug },
+          })}
+          className="org-name-link"
+        >
+          {info.getValue()}
+        </Link>
+      ),
+      enableColumnFilter: true,
+      filterFn: 'includesString',
+    }),
+    columnHelper.accessor('slug', {
+      header: 'Slug',
+      cell: info => <code className="org-slug-badge">{info.getValue()}</code>,
+      enableColumnFilter: true,
+      filterFn: 'includesString',
+    }),
+    columnHelper.accessor('description', {
+      header: 'Description',
+      cell: info => {
+        const desc = info.getValue()
+        if (!desc) return <span className="text-muted">-</span>
+        return desc.length > 50 ? `${desc.substring(0, 50)}...` : desc
+      },
+      enableColumnFilter: true,
+      filterFn: 'includesString',
+    }),
+    columnHelper.accessor('projectCount', {
+      header: 'Projects',
+      cell: info => (
+        <span className="org-project-count">{info.getValue()}</span>
+      ),
+      enableColumnFilter: false,
+    }),
+    columnHelper.accessor('createdAt', {
+      header: 'Created',
+      cell: info => {
+        const date = info.getValue()
+        return date ? new Date(date).toLocaleDateString() : '-'
+      },
+      enableColumnFilter: false,
+      sortingFn: (rowA, rowB) => {
+        const aVal = rowA.getValue('createdAt')
+        const bVal = rowB.getValue('createdAt')
+        const a: string = typeof aVal === 'string' ? aVal : ''
+        const b: string = typeof bVal === 'string' ? bVal : ''
+        if (!a && !b) return 0
+        if (!a) return 1
+        if (!b) return -1
+        return new Date(a).getTime() - new Date(b).getTime()
+      },
+    }),
+  ]
+}
+
+async function fetchOrganizationsData(
+  setOrganizations: (orgs: Organization[]) => void,
+  setError: (error: string | null) => void,
+  setLoading: (loading: boolean) => void
+) {
+  setLoading(true)
+  setError(null)
+
+  try {
+    const request = create(ListOrganizationsRequestSchema, {})
+    const response = await centyClient.listOrganizations(request)
+    setOrganizations(response.organizations)
+  } catch (err) {
+    const message =
+      err instanceof Error ? err.message : 'Failed to connect to daemon'
+    if (isDaemonUnimplemented(message)) {
+      setError(
+        'Organizations feature is not available. Please update your daemon.'
+      )
+    } else {
+      setError(message)
+    }
+  } finally {
+    setLoading(false)
+  }
+}
+
+async function deleteOrganizationAction(
+  slug: string,
+  setOrganizations: React.Dispatch<React.SetStateAction<Organization[]>>,
+  setShowDeleteConfirm: (slug: string | null) => void,
+  setDeleteError: (error: string | null) => void,
+  setDeleting: (deleting: boolean) => void
+) {
+  setDeleting(true)
+  setDeleteError(null)
+
+  try {
+    const request = create(DeleteOrganizationRequestSchema, { slug })
+    const response = await centyClient.deleteOrganization(request)
+
+    if (response.success) {
+      setOrganizations(prev => prev.filter(o => o.slug !== slug))
+      setShowDeleteConfirm(null)
+    } else {
+      setDeleteError(response.error || 'Failed to delete organization')
+    }
+  } catch (err) {
+    setDeleteError(
+      err instanceof Error ? err.message : 'Failed to connect to daemon'
+    )
+  } finally {
+    setDeleting(false)
+  }
+}
+
+function buildContextMenuItems(
+  contextMenu: { x: number; y: number; org: Organization },
+  router: ReturnType<typeof useRouter>,
+  setContextMenu: (menu: null) => void,
+  setShowDeleteConfirm: (slug: string) => void
+): ContextMenuItem[] {
+  return [
+    {
+      label: 'View',
+      onClick: () => {
+        router.push(
+          route({
+            pathname: '/organizations/[orgSlug]',
+            query: { orgSlug: contextMenu.org.slug },
+          })
+        )
+        setContextMenu(null)
+      },
+    },
+    {
+      label: 'Edit',
+      onClick: () => {
+        router.push(
+          route({
+            pathname: '/organizations/[orgSlug]',
+            query: { orgSlug: contextMenu.org.slug },
+          })
+        )
+        setContextMenu(null)
+      },
+    },
+    {
+      label: 'Delete',
+      onClick: () => {
+        setShowDeleteConfirm(contextMenu.org.slug)
+        setContextMenu(null)
+      },
+      danger: true,
+    },
+  ]
+}
+
+function OrganizationsListContent({
+  organizations,
+  loading,
+  table,
+  handleContextMenu,
+}: {
+  organizations: Organization[]
+  loading: boolean
+  table: ReturnType<typeof useReactTable<Organization>>
+  handleContextMenu: (e: React.MouseEvent, org: Organization) => void
+}) {
+  if (loading && organizations.length === 0) {
+    return <div className="loading">Loading organizations...</div>
+  }
+
+  if (organizations.length === 0) {
+    return (
+      <div className="empty-state">
+        <p>No organizations found</p>
+        <p>
+          <Link href="/organizations/new">Create your first organization</Link>{' '}
+          to group your projects
+        </p>
+      </div>
+    )
+  }
+
+  return (
+    <OrganizationsTable table={table} handleContextMenu={handleContextMenu} />
+  )
+}
+
+function useOrganizationsTable(organizations: Organization[]) {
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const columns = useMemo(() => buildColumns(), [])
+
+  return useReactTable({
+    data: organizations,
+    columns,
+    state: { sorting, columnFilters },
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+  })
+}
+
+function useOrganizationsListState() {
   const router = useRouter()
   const [organizations, setOrganizations] = useState<Organization[]>([])
   const [loading, setLoading] = useState(false)
@@ -40,116 +372,15 @@ export function OrganizationsList() {
     null
   )
   const [deleteError, setDeleteError] = useState<string | null>(null)
-
-  // Context menu state
   const [contextMenu, setContextMenu] = useState<{
     x: number
     y: number
     org: Organization
   } | null>(null)
-
-  // TanStack Table state
-  const [sorting, setSorting] = useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-
-  const columns = useMemo(
-    () => [
-      columnHelper.accessor('name', {
-        header: 'Name',
-        cell: info => (
-          <Link
-            href={route({
-              pathname: '/organizations/[orgSlug]',
-              query: { orgSlug: info.row.original.slug },
-            })}
-            className="org-name-link"
-          >
-            {info.getValue()}
-          </Link>
-        ),
-        enableColumnFilter: true,
-        filterFn: 'includesString',
-      }),
-      columnHelper.accessor('slug', {
-        header: 'Slug',
-        cell: info => <code className="org-slug-badge">{info.getValue()}</code>,
-        enableColumnFilter: true,
-        filterFn: 'includesString',
-      }),
-      columnHelper.accessor('description', {
-        header: 'Description',
-        cell: info => {
-          const desc = info.getValue()
-          if (!desc) return <span className="text-muted">-</span>
-          return desc.length > 50 ? `${desc.substring(0, 50)}...` : desc
-        },
-        enableColumnFilter: true,
-        filterFn: 'includesString',
-      }),
-      columnHelper.accessor('projectCount', {
-        header: 'Projects',
-        cell: info => (
-          <span className="org-project-count">{info.getValue()}</span>
-        ),
-        enableColumnFilter: false,
-      }),
-      columnHelper.accessor('createdAt', {
-        header: 'Created',
-        cell: info => {
-          const date = info.getValue()
-          return date ? new Date(date).toLocaleDateString() : '-'
-        },
-        enableColumnFilter: false,
-        sortingFn: (rowA, rowB) => {
-          const aVal = rowA.getValue('createdAt')
-          const bVal = rowB.getValue('createdAt')
-          const a: string = typeof aVal === 'string' ? aVal : ''
-          const b: string = typeof bVal === 'string' ? bVal : ''
-          if (!a && !b) return 0
-          if (!a) return 1
-          if (!b) return -1
-          return new Date(a).getTime() - new Date(b).getTime()
-        },
-      }),
-    ],
-    []
-  )
-
-  const table = useReactTable({
-    data: organizations,
-    columns,
-    state: {
-      sorting,
-      columnFilters,
-    },
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-  })
+  const table = useOrganizationsTable(organizations)
 
   const fetchOrganizations = useCallback(async () => {
-    setLoading(true)
-    setError(null)
-
-    try {
-      const request = create(ListOrganizationsRequestSchema, {})
-      const response = await centyClient.listOrganizations(request)
-      setOrganizations(response.organizations)
-    } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to connect to daemon'
-      if (isDaemonUnimplemented(message)) {
-        setError(
-          'Organizations feature is not available. Please update your daemon.'
-        )
-      } else {
-        setError(message)
-      }
-    } finally {
-      setLoading(false)
-    }
+    await fetchOrganizationsData(setOrganizations, setError, setLoading)
   }, [])
 
   useEffect(() => {
@@ -157,26 +388,13 @@ export function OrganizationsList() {
   }, [fetchOrganizations])
 
   const handleDelete = useCallback(async (slug: string) => {
-    setDeleting(true)
-    setDeleteError(null)
-
-    try {
-      const request = create(DeleteOrganizationRequestSchema, { slug })
-      const response = await centyClient.deleteOrganization(request)
-
-      if (response.success) {
-        setOrganizations(prev => prev.filter(o => o.slug !== slug))
-        setShowDeleteConfirm(null)
-      } else {
-        setDeleteError(response.error || 'Failed to delete organization')
-      }
-    } catch (err) {
-      setDeleteError(
-        err instanceof Error ? err.message : 'Failed to connect to daemon'
-      )
-    } finally {
-      setDeleting(false)
-    }
+    await deleteOrganizationAction(
+      slug,
+      setOrganizations,
+      setShowDeleteConfirm,
+      setDeleteError,
+      setDeleting
+    )
   }, [])
 
   const handleContextMenu = useCallback(
@@ -188,53 +406,47 @@ export function OrganizationsList() {
   )
 
   const contextMenuItems: ContextMenuItem[] = contextMenu
-    ? [
-        {
-          label: 'View',
-          onClick: () => {
-            router.push(
-              route({
-                pathname: '/organizations/[orgSlug]',
-                query: { orgSlug: contextMenu.org.slug },
-              })
-            )
-            setContextMenu(null)
-          },
-        },
-        {
-          label: 'Edit',
-          onClick: () => {
-            router.push(
-              route({
-                pathname: '/organizations/[orgSlug]',
-                query: { orgSlug: contextMenu.org.slug },
-              })
-            )
-            setContextMenu(null)
-          },
-        },
-        {
-          label: 'Delete',
-          onClick: () => {
-            setShowDeleteConfirm(contextMenu.org.slug)
-            setContextMenu(null)
-          },
-          danger: true,
-        },
-      ]
+    ? buildContextMenuItems(
+        contextMenu,
+        router,
+        setContextMenu,
+        setShowDeleteConfirm
+      )
     : []
+
+  return {
+    organizations,
+    loading,
+    error,
+    deleting,
+    showDeleteConfirm,
+    deleteError,
+    contextMenu,
+    table,
+    fetchOrganizations,
+    handleDelete,
+    handleContextMenu,
+    contextMenuItems,
+    setShowDeleteConfirm,
+    setDeleteError,
+    setContextMenu,
+  }
+}
+
+export function OrganizationsList() {
+  const state = useOrganizationsListState()
 
   return (
     <div className="organizations-list">
       <div className="organizations-header">
-        <h2 className="organizations-title">Organizations</h2>
+        <h2>Organizations</h2>
         <div className="header-actions">
           <button
-            onClick={fetchOrganizations}
-            disabled={loading}
+            onClick={state.fetchOrganizations}
+            disabled={state.loading}
             className="refresh-btn"
           >
-            {loading ? 'Loading...' : 'Refresh'}
+            {state.loading ? 'Loading...' : 'Refresh'}
           </button>
           <Link href="/organizations/new" className="create-btn">
             + New Organization
@@ -242,139 +454,33 @@ export function OrganizationsList() {
         </div>
       </div>
 
-      {error && <DaemonErrorMessage error={error} />}
+      {state.error && <DaemonErrorMessage error={state.error} />}
 
-      {showDeleteConfirm && (
-        <div className="delete-confirm">
-          <p className="delete-confirm-text">
-            Are you sure you want to delete this organization?
-          </p>
-          {deleteError && <p className="delete-error-message">{deleteError}</p>}
-          <div className="delete-confirm-actions">
-            <button
-              onClick={() => {
-                setShowDeleteConfirm(null)
-                setDeleteError(null)
-              }}
-              className="cancel-btn"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={() => handleDelete(showDeleteConfirm)}
-              disabled={deleting}
-              className="confirm-delete-btn"
-            >
-              {deleting ? 'Deleting...' : 'Yes, Delete'}
-            </button>
-          </div>
-        </div>
+      {state.showDeleteConfirm && (
+        <DeleteConfirmDialog
+          deleteError={state.deleteError}
+          deleting={state.deleting}
+          onCancel={() => {
+            state.setShowDeleteConfirm(null)
+            state.setDeleteError(null)
+          }}
+          onConfirm={() => state.handleDelete(state.showDeleteConfirm!)}
+        />
       )}
 
-      {loading && organizations.length === 0 ? (
-        <div className="loading">Loading organizations...</div>
-      ) : organizations.length === 0 ? (
-        <div className="empty-state">
-          <p className="empty-state-message">No organizations found</p>
-          <p className="empty-state-action">
-            <Link href="/organizations/new">
-              Create your first organization
-            </Link>{' '}
-            to group your projects
-          </p>
-        </div>
-      ) : (
-        <div className="organizations-table">
-          <table className="organizations-data-table">
-            <thead className="organizations-thead">
-              {table.getHeaderGroups().map(headerGroup => (
-                <tr key={headerGroup.id} className="organizations-header-row">
-                  {headerGroup.headers.map(header => (
-                    <th key={header.id} className="organizations-th">
-                      <div className="th-content">
-                        <button
-                          type="button"
-                          className={`sort-btn ${header.column.getIsSorted() ? 'sorted' : ''}`}
-                          onClick={header.column.getToggleSortingHandler()}
-                        >
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                          <span className="sort-indicator">
-                            {(() => {
-                              const sorted = header.column.getIsSorted()
-                              return sorted === 'asc'
-                                ? ' \u25B2'
-                                : sorted === 'desc'
-                                  ? ' \u25BC'
-                                  : ''
-                            })()}
-                          </span>
-                        </button>
-                        {header.column.getCanFilter() && (
-                          <input
-                            type="text"
-                            className="column-filter"
-                            placeholder="Filter..."
-                            value={(() => {
-                              const filterVal = header.column.getFilterValue()
-                              return typeof filterVal === 'string'
-                                ? filterVal
-                                : ''
-                            })()}
-                            onChange={e =>
-                              header.column.setFilterValue(e.target.value)
-                            }
-                          />
-                        )}
-                      </div>
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody className="organizations-tbody">
-              {table.getRowModel().rows.map(row => (
-                <tr
-                  key={row.original.slug}
-                  onContextMenu={e => handleContextMenu(e, row.original)}
-                  className="context-menu-row"
-                >
-                  {row.getVisibleCells().map(cell => (
-                    <td
-                      key={cell.id}
-                      className={
-                        cell.column.id === 'name'
-                          ? 'org-name'
-                          : cell.column.id === 'slug'
-                            ? 'org-slug'
-                            : cell.column.id === 'projectCount'
-                              ? 'org-projects'
-                              : cell.column.id === 'createdAt'
-                                ? 'org-date'
-                                : ''
-                      }
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+      <OrganizationsListContent
+        organizations={state.organizations}
+        loading={state.loading}
+        table={state.table}
+        handleContextMenu={state.handleContextMenu}
+      />
 
-      {contextMenu && (
+      {state.contextMenu && (
         <ContextMenu
-          items={contextMenuItems}
-          x={contextMenu.x}
-          y={contextMenu.y}
-          onClose={() => setContextMenu(null)}
+          items={state.contextMenuItems}
+          x={state.contextMenu.x}
+          y={state.contextMenu.y}
+          onClose={() => state.setContextMenu(null)}
         />
       )}
     </div>

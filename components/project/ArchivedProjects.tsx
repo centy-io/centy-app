@@ -15,17 +15,380 @@ import {
 } from '@/components/providers/ProjectProvider'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
-export function ArchivedProjects() {
-  const { archivedPaths, unarchiveProject, removeArchivedProject } =
-    useArchivedProjects()
-  const { setProjectPath, setIsInitialized } = useProject()
+function RemoveAllConfirm({
+  removingAll,
+  onConfirm,
+  onCancel,
+}: {
+  removingAll: boolean
+  onConfirm: () => void
+  onCancel: () => void
+}) {
+  return (
+    <div className="remove-all-confirm">
+      <span className="confirm-text">Remove all permanently?</span>
+      <button
+        className="confirm-yes-btn"
+        onClick={onConfirm}
+        disabled={removingAll}
+      >
+        {removingAll ? 'Removing...' : 'Yes'}
+      </button>
+      <button
+        className="confirm-no-btn"
+        onClick={onCancel}
+        disabled={removingAll}
+      >
+        No
+      </button>
+    </div>
+  )
+}
+
+function ArchivedItemActions({
+  projectPath,
+  confirmRemove,
+  removingPath,
+  onRestore,
+  onRestoreAndSelect,
+  onRemove,
+  onConfirmRemove,
+  onCancelConfirm,
+}: {
+  projectPath: string
+  confirmRemove: string | null
+  removingPath: string | null
+  onRestore: () => void
+  onRestoreAndSelect: () => void
+  onRemove: () => void
+  onConfirmRemove: () => void
+  onCancelConfirm: () => void
+}) {
+  if (confirmRemove === projectPath) {
+    return (
+      <>
+        <span className="confirm-text">Remove permanently?</span>
+        <button
+          className="confirm-yes-btn"
+          onClick={onRemove}
+          disabled={removingPath === projectPath}
+        >
+          {removingPath === projectPath ? 'Removing...' : 'Yes'}
+        </button>
+        <button
+          className="confirm-no-btn"
+          onClick={onCancelConfirm}
+          disabled={removingPath === projectPath}
+        >
+          No
+        </button>
+      </>
+    )
+  }
+
+  return (
+    <>
+      <button className="restore-btn" onClick={onRestore}>
+        Restore
+      </button>
+      <button className="restore-select-btn" onClick={onRestoreAndSelect}>
+        Restore & Select
+      </button>
+      <button className="remove-btn" onClick={onConfirmRemove}>
+        Remove
+      </button>
+    </>
+  )
+}
+
+function StaleItemActions({
+  path,
+  confirmRemove,
+  onRemoveStale,
+  onConfirmRemove,
+  onCancelConfirm,
+}: {
+  path: string
+  confirmRemove: string | null
+  onRemoveStale: () => void
+  onConfirmRemove: () => void
+  onCancelConfirm: () => void
+}) {
+  if (confirmRemove === path) {
+    return (
+      <>
+        <span className="confirm-text">Remove permanently?</span>
+        <button className="confirm-yes-btn" onClick={onRemoveStale}>
+          Yes
+        </button>
+        <button className="confirm-no-btn" onClick={onCancelConfirm}>
+          No
+        </button>
+      </>
+    )
+  }
+
+  return (
+    <button className="remove-btn" onClick={onConfirmRemove}>
+      Remove
+    </button>
+  )
+}
+
+function ArchivedProjectItem({
+  project,
+  confirmRemove,
+  removingPath,
+  onRestore,
+  onRestoreAndSelect,
+  onRemove,
+  onConfirmRemove,
+  onCancelConfirm,
+}: {
+  project: ProjectInfo
+  confirmRemove: string | null
+  removingPath: string | null
+  onRestore: () => void
+  onRestoreAndSelect: () => void
+  onRemove: () => void
+  onConfirmRemove: () => void
+  onCancelConfirm: () => void
+}) {
+  return (
+    <li className="archived-item">
+      <div className="archived-item-info">
+        <span className="archived-item-name">
+          {project.userTitle || project.projectTitle || project.name}
+        </span>
+        <span className="archived-item-path">{project.displayPath}</span>
+        <div className="archived-item-stats">
+          <span>Issues: {project.issueCount}</span>
+          <span>Docs: {project.docCount}</span>
+          {!project.initialized && (
+            <span className="not-initialized-badge">Not initialized</span>
+          )}
+        </div>
+      </div>
+      <div className="archived-item-actions">
+        <ArchivedItemActions
+          projectPath={project.path}
+          confirmRemove={confirmRemove}
+          removingPath={removingPath}
+          onRestore={onRestore}
+          onRestoreAndSelect={onRestoreAndSelect}
+          onRemove={onRemove}
+          onConfirmRemove={onConfirmRemove}
+          onCancelConfirm={onCancelConfirm}
+        />
+      </div>
+    </li>
+  )
+}
+
+function StaleProjectItem({
+  path,
+  confirmRemove,
+  onRemoveStale,
+  onConfirmRemove,
+  onCancelConfirm,
+}: {
+  path: string
+  confirmRemove: string | null
+  onRemoveStale: () => void
+  onConfirmRemove: () => void
+  onCancelConfirm: () => void
+}) {
+  return (
+    <li className="archived-item stale">
+      <div className="archived-item-info">
+        <span className="archived-item-name">
+          {path.split('/').pop() || path}
+        </span>
+        <span className="archived-item-path">{path}</span>
+        <div className="archived-item-stats">
+          <span className="stale-badge">Not tracked by daemon</span>
+        </div>
+      </div>
+      <div className="archived-item-actions">
+        <StaleItemActions
+          path={path}
+          confirmRemove={confirmRemove}
+          onRemoveStale={onRemoveStale}
+          onConfirmRemove={onConfirmRemove}
+          onCancelConfirm={onCancelConfirm}
+        />
+      </div>
+    </li>
+  )
+}
+
+async function removeAllArchivedProjects(
+  archivedProjects: ProjectInfo[],
+  archivedPathsNotInDaemon: string[],
+  removeArchivedProject: (path: string) => void,
+  archivedPaths: string[],
+  setAllProjects: React.Dispatch<React.SetStateAction<ProjectInfo[]>>,
+  setError: (error: string | null) => void,
+  setRemovingAll: (removing: boolean) => void,
+  setConfirmRemoveAll: (confirm: boolean) => void
+) {
+  setRemovingAll(true)
+  setError(null)
+  try {
+    for (const project of archivedProjects) {
+      const request = create(UntrackProjectRequestSchema, {
+        projectPath: project.path,
+      })
+      const response = await centyClient.untrackProject(request)
+      if (!response.success && response.error) {
+        setError(response.error)
+        setRemovingAll(false)
+        setConfirmRemoveAll(false)
+        return
+      }
+      removeArchivedProject(project.path)
+    }
+    for (const path of archivedPathsNotInDaemon) {
+      removeArchivedProject(path)
+    }
+    setAllProjects(prev => prev.filter(p => !archivedPaths.includes(p.path)))
+  } catch (err) {
+    setError(
+      err instanceof Error ? err.message : 'Failed to remove all projects'
+    )
+  } finally {
+    setRemovingAll(false)
+    setConfirmRemoveAll(false)
+  }
+}
+
+function ArchivedHeader({
+  hasArchivedProjects,
+  loading,
+  confirmRemoveAll,
+  removingAll,
+  onRemoveAll,
+  onCancelRemoveAll,
+  onStartRemoveAll,
+}: {
+  hasArchivedProjects: boolean
+  loading: boolean
+  confirmRemoveAll: boolean
+  removingAll: boolean
+  onRemoveAll: () => void
+  onCancelRemoveAll: () => void
+  onStartRemoveAll: () => void
+}) {
+  return (
+    <div className="archived-header">
+      <h2>Archived Projects</h2>
+      <div className="archived-header-actions">
+        {hasArchivedProjects && !loading && (
+          <>
+            {confirmRemoveAll ? (
+              <RemoveAllConfirm
+                removingAll={removingAll}
+                onConfirm={onRemoveAll}
+                onCancel={onCancelRemoveAll}
+              />
+            ) : (
+              <button className="remove-all-btn" onClick={onStartRemoveAll}>
+                Remove all
+              </button>
+            )}
+          </>
+        )}
+        <Link href="/" className="back-link">
+          Back to Projects
+        </Link>
+      </div>
+    </div>
+  )
+}
+
+function ArchivedProjectsList({
+  archivedProjects,
+  archivedPathsNotInDaemon,
+  confirmRemove,
+  removingPath,
+  onRestore,
+  onRestoreAndSelect,
+  onRemove,
+  onConfirmRemove,
+  onCancelConfirm,
+  onRemoveStale,
+}: {
+  archivedProjects: ProjectInfo[]
+  archivedPathsNotInDaemon: string[]
+  confirmRemove: string | null
+  removingPath: string | null
+  onRestore: (path: string) => void
+  onRestoreAndSelect: (project: ProjectInfo) => void
+  onRemove: (path: string) => void
+  onConfirmRemove: (path: string) => void
+  onCancelConfirm: () => void
+  onRemoveStale: (path: string) => void
+}) {
+  return (
+    <ul className="archived-list">
+      {archivedProjects.map(project => (
+        <ArchivedProjectItem
+          key={project.path}
+          project={project}
+          confirmRemove={confirmRemove}
+          removingPath={removingPath}
+          onRestore={() => onRestore(project.path)}
+          onRestoreAndSelect={() => onRestoreAndSelect(project)}
+          onRemove={() => onRemove(project.path)}
+          onConfirmRemove={() => onConfirmRemove(project.path)}
+          onCancelConfirm={onCancelConfirm}
+        />
+      ))}
+      {archivedPathsNotInDaemon.map(path => (
+        <StaleProjectItem
+          key={path}
+          path={path}
+          confirmRemove={confirmRemove}
+          onRemoveStale={() => onRemoveStale(path)}
+          onConfirmRemove={() => onConfirmRemove(path)}
+          onCancelConfirm={onCancelConfirm}
+        />
+      ))}
+    </ul>
+  )
+}
+
+async function handleRemoveProject(
+  projectPath: string,
+  removeArchivedProject: (path: string) => void,
+  setAllProjects: React.Dispatch<React.SetStateAction<ProjectInfo[]>>,
+  setError: (error: string | null) => void,
+  setRemovingPath: (path: string | null) => void,
+  setConfirmRemove: (path: string | null) => void
+) {
+  setRemovingPath(projectPath)
+  setError(null)
+  try {
+    const request = create(UntrackProjectRequestSchema, { projectPath })
+    const response = await centyClient.untrackProject(request)
+    if (!response.success && response.error) {
+      setError(response.error)
+    } else {
+      removeArchivedProject(projectPath)
+      setAllProjects(prev => prev.filter(p => p.path !== projectPath))
+    }
+  } catch (err) {
+    setError(err instanceof Error ? err.message : 'Failed to remove project')
+  } finally {
+    setRemovingPath(null)
+    setConfirmRemove(null)
+  }
+}
+
+function useArchivedProjectsFetch() {
   const [allProjects, setAllProjects] = useState<ProjectInfo[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [removingPath, setRemovingPath] = useState<string | null>(null)
-  const [confirmRemove, setConfirmRemove] = useState<string | null>(null)
-  const [confirmRemoveAll, setConfirmRemoveAll] = useState(false)
-  const [removingAll, setRemovingAll] = useState(false)
 
   const fetchProjects = useCallback(async () => {
     setLoading(true)
@@ -45,18 +408,29 @@ export function ArchivedProjects() {
     fetchProjects()
   }, [fetchProjects])
 
-  // Filter to only show archived projects
+  return { allProjects, setAllProjects, loading, error, setError }
+}
+
+function useArchivedProjectsState() {
+  const { archivedPaths, unarchiveProject, removeArchivedProject } =
+    useArchivedProjects()
+  const { setProjectPath, setIsInitialized } = useProject()
+  const { allProjects, setAllProjects, loading, error, setError } =
+    useArchivedProjectsFetch()
+  const [removingPath, setRemovingPath] = useState<string | null>(null)
+  const [confirmRemove, setConfirmRemove] = useState<string | null>(null)
+  const [confirmRemoveAll, setConfirmRemoveAll] = useState(false)
+  const [removingAll, setRemovingAll] = useState(false)
+
   const archivedProjects = allProjects.filter(p =>
     archivedPaths.includes(p.path)
   )
-
-  // Also show archived paths that may not be in daemon (stale/deleted)
   const archivedPathsNotInDaemon = archivedPaths.filter(
     path => !allProjects.some(p => p.path === path)
   )
 
-  const handleRestore = (projectPath: string) => {
-    unarchiveProject(projectPath)
+  const handleRestore = (pp: string) => {
+    unarchiveProject(pp)
   }
 
   const handleRestoreAndSelect = (project: ProjectInfo) => {
@@ -65,24 +439,15 @@ export function ArchivedProjects() {
     setIsInitialized(project.initialized)
   }
 
-  const handleRemove = async (projectPath: string) => {
-    setRemovingPath(projectPath)
-    setError(null)
-    try {
-      const request = create(UntrackProjectRequestSchema, { projectPath })
-      const response = await centyClient.untrackProject(request)
-      if (!response.success && response.error) {
-        setError(response.error)
-      } else {
-        removeArchivedProject(projectPath)
-        setAllProjects(prev => prev.filter(p => p.path !== projectPath))
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to remove project')
-    } finally {
-      setRemovingPath(null)
-      setConfirmRemove(null)
-    }
+  const handleRemove = async (pp: string) => {
+    await handleRemoveProject(
+      pp,
+      removeArchivedProject,
+      setAllProjects,
+      setError,
+      setRemovingPath,
+      setConfirmRemove
+    )
   }
 
   const handleRemoveStale = (path: string) => {
@@ -91,203 +456,80 @@ export function ArchivedProjects() {
   }
 
   const handleRemoveAll = async () => {
-    setRemovingAll(true)
-    setError(null)
-    try {
-      // Remove all projects tracked by daemon
-      for (const project of archivedProjects) {
-        const request = create(UntrackProjectRequestSchema, {
-          projectPath: project.path,
-        })
-        const response = await centyClient.untrackProject(request)
-        if (!response.success && response.error) {
-          setError(response.error)
-          setRemovingAll(false)
-          setConfirmRemoveAll(false)
-          return
-        }
-        removeArchivedProject(project.path)
-      }
-      // Remove all stale paths
-      for (const path of archivedPathsNotInDaemon) {
-        removeArchivedProject(path)
-      }
-      setAllProjects(prev => prev.filter(p => !archivedPaths.includes(p.path)))
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to remove all projects'
-      )
-    } finally {
-      setRemovingAll(false)
-      setConfirmRemoveAll(false)
-    }
+    await removeAllArchivedProjects(
+      archivedProjects,
+      archivedPathsNotInDaemon,
+      removeArchivedProject,
+      archivedPaths,
+      setAllProjects,
+      setError,
+      setRemovingAll,
+      setConfirmRemoveAll
+    )
   }
 
+  return {
+    loading,
+    error,
+    removingPath,
+    confirmRemove,
+    confirmRemoveAll,
+    removingAll,
+    archivedProjects,
+    archivedPathsNotInDaemon,
+    setConfirmRemove,
+    setConfirmRemoveAll,
+    handleRestore,
+    handleRestoreAndSelect,
+    handleRemove,
+    handleRemoveStale,
+    handleRemoveAll,
+  }
+}
+
+export function ArchivedProjects() {
+  const state = useArchivedProjectsState()
+
   const hasArchivedProjects =
-    archivedProjects.length > 0 || archivedPathsNotInDaemon.length > 0
+    state.archivedProjects.length > 0 ||
+    state.archivedPathsNotInDaemon.length > 0
 
   return (
     <div className="archived-projects">
-      <div className="archived-header">
-        <h2 className="archived-title">Archived Projects</h2>
-        <div className="archived-header-actions">
-          {hasArchivedProjects && !loading && (
-            <>
-              {confirmRemoveAll ? (
-                <div className="remove-all-confirm">
-                  <span className="confirm-text">Remove all permanently?</span>
-                  <button
-                    className="confirm-yes-btn"
-                    onClick={handleRemoveAll}
-                    disabled={removingAll}
-                  >
-                    {removingAll ? 'Removing...' : 'Yes'}
-                  </button>
-                  <button
-                    className="confirm-no-btn"
-                    onClick={() => setConfirmRemoveAll(false)}
-                    disabled={removingAll}
-                  >
-                    No
-                  </button>
-                </div>
-              ) : (
-                <button
-                  className="remove-all-btn"
-                  onClick={() => setConfirmRemoveAll(true)}
-                >
-                  Remove all
-                </button>
-              )}
-            </>
-          )}
-          <Link href="/" className="back-link">
-            Back to Projects
-          </Link>
-        </div>
-      </div>
+      <ArchivedHeader
+        hasArchivedProjects={hasArchivedProjects}
+        loading={state.loading}
+        confirmRemoveAll={state.confirmRemoveAll}
+        removingAll={state.removingAll}
+        onRemoveAll={state.handleRemoveAll}
+        onCancelRemoveAll={() => state.setConfirmRemoveAll(false)}
+        onStartRemoveAll={() => state.setConfirmRemoveAll(true)}
+      />
 
-      {error && <DaemonErrorMessage error={error} />}
+      {state.error && <DaemonErrorMessage error={state.error} />}
 
-      {loading ? (
+      {state.loading ? (
         <div className="loading">Loading projects...</div>
-      ) : archivedProjects.length === 0 &&
-        archivedPathsNotInDaemon.length === 0 ? (
+      ) : !hasArchivedProjects ? (
         <div className="empty-state">
-          <p className="archived-empty-message">No archived projects</p>
+          <p>No archived projects</p>
           <p className="hint">
             Archive projects from the project selector to see them here
           </p>
         </div>
       ) : (
-        <ul className="archived-list">
-          {archivedProjects.map(project => (
-            <li key={project.path} className="archived-item">
-              <div className="archived-item-info">
-                <span className="archived-item-name">
-                  {project.userTitle || project.projectTitle || project.name}
-                </span>
-                <span className="archived-item-path">
-                  {project.displayPath}
-                </span>
-                <div className="archived-item-stats">
-                  <span className="archived-item-stat">
-                    Issues: {project.issueCount}
-                  </span>
-                  <span className="archived-item-stat">
-                    Docs: {project.docCount}
-                  </span>
-                  {!project.initialized && (
-                    <span className="not-initialized-badge">
-                      Not initialized
-                    </span>
-                  )}
-                </div>
-              </div>
-              <div className="archived-item-actions">
-                {confirmRemove === project.path ? (
-                  <>
-                    <span className="confirm-text">Remove permanently?</span>
-                    <button
-                      className="confirm-yes-btn"
-                      onClick={() => handleRemove(project.path)}
-                      disabled={removingPath === project.path}
-                    >
-                      {removingPath === project.path ? 'Removing...' : 'Yes'}
-                    </button>
-                    <button
-                      className="confirm-no-btn"
-                      onClick={() => setConfirmRemove(null)}
-                      disabled={removingPath === project.path}
-                    >
-                      No
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <button
-                      className="restore-btn"
-                      onClick={() => handleRestore(project.path)}
-                    >
-                      Restore
-                    </button>
-                    <button
-                      className="restore-select-btn"
-                      onClick={() => handleRestoreAndSelect(project)}
-                    >
-                      Restore & Select
-                    </button>
-                    <button
-                      className="remove-btn"
-                      onClick={() => setConfirmRemove(project.path)}
-                    >
-                      Remove
-                    </button>
-                  </>
-                )}
-              </div>
-            </li>
-          ))}
-          {archivedPathsNotInDaemon.map(path => (
-            <li key={path} className="archived-item stale">
-              <div className="archived-item-info">
-                <span className="archived-item-name">
-                  {path.split('/').pop() || path}
-                </span>
-                <span className="archived-item-path">{path}</span>
-                <div className="archived-item-stats">
-                  <span className="stale-badge">Not tracked by daemon</span>
-                </div>
-              </div>
-              <div className="archived-item-actions">
-                {confirmRemove === path ? (
-                  <>
-                    <span className="confirm-text">Remove permanently?</span>
-                    <button
-                      className="confirm-yes-btn"
-                      onClick={() => handleRemoveStale(path)}
-                    >
-                      Yes
-                    </button>
-                    <button
-                      className="confirm-no-btn"
-                      onClick={() => setConfirmRemove(null)}
-                    >
-                      No
-                    </button>
-                  </>
-                ) : (
-                  <button
-                    className="remove-btn"
-                    onClick={() => setConfirmRemove(path)}
-                  >
-                    Remove
-                  </button>
-                )}
-              </div>
-            </li>
-          ))}
-        </ul>
+        <ArchivedProjectsList
+          archivedProjects={state.archivedProjects}
+          archivedPathsNotInDaemon={state.archivedPathsNotInDaemon}
+          confirmRemove={state.confirmRemove}
+          removingPath={state.removingPath}
+          onRestore={state.handleRestore}
+          onRestoreAndSelect={state.handleRestoreAndSelect}
+          onRemove={state.handleRemove}
+          onConfirmRemove={path => state.setConfirmRemove(path)}
+          onCancelConfirm={() => state.setConfirmRemove(null)}
+          onRemoveStale={state.handleRemoveStale}
+        />
       )}
     </div>
   )

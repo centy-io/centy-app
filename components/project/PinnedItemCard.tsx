@@ -63,9 +63,9 @@ export function PinnedItemCard({
       onDragEnd={onDragEnd}
     >
       <div className="pinned-item-drag-handle" title="Drag to reorder">
-        <span className="pinned-item-drag-handle-bar"></span>
-        <span className="pinned-item-drag-handle-bar"></span>
-        <span className="pinned-item-drag-handle-bar"></span>
+        <span></span>
+        <span></span>
+        <span></span>
       </div>
       <span className={getTypeBadgeClass(item.type)}>
         {getTypeLabel(item.type)}

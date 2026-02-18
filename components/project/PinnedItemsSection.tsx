@@ -35,7 +35,7 @@ export function PinnedItemsSection({
   return (
     <div className="pinned-items-section">
       <div className="pinned-items-header">
-        <h2 className="pinned-items-title">Pinned</h2>
+        <h2>Pinned</h2>
         {items.length > 0 && (
           <span className="pinned-items-count">{items.length}</span>
         )}
@@ -43,7 +43,7 @@ export function PinnedItemsSection({
 
       {items.length === 0 ? (
         <div className="pinned-items-empty">
-          <p className="pinned-items-empty-message">No pinned items yet</p>
+          <p>No pinned items yet</p>
           <p className="pinned-items-hint">
             Right-click an issue or doc to pin it here for quick access
           </p>

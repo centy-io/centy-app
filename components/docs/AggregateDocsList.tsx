@@ -15,8 +15,7 @@ interface AggregateDoc extends Doc {
   projectPath: string
 }
 
-export function AggregateDocsList() {
-  const { createProjectLink } = useAppLink()
+function useAggregateDocs() {
   const [docs, setDocs] = useState<AggregateDoc[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -26,11 +25,9 @@ export function AggregateDocsList() {
     setError(null)
 
     try {
-      // Get all initialized projects
       const projects = await getProjects()
       const initializedProjects = projects.filter(p => p.initialized)
 
-      // Fetch docs from each project in parallel
       const docPromises = initializedProjects.map(async project => {
         try {
           const request = create(ListDocsRequestSchema, {
@@ -44,7 +41,6 @@ export function AggregateDocsList() {
             projectPath: project.path,
           }))
         } catch {
-          // Skip projects that fail to load
           console.warn(`Failed to fetch docs from ${project.name}`)
           return []
         }
@@ -53,7 +49,6 @@ export function AggregateDocsList() {
       const docArrays = await Promise.all(docPromises)
       const allDocs = docArrays.flat()
 
-      // Sort by updated date (most recent first)
       allDocs.sort((a, b) => {
         const dateA =
           a.metadata && a.metadata.updatedAt
@@ -79,10 +74,57 @@ export function AggregateDocsList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  return { docs, loading, error, fetchAllDocs }
+}
+
+function DocCard({
+  doc,
+  createProjectLink,
+}: {
+  doc: AggregateDoc
+  createProjectLink: (
+    orgSlug: string | null,
+    projectName: string,
+    path: string
+  ) => string
+}) {
+  return (
+    <div className="doc-card">
+      <div className="doc-project">
+        <Link
+          href={createProjectLink(doc.orgSlug, doc.projectName, 'docs')}
+          className="project-link"
+        >
+          {doc.projectName}
+        </Link>
+      </div>
+      <Link
+        href={createProjectLink(
+          doc.orgSlug,
+          doc.projectName,
+          `docs/${doc.slug}`
+        )}
+        className="doc-title"
+      >
+        {doc.title || doc.slug}
+      </Link>
+      {doc.metadata && doc.metadata.updatedAt && (
+        <div className="doc-date">
+          Updated: {new Date(doc.metadata.updatedAt).toLocaleDateString()}
+        </div>
+      )}
+    </div>
+  )
+}
+
+export function AggregateDocsList() {
+  const { createProjectLink } = useAppLink()
+  const { docs, loading, error, fetchAllDocs } = useAggregateDocs()
+
   return (
     <div className="docs-list">
       <div className="docs-header">
-        <h2 className="docs-heading">All Docs</h2>
+        <h2>All Docs</h2>
         <div className="header-actions">
           <button
             onClick={fetchAllDocs}
@@ -104,37 +146,16 @@ export function AggregateDocsList() {
         <div className="loading">Loading docs from all projects...</div>
       ) : docs.length === 0 ? (
         <div className="empty-state">
-          <p className="docs-empty-text">No docs found across any projects</p>
+          <p>No docs found across any projects</p>
         </div>
       ) : (
         <div className="docs-grid">
           {docs.map(doc => (
-            <div key={`${doc.projectPath}-${doc.slug}`} className="doc-card">
-              <div className="doc-project">
-                <Link
-                  href={createProjectLink(doc.orgSlug, doc.projectName, 'docs')}
-                  className="project-link"
-                >
-                  {doc.projectName}
-                </Link>
-              </div>
-              <Link
-                href={createProjectLink(
-                  doc.orgSlug,
-                  doc.projectName,
-                  `docs/${doc.slug}`
-                )}
-                className="doc-title"
-              >
-                {doc.title || doc.slug}
-              </Link>
-              {doc.metadata && doc.metadata.updatedAt && (
-                <div className="doc-date">
-                  Updated:{' '}
-                  {new Date(doc.metadata.updatedAt).toLocaleDateString()}
-                </div>
-              )}
-            </div>
+            <DocCard
+              key={`${doc.projectPath}-${doc.slug}`}
+              doc={doc}
+              createProjectLink={createProjectLink}
+            />
           ))}
         </div>
       )}

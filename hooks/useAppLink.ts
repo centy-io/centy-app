@@ -20,11 +20,10 @@ const ROOT_ROUTES = new Set([
  * Hook that provides functions to generate path-based links.
  * Replaces the old query-param-based link generation.
  */
-export function useAppLink() {
+function useOrgAndProject() {
   const params = useParams()
   const pathname = usePathname()
 
-  // Extract org and project from named route params
   const rawOrg = params ? params.organization : undefined
   const paramOrg: string | undefined =
     typeof rawOrg === 'string' ? rawOrg : undefined
@@ -32,15 +31,12 @@ export function useAppLink() {
   const paramProject: string | undefined =
     typeof rawProject === 'string' ? rawProject : undefined
 
-  // Parse path segments from pathname as fallback
   const pathSegments = useMemo(() => {
     return pathname.split('/').filter(Boolean)
   }, [pathname])
 
-  // Determine effective org and project
   const org = useMemo(() => {
     if (paramOrg) return paramOrg
-    // Check if first segment is not a known root route
     if (pathSegments.length >= 2 && !ROOT_ROUTES.has(pathSegments[0])) {
       return pathSegments[0]
     }
@@ -49,27 +45,23 @@ export function useAppLink() {
 
   const project = useMemo(() => {
     if (paramProject) return paramProject
-    // Check if first segment is not a known root route
     if (pathSegments.length >= 2 && !ROOT_ROUTES.has(pathSegments[0])) {
       return pathSegments[1]
     }
     return undefined
   }, [paramProject, pathSegments])
 
-  /**
-   * Create a link within the current project context.
-   * If no project context (aggregate view), returns the path as-is.
-   *
-   * @param path - Page path like '/issues' or '/issues/123'
-   * @returns Full path like '/my-org/my-project/issues/123'
-   */
+  return { org, project }
+}
+
+export function useAppLink() {
+  const { org, project } = useOrgAndProject()
+
   const createLink = useCallback(
     (path: string): RouteLiteral => {
-      // Normalize path to not start with /
       const normalizedPath = path.startsWith('/') ? path.slice(1) : path
       const pathSegments = normalizedPath.split('/').filter(Boolean)
 
-      // If we have project context, prepend org/project to path
       if (org && project) {
         return route({
           pathname: '/[...path]',
@@ -77,7 +69,6 @@ export function useAppLink() {
         })
       }
 
-      // No project context (aggregate view) - use path segments directly
       return route({
         pathname: '/[...path]',
         query: {
@@ -88,15 +79,6 @@ export function useAppLink() {
     [org, project]
   )
 
-  /**
-   * Create a link to a specific project (regardless of current context).
-   * Use this in aggregate views where you need to link to a specific project.
-   *
-   * @param orgSlug - Organization slug (null for ungrouped projects)
-   * @param projectName - Project name
-   * @param path - Page path like 'issues' or 'issues/123'
-   * @returns Full path like '/my-org/my-project/issues/123'
-   */
   const createProjectLink = useCallback(
     (
       orgSlug: string | null,
@@ -113,25 +95,12 @@ export function useAppLink() {
     []
   )
 
-  /**
-   * Create a root-level link (for global pages like settings, organizations).
-   * Always returns the path without project prefix.
-   *
-   * @param path - Root path like '/settings' or '/organizations'
-   * @returns The path as-is
-   */
   const createRootLink = useCallback((path: string): string => {
     return path.startsWith('/') ? path : `/${path}`
   }, [])
 
-  /**
-   * Check if we're currently in a project context.
-   */
   const hasProjectContext = Boolean(org && project)
 
-  /**
-   * Get the current project context (useful for aggregate views linking back).
-   */
   const currentContext = hasProjectContext
     ? {
         orgSlug: org === UNGROUPED_ORG_MARKER ? null : org,
