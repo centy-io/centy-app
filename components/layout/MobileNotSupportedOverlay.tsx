@@ -29,7 +29,7 @@ export function MobileNotSupportedOverlay() {
     <div className="mobile-not-supported-overlay">
       <div className="mobile-not-supported-content">
         <div className="mobile-not-supported-icon">
-          {/* eslint-disable-next-line default/no-hardcoded-urls */}
+          {/* eslint-disable default/no-hardcoded-urls */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="48"
@@ -52,6 +52,7 @@ export function MobileNotSupportedOverlay() {
               strokeWidth="2.5"
             />
           </svg>
+          {/* eslint-enable default/no-hardcoded-urls */}
         </div>
         <h2>Mobile Not Supported</h2>
         <p>

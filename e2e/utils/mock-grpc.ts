@@ -15,9 +15,10 @@ export class GrpcMocker {
 
   constructor(page: Page, daemonUrl?: string) {
     this.page = page
-    // eslint-disable-next-line default/no-localhost, default/no-hardcoded-urls
+    /* eslint-disable default/no-localhost, default/no-hardcoded-urls */
     this.daemonUrl =
       daemonUrl !== undefined ? daemonUrl : 'http://localhost:50051'
+    /* eslint-enable default/no-localhost, default/no-hardcoded-urls */
     this.handlers = new Map()
     this.isSetup = false
   }

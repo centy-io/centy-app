@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import type { Issue, IssueMetadata } from '@/gen/centy_pb'
 
 /**

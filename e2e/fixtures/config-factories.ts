@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import type { Config, ProjectInfo, Manifest } from '@/gen/centy_pb'
 
 // Fixed date for deterministic visual tests
