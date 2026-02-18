@@ -19,20 +19,13 @@ import {
 import type {
   ListProjectsResponse,
   IsInitializedResponse,
-  Config,
-  Manifest,
   GetConfigResponse,
   GetManifestResponse,
   GetProjectInfoResponse,
-  ProjectInfo,
 } from '@/gen/centy_pb'
+import type { ProjectHandlerOptions } from './project-types'
 
-export interface ProjectHandlerOptions {
-  projects?: ProjectInfo[]
-  isInitialized?: boolean
-  config?: Config
-  manifest?: Manifest
-}
+export type { ProjectHandlerOptions } from './project-types'
 
 /**
  * Adds project-related handlers to the GrpcMocker.

@@ -1,0 +1,1 @@
+export { SharedAssets } from './SharedAssets'

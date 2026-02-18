@@ -3,95 +3,12 @@
 import { useCallback, useSyncExternalStore } from 'react'
 import type { SortingState, ColumnFiltersState } from '@tanstack/react-table'
 import { useProject } from '@/components/providers/ProjectProvider'
-
-const STORAGE_KEY_PREFIX = 'centy-issues-table-settings'
-
-interface IssueTableSettings {
-  sorting: SortingState
-  columnFilters: ColumnFiltersState
-}
-
-const DEFAULT_SETTINGS: IssueTableSettings = {
-  sorting: [{ id: 'createdAt', desc: true }],
-  columnFilters: [{ id: 'status', value: ['open', 'in-progress'] }],
-}
-
-function getStorageKey(projectPath: string): string {
-  return `${STORAGE_KEY_PREFIX}-${projectPath}`
-}
-
-function loadSettings(projectPath: string): IssueTableSettings {
-  if (typeof window === 'undefined' || !projectPath) return DEFAULT_SETTINGS
-  try {
-    const stored = localStorage.getItem(getStorageKey(projectPath))
-    if (!stored) return DEFAULT_SETTINGS
-    const parsed: IssueTableSettings = JSON.parse(stored)
-    return {
-      sorting:
-        parsed.sorting !== undefined
-          ? parsed.sorting
-          : DEFAULT_SETTINGS.sorting,
-      columnFilters:
-        parsed.columnFilters !== undefined
-          ? parsed.columnFilters
-          : DEFAULT_SETTINGS.columnFilters,
-    }
-  } catch {
-    return DEFAULT_SETTINGS
-  }
-}
-
-function saveSettings(projectPath: string, settings: IssueTableSettings): void {
-  if (typeof window === 'undefined' || !projectPath) return
-  try {
-    localStorage.setItem(getStorageKey(projectPath), JSON.stringify(settings))
-  } catch {
-    // Ignore storage errors
-  }
-}
-
-// Create a store for each project path
-const stores = new Map<
-  string,
-  {
-    settings: IssueTableSettings
-    listeners: Set<() => void>
-  }
->()
-
-function getOrCreateStore(projectPath: string) {
-  if (!stores.has(projectPath)) {
-    stores.set(projectPath, {
-      settings: loadSettings(projectPath),
-      listeners: new Set(),
-    })
-  }
-  return stores.get(projectPath)!
-}
-
-function subscribe(projectPath: string, listener: () => void) {
-  const store = getOrCreateStore(projectPath)
-  store.listeners.add(listener)
-  return () => store.listeners.delete(listener)
-}
-
-function getSnapshot(projectPath: string): IssueTableSettings {
-  return getOrCreateStore(projectPath).settings
-}
-
-function getServerSnapshot(): IssueTableSettings {
-  return DEFAULT_SETTINGS
-}
-
-function updateSettings(
-  projectPath: string,
-  updater: (prev: IssueTableSettings) => IssueTableSettings
-) {
-  const store = getOrCreateStore(projectPath)
-  store.settings = updater(store.settings)
-  saveSettings(projectPath, store.settings)
-  store.listeners.forEach(listener => listener())
-}
+import {
+  subscribe,
+  getSnapshot,
+  getServerSnapshot,
+  updateSettings,
+} from './useIssueTableSettings.store'
 
 export function useIssueTableSettings() {
   const { projectPath } = useProject()

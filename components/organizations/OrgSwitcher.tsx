@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
 import {
   useFloating,
   autoUpdate,
@@ -10,6 +9,7 @@ import {
   offset,
 } from '@floating-ui/react'
 import { useOrganization } from '@/components/providers/OrganizationProvider'
+import { OrgSwitcherDropdown } from './OrgSwitcher.dropdown'
 
 export function OrgSwitcher() {
   const {
@@ -83,71 +83,16 @@ export function OrgSwitcher() {
       </button>
 
       {isOpen && (
-        <div
-          ref={refs.setFloating}
-          style={floatingStyles}
-          className="org-switcher-dropdown"
-        >
-          <div className="org-switcher-header">
-            <h3>Filter by Organization</h3>
-            <button
-              className="refresh-btn"
-              onClick={() => refreshOrganizations()}
-              disabled={loading}
-              title="Refresh organizations"
-            >
-              ↻
-            </button>
-          </div>
-
-          <ul className="org-options" role="listbox">
-            <li
-              role="option"
-              aria-selected={selectedOrgSlug === null}
-              className={`org-option ${selectedOrgSlug === null ? 'selected' : ''}`}
-              onClick={() => handleSelect(null)}
-            >
-              <span className="org-option-name">All Organizations</span>
-            </li>
-            <li
-              role="option"
-              aria-selected={selectedOrgSlug === ''}
-              className={`org-option ${selectedOrgSlug === '' ? 'selected' : ''}`}
-              onClick={() => handleSelect('')}
-            >
-              <span className="org-option-name">Ungrouped Projects</span>
-            </li>
-
-            {organizations.length > 0 && <li className="org-divider" />}
-
-            {loading && organizations.length === 0 ? (
-              <li className="org-loading">Loading...</li>
-            ) : (
-              organizations.map(org => (
-                <li
-                  key={org.slug}
-                  role="option"
-                  aria-selected={selectedOrgSlug === org.slug}
-                  className={`org-option ${selectedOrgSlug === org.slug ? 'selected' : ''}`}
-                  onClick={() => handleSelect(org.slug)}
-                >
-                  <span className="org-option-name">{org.name}</span>
-                  <span className="org-project-count">{org.projectCount}</span>
-                </li>
-              ))
-            )}
-          </ul>
-
-          <div className="org-switcher-footer">
-            <Link
-              href="/organizations"
-              className="manage-orgs-link"
-              onClick={() => setIsOpen(false)}
-            >
-              Manage Organizations
-            </Link>
-          </div>
-        </div>
+        <OrgSwitcherDropdown
+          refs={refs}
+          floatingStyles={floatingStyles}
+          selectedOrgSlug={selectedOrgSlug}
+          organizations={organizations}
+          loading={loading}
+          onRefresh={refreshOrganizations}
+          onSelect={handleSelect}
+          onClose={() => setIsOpen(false)}
+        />
       )}
     </div>
   )
