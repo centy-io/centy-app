@@ -15,7 +15,9 @@ function loadFromStorage(projectPath: string): IssueTableSettings {
     const parsed: IssueTableSettings = JSON.parse(stored)
     return {
       sorting:
-        parsed.sorting !== undefined ? parsed.sorting : DEFAULT_SETTINGS.sorting,
+        parsed.sorting !== undefined
+          ? parsed.sorting
+          : DEFAULT_SETTINGS.sorting,
       columnFilters:
         parsed.columnFilters !== undefined
           ? parsed.columnFilters
@@ -26,7 +28,10 @@ function loadFromStorage(projectPath: string): IssueTableSettings {
   }
 }
 
-interface StoreEntry { settings: IssueTableSettings; listeners: Set<() => void> }
+interface StoreEntry {
+  settings: IssueTableSettings
+  listeners: Set<() => void>
+}
 
 const storeMap = new Map<string, StoreEntry>()
 

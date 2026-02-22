@@ -34,7 +34,10 @@ export function ProjectCard({
 
       <div className="project-badges">
         {orgSlug && (
-          <span className="project-badge org-badge" title={`Organization: ${orgName}`}>
+          <span
+            className="project-badge org-badge"
+            title={`Organization: ${orgName}`}
+          >
             {'\uD83C\uDFE2'} {orgName}
           </span>
         )}

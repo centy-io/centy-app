@@ -1,9 +1,6 @@
 import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
-import {
-  UpdateConfigRequestSchema,
-  type Config,
-} from '@/gen/centy_pb'
+import { UpdateConfigRequestSchema, type Config } from '@/gen/centy_pb'
 
 interface SaveResult {
   config?: Config

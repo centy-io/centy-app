@@ -1,6 +1,7 @@
 'use client'
 
-import type { FieldGroup, FieldOverride } from './types'
+import type { FieldGroup } from './FieldGroup'
+import type { FieldOverride } from './FieldOverride'
 import {
   toStringArray,
   toStringRecord,

@@ -1,10 +1,7 @@
 'use client'
 
 import { DEMO_PROJECT_PATH, DEMO_ISSUES } from '../demo-data'
-import type {
-  ListIssuesRequest,
-  ListIssuesResponse,
-} from '@/gen/centy_pb'
+import type { ListIssuesRequest, ListIssuesResponse } from '@/gen/centy_pb'
 
 // Helper to filter issues by request parameters
 function filterIssues(

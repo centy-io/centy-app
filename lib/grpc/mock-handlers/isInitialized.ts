@@ -1,7 +1,10 @@
 'use client'
 
 import { DEMO_PROJECT_PATH } from '../demo-data'
-import type { IsInitializedRequest, IsInitializedResponse } from '@/gen/centy_pb'
+import type {
+  IsInitializedRequest,
+  IsInitializedResponse,
+} from '@/gen/centy_pb'
 
 export async function isInitialized(
   request: IsInitializedRequest
