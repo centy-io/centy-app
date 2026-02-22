@@ -1,48 +1,15 @@
 'use client'
 
-import { useDaemonActions } from './useDaemonActions'
-import { DaemonInfoSection } from './DaemonInfoSection'
-import { DaemonSettings } from '@/components/settings/DaemonSettings'
 import { AgentConfigEditor } from '@/components/settings/AgentConfigEditor'
-import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 const { NEXT_PUBLIC_COMMIT_SHA } = process.env
 
 export function GeneralSettings() {
-  const {
-    daemonInfo,
-    error,
-    success,
-    shuttingDown,
-    restarting,
-    showShutdownConfirm,
-    setShowShutdownConfirm,
-    showRestartConfirm,
-    setShowRestartConfirm,
-    handleShutdown,
-    handleRestart,
-  } = useDaemonActions()
-
   return (
     <div className="settings-page">
       <div className="settings-header">
         <h2 className="settings-title">General Settings</h2>
       </div>
-
-      {error && <DaemonErrorMessage error={error} />}
-      {success && <div className="success-message">{success}</div>}
-
-      <DaemonInfoSection
-        daemonInfo={daemonInfo}
-        restarting={restarting}
-        shuttingDown={shuttingDown}
-        showRestartConfirm={showRestartConfirm}
-        showShutdownConfirm={showShutdownConfirm}
-        onShowRestartConfirm={setShowRestartConfirm}
-        onShowShutdownConfirm={setShowShutdownConfirm}
-        onRestart={handleRestart}
-        onShutdown={handleShutdown}
-      />
 
       {NEXT_PUBLIC_COMMIT_SHA && (
         <section className="settings-section">
@@ -59,13 +26,6 @@ export function GeneralSettings() {
           </div>
         </section>
       )}
-
-      <section className="settings-section">
-        <h3 className="settings-section-title">Daemon Connection</h3>
-        <div className="settings-card">
-          <DaemonSettings />
-        </div>
-      </section>
 
       <section className="settings-section">
         <h3 className="settings-section-title">Agent Configuration</h3>
