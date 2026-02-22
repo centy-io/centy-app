@@ -7,7 +7,7 @@ import { route } from 'nextjs-routes'
 import { useProjectConfigData } from './useProjectConfigData'
 import { useProjectOrg } from './useProjectOrg'
 import { OrgSection } from './OrgSection'
-import { useProject } from '@/components/providers/ProjectProvider'
+import { usePathContext } from '@/components/providers/PathContextProvider'
 import { useOrganization } from '@/components/providers/OrganizationProvider'
 import { ProjectTitleEditor } from '@/components/settings/ProjectTitleEditor'
 import { AgentConfigEditor } from '@/components/settings/AgentConfigEditor'
@@ -17,14 +17,10 @@ import { ManifestSection } from '@/components/settings/Settings/ManifestSection'
 
 // eslint-disable-next-line max-lines-per-function
 export function ProjectConfig() {
-  const { projectPath, isInitialized, setIsInitialized } = useProject()
+  const { projectPath, isInitialized } = usePathContext()
   const { organizations, refreshOrganizations } = useOrganization()
 
-  const data = useProjectConfigData(
-    projectPath,
-    isInitialized,
-    setIsInitialized
-  )
+  const data = useProjectConfigData(projectPath, isInitialized)
 
   const org = useProjectOrg(
     projectPath,
