@@ -35,7 +35,7 @@ export function getColumns() {
       header: 'Description',
       cell: info => {
         const desc = info.getValue()
-        if (!desc) return <span className="text-muted">-</span>
+        if (!desc) return <span className="org-empty-value">-</span>
         return desc.length > 50 ? `${desc.substring(0, 50)}...` : desc
       },
       enableColumnFilter: true,
