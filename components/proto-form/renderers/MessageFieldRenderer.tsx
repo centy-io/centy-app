@@ -14,7 +14,12 @@ type MessageFieldProps = Omit<FieldRenderProps, 'field'> & {
 }
 
 function toRecord(v: unknown): Record<string, unknown> {
-  if (v !== null && v !== undefined && typeof v === 'object' && !Array.isArray(v)) {
+  if (
+    v !== null &&
+    v !== undefined &&
+    typeof v === 'object' &&
+    !Array.isArray(v)
+  ) {
     const result: Record<string, unknown> = {}
     Object.assign(result, v)
     return result

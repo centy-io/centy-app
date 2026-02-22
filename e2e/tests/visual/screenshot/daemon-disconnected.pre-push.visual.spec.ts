@@ -80,15 +80,15 @@ test.describe('Daemon Disconnected Overlay Pre-push Visual Test @visual', () => 
       await expect(codeBlock).toBeVisible()
 
       // Verify white-space: nowrap is applied — the fix for issue #144
-      const whiteSpace = await codeBlock.locator('code').evaluate(
-        (el: HTMLElement) => getComputedStyle(el).whiteSpace
-      )
+      const whiteSpace = await codeBlock
+        .locator('code')
+        .evaluate((el: HTMLElement) => getComputedStyle(el).whiteSpace)
       expect(whiteSpace).toBe('nowrap')
 
       // Verify the code block is a single line (scrollHeight === clientHeight)
-      const isSingleLine = await codeBlock.locator('code').evaluate(
-        (el: HTMLElement) => el.scrollHeight <= el.clientHeight + 2
-      )
+      const isSingleLine = await codeBlock
+        .locator('code')
+        .evaluate((el: HTMLElement) => el.scrollHeight <= el.clientHeight + 2)
       expect(isSingleLine).toBe(true)
 
       // Screenshot the code block to lock in the no-wrap layout

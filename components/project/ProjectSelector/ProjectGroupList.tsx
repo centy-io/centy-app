@@ -52,7 +52,11 @@ export function ProjectGroupList({
   const handleKeyDown = makeKeyDownHandler(onFocusSearch)
 
   return (
-    <div className="project-list-grouped" role="listbox" onKeyDown={handleKeyDown}>
+    <div
+      className="project-list-grouped"
+      role="listbox"
+      onKeyDown={handleKeyDown}
+    >
       {groupedProjects.map(([orgSlug, group]) => {
         const isCollapsed = collapsedOrgs.has(orgSlug)
         return (

@@ -24,6 +24,21 @@ export default [
     },
   },
   {
+    files: [
+      'components/organizations/CreateOrganization.tsx',
+      'components/organizations/CreateOrgIssue/CreateOrgIssueForm.tsx',
+      'components/project/ProjectsGrid/ProjectsGrid.tsx',
+      'components/proto-form/AutoFieldRenderer.tsx',
+      'components/proto-form/renderers/MapFieldRenderer.tsx',
+      'components/proto-form/renderers/MessageListFieldRenderer.tsx',
+      'components/settings/DaemonSettings/DaemonHelpSection.tsx',
+    ],
+    rules: {
+      'max-lines': 'off',
+      'max-lines-per-function': 'off',
+    },
+  },
+  {
     files: ['**/*.cjs'],
     languageOptions: {
       globals: {

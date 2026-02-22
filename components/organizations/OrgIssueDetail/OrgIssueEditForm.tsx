@@ -9,7 +9,6 @@ interface OrgIssueEditFormProps {
   state: OrgIssueDetailState
 }
 
-
 export function OrgIssueEditForm({ state }: OrgIssueEditFormProps) {
   return (
     <div className="edit-form">
@@ -37,9 +36,15 @@ export function OrgIssueEditForm({ state }: OrgIssueEditFormProps) {
           value={state.editPriority}
           onChange={e => state.setEditPriority(Number(e.target.value))}
         >
-          <option className="form-option" value={1}>High</option>
-          <option className="form-option" value={2}>Medium</option>
-          <option className="form-option" value={3}>Low</option>
+          <option className="form-option" value={1}>
+            High
+          </option>
+          <option className="form-option" value={2}>
+            Medium
+          </option>
+          <option className="form-option" value={3}>
+            Low
+          </option>
         </select>
       </div>
 

@@ -18,9 +18,15 @@ interface AutoFieldRendererProps extends FieldRenderProps {
   ProtoFormRenderer: ProtoFormRendererType
 }
 
-type SharedProps = Pick<AutoFieldRendererProps, 'label' | 'description' | 'value' | 'onChange' | 'ProtoFormRenderer'>
+type SharedProps = Pick<
+  AutoFieldRendererProps,
+  'label' | 'description' | 'value' | 'onChange' | 'ProtoFormRenderer'
+>
 
-function renderList(field: Extract<FieldRenderProps['field'], { fieldKind: 'list' }>, shared: SharedProps) {
+function renderList(
+  field: Extract<FieldRenderProps['field'], { fieldKind: 'list' }>,
+  shared: SharedProps
+) {
   const { label, description, value, onChange, ProtoFormRenderer } = shared
   if (field.listKind === 'message') {
     return (
@@ -35,20 +41,55 @@ function renderList(field: Extract<FieldRenderProps['field'], { fieldKind: 'list
     )
   }
   // scalar list or enum list — render as scalar list
-  return <ListFieldRenderer label={label} description={description} value={value} onChange={onChange} />
+  return (
+    <ListFieldRenderer
+      label={label}
+      description={description}
+      value={value}
+      onChange={onChange}
+    />
+  )
 }
 
-export function AutoFieldRenderer({ field, label, description, value, onChange, ProtoFormRenderer }: AutoFieldRendererProps) {
+export function AutoFieldRenderer({
+  field,
+  label,
+  description,
+  value,
+  onChange,
+  ProtoFormRenderer,
+}: AutoFieldRendererProps) {
   if (field.fieldKind === 'scalar') {
-    return <ScalarFieldRenderer scalar={field.scalar} label={label} description={description} value={value} onChange={onChange} />
+    return (
+      <ScalarFieldRenderer
+        scalar={field.scalar}
+        label={label}
+        description={description}
+        value={value}
+        onChange={onChange}
+      />
+    )
   }
 
   if (field.fieldKind === 'map') {
-    return <MapFieldRenderer label={label} description={description} value={value} onChange={onChange} />
+    return (
+      <MapFieldRenderer
+        label={label}
+        description={description}
+        value={value}
+        onChange={onChange}
+      />
+    )
   }
 
   if (field.fieldKind === 'list') {
-    return renderList(field, { label, description, value, onChange, ProtoFormRenderer })
+    return renderList(field, {
+      label,
+      description,
+      value,
+      onChange,
+      ProtoFormRenderer,
+    })
   }
 
   if (field.fieldKind === 'message') {
@@ -68,7 +109,9 @@ export function AutoFieldRenderer({ field, label, description, value, onChange, 
   return (
     <div className="proto-form-field">
       <label className="proto-form-field-label">{label}</label>
-      {description && <p className="proto-form-field-description">{description}</p>}
+      {description && (
+        <p className="proto-form-field-description">{description}</p>
+      )}
       <input
         type="text"
         className="proto-form-input"
