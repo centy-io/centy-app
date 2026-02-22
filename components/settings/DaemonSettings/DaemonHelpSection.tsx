@@ -15,6 +15,16 @@ export function DaemonHelpSection() {
           </strong>
           <pre className="daemon-help-pre">
             <code className="inline-code">
+              CENTY_CORS_ORIGINS=https://app.centy.io centy start
+            </code>
+          </pre>
+          <p className="daemon-help-text">
+            The <code className="inline-code">centy start</code> command will
+            automatically install the daemon if it is not already installed. You
+            can also start the daemon directly:
+          </p>
+          <pre className="daemon-help-pre">
+            <code className="inline-code">
               centy-daemon --cors-origins=https://app.centy.io
             </code>
           </pre>
@@ -26,6 +36,26 @@ export function DaemonHelpSection() {
           (default: <code className="inline-code">http://localhost:50051</code>)
         </li>
       </ol>
+
+      <h4 className="daemon-help-title">Autostart on Boot</h4>
+      <p className="daemon-help-text">
+        To have the daemon start automatically when your machine boots:
+      </p>
+      <pre className="daemon-help-pre">
+        <code className="inline-code">centy daemon autostart --enable</code>
+      </pre>
+      <p className="daemon-help-text">
+        Add <code className="inline-code">CENTY_CORS_ORIGINS</code> to your
+        shell profile (e.g.{' '}
+        <code className="inline-code">~/.zshrc</code> or{' '}
+        <code className="inline-code">~/.bashrc</code>) so that CORS is
+        configured on every startup:
+      </p>
+      <pre className="daemon-help-pre">
+        <code className="inline-code">
+          export CENTY_CORS_ORIGINS=https://app.centy.io
+        </code>
+      </pre>
 
       <h4 className="daemon-help-title">Exposing Your Local Daemon</h4>
       <p className="daemon-help-text">
@@ -54,7 +84,9 @@ export function DaemonHelpSection() {
       <ul className="daemon-help-list">
         <li className="daemon-help-list-item">
           Only expose your daemon to trusted origins using the{' '}
-          <code className="inline-code">--cors-origins</code> flag
+          <code className="inline-code">--cors-origins</code> flag or{' '}
+          <code className="inline-code">CENTY_CORS_ORIGINS</code> environment
+          variable
         </li>
         <li className="daemon-help-list-item">
           Consider using HTTPS when exposing your daemon over the internet
