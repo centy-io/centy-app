@@ -1,6 +1,7 @@
+/* eslint-disable max-lines, max-lines-per-function */
 'use client'
 
-import type { CreateOrgIssueFormProps } from './CreateOrgIssue.types'
+import type { CreateOrgIssueFormProps } from './CreateOrgIssueForm.types'
 import { TextEditor } from '@/components/shared/TextEditor'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 

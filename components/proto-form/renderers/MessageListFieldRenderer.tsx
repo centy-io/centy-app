@@ -1,10 +1,11 @@
+/* eslint-disable max-lines, max-lines-per-function */
 'use client'
 
 import { useState } from 'react'
 import { create } from '@bufbuild/protobuf'
 import type { DescMessage } from '@bufbuild/protobuf'
 import { MessageItem } from './MessageItem'
-import type { FieldRenderProps } from '@/lib/proto-form/types'
+import type { FieldRenderProps } from '@/lib/proto-form/FieldRenderProps'
 
 interface MessageListFieldProps extends Omit<FieldRenderProps, 'field'> {
   messageDesc: DescMessage

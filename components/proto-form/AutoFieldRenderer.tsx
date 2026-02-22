@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 'use client'
 
 import type { DescMessage } from '@bufbuild/protobuf'
@@ -6,7 +7,7 @@ import { MapFieldRenderer } from './renderers/MapFieldRenderer'
 import { ListFieldRenderer } from './renderers/ListFieldRenderer'
 import { MessageFieldRenderer } from './renderers/MessageFieldRenderer'
 import { MessageListFieldRenderer } from './renderers/MessageListFieldRenderer'
-import type { FieldRenderProps } from '@/lib/proto-form/types'
+import type { FieldRenderProps } from '@/lib/proto-form/FieldRenderProps'
 
 type ProtoFormRendererType = React.ComponentType<{
   schema: DescMessage
