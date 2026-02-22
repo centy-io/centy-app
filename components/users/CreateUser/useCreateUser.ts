@@ -80,7 +80,9 @@ export function useCreateUser() {
           router.push(route({ pathname: '/' }))
         }
       } else {
-        setError(formatError(new OperationError(res.error || 'Failed to create user')))
+        setError(
+          formatError(new OperationError(res.error || 'Failed to create user'))
+        )
       }
     } catch (err) {
       setError(formatError(err))

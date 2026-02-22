@@ -4,9 +4,7 @@ export function getDraftStorageKey(type: string, projectPath: string): string {
   return `centy-draft-${type}-${projectPath}`
 }
 
-export function loadFormDraft<T>(
-  storageKey: string
-): Partial<T> {
+export function loadFormDraft<T>(storageKey: string): Partial<T> {
   if (typeof window === 'undefined') return {}
   try {
     const stored = localStorage.getItem(storageKey)

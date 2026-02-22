@@ -48,7 +48,9 @@ export function OrgSection({
           </div>
           <span className="form-hint">
             Group this project under an organization for better management.{' '}
-            <Link href={route({ pathname: '/organizations' })}>Manage organizations</Link>
+            <Link href={route({ pathname: '/organizations' })}>
+              Manage organizations
+            </Link>
           </span>
         </div>
       </div>

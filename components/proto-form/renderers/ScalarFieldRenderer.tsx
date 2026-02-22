@@ -8,7 +8,13 @@ interface ScalarFieldProps extends Omit<FieldRenderProps, 'field'> {
   scalar: ScalarType
 }
 
-export function ScalarFieldRenderer({ scalar, label, description, value, onChange }: ScalarFieldProps) {
+export function ScalarFieldRenderer({
+  scalar,
+  label,
+  description,
+  value,
+  onChange,
+}: ScalarFieldProps) {
   if (scalar === ScalarType.BOOL) {
     return (
       <label className="proto-form-checkbox-label">
@@ -46,14 +52,24 @@ export function ScalarFieldRenderer({ scalar, label, description, value, onChang
     scalar === ScalarType.DOUBLE
 
   if (isNumeric) {
-    return <NumericField label={label} description={description} value={value} is64bit={is64bit} onChange={onChange} />
+    return (
+      <NumericField
+        label={label}
+        description={description}
+        value={value}
+        is64bit={is64bit}
+        onChange={onChange}
+      />
+    )
   }
 
   // STRING, BYTES → text input
   return (
     <div className="proto-form-field">
       <label className="proto-form-field-label">{label}</label>
-      {description && <p className="proto-form-field-description">{description}</p>}
+      {description && (
+        <p className="proto-form-field-description">{description}</p>
+      )}
       <input
         type="text"
         className="proto-form-input"

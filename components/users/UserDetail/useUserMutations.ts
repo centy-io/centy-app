@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 'use client'
 
 import { useCallback, useState } from 'react'
@@ -56,7 +57,9 @@ export function useUserMutations(
         setUser(res.user)
         setIsEditing(false)
       } else {
-        setError(formatError(new OperationError(res.error || 'Failed to update')))
+        setError(
+          formatError(new OperationError(res.error || 'Failed to update'))
+        )
       }
     } catch (err) {
       setError(formatError(err))
@@ -84,7 +87,9 @@ export function useUserMutations(
       if (res.success) {
         router.push(usersListUrl)
       } else {
-        setError(formatError(new OperationError(res.error || 'Failed to delete')))
+        setError(
+          formatError(new OperationError(res.error || 'Failed to delete'))
+        )
         setShowDeleteConfirm(false)
       }
     } catch (err) {

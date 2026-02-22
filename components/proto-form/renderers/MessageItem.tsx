@@ -19,8 +19,15 @@ interface MessageItemProps {
 }
 
 export function MessageItem({
-  item, index, messageName, isExpanded,
-  onToggle, onRemove, onItemChange, messageDesc, ProtoFormRenderer,
+  item,
+  index,
+  messageName,
+  isExpanded,
+  onToggle,
+  onRemove,
+  onItemChange,
+  messageDesc,
+  ProtoFormRenderer,
 }: MessageItemProps) {
   return (
     <div className="proto-form-message-item">
