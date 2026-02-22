@@ -30,9 +30,12 @@ pnpm test --run || {
   exit 1
 }
 
-# E2E tests are skipped in pre-push; they run in CI
-# The local dev server has intermittent stability issues that cause false failures
-# Re-enable once dev server stability is improved
-echo "Skipping e2e tests (run in CI)..."
+echo "Running visual regression tests..."
+pnpm e2e:visual:pre-push || {
+  echo "Visual regression tests failed."
+  echo "If your changes intentionally affect the UI, update snapshots with:"
+  echo "  pnpm e2e:visual:pre-push:update"
+  exit 1
+}
 
 echo "All pre-push checks passed!"
