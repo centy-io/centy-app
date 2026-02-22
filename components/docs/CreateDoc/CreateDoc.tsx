@@ -11,12 +11,10 @@ import { centyClient } from '@/lib/grpc/client'
 import { CreateDocRequestSchema } from '@/gen/centy_pb'
 import { TextEditor } from '@/components/shared/TextEditor'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
-import {
-  getDraftStorageKey,
-  loadFormDraft,
-  saveFormDraft,
-  clearFormDraft,
-} from '@/hooks/useFormDraft'
+import { getDraftStorageKey } from '@/hooks/getDraftStorageKey'
+import { loadFormDraft } from '@/hooks/loadFormDraft'
+import { saveFormDraft } from '@/hooks/saveFormDraft'
+import { clearFormDraft } from '@/hooks/clearFormDraft'
 
 interface DocDraft {
   title: string
