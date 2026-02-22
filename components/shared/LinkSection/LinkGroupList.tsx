@@ -13,7 +13,7 @@ interface LinkGroupListProps {
   buildLinkRoute: (
     targetType: LinkTargetType,
     targetId: string
-  ) => RouteLiteral | '/'
+  ) => RouteLiteral
   onDeleteLink: (link: LinkType) => void
 }
 

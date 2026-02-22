@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { route } from 'nextjs-routes'
 import { useCreateUser } from './useCreateUser'
 import { CreateUserForm } from './CreateUserForm'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
@@ -27,7 +28,7 @@ export function CreateUser() {
           <p className="not-initialized-text">
             Centy is not initialized in this directory
           </p>
-          <Link href="/">Initialize Project</Link>
+          <Link href={route({ pathname: '/' })}>Initialize Project</Link>
         </div>
       </div>
     )

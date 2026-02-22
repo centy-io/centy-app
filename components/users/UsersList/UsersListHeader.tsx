@@ -9,7 +9,7 @@ interface UsersListHeaderProps {
   loading: boolean
   fetchUsers: () => void
   setShowSyncModal: (show: boolean) => void
-  newUserRoute: RouteLiteral | '/'
+  newUserRoute: RouteLiteral
 }
 
 export function UsersListHeader({

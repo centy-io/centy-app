@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import { route } from 'nextjs-routes'
 import { useProjectPathToUrl } from '@/components/providers/PathContextProvider'
 import { useAppLink } from '@/hooks/useAppLink'
 
@@ -19,7 +20,7 @@ export function useDocsNavigation(projectPath: string, fetchDocs: () => void) {
         )
         router.push(url)
       } else {
-        router.push('/')
+        router.push(route({ pathname: '/' }))
       }
     },
     [resolvePathToUrl, createProjectLink, router]
@@ -40,7 +41,7 @@ export function useDocsNavigation(projectPath: string, fetchDocs: () => void) {
           )
           router.push(url)
         } else {
-          router.push('/')
+          router.push(route({ pathname: '/' }))
         }
       }
     },

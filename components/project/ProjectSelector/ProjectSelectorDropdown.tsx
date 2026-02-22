@@ -2,6 +2,7 @@
 'use client'
 
 import Link from 'next/link'
+import { route } from 'nextjs-routes'
 import type { GroupedProjects } from './ProjectSelector.types'
 import { ProjectGroupList } from './ProjectGroupList'
 import { ProjectFlatList } from './ProjectFlatList'
@@ -125,14 +126,14 @@ export function ProjectSelectorDropdown(props: ProjectSelectorDropdownProps) {
       )}
       <div className="project-selector-actions">
         <Link
-          href="/"
+          href={route({ pathname: '/' })}
           className="init-project-btn"
           onClick={() => setIsOpen(false)}
         >
           {'\u2728'} Init Project
         </Link>
         <Link
-          href="/archived"
+          href={route({ pathname: '/archived' })}
           className="view-archived-link"
           onClick={() => setIsOpen(false)}
         >

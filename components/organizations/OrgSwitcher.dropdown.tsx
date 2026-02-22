@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { route } from 'nextjs-routes'
 import type { Organization } from '@/gen/centy_pb'
 
 interface OrgSwitcherDropdownProps {
@@ -85,7 +86,7 @@ export function OrgSwitcherDropdown({
 
       <div className="org-switcher-footer">
         <Link
-          href="/organizations"
+          href={route({ pathname: '/organizations' })}
           className="manage-orgs-link"
           onClick={onClose}
         >

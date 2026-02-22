@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import type { RouteLiteral } from 'nextjs-routes'
+import { route, type RouteLiteral } from 'nextjs-routes'
 import type { NavLinks, NavItemType } from './types'
 import { DOCS_URL } from '@/lib/constants/urls'
 
@@ -65,13 +65,13 @@ export function DesktopNav({
       )}
       <div className="nav-group nav-group-general">
         <Link
-          href="/organizations"
+          href={route({ pathname: '/organizations' })}
           className={pathname.startsWith('/organizations') ? 'active' : ''}
         >
           Organizations
         </Link>
         <Link
-          href="/settings"
+          href={route({ pathname: '/settings' })}
           className={pathname === '/settings' ? 'active' : ''}
         >
           Settings

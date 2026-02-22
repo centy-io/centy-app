@@ -120,7 +120,7 @@ export function useOrganizationDetail(orgSlug: string) {
       const res = await centyClient.deleteOrganization(
         create(DeleteOrganizationRequestSchema, { slug: orgSlug })
       )
-      if (res.success) router.push('/organizations')
+      if (res.success) router.push(route({ pathname: '/organizations' }))
       else setDeleteError(res.error || 'Failed to delete organization')
     } catch (err) {
       setDeleteError(

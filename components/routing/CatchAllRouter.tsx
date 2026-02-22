@@ -3,6 +3,7 @@
 import { usePathname, useRouter } from 'next/navigation'
 import { useMemo, useEffect, type ReactNode } from 'react'
 import Link from 'next/link'
+import { route } from 'nextjs-routes'
 import {
   PROJECT_SCOPED_ROUTES,
   resolveRoute,
@@ -29,7 +30,7 @@ function ProjectContextRequired({ requestedPage }: { requestedPage: string }) {
         {pageLabel} are project-scoped. Please select a project to view its{' '}
         {pageLabel.toLowerCase()}.
       </p>
-      <Link href="/organizations" className="select-project-link">
+      <Link href={route({ pathname: '/organizations' })} className="select-project-link">
         Select a Project
       </Link>
     </div>

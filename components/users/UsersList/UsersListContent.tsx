@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { type RouteLiteral } from 'nextjs-routes'
+import { route, type RouteLiteral } from 'nextjs-routes'
 import { UsersTable } from './UsersTable'
 import { UsersListHeader } from './UsersListHeader'
 import { UsersEmptyState } from './UsersEmptyState'
@@ -21,8 +21,8 @@ interface UsersListContentProps {
   handleDelete: (userId: string) => void
   fetchUsers: () => void
   setShowSyncModal: (show: boolean) => void
-  newUserRoute: RouteLiteral | '/'
-  getUserRoute: (userId: string) => RouteLiteral | '/'
+  newUserRoute: RouteLiteral
+  getUserRoute: (userId: string) => RouteLiteral
   onContextMenu: (e: React.MouseEvent, user: User) => void
 }
 
@@ -59,7 +59,7 @@ export function UsersListContent(props: UsersListContentProps) {
           <p className="not-initialized-text">
             Centy is not initialized in this directory
           </p>
-          <Link href="/">Initialize Project</Link>
+          <Link href={route({ pathname: '/' })}>Initialize Project</Link>
         </div>
       )}
 

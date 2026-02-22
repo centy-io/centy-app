@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import { route } from 'nextjs-routes'
 import { useProjectPathToUrl } from '@/components/providers/PathContextProvider'
 import { useAppLink } from '@/hooks/useAppLink'
 
@@ -19,7 +20,7 @@ export function useIssueMoveActions(
           createProjectLink(result.orgSlug, result.projectName, 'issues')
         )
       } else {
-        router.push('/')
+        router.push(route({ pathname: '/' }))
       }
     },
     [resolvePathToUrl, createProjectLink, router]
@@ -45,7 +46,7 @@ export function useIssueMoveActions(
             )
           )
         } else {
-          router.push('/')
+          router.push(route({ pathname: '/' }))
         }
       }
       onComplete()

@@ -34,7 +34,7 @@ export function Header() {
       <Link
         href={
           effectiveOrg === UNGROUPED_ORG_MARKER
-            ? '/organizations'
+            ? route({ pathname: '/organizations' })
             : route({
                 pathname: '/organizations/[orgSlug]',
                 query: { orgSlug: effectiveOrg },
@@ -51,7 +51,7 @@ export function Header() {
     <header className="app-header">
       <div className="header-top">
         <h1 className="header-title">
-          <Link href="/" className="header-logo-link">
+          <Link href={route({ pathname: '/' })} className="header-logo-link">
             <img
               src="/logo.svg"
               alt=""

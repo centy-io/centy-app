@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { route } from 'nextjs-routes'
 import { useOrganizationsList } from './useOrganizationsList'
 import { OrganizationsTable } from './OrganizationsTable'
 import { ContextMenu } from '@/components/shared/ContextMenu'
@@ -22,7 +23,7 @@ export function OrganizationsList() {
           >
             {state.loading ? 'Loading...' : 'Refresh'}
           </button>
-          <Link href="/organizations/new" className="create-btn">
+          <Link href={route({ pathname: '/organizations/new' })} className="create-btn">
             + New Organization
           </Link>
         </div>
@@ -62,7 +63,7 @@ export function OrganizationsList() {
         <div className="empty-state">
           <p className="empty-state-text">No organizations found</p>
           <p className="empty-state-hint">
-            <Link href="/organizations/new">
+            <Link href={route({ pathname: '/organizations/new' })}>
               Create your first organization
             </Link>{' '}
             to group your projects

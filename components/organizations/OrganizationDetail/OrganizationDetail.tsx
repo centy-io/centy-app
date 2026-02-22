@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { route } from 'nextjs-routes'
 import type { OrganizationDetailProps } from './OrganizationDetail.types'
 import { useOrganizationDetail } from './useOrganizationDetail'
 import { OrganizationDetailView } from './OrganizationDetailView'
@@ -27,7 +28,7 @@ export function OrganizationDetail({ orgSlug }: OrganizationDetailProps) {
     return (
       <div className="organization-detail">
         <DaemonErrorMessage error={state.error} />
-        <Link href="/organizations" className="back-link">
+        <Link href={route({ pathname: '/organizations' })} className="back-link">
           Back to Organizations
         </Link>
       </div>
@@ -38,7 +39,7 @@ export function OrganizationDetail({ orgSlug }: OrganizationDetailProps) {
     return (
       <div className="organization-detail">
         <div className="error-message">Organization not found</div>
-        <Link href="/organizations" className="back-link">
+        <Link href={route({ pathname: '/organizations' })} className="back-link">
           Back to Organizations
         </Link>
       </div>

@@ -2,6 +2,7 @@
 
 import type { ReactElement } from 'react'
 import Link from 'next/link'
+import { route } from 'nextjs-routes'
 import { useCreateIssue } from './hooks/useCreateIssue'
 import { CreateIssueForm } from './CreateIssueForm'
 
@@ -47,7 +48,7 @@ export function CreateIssue(): ReactElement {
           <p className="not-initialized-text">
             Centy is not initialized in this directory
           </p>
-          <Link href="/">Initialize Project</Link>
+          <Link href={route({ pathname: '/' })}>Initialize Project</Link>
         </div>
       </div>
     )
