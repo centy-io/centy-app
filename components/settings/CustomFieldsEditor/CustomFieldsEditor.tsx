@@ -25,8 +25,7 @@ export function CustomFieldsEditor({
 
   const handleUpdate = (index: number, field: CustomFieldDefinition) => {
     const newFields = [...fields]
-    // eslint-disable-next-line security/detect-object-injection
-    newFields[index] = field
+    newFields.splice(index, 1, field)
     onChange(newFields)
     setEditingIndex(null)
   }
@@ -38,22 +37,18 @@ export function CustomFieldsEditor({
   const handleMoveUp = (index: number) => {
     if (index === 0) return
     const newFields = [...fields]
-    const tmp = newFields[index - 1]
-    // eslint-disable-next-line security/detect-object-injection
-    newFields[index - 1] = newFields[index]
-    // eslint-disable-next-line security/detect-object-injection
-    newFields[index] = tmp
+    const curr = newFields.at(index)
+    if (curr === undefined) return
+    newFields.splice(index - 1, 2, curr, newFields[index - 1])
     onChange(newFields)
   }
 
   const handleMoveDown = (index: number) => {
     if (index === fields.length - 1) return
     const newFields = [...fields]
-    // eslint-disable-next-line security/detect-object-injection
-    const tmp = newFields[index]
-    // eslint-disable-next-line security/detect-object-injection
-    newFields[index] = newFields[index + 1]
-    newFields[index + 1] = tmp
+    const curr = newFields.at(index)
+    if (curr === undefined) return
+    newFields.splice(index, 2, newFields[index + 1], curr)
     onChange(newFields)
   }
 

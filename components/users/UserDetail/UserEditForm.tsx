@@ -20,8 +20,7 @@ export function UserEditForm({
 }: UserEditFormProps) {
   const handleGitUsernameChange = (index: number, value: string) => {
     const updated = [...editGitUsernames]
-    // eslint-disable-next-line security/detect-object-injection
-    updated[index] = value
+    updated.splice(index, 1, value)
     setEditGitUsernames(updated)
   }
 
