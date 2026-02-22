@@ -12,6 +12,7 @@ interface ArchivedProjectItemProps {
   onSetConfirmRemove: (v: string | null) => void
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function ArchivedProjectItem({
   project,
   confirmRemove,

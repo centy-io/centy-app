@@ -32,6 +32,7 @@ export function DropZone({ fileInputRef, onFilesSelected }: DropZoneProps) {
       }}
     >
       <input
+        className="drop-zone-input"
         ref={fileInputRef}
         type="file"
         multiple

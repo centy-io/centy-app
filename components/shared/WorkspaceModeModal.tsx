@@ -15,6 +15,7 @@ interface WorkspaceModeModalProps {
   onSelect: (mode: WorkspaceMode) => void
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function WorkspaceModeModal({
   issueNumber,
   onClose,
