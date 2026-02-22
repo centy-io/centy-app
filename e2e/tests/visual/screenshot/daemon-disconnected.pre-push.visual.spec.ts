@@ -208,7 +208,7 @@ test.describe('Daemon Disconnected Overlay Pre-push Visual Test @visual', () => 
 
       // Verify button meets minimum touch target height
       const boundingBox = await demoButton.boundingBox()
-      expect(boundingBox?.height).toBeGreaterThanOrEqual(36)
+      expect(boundingBox && boundingBox.height).toBeGreaterThanOrEqual(36)
 
       await expect(demoSection).toHaveScreenshot(
         `daemon-demo-section-${platform}.png`,
@@ -233,7 +233,7 @@ test.describe('Daemon Disconnected Overlay Pre-push Visual Test @visual', () => 
 
       // On mobile the button should be full-width (min-height: 44px)
       const boundingBox = await demoButton.boundingBox()
-      expect(boundingBox?.height).toBeGreaterThanOrEqual(44)
+      expect(boundingBox && boundingBox.height).toBeGreaterThanOrEqual(44)
 
       await expect(demoButton).toHaveScreenshot(
         `daemon-demo-button-mobile-${platform}.png`,
