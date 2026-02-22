@@ -3,7 +3,7 @@
 
 import { useState } from 'react'
 import { MapEntriesTable } from './MapEntriesTable'
-import type { FieldRenderProps } from '@/lib/proto-form/types'
+import type { FieldRenderProps } from '@/lib/proto-form/FieldRenderProps'
 
 interface MapFieldProps extends Omit<FieldRenderProps, 'field'> {
   label: string
