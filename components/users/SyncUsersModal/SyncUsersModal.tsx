@@ -37,7 +37,7 @@ export function SyncUsersModal({ onClose, onSynced }: SyncUsersModalProps) {
     <div className="sync-modal-overlay" onClick={handleClose}>
       <div className="sync-modal" onClick={e => e.stopPropagation()}>
         <div className="sync-modal-header">
-          <h3>Sync Users from Git</h3>
+          <h3 className="sync-modal-title">Sync Users from Git</h3>
           <button className="close-btn" onClick={handleClose}>
             &times;
           </button>
@@ -45,7 +45,7 @@ export function SyncUsersModal({ onClose, onSynced }: SyncUsersModalProps) {
         <div className="sync-modal-content">
           {sync.state === 'loading' && (
             <div className="sync-loading">
-              <p>Checking git history...</p>
+              <p className="sync-loading-text">Checking git history...</p>
             </div>
           )}
           {sync.state === 'error' && (
@@ -68,7 +68,7 @@ export function SyncUsersModal({ onClose, onSynced }: SyncUsersModalProps) {
           )}
           {sync.state === 'syncing' && (
             <div className="sync-loading">
-              <p>Creating users...</p>
+              <p className="sync-loading-text">Creating users...</p>
             </div>
           )}
           {sync.state === 'success' && (

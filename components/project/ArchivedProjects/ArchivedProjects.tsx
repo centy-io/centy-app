@@ -13,7 +13,7 @@ export function ArchivedProjects() {
   return (
     <div className="archived-projects">
       <div className="archived-header">
-        <h2>Archived Projects</h2>
+        <h2 className="archived-title">Archived Projects</h2>
         <div className="archived-header-actions">
           {state.hasArchivedProjects && !state.loading && (
             <>
@@ -56,7 +56,7 @@ export function ArchivedProjects() {
       ) : state.archivedProjects.length === 0 &&
         state.archivedPathsNotInDaemon.length === 0 ? (
         <div className="empty-state">
-          <p>No archived projects</p>
+          <p className="empty-state-text">No archived projects</p>
           <p className="hint">
             Archive projects from the project selector to see them here
           </p>

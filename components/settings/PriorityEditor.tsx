@@ -98,7 +98,7 @@ export function PriorityEditor({
   return (
     <div className="priority-editor">
       <div className="priority-levels-selector">
-        <label htmlFor="priority-levels">Number of priority levels:</label>
+        <label className="form-label" htmlFor="priority-levels">Number of priority levels:</label>
         <select
           id="priority-levels"
           value={levels}
@@ -106,7 +106,7 @@ export function PriorityEditor({
           className="priority-levels-select"
         >
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => (
-            <option key={n} value={n}>
+            <option className="form-option" key={n} value={n}>
               {n} level{n > 1 ? 's' : ''}
             </option>
           ))}

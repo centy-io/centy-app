@@ -15,11 +15,12 @@ export function GitUsernamesField({
 }: GitUsernamesFieldProps) {
   return (
     <div className="form-group">
-      <label>Git Usernames</label>
+      <label className="form-label">Git Usernames</label>
       <div className="git-usernames-list">
         {gitUsernames.map((username, index) => (
           <div key={index} className="git-username-item">
             <input
+              className="form-input"
               type="text"
               value={username}
               onChange={e => onGitUsernameChange(index, e.target.value)}

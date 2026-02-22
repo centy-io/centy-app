@@ -10,7 +10,7 @@ export function InitProject() {
 
   return (
     <div className="init-project">
-      <h2>Initialize Centy Project</h2>
+      <h2 className="init-project-title">Initialize Centy Project</h2>
       {state.step === 'input' && (
         <InputStep
           projectPath={state.projectPath}

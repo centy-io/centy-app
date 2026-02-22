@@ -77,15 +77,15 @@ export function CustomFieldDisplay({
 
       <div className="custom-field-details">
         {field.defaultValue && (
-          <span>
-            Default: <code>{field.defaultValue}</code>
+          <span className="custom-field-default">
+            Default: <code className="custom-field-default-value">{field.defaultValue}</code>
           </span>
         )}
         {field.fieldType === 'enum' && field.enumValues.length > 0 && (
-          <span>
+          <span className="custom-field-enum-values">
             Options:{' '}
             {field.enumValues.map((v, i) => (
-              <code key={v}>
+              <code className="custom-field-enum-value" key={v}>
                 {v}
                 {i < field.enumValues.length - 1 ? ', ' : ''}
               </code>

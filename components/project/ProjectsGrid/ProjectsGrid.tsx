@@ -36,7 +36,7 @@ export function ProjectsGrid() {
   if (loading) {
     return (
       <div className="projects-grid-loading">
-        <p>Loading projects...</p>
+        <p className="projects-grid-loading-text">Loading projects...</p>
       </div>
     )
   }
@@ -44,7 +44,7 @@ export function ProjectsGrid() {
   if (error) {
     return (
       <div className="projects-grid-error">
-        <p>Error: {error}</p>
+        <p className="projects-grid-error-text">Error: {error}</p>
         <button onClick={fetchData} className="retry-btn">
           Retry
         </button>
@@ -55,8 +55,8 @@ export function ProjectsGrid() {
   if (projects.length === 0) {
     return (
       <div className="projects-grid-empty">
-        <h2>No projects found</h2>
-        <p>
+        <h2 className="projects-grid-empty-title">No projects found</h2>
+        <p className="projects-grid-empty-description">
           <Link href="/project/init">Initialize a project</Link> with Centy to
           see it here, or{' '}
           <Link href="/organizations/new">create an organization</Link> to get
@@ -69,7 +69,7 @@ export function ProjectsGrid() {
   return (
     <div className="projects-grid-container">
       <div className="projects-grid-header">
-        <h1>Projects</h1>
+        <h1 className="projects-grid-title">Projects</h1>
         <div className="projects-grid-actions">
           <button onClick={fetchData} className="refresh-btn">
             Refresh

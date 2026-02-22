@@ -38,9 +38,10 @@ export function DaemonSettings() {
       </p>
 
       <div className="daemon-url-input">
-        <label htmlFor="daemon-url">Daemon URL</label>
+        <label className="form-label" htmlFor="daemon-url">Daemon URL</label>
         <div className="input-with-button">
           <input
+            className="form-input"
             id="daemon-url"
             type="text"
             value={url}

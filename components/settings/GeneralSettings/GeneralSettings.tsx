@@ -26,7 +26,7 @@ export function GeneralSettings() {
   return (
     <div className="settings-page">
       <div className="settings-header">
-        <h2>General Settings</h2>
+        <h2 className="settings-title">General Settings</h2>
       </div>
 
       {error && <DaemonErrorMessage error={error} />}
@@ -46,7 +46,7 @@ export function GeneralSettings() {
 
       {NEXT_PUBLIC_COMMIT_SHA && (
         <section className="settings-section">
-          <h3>App Information</h3>
+          <h3 className="settings-section-title">App Information</h3>
           <div className="settings-card">
             <div className="info-grid">
               <div className="info-item">
@@ -61,14 +61,14 @@ export function GeneralSettings() {
       )}
 
       <section className="settings-section">
-        <h3>Daemon Connection</h3>
+        <h3 className="settings-section-title">Daemon Connection</h3>
         <div className="settings-card">
           <DaemonSettings />
         </div>
       </section>
 
       <section className="settings-section">
-        <h3>Agent Configuration</h3>
+        <h3 className="settings-section-title">Agent Configuration</h3>
         <div className="settings-card">
           <AgentConfigEditor />
         </div>

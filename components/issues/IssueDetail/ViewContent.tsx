@@ -24,7 +24,7 @@ export function ViewContent({
   return (
     <>
       <div className="issue-description">
-        <h3>Description</h3>
+        <h3 className="section-title">Description</h3>
         {issue.description ? (
           <TextEditor value={issue.description} format="md" mode="display" />
         ) : (
@@ -33,7 +33,7 @@ export function ViewContent({
       </div>
 
       <div className="issue-assets">
-        <h3>Attachments</h3>
+        <h3 className="section-title">Attachments</h3>
         {assets.length > 0 ? (
           <AssetUploader
             projectPath={projectPath}

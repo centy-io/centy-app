@@ -27,12 +27,12 @@ export function IssuesTable({
 }: IssuesTableProps): ReactElement {
   return (
     <div className="issues-table">
-      <table>
+      <table className="issues-data-table">
         <IssuesTableHeader
           headerGroups={table.getHeaderGroups()}
           statusOptions={statusOptions}
         />
-        <tbody>
+        <tbody className="issues-tbody">
           {table.getRowModel().rows.map(row => (
             <tr
               key={row.original.issueNumber}

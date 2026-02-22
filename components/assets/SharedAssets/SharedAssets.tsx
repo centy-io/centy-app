@@ -22,7 +22,7 @@ export function SharedAssets() {
   return (
     <div className="shared-assets">
       <div className="shared-assets-header">
-        <h2>Shared Assets</h2>
+        <h2 className="shared-assets-title">Shared Assets</h2>
         <div className="header-actions">
           {projectPath && isInitialized === true && (
             <button
@@ -38,13 +38,13 @@ export function SharedAssets() {
 
       {!projectPath && (
         <div className="no-project-message">
-          <p>Select a project from the header to view shared assets</p>
+          <p className="no-project-text">Select a project from the header to view shared assets</p>
         </div>
       )}
 
       {projectPath && isInitialized === false && (
         <div className="not-initialized-message">
-          <p>Centy is not initialized in this directory</p>
+          <p className="not-initialized-text">Centy is not initialized in this directory</p>
           <Link href="/">Initialize Project</Link>
         </div>
       )}
@@ -57,7 +57,7 @@ export function SharedAssets() {
             <div className="loading">Loading shared assets...</div>
           ) : shared.assets.length === 0 ? (
             <div className="empty-state">
-              <p>No shared assets found</p>
+              <p className="empty-state-text">No shared assets found</p>
               <p className="hint">
                 Shared assets are files that can be referenced across multiple
                 issues

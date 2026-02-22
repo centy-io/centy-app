@@ -78,7 +78,7 @@ export function LegacyUrlRedirect() {
   if (isRedirecting) {
     return (
       <div className="legacy-redirect-loading">
-        <p>Redirecting to new URL format...</p>
+        <p className="redirect-message">Redirecting to new URL format...</p>
       </div>
     )
   }

@@ -24,7 +24,7 @@ export function CreateUser() {
     return (
       <div className="create-user">
         <div className="not-initialized-message">
-          <p>Centy is not initialized in this directory</p>
+          <p className="not-initialized-text">Centy is not initialized in this directory</p>
           <Link href="/">Initialize Project</Link>
         </div>
       </div>
@@ -37,7 +37,7 @@ export function CreateUser() {
         <Link href={state.usersListUrl} className="back-link">
           Back to Users
         </Link>
-        <h2>Create New User</h2>
+        <h2 className="create-user-title">Create New User</h2>
       </div>
       {state.error && <DaemonErrorMessage error={state.error} />}
       <CreateUserForm

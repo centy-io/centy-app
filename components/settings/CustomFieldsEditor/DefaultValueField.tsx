@@ -13,16 +13,16 @@ export function DefaultValueField({
 }: DefaultValueFieldProps) {
   return (
     <div className="custom-field-form-group">
-      <label>Default Value</label>
+      <label className="form-label">Default Value</label>
       {fieldType === 'enum' ? (
         <select
           value={defaultValue}
           onChange={e => onChange(e.target.value)}
           className="custom-field-form-select"
         >
-          <option value="">No default</option>
+          <option className="form-option" value="">No default</option>
           {enumValues.map(v => (
-            <option key={v} value={v}>
+            <option className="form-option" key={v} value={v}>
               {v}
             </option>
           ))}
@@ -33,9 +33,9 @@ export function DefaultValueField({
           onChange={e => onChange(e.target.value)}
           className="custom-field-form-select"
         >
-          <option value="">No default</option>
-          <option value="true">True</option>
-          <option value="false">False</option>
+          <option className="form-option" value="">No default</option>
+          <option className="form-option" value="true">True</option>
+          <option className="form-option" value="false">False</option>
         </select>
       ) : (
         <input

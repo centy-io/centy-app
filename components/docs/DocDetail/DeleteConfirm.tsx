@@ -11,7 +11,7 @@ export function DeleteConfirm({
 }: DeleteConfirmProps) {
   return (
     <div className="delete-confirm">
-      <p>Are you sure you want to delete this document?</p>
+      <p className="delete-confirm-message">Are you sure you want to delete this document?</p>
       <div className="delete-confirm-actions">
         <button onClick={onCancel} className="cancel-btn">
           Cancel

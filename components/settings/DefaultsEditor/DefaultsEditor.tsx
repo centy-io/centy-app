@@ -43,9 +43,9 @@ function AddDefaultRow({
         list="suggested-keys"
       />
       {availableKeys.length > 0 && (
-        <datalist id="suggested-keys">
+        <datalist className="defaults-suggested-keys" id="suggested-keys">
           {availableKeys.map(k => (
-            <option key={k} value={k} />
+            <option className="defaults-suggested-option" key={k} value={k} />
           ))}
         </datalist>
       )}

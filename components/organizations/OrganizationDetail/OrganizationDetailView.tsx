@@ -92,7 +92,7 @@ export function OrganizationDetailView(props: OrganizationDetailViewProps) {
       {error && <DaemonErrorMessage error={error} />}
       {showDeleteConfirm && (
         <div className="delete-confirm">
-          <p>Are you sure you want to delete this organization?</p>
+          <p className="delete-confirm-message">Are you sure you want to delete this organization?</p>
           {projects.length > 0 && (
             <p className="delete-warning">
               This organization has {projects.length} project(s). They will
@@ -122,13 +122,14 @@ export function OrganizationDetailView(props: OrganizationDetailViewProps) {
       )}
       <div className="organization-content">
         <div className="org-slug-badge">
-          <code>{organization.slug}</code>
+          <code className="org-slug-code">{organization.slug}</code>
         </div>
         {isEditing ? (
           <div className="edit-form">
             <div className="form-group">
-              <label htmlFor="edit-name">Name:</label>
+              <label className="form-label" htmlFor="edit-name">Name:</label>
               <input
+                className="form-input"
                 id="edit-name"
                 type="text"
                 value={editName}
@@ -137,8 +138,9 @@ export function OrganizationDetailView(props: OrganizationDetailViewProps) {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="edit-slug">Slug:</label>
+              <label className="form-label" htmlFor="edit-slug">Slug:</label>
               <input
+                className="form-input"
                 id="edit-slug"
                 type="text"
                 value={editSlug}
@@ -153,8 +155,9 @@ export function OrganizationDetailView(props: OrganizationDetailViewProps) {
               )}
             </div>
             <div className="form-group">
-              <label htmlFor="edit-description">Description:</label>
+              <label className="form-label" htmlFor="edit-description">Description:</label>
               <textarea
+                className="form-textarea"
                 id="edit-description"
                 value={editDescription}
                 onChange={e => setEditDescription(e.target.value)}

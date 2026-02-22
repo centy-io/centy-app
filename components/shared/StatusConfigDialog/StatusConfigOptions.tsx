@@ -21,6 +21,7 @@ export function StatusConfigOptions({
           className={`status-config-option ${selectedOption === true ? 'selected' : ''}`}
         >
           <input
+            className="status-config-radio"
             type="radio"
             name="updateStatus"
             checked={selectedOption === true}
@@ -41,6 +42,7 @@ export function StatusConfigOptions({
           className={`status-config-option ${selectedOption === false ? 'selected' : ''}`}
         >
           <input
+            className="status-config-radio"
             type="radio"
             name="updateStatus"
             checked={selectedOption === false}

@@ -16,36 +16,36 @@ export function SuccessStep({
 }: SuccessStepProps) {
   return (
     <div className="success-step">
-      <h3>Success!</h3>
-      <p>
-        Centy has been initialized in <code>{projectPath}</code>
+      <h3 className="result-step-title">Success!</h3>
+      <p className="result-step-description">
+        Centy has been initialized in <code className="inline-code">{projectPath}</code>
       </p>
       {result.created.length > 0 && (
         <div className="result-section">
-          <h4>Created:</h4>
-          <ul>
+          <h4 className="result-section-title">Created:</h4>
+          <ul className="result-list">
             {result.created.map(path => (
-              <li key={path}>{path}</li>
+              <li className="result-list-item" key={path}>{path}</li>
             ))}
           </ul>
         </div>
       )}
       {result.restored.length > 0 && (
         <div className="result-section">
-          <h4>Restored:</h4>
-          <ul>
+          <h4 className="result-section-title">Restored:</h4>
+          <ul className="result-list">
             {result.restored.map(path => (
-              <li key={path}>{path}</li>
+              <li className="result-list-item" key={path}>{path}</li>
             ))}
           </ul>
         </div>
       )}
       {result.reset.length > 0 && (
         <div className="result-section">
-          <h4>Reset:</h4>
-          <ul>
+          <h4 className="result-section-title">Reset:</h4>
+          <ul className="result-list">
             {result.reset.map(path => (
-              <li key={path}>{path}</li>
+              <li className="result-list-item" key={path}>{path}</li>
             ))}
           </ul>
         </div>
@@ -65,7 +65,7 @@ interface ErrorStepProps {
 export function ErrorStep({ error, handleReset }: ErrorStepProps) {
   return (
     <div className="error-step">
-      <h3>Error</h3>
+      <h3 className="result-step-title">Error</h3>
       {error && <DaemonErrorMessage error={error} />}
       <button onClick={handleReset} className="primary">
         Try Again
@@ -78,7 +78,7 @@ export function ExecutingStep() {
   return (
     <div className="executing-step">
       <div className="spinner" />
-      <p>Initializing project...</p>
+      <p className="executing-step-text">Initializing project...</p>
     </div>
   )
 }

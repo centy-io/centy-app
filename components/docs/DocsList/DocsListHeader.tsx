@@ -18,7 +18,7 @@ export function DocsListHeader({
 }: DocsListHeaderProps) {
   return (
     <div className="docs-header">
-      <h2>Documentation</h2>
+      <h2 className="docs-title">Documentation</h2>
       <div className="header-actions">
         {projectPath && isInitialized === true && (
           <button

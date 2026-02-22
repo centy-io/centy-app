@@ -5,7 +5,6 @@ import type { CreateIssueFormProps } from './CreateIssue.types'
 import { AssetUploader } from '@/components/assets/AssetUploader'
 import { TextEditor } from '@/components/shared/TextEditor'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
-
 // eslint-disable-next-line max-lines-per-function
 export function CreateIssueForm({
   projectPath,
@@ -26,21 +25,14 @@ export function CreateIssueForm({
   onCancel,
 }: CreateIssueFormProps): ReactElement {
   return (
-    <form onSubmit={onSubmit}>
+    <form className="create-issue-form" onSubmit={onSubmit}>
       <div className="form-group">
-        <label htmlFor="title">Title:</label>
-        <input
-          id="title"
-          type="text"
-          value={title}
-          onChange={e => setTitle(e.target.value)}
-          placeholder="Issue title"
-          required
-        />
+        <label className="form-label" htmlFor="title">Title:</label>
+        <input className="form-input" id="title" type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="Issue title" required />
       </div>
 
       <div className="form-group">
-        <label htmlFor="description">Description:</label>
+        <label className="form-label" htmlFor="description">Description:</label>
         <TextEditor
           value={description}
           onChange={setDescription}
@@ -52,27 +44,27 @@ export function CreateIssueForm({
       </div>
 
       <div className="form-group">
-        <label htmlFor="priority">Priority:</label>
+        <label className="form-label" htmlFor="priority">Priority:</label>
         <select
+          className="form-select"
           id="priority"
           value={priority}
           onChange={e => setPriority(Number(e.target.value))}
         >
-          <option value={1}>High</option>
-          <option value={2}>Medium</option>
-          <option value={3}>Low</option>
+          <option className="form-option" value={1}>High</option><option className="form-option" value={2}>Medium</option><option className="form-option" value={3}>Low</option>
         </select>
       </div>
 
       <div className="form-group">
-        <label htmlFor="status">Status:</label>
+        <label className="form-label" htmlFor="status">Status:</label>
         <select
+          className="form-select"
           id="status"
           value={status}
           onChange={e => setStatus(e.target.value)}
         >
           {stateOptions.map(option => (
-            <option key={option.value} value={option.value}>
+            <option className="form-option" key={option.value} value={option.value}>
               {option.label}
             </option>
           ))}
@@ -80,7 +72,7 @@ export function CreateIssueForm({
       </div>
 
       <div className="form-group">
-        <label>Attachments:</label>
+        <label className="form-label">Attachments:</label>
         <AssetUploader
           ref={assetUploaderRef}
           projectPath={projectPath}

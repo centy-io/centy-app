@@ -51,9 +51,9 @@ export function UsersTable({
 
   return (
     <div className="users-table">
-      <table>
+      <table className="users-data-table">
         <SortableTableHeader headerGroups={table.getHeaderGroups()} />
-        <tbody>
+        <tbody className="users-tbody">
           {table.getRowModel().rows.map(row => (
             <tr
               key={row.original.id}

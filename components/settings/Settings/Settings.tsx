@@ -24,7 +24,7 @@ export function Settings() {
   return (
     <div className="settings-page">
       <div className="settings-header">
-        <h2>Settings</h2>
+        <h2 className="settings-title">Settings</h2>
         {settings.isDirty && (
           <span className="unsaved-indicator">Unsaved changes</span>
         )}
@@ -46,7 +46,7 @@ export function Settings() {
       />
 
       <section className="settings-section">
-        <h3>Daemon Connection</h3>
+        <h3 className="settings-section-title">Daemon Connection</h3>
         <div className="settings-card">
           <DaemonSettings />
         </div>
@@ -54,13 +54,13 @@ export function Settings() {
 
       {!projectPath && (
         <div className="no-project-message">
-          <p>Select a project from the header to view project settings</p>
+          <p className="no-project-text">Select a project from the header to view project settings</p>
         </div>
       )}
 
       {projectPath && isInitialized === false && (
         <div className="not-initialized-message">
-          <p>Centy is not initialized in this directory</p>
+          <p className="not-initialized-text">Centy is not initialized in this directory</p>
           <Link href="/project/init">Initialize Project</Link>
         </div>
       )}
@@ -72,7 +72,7 @@ export function Settings() {
           ) : (
             <>
               <section className="settings-section">
-                <h3>Project Title</h3>
+                <h3 className="settings-section-title">Project Title</h3>
                 <div className="settings-card">
                   <ProjectTitleEditor projectPath={projectPath} />
                 </div>

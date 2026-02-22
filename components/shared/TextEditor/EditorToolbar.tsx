@@ -39,6 +39,7 @@ export function EditorToolbar({
         <button
           type="button"
           onClick={() => editor.chain().focus().setHorizontalRule().run()}
+          className="toolbar-btn"
           title="Horizontal Rule"
         >
           &mdash;

@@ -28,11 +28,11 @@ export function TableHeader({
   statusOptions,
 }: TableHeaderProps): ReactElement {
   return (
-    <thead>
+    <thead className="issues-thead">
       {headerGroups.map(headerGroup => (
-        <tr key={headerGroup.id}>
+        <tr className="header-row" key={headerGroup.id}>
           {headerGroup.headers.map(header => (
-            <th key={header.id}>
+            <th className="header-cell" key={header.id}>
               <div className="th-content">
                 <button
                   type="button"

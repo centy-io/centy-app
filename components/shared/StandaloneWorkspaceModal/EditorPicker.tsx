@@ -16,7 +16,7 @@ export function EditorPicker({
 }: EditorPickerProps) {
   return (
     <div className="standalone-modal-field">
-      <label>Open In</label>
+      <label className="standalone-modal-label">Open In</label>
       <div className="standalone-modal-editor-options">
         <button
           type="button"
@@ -28,7 +28,7 @@ export function EditorPicker({
           disabled={!isEditorAvailable(EditorType.VSCODE)}
         >
           <VscodeIcon />
-          <span>VS Code</span>
+          <span className="editor-option-name">VS Code</span>
           {!isEditorAvailable(EditorType.VSCODE) && (
             <span className="unavailable-badge">Not available</span>
           )}
@@ -43,7 +43,7 @@ export function EditorPicker({
           disabled={!isEditorAvailable(EditorType.TERMINAL)}
         >
           <TerminalIcon />
-          <span>Terminal</span>
+          <span className="editor-option-name">Terminal</span>
           {!isEditorAvailable(EditorType.TERMINAL) && (
             <span className="unavailable-badge">Not available</span>
           )}

@@ -13,6 +13,7 @@ interface CreateOrganizationFormProps {
   onSubmit: () => void
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function CreateOrganizationForm({
   name,
   setName,
@@ -32,10 +33,11 @@ export function CreateOrganizationForm({
       className="create-organization-form"
     >
       <div className="form-group">
-        <label htmlFor="name">
+        <label className="form-label" htmlFor="name">
           Name <span className="required">*</span>
         </label>
         <input
+          className="form-input"
           id="name"
           type="text"
           value={name}
@@ -46,8 +48,9 @@ export function CreateOrganizationForm({
       </div>
 
       <div className="form-group">
-        <label htmlFor="slug">Slug</label>
+        <label className="form-label" htmlFor="slug">Slug</label>
         <input
+          className="form-input"
           id="slug"
           type="text"
           value={slug}
@@ -60,8 +63,9 @@ export function CreateOrganizationForm({
       </div>
 
       <div className="form-group">
-        <label htmlFor="description">Description</label>
+        <label className="form-label" htmlFor="description">Description</label>
         <textarea
+          className="form-textarea"
           id="description"
           value={description}
           onChange={e => setDescription(e.target.value)}

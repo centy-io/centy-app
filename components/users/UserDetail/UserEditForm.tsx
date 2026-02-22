@@ -28,8 +28,9 @@ export function UserEditForm({
   return (
     <div className="edit-form">
       <div className="form-group">
-        <label htmlFor="edit-name">Name:</label>
+        <label className="form-label" htmlFor="edit-name">Name:</label>
         <input
+          className="form-input"
           id="edit-name"
           type="text"
           value={editName}
@@ -39,8 +40,9 @@ export function UserEditForm({
       </div>
 
       <div className="form-group">
-        <label htmlFor="edit-email">Email:</label>
+        <label className="form-label" htmlFor="edit-email">Email:</label>
         <input
+          className="form-input"
           id="edit-email"
           type="email"
           value={editEmail}
@@ -50,11 +52,12 @@ export function UserEditForm({
       </div>
 
       <div className="form-group">
-        <label>Git Usernames:</label>
+        <label className="form-label">Git Usernames:</label>
         <div className="git-usernames-list">
           {editGitUsernames.map((username, index) => (
             <div key={index} className="git-username-item">
               <input
+                className="form-input"
                 type="text"
                 value={username}
                 onChange={e => handleGitUsernameChange(index, e.target.value)}

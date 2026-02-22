@@ -15,14 +15,14 @@ export function PreviewModal({ asset, url, onClose }: PreviewModalProps) {
         <button className="preview-close-btn" onClick={onClose}>
           x
         </button>
-        <h3>{asset.filename}</h3>
+        <h3 className="preview-filename">{asset.filename}</h3>
         {asset.mimeType.startsWith('image/') ? (
-          <img src={url} alt={asset.filename} />
+          <img className="preview-image" src={url} alt={asset.filename} />
         ) : asset.mimeType.startsWith('video/') ? (
-          <video src={url} controls />
+          <video className="preview-video" src={url} controls />
         ) : (
           <div className="preview-download">
-            <a href={url} download={asset.filename}>
+            <a className="preview-download-link" href={url} download={asset.filename}>
               Download File
             </a>
           </div>

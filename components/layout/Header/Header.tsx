@@ -23,7 +23,6 @@ export function Header() {
     effectiveProject,
     navLinks,
     isActive,
-    itemTypes,
   } = useHeaderNav()
   const { mobileMenuOpen, setMobileMenuOpen, toggleMobileMenu } =
     useMobileMenu(pathname)
@@ -49,7 +48,7 @@ export function Header() {
   return (
     <header className="app-header">
       <div className="header-top">
-        <h1>
+        <h1 className="header-title">
           <Link href="/" className="header-logo-link">
             <img
               src="/logo.svg"
@@ -59,7 +58,7 @@ export function Header() {
               height={28}
               aria-hidden="true"
             />
-            <span>Centy</span>
+            <span className="header-app-name">Centy</span>
           </Link>
           {contextDisplay}
         </h1>
@@ -80,15 +79,8 @@ export function Header() {
           <span className="hamburger-line" />
         </button>
       </div>
-      <p>Local-first issue and documentation tracker</p>
-      <DesktopNav
-        navLinks={navLinks}
-        pathname={pathname}
-        isActive={isActive}
-        effectiveOrg={effectiveOrg}
-        effectiveProject={effectiveProject}
-        itemTypes={itemTypes}
-      />
+      <p className="header-tagline">Local-first issue and documentation tracker</p>
+      <DesktopNav navLinks={navLinks} pathname={pathname} isActive={isActive} />
       <MobileMenu
         mobileMenuOpen={mobileMenuOpen}
         setMobileMenuOpen={setMobileMenuOpen}
@@ -96,9 +88,6 @@ export function Header() {
         navLinks={navLinks}
         pathname={pathname}
         isActive={isActive}
-        effectiveOrg={effectiveOrg}
-        effectiveProject={effectiveProject}
-        itemTypes={itemTypes}
       />
     </header>
   )

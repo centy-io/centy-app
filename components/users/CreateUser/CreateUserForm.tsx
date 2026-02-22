@@ -20,7 +20,6 @@ interface CreateUserFormProps {
   usersListUrl: RouteLiteral | '/'
 }
 
-// eslint-disable-next-line max-lines-per-function
 export function CreateUserForm({
   name,
   setName,
@@ -45,40 +44,19 @@ export function CreateUserForm({
       className="create-user-form"
     >
       <div className="form-group">
-        <label htmlFor="name">
-          Name <span className="required">*</span>
-        </label>
-        <input
-          id="name"
-          type="text"
-          value={name}
-          onChange={e => setName(e.target.value)}
-          placeholder="Display name"
-          required
-        />
+        <label className="form-label" htmlFor="name">Name <span className="required">*</span></label>
+        <input className="form-input" id="name" type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Display name" required />
       </div>
       <div className="form-group">
-        <label htmlFor="userId">User ID</label>
-        <input
-          id="userId"
-          type="text"
-          value={userId}
-          onChange={e => onUserIdChange(e.target.value)}
-          placeholder="Auto-generated from name"
-        />
+        <label className="form-label" htmlFor="userId">User ID</label>
+        <input className="form-input" id="userId" type="text" value={userId} onChange={e => onUserIdChange(e.target.value)} placeholder="Auto-generated from name" />
         <span className="form-hint">
           Unique identifier (slug format). Leave empty to auto-generate.
         </span>
       </div>
       <div className="form-group">
-        <label htmlFor="email">Email</label>
-        <input
-          id="email"
-          type="email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          placeholder="Email address (optional)"
-        />
+        <label className="form-label" htmlFor="email">Email</label>
+        <input className="form-input" id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email address (optional)" />
       </div>
       <GitUsernamesField
         gitUsernames={gitUsernames}

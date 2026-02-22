@@ -21,7 +21,6 @@ export default [
     rules: {
       'single-export/single-export': 'off',
       'ddd/require-spec-file': 'off',
-      'custom/jsx-classname-required': 'off',
     },
   },
   {
