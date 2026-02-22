@@ -12,7 +12,7 @@ export function AddLinkModalBody({ state }: AddLinkModalBodyProps) {
   return (
     <>
       <div className="link-modal-field">
-        <label>Link Type</label>
+        <label className="link-modal-label">Link Type</label>
         {state.loadingTypes ? (
           <div className="link-modal-loading">Loading...</div>
         ) : (
@@ -22,7 +22,7 @@ export function AddLinkModalBody({ state }: AddLinkModalBodyProps) {
             className="link-modal-select"
           >
             {state.linkTypes.map(type => (
-              <option key={type.name} value={type.name}>
+              <option className="link-modal-option" key={type.name} value={type.name}>
                 {type.name} {type.description ? `- ${type.description}` : ''}
               </option>
             ))}
@@ -31,7 +31,7 @@ export function AddLinkModalBody({ state }: AddLinkModalBodyProps) {
       </div>
 
       <div className="link-modal-field">
-        <label>Target Type</label>
+        <label className="link-modal-label">Target Type</label>
         <div className="link-modal-tabs">
           <button
             className={`link-modal-tab ${state.targetTypeFilter === 'issue' ? 'active' : ''}`}
@@ -49,7 +49,7 @@ export function AddLinkModalBody({ state }: AddLinkModalBodyProps) {
       </div>
 
       <div className="link-modal-field">
-        <label>Search</label>
+        <label className="link-modal-label">Search</label>
         <input
           type="text"
           value={state.searchQuery}
@@ -60,7 +60,7 @@ export function AddLinkModalBody({ state }: AddLinkModalBodyProps) {
       </div>
 
       <div className="link-modal-field">
-        <label>Select Target</label>
+        <label className="link-modal-label">Select Target</label>
         <div className="link-modal-results">
           {state.loadingSearch ? (
             <div className="link-modal-loading">Searching...</div>

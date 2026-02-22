@@ -26,14 +26,14 @@ export function AggregateTable({
 }: AggregateTableProps): ReactElement {
   return (
     <div className="issues-table">
-      <table>
+      <table className="issues-data-table">
         <TableHeader
           headerGroups={table.getHeaderGroups()}
           statusOptions={statusOptions}
         />
-        <tbody>
+        <tbody className="issues-tbody">
           {table.getRowModel().rows.map(row => (
-            <tr key={`${row.original.projectPath}-${row.original.issueNumber}`}>
+            <tr className="issue-row" key={`${row.original.projectPath}-${row.original.issueNumber}`}>
               {row.getVisibleCells().map(cell => (
                 <td key={cell.id} className={getCellClassName(cell.column.id)}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}

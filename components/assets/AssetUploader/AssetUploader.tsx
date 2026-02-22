@@ -57,7 +57,7 @@ export const AssetUploader = forwardRef<
       {uploader.error && (
         <div className="asset-error">
           {uploader.error}
-          <button onClick={() => uploader.setError(null)}>Dismiss</button>
+          <button className="asset-dismiss-btn" onClick={() => uploader.setError(null)}>Dismiss</button>
         </div>
       )}
       <AssetGrid

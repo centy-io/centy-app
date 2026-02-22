@@ -93,7 +93,7 @@ export function CreateOrganization() {
         <Link href="/organizations" className="back-link">
           Back to Organizations
         </Link>
-        <h2>Create New Organization</h2>
+        <h2 className="create-organization-title">Create New Organization</h2>
       </div>
 
       {error && <DaemonErrorMessage error={error} />}

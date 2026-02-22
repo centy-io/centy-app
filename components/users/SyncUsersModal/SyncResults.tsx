@@ -16,7 +16,7 @@ export function SyncResults({
       <div className="sync-success-message">Sync completed successfully!</div>
       {created.length > 0 && (
         <div className="sync-section">
-          <h4>Created ({created.length})</h4>
+          <h4 className="sync-section-title">Created ({created.length})</h4>
           <ul className="result-list">
             {created.map((userId, i) => (
               <li key={i} className="result-item created">
@@ -28,7 +28,7 @@ export function SyncResults({
       )}
       {skipped.length > 0 && (
         <div className="sync-section">
-          <h4>Skipped ({skipped.length})</h4>
+          <h4 className="sync-section-title">Skipped ({skipped.length})</h4>
           <ul className="result-list">
             {skipped.map((email, i) => (
               <li key={i} className="result-item skipped">
@@ -40,7 +40,7 @@ export function SyncResults({
       )}
       {syncErrors.length > 0 && (
         <div className="sync-section">
-          <h4>Errors ({syncErrors.length})</h4>
+          <h4 className="sync-section-title">Errors ({syncErrors.length})</h4>
           <ul className="result-list">
             {syncErrors.map((err, i) => (
               <li key={i} className="result-item error">

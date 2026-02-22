@@ -9,7 +9,7 @@ export function TitlePreview({ projectInfo }: TitlePreviewProps) {
     <div className="title-preview">
       <h4 className="title-preview-label">Current Display Name</h4>
       <p className="title-preview-value">
-        <strong>
+        <strong className="title-preview-strong">
           {projectInfo.userTitle ||
             projectInfo.projectTitle ||
             projectInfo.name ||

@@ -29,8 +29,8 @@ export function ArchivedProjectItem({
         </span>
         <span className="archived-item-path">{project.displayPath}</span>
         <div className="archived-item-stats">
-          <span>Issues: {project.issueCount}</span>
-          <span>Docs: {project.docCount}</span>
+          <span className="archived-item-stat">Issues: {project.issueCount}</span>
+          <span className="archived-item-stat">Docs: {project.docCount}</span>
           {!project.initialized && (
             <span className="not-initialized-badge">Not initialized</span>
           )}

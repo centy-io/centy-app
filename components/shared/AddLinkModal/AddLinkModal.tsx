@@ -12,7 +12,7 @@ export function AddLinkModal(props: AddLinkModalProps) {
     <div className="link-modal-overlay">
       <div className="link-modal" ref={state.modalRef}>
         <div className="link-modal-header">
-          <h3>Add Link</h3>
+          <h3 className="link-modal-title">Add Link</h3>
           <button className="link-modal-close" onClick={props.onClose}>
             x
           </button>

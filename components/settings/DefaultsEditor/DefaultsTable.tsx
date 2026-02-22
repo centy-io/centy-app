@@ -11,18 +11,18 @@ export function DefaultsTable({
 }: DefaultsTableProps) {
   return (
     <table className="defaults-table">
-      <thead>
-        <tr>
-          <th>Key</th>
-          <th>Value</th>
-          <th></th>
+      <thead className="defaults-thead">
+        <tr className="defaults-header-row">
+          <th className="defaults-header-cell">Key</th>
+          <th className="defaults-header-cell">Value</th>
+          <th className="defaults-header-cell"></th>
         </tr>
       </thead>
-      <tbody>
+      <tbody className="defaults-tbody">
         {entries.map(([key, val]) => (
-          <tr key={key}>
+          <tr className="defaults-row" key={key}>
             <td className="defaults-key">{key}</td>
-            <td>
+            <td className="defaults-value-cell">
               <input
                 type="text"
                 value={val}
@@ -30,7 +30,7 @@ export function DefaultsTable({
                 className="defaults-value-input"
               />
             </td>
-            <td>
+            <td className="defaults-action-cell">
               <button
                 type="button"
                 onClick={() => onRemove(key)}

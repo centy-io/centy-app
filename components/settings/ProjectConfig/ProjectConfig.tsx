@@ -43,7 +43,7 @@ export function ProjectConfig() {
   return (
     <div className="settings-page">
       <div className="settings-header">
-        <h2>Project Configuration</h2>
+        <h2 className="settings-title">Project Configuration</h2>
         {data.isDirty && (
           <span className="unsaved-indicator">Unsaved changes</span>
         )}
@@ -54,13 +54,13 @@ export function ProjectConfig() {
 
       {!projectPath && (
         <div className="no-project-message">
-          <p>Select a project from the header to view project configuration</p>
+          <p className="no-project-text">Select a project from the header to view project configuration</p>
         </div>
       )}
 
       {projectPath && isInitialized === false && (
         <div className="not-initialized-message">
-          <p>Centy is not initialized in this directory</p>
+          <p className="not-initialized-text">Centy is not initialized in this directory</p>
           <Link href="/">Initialize Project</Link>
         </div>
       )}
@@ -79,7 +79,7 @@ export function ProjectConfig() {
               />
 
               <section className="settings-section">
-                <h3>Project Title</h3>
+                <h3 className="settings-section-title">Project Title</h3>
                 <div className="settings-card">
                   <ProjectTitleEditor projectPath={projectPath} />
                 </div>
@@ -97,7 +97,7 @@ export function ProjectConfig() {
               )}
 
               <section className="settings-section">
-                <h3>Agent Configuration</h3>
+                <h3 className="settings-section-title">Agent Configuration</h3>
                 <div className="settings-card">
                   <AgentConfigEditor />
                 </div>

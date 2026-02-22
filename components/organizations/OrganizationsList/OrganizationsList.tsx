@@ -13,7 +13,7 @@ export function OrganizationsList() {
   return (
     <div className="organizations-list">
       <div className="organizations-header">
-        <h2>Organizations</h2>
+        <h2 className="organizations-title">Organizations</h2>
         <div className="header-actions">
           <button
             onClick={state.fetchOrganizations}
@@ -30,7 +30,7 @@ export function OrganizationsList() {
       {state.error && <DaemonErrorMessage error={state.error} />}
       {state.showDeleteConfirm && (
         <div className="delete-confirm">
-          <p>Are you sure you want to delete this organization?</p>
+          <p className="delete-confirm-message">Are you sure you want to delete this organization?</p>
           {state.deleteError && (
             <p className="delete-error-message">{state.deleteError}</p>
           )}
@@ -58,8 +58,8 @@ export function OrganizationsList() {
         <div className="loading">Loading organizations...</div>
       ) : state.organizations.length === 0 ? (
         <div className="empty-state">
-          <p>No organizations found</p>
-          <p>
+          <p className="empty-state-text">No organizations found</p>
+          <p className="empty-state-hint">
             <Link href="/organizations/new">
               Create your first organization
             </Link>{' '}

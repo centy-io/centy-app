@@ -44,7 +44,7 @@ export function OrganizationReadView({
       </div>
       {projects.length > 0 && (
         <div className="organization-projects">
-          <h3>Projects in this organization</h3>
+          <h3 className="org-projects-title">Projects in this organization</h3>
           <ul className="project-list">
             {projects.map(project => (
               <li key={project.path} className="project-item">

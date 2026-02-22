@@ -16,11 +16,11 @@ export function SortableTableHeader<T>({
   headerGroups,
 }: SortableTableHeaderProps<T>) {
   return (
-    <thead>
+    <thead className="sortable-thead">
       {headerGroups.map(hg => (
-        <tr key={hg.id}>
+        <tr className="header-row" key={hg.id}>
           {hg.headers.map(header => (
-            <th key={header.id}>
+            <th className="header-cell" key={header.id}>
               <div className="th-content">
                 <button
                   type="button"

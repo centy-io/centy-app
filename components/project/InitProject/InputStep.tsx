@@ -21,14 +21,15 @@ export function InputStep({
 }: InputStepProps) {
   return (
     <div className="input-step">
-      <p>
-        Create a <code>.centy</code> folder to track issues and documentation
+      <p className="input-step-description">
+        Create a <code className="inline-code">.centy</code> folder to track issues and documentation
         for your project.
       </p>
       <div className="path-input">
-        <label htmlFor="project-path">Project Path:</label>
+        <label className="form-label" htmlFor="project-path">Project Path:</label>
         <div className="input-row">
           <input
+            className="form-input"
             id="project-path"
             type="text"
             value={projectPath}

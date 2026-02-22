@@ -36,7 +36,7 @@ export function DocsListContent({
   if (!projectPath) {
     return (
       <div className="no-project-message">
-        <p>Select a project from the header to view documentation</p>
+        <p className="no-project-text">Select a project from the header to view documentation</p>
       </div>
     )
   }
@@ -44,7 +44,7 @@ export function DocsListContent({
   if (isInitialized === false) {
     return (
       <div className="not-initialized-message">
-        <p>Centy is not initialized in this directory</p>
+        <p className="not-initialized-text">Centy is not initialized in this directory</p>
         <Link href="/">Initialize Project</Link>
       </div>
     )
@@ -60,7 +60,7 @@ export function DocsListContent({
         <div className="loading">Loading documentation...</div>
       ) : docs.length === 0 ? (
         <div className="empty-state">
-          <p>No documentation found</p>
+          <p className="empty-state-text">No documentation found</p>
           <Link href={createLink('/docs/new')}>Create your first document</Link>
         </div>
       ) : (

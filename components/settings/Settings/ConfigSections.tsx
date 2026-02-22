@@ -26,7 +26,7 @@ export function ConfigSections({
   return (
     <>
       <section className="settings-section">
-        <h3>Issue States</h3>
+        <h3 className="settings-section-title">Issue States</h3>
         <div className="settings-card">
           <StateListEditor
             states={config.allowedStates}
@@ -40,7 +40,7 @@ export function ConfigSections({
       </section>
 
       <section className="settings-section">
-        <h3>Priority Levels</h3>
+        <h3 className="settings-section-title">Priority Levels</h3>
         <div className="settings-card">
           <PriorityEditor
             levels={config.priorityLevels}
@@ -52,7 +52,7 @@ export function ConfigSections({
       </section>
 
       <section className="settings-section">
-        <h3>Custom Fields</h3>
+        <h3 className="settings-section-title">Custom Fields</h3>
         <div className="settings-card">
           <CustomFieldsEditor
             fields={config.customFields}
@@ -62,7 +62,7 @@ export function ConfigSections({
       </section>
 
       <section className="settings-section">
-        <h3>Default Values</h3>
+        <h3 className="settings-section-title">Default Values</h3>
         <div className="settings-card">
           <DefaultsEditor
             value={config.defaults}
@@ -73,7 +73,7 @@ export function ConfigSections({
       </section>
 
       <section className="settings-section">
-        <h3>Workspace Settings</h3>
+        <h3 className="settings-section-title">Workspace Settings</h3>
         <div className="settings-card">
           <WorkspaceSettingsEditor
             value={config.workspace}

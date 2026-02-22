@@ -23,7 +23,7 @@ export function IssuesHeader({
 }: IssuesHeaderProps): ReactElement {
   return (
     <div className="issues-header">
-      <h2>Issues</h2>
+      <h2 className="issues-title">Issues</h2>
       <div className="header-actions">
         {projectPath && isInitialized === true && (
           <button

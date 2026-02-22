@@ -15,7 +15,7 @@ export function DeleteConfirmDialog({
 }: DeleteConfirmDialogProps) {
   return (
     <div className="delete-confirm">
-      <p>{message}</p>
+      <p className="delete-confirm-message">{message}</p>
       <div className="delete-confirm-actions">
         <button onClick={onCancel} className="cancel-btn">
           Cancel

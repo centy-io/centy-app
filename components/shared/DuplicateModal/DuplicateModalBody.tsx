@@ -23,7 +23,7 @@ export function DuplicateModalBody({ props, state }: DuplicateModalBodyProps) {
       </div>
 
       <div className="move-modal-field">
-        <label>Target Project</label>
+        <label className="move-modal-label">Target Project</label>
         {state.loadingProjects ? (
           <div className="move-modal-loading">Loading projects...</div>
         ) : state.projects.length === 0 ? (
@@ -35,7 +35,7 @@ export function DuplicateModalBody({ props, state }: DuplicateModalBodyProps) {
             className="move-modal-select"
           >
             {state.projects.map(project => (
-              <option key={project.path} value={project.path}>
+              <option className="move-modal-option" key={project.path} value={project.path}>
                 {project.userTitle || project.projectTitle || project.name}
                 {project.path === props.currentProjectPath
                   ? ' (current)'
@@ -48,7 +48,7 @@ export function DuplicateModalBody({ props, state }: DuplicateModalBodyProps) {
       </div>
 
       <div className="move-modal-field">
-        <label>New Title</label>
+        <label className="move-modal-label">New Title</label>
         <input
           type="text"
           value={state.newTitle}
@@ -60,7 +60,7 @@ export function DuplicateModalBody({ props, state }: DuplicateModalBodyProps) {
 
       {props.entityType === 'doc' && (
         <div className="move-modal-field">
-          <label>New Slug</label>
+          <label className="move-modal-label">New Slug</label>
           <input
             type="text"
             value={state.newSlug}

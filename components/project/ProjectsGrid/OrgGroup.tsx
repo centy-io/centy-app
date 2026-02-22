@@ -21,7 +21,7 @@ export function OrgGroup({
   return (
     <div className="project-org-group">
       <div className="org-group-header">
-        <h2>
+        <h2 className="org-group-title">
           {orgSlug ? (
             <>
               <span className="org-icon">{'\uD83C\uDFE2'}</span>

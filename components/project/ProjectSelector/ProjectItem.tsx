@@ -53,10 +53,10 @@ export function ProjectItem({
         <div className="project-item-stats">
           {project.initialized && (
             <>
-              <span title="Issues">
+              <span className="project-stat-issues" title="Issues">
                 {'\uD83D\uDCCB'} {project.issueCount}
               </span>
-              <span title="Docs">
+              <span className="project-stat-docs" title="Docs">
                 {'\uD83D\uDCC4'} {project.docCount}
               </span>
             </>

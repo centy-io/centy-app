@@ -15,7 +15,7 @@ export function ToolbarFormatButtons({ editor }: ToolbarFormatButtonsProps) {
         className={editor.isActive('bold') ? 'active' : ''}
         title="Bold (Ctrl+B)"
       >
-        <strong>B</strong>
+        <strong className="toolbar-format-bold">B</strong>
       </button>
       <button
         type="button"
@@ -23,7 +23,7 @@ export function ToolbarFormatButtons({ editor }: ToolbarFormatButtonsProps) {
         className={editor.isActive('italic') ? 'active' : ''}
         title="Italic (Ctrl+I)"
       >
-        <em>I</em>
+        <em className="toolbar-format-italic">I</em>
       </button>
       <button
         type="button"
@@ -31,7 +31,7 @@ export function ToolbarFormatButtons({ editor }: ToolbarFormatButtonsProps) {
         className={editor.isActive('strike') ? 'active' : ''}
         title="Strikethrough"
       >
-        <s>S</s>
+        <s className="toolbar-format-strike">S</s>
       </button>
       <button
         type="button"

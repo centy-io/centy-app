@@ -22,12 +22,12 @@ export function EnumValuesEditor({
 
   return (
     <div className="custom-field-enum-section">
-      <label>Options</label>
+      <label className="form-label">Options</label>
       <div className="custom-field-enum-list">
         {enumValues.map(value => (
           <span key={value} className="custom-field-enum-tag">
             {value}
-            <button type="button" onClick={() => onRemove(value)}>
+            <button className="custom-field-enum-remove-btn" type="button" onClick={() => onRemove(value)}>
               &times;
             </button>
           </span>
@@ -47,6 +47,7 @@ export function EnumValuesEditor({
           className="custom-field-form-input"
         />
         <button
+          className="custom-field-enum-add-btn"
           type="button"
           onClick={handleAddEnumValue}
           disabled={

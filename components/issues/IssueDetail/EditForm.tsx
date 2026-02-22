@@ -24,8 +24,9 @@ export function EditForm({
   return (
     <div className="edit-form">
       <div className="form-group">
-        <label htmlFor="edit-title">Title:</label>
+        <label className="form-label" htmlFor="edit-title">Title:</label>
         <input
+          className="form-input"
           id="edit-title"
           type="text"
           value={editTitle}
@@ -35,14 +36,15 @@ export function EditForm({
 
       <div className="form-row">
         <div className="form-group">
-          <label htmlFor="edit-status">Status:</label>
+          <label className="form-label" htmlFor="edit-status">Status:</label>
           <select
+            className="form-select"
             id="edit-status"
             value={editStatus}
             onChange={e => setEditStatus(e.target.value)}
           >
             {stateOptions.map(option => (
-              <option key={option.value} value={option.value}>
+              <option className="form-option" key={option.value} value={option.value}>
                 {option.label}
               </option>
             ))}
@@ -50,21 +52,22 @@ export function EditForm({
         </div>
 
         <div className="form-group">
-          <label htmlFor="edit-priority">Priority:</label>
+          <label className="form-label" htmlFor="edit-priority">Priority:</label>
           <select
+            className="form-select"
             id="edit-priority"
             value={editPriority}
             onChange={e => setEditPriority(Number(e.target.value))}
           >
-            <option value={1}>High</option>
-            <option value={2}>Medium</option>
-            <option value={3}>Low</option>
+            <option className="form-option" value={1}>High</option>
+            <option className="form-option" value={2}>Medium</option>
+            <option className="form-option" value={3}>Low</option>
           </select>
         </div>
       </div>
 
       <div className="form-group">
-        <label htmlFor="edit-description">Description:</label>
+        <label className="form-label" htmlFor="edit-description">Description:</label>
         <TextEditor
           value={editDescription}
           onChange={setEditDescription}
@@ -76,7 +79,7 @@ export function EditForm({
       </div>
 
       <div className="form-group">
-        <label>Attachments:</label>
+        <label className="form-label">Attachments:</label>
         <AssetUploader
           projectPath={projectPath}
           issueId={issueNumber}

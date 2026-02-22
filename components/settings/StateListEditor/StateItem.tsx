@@ -38,9 +38,9 @@ export function StateItem({
       onDragEnd={onDragEnd}
     >
       <div className="state-drag-handle" title="Drag to reorder">
-        <span></span>
-        <span></span>
-        <span></span>
+        <span className="drag-handle-line"></span>
+        <span className="drag-handle-line"></span>
+        <span className="drag-handle-line"></span>
       </div>
 
       <div className="state-preview" style={{ backgroundColor: color }}>
@@ -58,8 +58,8 @@ export function StateItem({
         }}
         className="state-default-select"
       >
-        <option value="">-</option>
-        <option value="default">Default</option>
+        <option className="state-option" value="">-</option>
+        <option className="state-option" value="default">Default</option>
       </select>
 
       <button

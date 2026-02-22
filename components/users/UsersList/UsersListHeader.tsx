@@ -22,7 +22,7 @@ export function UsersListHeader({
 }: UsersListHeaderProps) {
   return (
     <div className="users-header">
-      <h2>Users</h2>
+      <h2 className="users-title">Users</h2>
       <div className="header-actions">
         {projectPath && isInitialized === true && (
           <>

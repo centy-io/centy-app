@@ -12,7 +12,7 @@ export function DuplicateModal(props: DuplicateModalProps) {
     <div className="move-modal-overlay">
       <div className="move-modal" ref={state.modalRef}>
         <div className="move-modal-header">
-          <h3>
+          <h3 className="move-modal-title">
             Duplicate {props.entityType === 'issue' ? 'Issue' : 'Document'}
           </h3>
           <button className="move-modal-close" onClick={props.onClose}>

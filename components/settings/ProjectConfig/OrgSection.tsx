@@ -20,10 +20,10 @@ export function OrgSection({
 }: OrgSectionProps) {
   return (
     <section className="settings-section">
-      <h3>Organization</h3>
+      <h3 className="settings-section-title">Organization</h3>
       <div className="settings-card">
         <div className="form-group">
-          <label htmlFor="project-org">Assign to Organization</label>
+          <label className="form-label" htmlFor="project-org">Assign to Organization</label>
           <div className="org-select-row">
             <select
               id="project-org"
@@ -32,9 +32,9 @@ export function OrgSection({
               disabled={savingOrg}
               className="org-select"
             >
-              <option value="">No Organization (Ungrouped)</option>
+              <option className="form-option" value="">No Organization (Ungrouped)</option>
               {organizations.map(org => (
-                <option key={org.slug} value={org.slug}>
+                <option className="form-option" key={org.slug} value={org.slug}>
                   {org.name}
                 </option>
               ))}

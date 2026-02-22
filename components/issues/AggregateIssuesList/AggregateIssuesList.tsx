@@ -66,7 +66,7 @@ export function AggregateIssuesList() {
   return (
     <div className="issues-list">
       <div className="issues-header">
-        <h2>{getOrgDisplayName()}</h2>
+        <h2 className="issues-title">{getOrgDisplayName()}</h2>
         <div className="header-actions">
           <button
             onClick={fetchAllIssues}
@@ -86,7 +86,7 @@ export function AggregateIssuesList() {
         <div className="loading">Loading issues...</div>
       ) : filteredIssues.length === 0 ? (
         <div className="empty-state">
-          <p>{getEmptyText()}</p>
+          <p className="empty-state-text">{getEmptyText()}</p>
         </div>
       ) : (
         <AggregateTable table={table} statusOptions={statusOptions} />

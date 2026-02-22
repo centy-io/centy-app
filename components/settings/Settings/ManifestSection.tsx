@@ -9,7 +9,7 @@ export function ManifestSection({ manifest }: ManifestSectionProps) {
 
   return (
     <section className="settings-section">
-      <h3>Manifest</h3>
+      <h3 className="settings-section-title">Manifest</h3>
       <div className="settings-card">
         <div className="manifest-details">
           <div className="info-grid">

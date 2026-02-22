@@ -54,7 +54,7 @@ export function ProjectSelectorDropdown(props: ProjectSelectorDropdownProps) {
   return (
     <>
       <div className="project-selector-header">
-        <h3>Select Project</h3>
+        <h3 className="project-selector-title">Select Project</h3>
         <button
           className="refresh-btn"
           onClick={fetchProjects}
@@ -90,12 +90,12 @@ export function ProjectSelectorDropdown(props: ProjectSelectorDropdownProps) {
         <div className="project-selector-empty">
           {searchQuery ? (
             <>
-              <p>No projects match &quot;{searchQuery}&quot;</p>
+              <p className="empty-state-text">No projects match &quot;{searchQuery}&quot;</p>
               <p className="hint">Try a different search term</p>
             </>
           ) : (
             <>
-              <p>No tracked projects found</p>
+              <p className="empty-state-text">No tracked projects found</p>
               <p className="hint">
                 Initialize a project with Centy to see it here
               </p>
@@ -138,7 +138,7 @@ export function ProjectSelectorDropdown(props: ProjectSelectorDropdownProps) {
         </Link>
       </div>
       <div className="project-selector-manual">
-        <form onSubmit={handleManualSubmit}>
+        <form className="manual-path-form" onSubmit={handleManualSubmit}>
           <input
             type="text"
             value={manualPath}

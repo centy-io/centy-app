@@ -26,7 +26,7 @@ export function DaemonInfoSection({
 }: DaemonInfoSectionProps) {
   return (
     <section className="settings-section">
-      <h3>Daemon Information</h3>
+      <h3 className="settings-section-title">Daemon Information</h3>
       <div className="settings-card">
         {daemonInfo ? (
           <div className="info-grid">
@@ -58,7 +58,7 @@ export function DaemonInfoSection({
 
         {showRestartConfirm && (
           <div className="confirm-dialog">
-            <p>Are you sure you want to restart the daemon?</p>
+            <p className="confirm-dialog-text">Are you sure you want to restart the daemon?</p>
             <div className="confirm-actions">
               <button
                 onClick={() => onShowRestartConfirm(false)}
@@ -75,7 +75,7 @@ export function DaemonInfoSection({
 
         {showShutdownConfirm && (
           <div className="confirm-dialog danger">
-            <p>
+            <p className="confirm-dialog-text">
               Are you sure you want to shutdown the daemon? You will need to
               manually restart it.
             </p>

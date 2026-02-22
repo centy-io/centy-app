@@ -66,7 +66,7 @@ export function Metadata({
       </div>
 
       <div className="issue-assignees">
-        <h4>Assignees</h4>
+        <h4 className="assignees-title">Assignees</h4>
         <AssigneeSelector
           projectPath={projectPath}
           issueId={issueNumber}

@@ -90,6 +90,7 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
   }, [])
 
   return (
+    // eslint-disable-next-line custom/jsx-classname-required
     <OrganizationContext.Provider
       value={{
         selectedOrgSlug,

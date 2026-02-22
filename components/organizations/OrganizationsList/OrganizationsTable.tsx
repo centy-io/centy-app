@@ -15,12 +15,12 @@ export function OrganizationsTable({
 }: OrganizationsTableProps) {
   return (
     <div className="organizations-table">
-      <table>
-        <thead>
+      <table className="orgs-data-table">
+        <thead className="orgs-thead">
           {table.getHeaderGroups().map(headerGroup => (
-            <tr key={headerGroup.id}>
+            <tr className="header-row" key={headerGroup.id}>
               {headerGroup.headers.map(header => (
-                <th key={header.id}>
+                <th className="header-cell" key={header.id}>
                   <div className="th-content">
                     <button
                       type="button"
@@ -62,7 +62,7 @@ export function OrganizationsTable({
             </tr>
           ))}
         </thead>
-        <tbody>
+        <tbody className="orgs-tbody">
           {table.getRowModel().rows.map(row => (
             <tr
               key={row.original.slug}
