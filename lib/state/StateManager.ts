@@ -16,6 +16,7 @@ export class StateManager {
   private static DEFAULT_STATE: string
 
   private config: Config | null
+  private itemTypeStatuses: string[]
 
   static {
     StateManager.DEFAULT_STATES = ['open', 'in-progress', 'closed'] as const
@@ -27,8 +28,9 @@ export class StateManager {
     StateManager.DEFAULT_STATE = 'open'
   }
 
-  constructor(config?: Config | null) {
+  constructor(config?: Config | null, itemTypeStatuses?: string[]) {
     this.config = config !== undefined ? config : null
+    this.itemTypeStatuses = itemTypeStatuses ?? []
   }
 
   /**
@@ -42,6 +44,9 @@ export class StateManager {
       this.config.allowedStates.length > 0
     ) {
       return [...this.config.allowedStates]
+    }
+    if (this.itemTypeStatuses.length > 0) {
+      return [...this.itemTypeStatuses]
     }
     return [...StateManager.DEFAULT_STATES]
   }
@@ -61,12 +66,14 @@ export class StateManager {
    * Returns config color if available, otherwise default color, or fallback.
    */
   getStateColor(state: string): string {
-    const stateColors = this.config && this.config.stateColors
-    const configColor = stateColors
-      ? new Map(Object.entries(stateColors)).get(state)
-      : undefined
+    const configColor =
+      this.config && this.config.stateColors
+        ? // eslint-disable-next-line security/detect-object-injection
+          this.config.stateColors[state]
+        : undefined
     if (configColor) return configColor
-    return new Map(Object.entries(StateManager.DEFAULT_COLORS)).get(state) || '#888888'
+    // eslint-disable-next-line security/detect-object-injection
+    return StateManager.DEFAULT_COLORS[state] || '#888888'
   }
 
   /**
@@ -97,8 +104,12 @@ export class StateManager {
    * Returns 'status-custom' if config has custom color, otherwise status-{state}.
    */
   getStateClass(state: string): string {
-    const stateColors = this.config && this.config.stateColors
-    if (stateColors && new Map(Object.entries(stateColors)).has(state)) {
+    if (
+      this.config &&
+      this.config.stateColors &&
+      // eslint-disable-next-line security/detect-object-injection
+      this.config.stateColors[state]
+    ) {
       return 'status-custom'
     }
     switch (state) {
