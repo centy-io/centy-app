@@ -11,9 +11,9 @@ vi.mock('@/lib/grpc/client', () => ({
   },
 }))
 
-const mockUseProject = vi.fn()
-vi.mock('@/components/providers/ProjectProvider', () => ({
-  useProject: () => mockUseProject(),
+const mockUsePathContext = vi.fn()
+vi.mock('@/components/providers/PathContextProvider', () => ({
+  usePathContext: () => mockUsePathContext(),
 }))
 
 vi.mock('../AddLinkModal/index', () => ({
@@ -42,7 +42,7 @@ const createMockLink = (overrides: Partial<LinkType> = {}): LinkType =>
 describe('LinkSection', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    mockUseProject.mockReturnValue({
+    mockUsePathContext.mockReturnValue({
       projectPath: '/test/project',
     })
   })
@@ -305,7 +305,7 @@ describe('LinkSection', () => {
   })
 
   it('should not fetch links when projectPath is empty', async () => {
-    mockUseProject.mockReturnValue({
+    mockUsePathContext.mockReturnValue({
       projectPath: '',
     })
 

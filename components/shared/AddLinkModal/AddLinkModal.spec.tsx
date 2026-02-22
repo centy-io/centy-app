@@ -17,9 +17,9 @@ vi.mock('@/lib/grpc/client', () => ({
   },
 }))
 
-const mockUseProject = vi.fn()
-vi.mock('@/components/providers/ProjectProvider', () => ({
-  useProject: () => mockUseProject(),
+const mockUsePathContext = vi.fn()
+vi.mock('@/components/providers/PathContextProvider', () => ({
+  usePathContext: () => mockUsePathContext(),
 }))
 
 const createMockLinkTypeInfo = (
@@ -49,7 +49,7 @@ describe('AddLinkModal', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    mockUseProject.mockReturnValue({
+    mockUsePathContext.mockReturnValue({
       projectPath: '/test/project',
     })
 

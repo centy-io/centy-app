@@ -4,10 +4,10 @@ import { useDocSave } from './useDocSave'
 import { useDocDelete } from './useDocDelete'
 import { useDocNavigation } from './useDocNavigation'
 import { useAppLink } from '@/hooks/useAppLink'
-import { useProject } from '@/components/providers/ProjectProvider'
+import { usePathContext } from '@/components/providers/PathContextProvider'
 
 export function useDocDetail(slug: string) {
-  const { projectPath } = useProject()
+  const { projectPath } = usePathContext()
   const { createLink } = useAppLink()
   const docsListUrl = createLink('/docs')
   const [isEditing, setIsEditing] = useState(false)

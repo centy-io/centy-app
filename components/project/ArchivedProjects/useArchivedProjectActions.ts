@@ -2,6 +2,8 @@
 'use client'
 
 import { useState, useCallback, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { route } from 'nextjs-routes'
 import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
 import {
@@ -13,9 +15,11 @@ import {
   useArchivedProjects,
   useProject,
 } from '@/components/providers/ProjectProvider'
+import { UNGROUPED_ORG_MARKER } from '@/lib/project-resolver'
 
 // eslint-disable-next-line max-lines-per-function
 export function useArchivedProjectActions() {
+  const router = useRouter()
   const { archivedPaths, unarchiveProject, removeArchivedProject } =
     useArchivedProjects()
   const { setProjectPath, setIsInitialized } = useProject()
@@ -60,6 +64,13 @@ export function useArchivedProjectActions() {
     unarchiveProject(project.path)
     setProjectPath(project.path)
     setIsInitialized(project.initialized)
+    const orgSlug = project.organizationSlug || UNGROUPED_ORG_MARKER
+    router.push(
+      route({
+        pathname: '/[...path]',
+        query: { path: [orgSlug, project.name, 'issues'] },
+      })
+    )
   }
 
   const handleRemove = async (projectPath: string) => {

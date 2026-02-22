@@ -6,7 +6,7 @@ import { create } from '@bufbuild/protobuf'
 import { useUserMutations } from './useUserMutations'
 import { centyClient } from '@/lib/grpc/client'
 import { GetUserRequestSchema, type User } from '@/gen/centy_pb'
-import { useProject } from '@/components/providers/ProjectProvider'
+import { usePathContext } from '@/components/providers/PathContextProvider'
 import { isDaemonUnimplemented } from '@/lib/daemon-error'
 
 function formatError(err: unknown): string {
@@ -17,7 +17,7 @@ function formatError(err: unknown): string {
 }
 
 export function useUserData(userId: string, usersListUrl: RouteLiteral) {
-  const { projectPath } = useProject()
+  const { projectPath } = usePathContext()
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)

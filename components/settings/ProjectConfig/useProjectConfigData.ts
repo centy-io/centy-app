@@ -2,17 +2,13 @@
 
 import { useState, useCallback, useEffect } from 'react'
 import type { Config, Manifest } from '@/gen/centy_pb'
-import {
-  checkProjectInitialized,
-  fetchProjectData,
-} from '@/components/settings/Settings/settingsApi'
+import { fetchProjectData } from '@/components/settings/Settings/settingsApi'
 import { useConfigMutations } from '@/components/settings/Settings/useConfigMutations'
 
 // eslint-disable-next-line max-lines-per-function
 export function useProjectConfigData(
   projectPath: string,
-  isInitialized: boolean | null,
-  setIsInitialized: (val: boolean | null) => void
+  isInitialized: boolean | null
 ) {
   const [config, setConfig] = useState<Config | null>(null)
   const [originalConfig, setOriginalConfig] = useState<Config | null>(null)
@@ -71,14 +67,6 @@ export function useProjectConfigData(
     setError,
     setSuccess,
   })
-
-  useEffect(() => {
-    const timeoutId = setTimeout(async () => {
-      const result = await checkProjectInitialized(projectPath)
-      setIsInitialized(result)
-    }, 300)
-    return () => clearTimeout(timeoutId)
-  }, [projectPath, setIsInitialized])
 
   return {
     config,
