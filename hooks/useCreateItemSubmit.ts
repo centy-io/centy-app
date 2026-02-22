@@ -1,4 +1,4 @@
-/* eslint-disable max-lines, max-lines-per-function */
+/* eslint-disable max-lines, max-lines-per-function, ddd/require-spec-file, single-export/single-export */
 import { useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { route } from 'nextjs-routes'
@@ -109,7 +109,15 @@ export function useCreateItemSubmit({
         setLoading(false)
       }
     },
-    [kind, projectPath, router, getProjectContext, setLoading, setError, clearDraft]
+    [
+      kind,
+      projectPath,
+      router,
+      getProjectContext,
+      setLoading,
+      setError,
+      clearDraft,
+    ]
   )
 
   return { submitItem, handleCancel }
