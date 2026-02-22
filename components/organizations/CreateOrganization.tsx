@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 'use client'
 
 import { useState, useCallback, useEffect } from 'react'
@@ -90,7 +91,10 @@ export function CreateOrganization() {
   return (
     <div className="create-organization">
       <div className="create-organization-header">
-        <Link href={route({ pathname: '/organizations' })} className="back-link">
+        <Link
+          href={route({ pathname: '/organizations' })}
+          className="back-link"
+        >
           Back to Organizations
         </Link>
         <h2 className="create-organization-title">Create New Organization</h2>

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 'use client'
 
 import Link from 'next/link'
@@ -57,10 +58,14 @@ export function ProjectsGrid() {
       <div className="projects-grid-empty">
         <h2 className="projects-grid-empty-title">No projects found</h2>
         <p className="projects-grid-empty-description">
-          <Link href={route({ pathname: '/project/init' })}>Initialize a project</Link> with Centy to
-          see it here, or{' '}
-          <Link href={route({ pathname: '/organizations/new' })}>create an organization</Link> to get
-          started.
+          <Link href={route({ pathname: '/project/init' })}>
+            Initialize a project
+          </Link>{' '}
+          with Centy to see it here, or{' '}
+          <Link href={route({ pathname: '/organizations/new' })}>
+            create an organization
+          </Link>{' '}
+          to get started.
         </p>
       </div>
     )
@@ -74,10 +79,16 @@ export function ProjectsGrid() {
           <button onClick={fetchData} className="refresh-btn">
             Refresh
           </button>
-          <Link href={route({ pathname: '/project/init' })} className="init-project-btn">
+          <Link
+            href={route({ pathname: '/project/init' })}
+            className="init-project-btn"
+          >
             + Init Project
           </Link>
-          <Link href={route({ pathname: '/organizations/new' })} className="create-org-btn">
+          <Link
+            href={route({ pathname: '/organizations/new' })}
+            className="create-org-btn"
+          >
             + New Organization
           </Link>
         </div>
@@ -95,7 +106,10 @@ export function ProjectsGrid() {
       ))}
 
       <div className="projects-grid-footer">
-        <Link href={route({ pathname: '/organizations' })} className="view-all-link">
+        <Link
+          href={route({ pathname: '/organizations' })}
+          className="view-all-link"
+        >
           Manage Organizations
         </Link>
       </div>

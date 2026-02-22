@@ -66,7 +66,9 @@ export function Settings() {
           <p className="not-initialized-text">
             Centy is not initialized in this directory
           </p>
-          <Link href={route({ pathname: '/project/init' })}>Initialize Project</Link>
+          <Link href={route({ pathname: '/project/init' })}>
+            Initialize Project
+          </Link>
         </div>
       )}
 

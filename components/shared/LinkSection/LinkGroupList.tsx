@@ -10,10 +10,7 @@ interface LinkGroupListProps {
   groupedLinks: Record<string, LinkType[]>
   editable: boolean
   deletingLinkId: string | null
-  buildLinkRoute: (
-    targetType: LinkTargetType,
-    targetId: string
-  ) => RouteLiteral
+  buildLinkRoute: (targetType: LinkTargetType, targetId: string) => RouteLiteral
   onDeleteLink: (link: LinkType) => void
 }
 

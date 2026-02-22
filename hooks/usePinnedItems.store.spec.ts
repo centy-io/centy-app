@@ -33,7 +33,9 @@ describe('usePinnedItems.store', () => {
 
     it('returns persisted state from localStorage', () => {
       const path = uniquePath()
-      const stored = { items: [{ id: '1', type: 'issue', title: 'Test', pinnedAt: 1000 }] }
+      const stored = {
+        items: [{ id: '1', type: 'issue', title: 'Test', pinnedAt: 1000 }],
+      }
       localStorage.setItem(`centy-pinned-items-${path}`, JSON.stringify(stored))
 
       expect(getSnapshot(path)).toEqual(stored)
@@ -48,7 +50,10 @@ describe('usePinnedItems.store', () => {
 
     it('returns DEFAULT_STATE when localStorage items is not an array', () => {
       const path = uniquePath()
-      localStorage.setItem(`centy-pinned-items-${path}`, JSON.stringify({ items: 'invalid' }))
+      localStorage.setItem(
+        `centy-pinned-items-${path}`,
+        JSON.stringify({ items: 'invalid' })
+      )
 
       expect(getSnapshot(path)).toEqual(DEFAULT_STATE)
     })
@@ -61,7 +66,12 @@ describe('usePinnedItems.store', () => {
   describe('updateState', () => {
     it('updates state via updater function', () => {
       const path = uniquePath()
-      const newItem = { id: '1', type: 'issue' as const, title: 'Test', pinnedAt: Date.now() }
+      const newItem = {
+        id: '1',
+        type: 'issue' as const,
+        title: 'Test',
+        pinnedAt: Date.now(),
+      }
 
       updateState(path, prev => ({ items: [...prev.items, newItem] }))
 
@@ -70,11 +80,18 @@ describe('usePinnedItems.store', () => {
 
     it('persists state to localStorage', () => {
       const path = uniquePath()
-      const newItem = { id: '1', type: 'doc' as const, title: 'My Doc', pinnedAt: 1000 }
+      const newItem = {
+        id: '1',
+        type: 'doc' as const,
+        title: 'My Doc',
+        pinnedAt: 1000,
+      }
 
       updateState(path, () => ({ items: [newItem] }))
 
-      const stored = JSON.parse(localStorage.getItem(`centy-pinned-items-${path}`)!)
+      const stored = JSON.parse(
+        localStorage.getItem(`centy-pinned-items-${path}`)!
+      )
       expect(stored.items).toContainEqual(newItem)
     })
 
@@ -145,21 +162,33 @@ describe('usePinnedItems.store', () => {
   describe('integration: pin/unpin workflow', () => {
     it('can add and remove pinned items', () => {
       const path = uniquePath()
-      const item = { id: 'abc', type: 'issue' as const, title: 'Bug fix', pinnedAt: 1000 }
+      const item = {
+        id: 'abc',
+        type: 'issue' as const,
+        title: 'Bug fix',
+        pinnedAt: 1000,
+      }
 
       // Pin item
       updateState(path, prev => ({ items: [...prev.items, item] }))
       expect(getSnapshot(path).items).toHaveLength(1)
 
       // Unpin item
-      updateState(path, prev => ({ items: prev.items.filter(i => i.id !== item.id) }))
+      updateState(path, prev => ({
+        items: prev.items.filter(i => i.id !== item.id),
+      }))
       expect(getSnapshot(path).items).toHaveLength(0)
     })
 
     it('maintains separate state per projectPath', () => {
       const path1 = uniquePath()
       const path2 = uniquePath()
-      const item = { id: '1', type: 'issue' as const, title: 'Issue', pinnedAt: 1000 }
+      const item = {
+        id: '1',
+        type: 'issue' as const,
+        title: 'Issue',
+        pinnedAt: 1000,
+      }
 
       updateState(path1, () => ({ items: [item] }))
 
@@ -169,7 +198,12 @@ describe('usePinnedItems.store', () => {
 
     it('state persists across getSnapshot calls', () => {
       const path = uniquePath()
-      const item = { id: '1', type: 'doc' as const, title: 'Doc', pinnedAt: 1000 }
+      const item = {
+        id: '1',
+        type: 'doc' as const,
+        title: 'Doc',
+        pinnedAt: 1000,
+      }
 
       updateState(path, () => ({ items: [item] }))
 
