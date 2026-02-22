@@ -11,12 +11,10 @@ import {
 import { useProject } from '@/components/providers/ProjectProvider'
 import { useStateManager } from '@/lib/state'
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
-import {
-  getDraftStorageKey,
-  loadFormDraft,
-  saveFormDraft,
-  clearFormDraft,
-} from '@/hooks/useFormDraft'
+import { getDraftStorageKey } from '@/hooks/getDraftStorageKey'
+import { loadFormDraft } from '@/hooks/loadFormDraft'
+import { saveFormDraft } from '@/hooks/saveFormDraft'
+import { clearFormDraft } from '@/hooks/clearFormDraft'
 import type {
   AssetUploaderHandle,
   PendingAsset,
