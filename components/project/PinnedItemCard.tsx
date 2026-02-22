@@ -23,8 +23,6 @@ function getItemHref(
       return createLink(`/issues/${item.id}`)
     case 'doc':
       return createLink(`/docs/${item.id}`)
-    case 'pr':
-      return createLink(`/pull-requests/${item.displayNumber}`)
   }
 }
 
@@ -38,8 +36,6 @@ function getTypeLabel(type: PinnedItem['type']): string {
       return 'Issue'
     case 'doc':
       return 'Doc'
-    case 'pr':
-      return 'PR'
   }
 }
 
