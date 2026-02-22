@@ -60,6 +60,7 @@
   align-items: center;
   background: var(--color-bg-surface);
   border-radius: 4px;
+  overflow: hidden;
 }
 
 .daemon-disconnected-instructions code {
@@ -78,6 +79,8 @@
   flex: 1;
   min-width: 0;
   padding-right: 8px;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .daemon-copy-button {
