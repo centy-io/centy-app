@@ -105,8 +105,8 @@
 }
 
 .daemon-retry-button {
-  background: #3b82f6;
-  color: var(--color-text-primary);
+  background: var(--color-primary);
+  color: white;
   border: none;
   border-radius: 8px;
   padding: 12px 32px;
@@ -117,11 +117,11 @@
 }
 
 .daemon-retry-button:hover {
-  background: #2563eb;
+  background: var(--color-primary-hover);
 }
 
 .daemon-retry-button:active {
-  background: #1d4ed8;
+  background: var(--color-primary-dark);
 }
 
 .daemon-disconnected-demo-section {
@@ -138,8 +138,8 @@
 
 .daemon-demo-button {
   background: transparent;
-  color: #a78bfa;
-  border: 1px solid #a78bfa;
+  color: var(--color-demo);
+  border: 1px solid var(--color-demo);
   border-radius: 8px;
   padding: 10px 24px;
   font-size: 14px;
@@ -150,8 +150,8 @@
 
 .daemon-demo-button:hover {
   background: rgba(167, 139, 250, 0.1);
-  border-color: #c4b5fd;
-  color: #c4b5fd;
+  border-color: var(--color-demo-hover);
+  color: var(--color-demo-hover);
 }
 
 .daemon-demo-button:active {

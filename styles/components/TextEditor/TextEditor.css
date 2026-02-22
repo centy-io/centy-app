@@ -1,9 +1,9 @@
 .text-editor {
   position: relative;
-  border: 1px solid var(--border-color, #374151);
+  border: 1px solid var(--color-border-default);
   border-radius: 8px;
   overflow: hidden;
-  background: var(--bg-secondary, #1f2937);
+  background: var(--color-bg-elevated);
 }
 
 /* Display mode specific styles */
@@ -23,8 +23,8 @@
   align-items: center;
   gap: 4px;
   padding: 8px 12px;
-  background: var(--bg-tertiary, #111827);
-  border-bottom: 1px solid var(--border-color, #374151);
+  background: var(--color-gray-50);
+  border-bottom: 1px solid var(--color-border-default);
   flex-wrap: wrap;
 }
 
@@ -36,7 +36,7 @@
 .toolbar-separator {
   width: 1px;
   height: 24px;
-  background: var(--border-color, #374151);
+  background: var(--color-border-default);
   margin: 0 6px;
 }
 
@@ -54,19 +54,19 @@
   border: none;
   border-radius: 4px;
   background: transparent;
-  color: var(--text-secondary, #9ca3af);
+  color: var(--color-text-muted);
   cursor: pointer;
   font-size: 14px;
   transition: all 0.15s ease;
 }
 
 .editor-toolbar button:hover {
-  background: var(--bg-hover, #374151);
-  color: var(--text-primary, #f9fafb);
+  background: var(--color-gray-200);
+  color: var(--color-text-primary);
 }
 
 .editor-toolbar button.active {
-  background: var(--accent-color, #3b82f6);
+  background: var(--color-primary);
   color: white;
 }
 
@@ -76,10 +76,10 @@
   top: 8px;
   right: 8px;
   padding: 4px 12px;
-  border: 1px solid var(--border-color, #374151);
+  border: 1px solid var(--color-border-default);
   border-radius: 4px;
-  background: var(--bg-secondary, #1f2937);
-  color: var(--text-secondary, #9ca3af);
+  background: var(--color-bg-elevated);
+  color: var(--color-text-muted);
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
@@ -88,8 +88,8 @@
 }
 
 .mode-toggle-btn:hover {
-  background: var(--bg-hover, #374151);
-  color: var(--text-primary, #f9fafb);
+  background: var(--color-gray-200);
+  color: var(--color-text-primary);
 }
 
 /* Editor Content */
@@ -101,7 +101,7 @@
 .editor-content .tiptap {
   outline: none;
   min-height: inherit;
-  color: var(--text-primary, #f9fafb);
+  color: var(--color-text-primary);
 }
 
 .editor-content .tiptap p {
@@ -151,29 +151,29 @@
 .editor-content .tiptap blockquote {
   margin: 1em 0;
   padding-left: 1em;
-  border-left: 3px solid var(--accent-color, #3b82f6);
-  color: var(--text-secondary, #9ca3af);
+  border-left: 3px solid var(--color-primary);
+  color: var(--color-text-muted);
 }
 
 .editor-content .tiptap hr {
   margin: 1.5em 0;
   border: none;
-  border-top: 1px solid var(--border-color, #374151);
+  border-top: 1px solid var(--color-border-default);
 }
 
 .editor-content .tiptap code {
-  background: var(--bg-tertiary, #111827);
+  background: var(--color-gray-50);
   padding: 2px 6px;
   border-radius: 4px;
   font-family: 'Fira Code', 'Consolas', monospace;
   font-size: 0.9em;
-  color: var(--color-gray-700);
+  color: var(--color-text-primary);
 }
 
 .editor-content .tiptap pre {
   margin: 1em 0;
   padding: 16px;
-  background: var(--bg-tertiary, #111827);
+  background: var(--color-gray-50);
   border-radius: 6px;
   overflow-x: auto;
 }
@@ -183,16 +183,16 @@
   padding: 0;
   font-size: 0.875em;
   line-height: 1.6;
-  color: var(--color-gray-700);
+  color: var(--color-text-primary);
 }
 
 .editor-content .tiptap a {
-  color: var(--accent-color, #3b82f6);
+  color: var(--color-primary);
   text-decoration: underline;
 }
 
 .editor-content .tiptap a:hover {
-  color: var(--accent-hover, #60a5fa);
+  color: var(--color-primary-hover);
 }
 
 .editor-content .tiptap strong {
@@ -211,7 +211,7 @@
 .editor-content .tiptap p.is-editor-empty:first-child::before {
   content: attr(data-placeholder);
   float: left;
-  color: var(--text-muted, #6b7280);
+  color: var(--color-text-muted);
   pointer-events: none;
   height: 0;
 }
@@ -266,7 +266,7 @@
   padding: 16px;
   border: none;
   background: transparent;
-  color: var(--text-primary, #f9fafb);
+  color: var(--color-text-primary);
   font-family: 'Fira Code', 'Consolas', monospace;
   font-size: 14px;
   line-height: 1.6;
@@ -279,13 +279,13 @@
 }
 
 .editor-raw::placeholder {
-  color: var(--text-muted, #6b7280);
+  color: var(--color-text-muted);
 }
 
 /* Focus state for edit mode */
 .text-editor--edit:focus-within {
-  border-color: var(--accent-color, #3b82f6);
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-light);
 }
 
 /* Display mode: remove cursor styling */
