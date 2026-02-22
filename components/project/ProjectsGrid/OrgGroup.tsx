@@ -42,6 +42,8 @@ export function OrgGroup({
           <ProjectCard
             key={project.path}
             project={project}
+            orgSlug={orgSlug}
+            orgName={groupName}
             onClick={() => onProjectClick(project)}
             onToggleFavorite={onToggleFavorite}
           />

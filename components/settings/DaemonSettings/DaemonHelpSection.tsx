@@ -1,4 +1,3 @@
-// eslint-disable-next-line max-lines-per-function
 export function DaemonHelpSection() {
   return (
     <div className="daemon-help">

@@ -8,10 +8,18 @@ interface NumericFieldProps {
   onChange: (value: unknown) => void
 }
 
-export function NumericField({ label, description, value, is64bit, onChange }: NumericFieldProps) {
+export function NumericField({
+  label,
+  description,
+  value,
+  is64bit,
+  onChange,
+}: NumericFieldProps) {
   const displayValue = is64bit
     ? String(value !== null && value !== undefined ? value : '')
-    : (value !== null && value !== undefined ? value : '')
+    : value !== null && value !== undefined
+      ? value
+      : ''
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value
     if (is64bit) {
@@ -23,8 +31,15 @@ export function NumericField({ label, description, value, is64bit, onChange }: N
   return (
     <div className="proto-form-field">
       <label className="proto-form-field-label">{label}</label>
-      {description && <p className="proto-form-field-description">{description}</p>}
-      <input type="number" className="proto-form-input" value={String(displayValue)} onChange={handleChange} />
+      {description && (
+        <p className="proto-form-field-description">{description}</p>
+      )}
+      <input
+        type="number"
+        className="proto-form-input"
+        value={String(displayValue)}
+        onChange={handleChange}
+      />
     </div>
   )
 }

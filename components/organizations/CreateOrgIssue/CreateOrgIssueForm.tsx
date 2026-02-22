@@ -4,7 +4,6 @@ import type { CreateOrgIssueFormProps } from './CreateOrgIssue.types'
 import { TextEditor } from '@/components/shared/TextEditor'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
-// eslint-disable-next-line max-lines-per-function
 export function CreateOrgIssueForm({
   title,
   setTitle,
@@ -61,9 +60,15 @@ export function CreateOrgIssueForm({
           value={priority}
           onChange={e => setPriority(Number(e.target.value))}
         >
-          <option className="form-option" value={1}>High</option>
-          <option className="form-option" value={2}>Medium</option>
-          <option className="form-option" value={3}>Low</option>
+          <option className="form-option" value={1}>
+            High
+          </option>
+          <option className="form-option" value={2}>
+            Medium
+          </option>
+          <option className="form-option" value={3}>
+            Low
+          </option>
         </select>
       </div>
 

@@ -14,8 +14,7 @@ async function fetchOrgIssuesFromProjects(
     create(ListProjectsRequestSchema, { organizationSlug: orgSlug })
   )
   const orgProjects = projectsRes.projects.filter(p => p.initialized)
-  const firstProjectPath =
-    orgProjects.length > 0 ? orgProjects[0].path : null
+  const firstProjectPath = orgProjects.length > 0 ? orgProjects[0].path : null
 
   const seen = new Set<string>()
   const orgIssues: Issue[] = []

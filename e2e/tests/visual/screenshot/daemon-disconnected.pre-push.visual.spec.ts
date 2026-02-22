@@ -80,20 +80,64 @@ test.describe('Daemon Disconnected Overlay Pre-push Visual Test @visual', () => 
       await expect(codeBlock).toBeVisible()
 
       // Verify white-space: nowrap is applied — the fix for issue #144
-      const whiteSpace = await codeBlock.locator('code').evaluate(
-        (el: HTMLElement) => getComputedStyle(el).whiteSpace
-      )
+      const whiteSpace = await codeBlock
+        .locator('code')
+        .evaluate((el: HTMLElement) => getComputedStyle(el).whiteSpace)
       expect(whiteSpace).toBe('nowrap')
 
       // Verify the code block is a single line (scrollHeight === clientHeight)
-      const isSingleLine = await codeBlock.locator('code').evaluate(
-        (el: HTMLElement) => el.scrollHeight <= el.clientHeight + 2
-      )
+      const isSingleLine = await codeBlock
+        .locator('code')
+        .evaluate((el: HTMLElement) => el.scrollHeight <= el.clientHeight + 2)
       expect(isSingleLine).toBe(true)
 
       // Screenshot the code block to lock in the no-wrap layout
       await expect(codeBlock).toHaveScreenshot(
         `daemon-code-block-${platform}.png`,
+        {
+          maxDiffPixelRatio: 0.05,
+          threshold: 0.3,
+        }
+      )
+    })
+  })
+
+  test.describe('Tablet viewport (768x1024)', () => {
+    test.beforeEach(async ({ page }) => {
+      await page.setViewportSize({ width: 768, height: 1024 })
+    })
+
+    test('overlay content - tablet light theme', async ({ page }) => {
+      await page.emulateMedia({ colorScheme: 'light' })
+      await page.goto('/')
+
+      await expect(page.locator('.daemon-disconnected-overlay')).toBeVisible()
+      await page.waitForTimeout(500)
+
+      const content = page.locator('.daemon-disconnected-content')
+      await expect(content).toBeVisible()
+
+      await expect(content).toHaveScreenshot(
+        `daemon-disconnected-tablet-light-${platform}.png`,
+        {
+          maxDiffPixelRatio: 0.05,
+          threshold: 0.3,
+        }
+      )
+    })
+
+    test('overlay content - tablet dark theme', async ({ page }) => {
+      await page.emulateMedia({ colorScheme: 'dark' })
+      await page.goto('/')
+
+      await expect(page.locator('.daemon-disconnected-overlay')).toBeVisible()
+      await page.waitForTimeout(500)
+
+      const content = page.locator('.daemon-disconnected-content')
+      await expect(content).toBeVisible()
+
+      await expect(content).toHaveScreenshot(
+        `daemon-disconnected-tablet-dark-${platform}.png`,
         {
           maxDiffPixelRatio: 0.05,
           threshold: 0.3,

@@ -13,7 +13,6 @@ import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import { isDaemonUnimplemented } from '@/lib/daemon-error'
 import { generateSlug } from '@/lib/generate-slug'
 
-// eslint-disable-next-line max-lines-per-function
 export function CreateOrganization() {
   const router = useRouter()
 
@@ -90,7 +89,10 @@ export function CreateOrganization() {
   return (
     <div className="create-organization">
       <div className="create-organization-header">
-        <Link href={route({ pathname: '/organizations' })} className="back-link">
+        <Link
+          href={route({ pathname: '/organizations' })}
+          className="back-link"
+        >
           Back to Organizations
         </Link>
         <h2 className="create-organization-title">Create New Organization</h2>

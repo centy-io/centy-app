@@ -18,12 +18,10 @@ export function OrgIssueReadView({ issue }: OrgIssueReadViewProps) {
   const displayNum = meta ? meta.orgDisplayNumber : issue.displayNumber
   const status = (meta && meta.status) || '—'
   const priority = meta ? meta.priority : 2
-  const createdAt = meta && meta.createdAt
-    ? new Date(meta.createdAt).toLocaleString()
-    : null
-  const updatedAt = meta && meta.updatedAt
-    ? new Date(meta.updatedAt).toLocaleString()
-    : null
+  const createdAt =
+    meta && meta.createdAt ? new Date(meta.createdAt).toLocaleString() : null
+  const updatedAt =
+    meta && meta.updatedAt ? new Date(meta.updatedAt).toLocaleString() : null
 
   return (
     <>
@@ -43,12 +41,8 @@ export function OrgIssueReadView({ issue }: OrgIssueReadViewProps) {
       </div>
       {(createdAt || updatedAt) && (
         <div className="issue-timestamps">
-          {createdAt && (
-            <span className="timestamp">Created: {createdAt}</span>
-          )}
-          {updatedAt && (
-            <span className="timestamp">Updated: {updatedAt}</span>
-          )}
+          {createdAt && <span className="timestamp">Created: {createdAt}</span>}
+          {updatedAt && <span className="timestamp">Updated: {updatedAt}</span>}
         </div>
       )}
     </>

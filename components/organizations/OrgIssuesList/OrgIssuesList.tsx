@@ -7,7 +7,6 @@ import { useOrgIssues } from './hooks/useOrgIssues'
 import { OrgIssuesTable } from './OrgIssuesTable'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
-
 export function OrgIssuesList({ orgSlug }: OrgIssuesListProps) {
   const { issues, loading, error, orgProjectPath, fetchIssues } =
     useOrgIssues(orgSlug)

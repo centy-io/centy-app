@@ -13,10 +13,26 @@ import { GOOGLE_ANALYTICS_URL } from '@/lib/constants/urls'
 
 const notoSans = localFont({
   src: [
-    { path: '../public/fonts/noto-sans/noto-sans-latin-400-normal.woff2', weight: '400', style: 'normal' },
-    { path: '../public/fonts/noto-sans/noto-sans-latin-500-normal.woff2', weight: '500', style: 'normal' },
-    { path: '../public/fonts/noto-sans/noto-sans-latin-600-normal.woff2', weight: '600', style: 'normal' },
-    { path: '../public/fonts/noto-sans/noto-sans-latin-700-normal.woff2', weight: '700', style: 'normal' },
+    {
+      path: '../public/fonts/noto-sans/noto-sans-latin-400-normal.woff2',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/noto-sans/noto-sans-latin-500-normal.woff2',
+      weight: '500',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/noto-sans/noto-sans-latin-600-normal.woff2',
+      weight: '600',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/noto-sans/noto-sans-latin-700-normal.woff2',
+      weight: '700',
+      style: 'normal',
+    },
   ],
   variable: '--font-noto-sans',
   display: 'swap',
@@ -38,7 +54,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`root-html ${notoSans.variable}`}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`root-html ${notoSans.variable}`}
+    >
       <head className="root-head">
         <Script src={GOOGLE_ANALYTICS_URL} strategy="afterInteractive" />
         <Script id="google-analytics" strategy="afterInteractive">

@@ -23,7 +23,10 @@ export function OrganizationsList() {
           >
             {state.loading ? 'Loading...' : 'Refresh'}
           </button>
-          <Link href={route({ pathname: '/organizations/new' })} className="create-btn">
+          <Link
+            href={route({ pathname: '/organizations/new' })}
+            className="create-btn"
+          >
             + New Organization
           </Link>
         </div>

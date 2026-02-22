@@ -6,7 +6,11 @@ interface MapEntriesTableProps {
   onRemove: (key: string) => void
 }
 
-export function MapEntriesTable({ entries, onValueChange, onRemove }: MapEntriesTableProps) {
+export function MapEntriesTable({
+  entries,
+  onValueChange,
+  onRemove,
+}: MapEntriesTableProps) {
   return (
     <table className="proto-form-map-table">
       <thead className="proto-form-map-thead">
