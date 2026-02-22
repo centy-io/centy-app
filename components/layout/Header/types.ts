@@ -9,6 +9,7 @@ export interface NavLinks {
 export interface NavItemType {
   name: string
   plural: string
+  itemCount: number
 }
 
 /**
