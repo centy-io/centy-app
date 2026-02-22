@@ -60,7 +60,9 @@ export function useHeaderNav() {
         const res = await centyClient.listItemTypes(req)
         if (cancelled) return
         setItemTypes(
-          res.itemTypes.map(t => ({ name: t.name, plural: t.plural }))
+          res.itemTypes
+            .map(t => ({ name: t.name, plural: t.plural, itemCount: t.itemCount }))
+            .sort((a, b) => b.itemCount - a.itemCount)
         )
       } catch {
         // silently fall back to empty

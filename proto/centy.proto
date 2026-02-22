@@ -1764,6 +1764,7 @@ message ItemTypeConfigProto {
   repeated string statuses = 5;
   string default_status = 6;
   uint32 priority_levels = 7;
+  uint32 item_count = 8;
 }
 
 message ListItemTypesRequest {
