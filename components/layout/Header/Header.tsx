@@ -15,7 +15,7 @@ import { UNGROUPED_ORG_MARKER } from '@/lib/project-resolver'
 
 // eslint-disable-next-line max-lines-per-function
 export function Header() {
-  const { hasExplicitSelection } = useOrganization()
+  const { selectedOrgSlug } = useOrganization()
   const {
     pathname,
     hasProjectContext,
@@ -67,7 +67,7 @@ export function Header() {
           <ThemeToggle />
           <DaemonStatusIndicator />
           <OrgSwitcher />
-          {hasExplicitSelection && <ProjectSelector />}
+          {selectedOrgSlug !== null && <ProjectSelector />}
         </div>
         <button
           className={`mobile-menu-toggle ${mobileMenuOpen ? 'open' : ''}`}
@@ -92,7 +92,7 @@ export function Header() {
       <MobileMenu
         mobileMenuOpen={mobileMenuOpen}
         setMobileMenuOpen={setMobileMenuOpen}
-        hasExplicitSelection={hasExplicitSelection}
+        selectedOrgSlug={selectedOrgSlug}
         navLinks={navLinks}
         pathname={pathname}
         isActive={isActive}

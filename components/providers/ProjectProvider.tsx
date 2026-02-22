@@ -19,7 +19,6 @@ interface ProjectContextType {
 
 const ProjectContext = createContext<ProjectContextType | null>(null)
 
-const STORAGE_KEY = 'centy-project-path'
 const ARCHIVED_STORAGE_KEY = 'centy-archived-projects'
 
 function setArchivedProjectsStorage(paths: string[]): void {
@@ -29,26 +28,11 @@ function setArchivedProjectsStorage(paths: string[]): void {
 }
 
 export function ProjectProvider({ children }: { children: ReactNode }) {
-  // Initialize to empty to avoid hydration mismatch - load from localStorage after mount
   const [projectPath, setProjectPathState] = useState('')
   const [isInitialized, setIsInitialized] = useState<boolean | null>(null)
 
-  // Load from localStorage after mount to avoid hydration mismatch
-  useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    if (stored) {
-      setProjectPathState(stored)
-    }
-  }, [])
-
   const setProjectPath = useCallback((path: string) => {
     setProjectPathState(path)
-    // Persist to localStorage
-    if (path) {
-      localStorage.setItem(STORAGE_KEY, path)
-    } else {
-      localStorage.removeItem(STORAGE_KEY)
-    }
   }, [])
 
   return (

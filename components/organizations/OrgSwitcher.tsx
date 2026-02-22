@@ -16,7 +16,6 @@ export function OrgSwitcher() {
   const {
     selectedOrgSlug,
     setSelectedOrgSlug,
-    hasExplicitSelection,
     organizations,
     loading,
     refreshOrganizations,
@@ -56,7 +55,6 @@ export function OrgSwitcher() {
   }, [isOpen])
 
   const getCurrentLabel = () => {
-    if (!hasExplicitSelection) return 'Select Org'
     if (selectedOrgSlug === null) return 'All Orgs'
     if (selectedOrgSlug === '') return 'Ungrouped'
     const org = organizations.find(o => o.slug === selectedOrgSlug)
