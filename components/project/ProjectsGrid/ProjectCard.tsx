@@ -28,6 +28,13 @@ export function ProjectCard({
         </button>
       </div>
 
+      {project.organizationSlug && (
+        <div className="project-badge org">
+          <span className="org-badge-icon">🏢</span>
+          {project.organizationName || project.organizationSlug}
+        </div>
+      )}
+
       {!project.initialized && (
         <div className="project-badge not-initialized">Not initialized</div>
       )}

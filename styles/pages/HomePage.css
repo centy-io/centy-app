@@ -179,6 +179,21 @@
   color: var(--color-warning-dark);
 }
 
+.project-badge.org {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  text-transform: none;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.project-badge.org .org-badge-icon {
+  font-size: 0.875rem;
+}
+
 /* Project Stats */
 .project-stats {
   display: flex;

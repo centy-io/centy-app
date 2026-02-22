@@ -1,13 +1,25 @@
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { useProjectContext } from './useProjectContext'
 import { useCreateIssueSubmit } from './useCreateIssueSubmit'
 import { usePathContext } from '@/components/providers/PathContextProvider'
 import { useStateManager } from '@/lib/state'
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
+import {
+  getDraftStorageKey,
+  loadFormDraft,
+  saveFormDraft,
+  clearFormDraft,
+} from '@/hooks/useFormDraft'
 import type {
   AssetUploaderHandle,
   PendingAsset,
 } from '@/components/assets/AssetUploader'
+
+interface IssueDraft {
+  title: string
+  description: string
+  priority: number
+}
 
 // eslint-disable-next-line max-lines-per-function
 export function useCreateIssue() {
@@ -23,6 +35,29 @@ export function useCreateIssue() {
   const [error, setError] = useState<string | null>(null)
   const [pendingAssets, setPendingAssets] = useState<PendingAsset[]>([])
   const assetUploaderRef = useRef<AssetUploaderHandle>(null)
+  const [draftLoaded, setDraftLoaded] = useState(false)
+
+  const draftKey = projectPath ? getDraftStorageKey('issue', projectPath) : ''
+
+  // Load draft from localStorage when projectPath becomes available
+  useEffect(() => {
+    if (!draftKey || draftLoaded) return
+    const draft = loadFormDraft<IssueDraft>(draftKey)
+    if (draft.title !== undefined) setTitle(draft.title)
+    if (draft.description !== undefined) setDescription(draft.description)
+    if (draft.priority !== undefined) setPriority(draft.priority)
+    setDraftLoaded(true)
+  }, [draftKey, draftLoaded])
+
+  // Auto-save draft on field changes
+  useEffect(() => {
+    if (!draftKey || !draftLoaded) return
+    saveFormDraft<IssueDraft>(draftKey, { title, description, priority })
+  }, [draftKey, title, description, priority, draftLoaded])
+
+  const clearDraft = useCallback(() => {
+    clearFormDraft(draftKey)
+  }, [draftKey])
 
   const { getProjectContext } = useProjectContext(projectPath)
 
@@ -37,6 +72,7 @@ export function useCreateIssue() {
     getProjectContext,
     setLoading,
     setError,
+    clearDraft,
   })
 
   const handleKeyboardSave = useCallback(() => {

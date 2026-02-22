@@ -11,8 +11,10 @@ import {
   type ProjectInfo,
   type Organization,
 } from '@/gen/centy_pb'
+import { useOrganization } from '@/components/providers/OrganizationProvider'
 
 export function useProjectsData() {
+  const { selectedOrgSlug } = useOrganization()
   const [projects, setProjects] = useState<ProjectInfo[]>([])
   const [organizations, setOrganizations] = useState<Organization[]>([])
   const [loading, setLoading] = useState(true)
@@ -70,10 +72,11 @@ export function useProjectsData() {
     }
   }
 
-  const groupedProjects: GroupedProject[] = useMemo(
-    () => groupProjects(projects, organizations),
-    [projects, organizations]
-  )
+  const groupedProjects: GroupedProject[] = useMemo(() => {
+    const allGroups = groupProjects(projects, organizations)
+    if (selectedOrgSlug === null) return allGroups
+    return allGroups.filter(([slug]) => slug === selectedOrgSlug)
+  }, [projects, organizations, selectedOrgSlug])
 
   return {
     projects,
