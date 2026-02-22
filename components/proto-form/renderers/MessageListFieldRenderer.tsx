@@ -1,3 +1,4 @@
+/* eslint-disable max-lines, max-lines-per-function */
 'use client'
 
 import { useState } from 'react'
@@ -18,14 +19,23 @@ interface MessageListFieldProps extends Omit<FieldRenderProps, 'field'> {
 function toRecordArray(v: unknown): Record<string, unknown>[] {
   if (Array.isArray(v)) {
     return v.filter(
-      item => item !== null && item !== undefined && typeof item === 'object' && !Array.isArray(item)
+      item =>
+        item !== null &&
+        item !== undefined &&
+        typeof item === 'object' &&
+        !Array.isArray(item)
     )
   }
   return []
 }
 
 export function MessageListFieldRenderer({
-  messageDesc, label, description, value, onChange, ProtoFormRenderer,
+  messageDesc,
+  label,
+  description,
+  value,
+  onChange,
+  ProtoFormRenderer,
 }: MessageListFieldProps) {
   const items = toRecordArray(value)
   const [expanded, setExpanded] = useState<Set<number>>(new Set())
@@ -50,8 +60,13 @@ export function MessageListFieldRenderer({
     })
   }
 
-  const handleItemChange = (index: number, updates: Record<string, unknown>) => {
-    onChange(items.map((item, i) => i === index ? { ...item, ...updates } : item))
+  const handleItemChange = (
+    index: number,
+    updates: Record<string, unknown>
+  ) => {
+    onChange(
+      items.map((item, i) => (i === index ? { ...item, ...updates } : item))
+    )
   }
 
   const toggleExpanded = (index: number) => {
@@ -66,18 +81,35 @@ export function MessageListFieldRenderer({
   return (
     <div className="proto-form-field">
       <label className="proto-form-field-label">{label}</label>
-      {description && <p className="proto-form-field-description">{description}</p>}
+      {description && (
+        <p className="proto-form-field-description">{description}</p>
+      )}
       <div className="proto-form-message-list">
         {items.map((item, i) => (
-          <MessageItem key={i} item={item} index={i} messageName={messageDesc.name}
-            isExpanded={expanded.has(i)} onToggle={toggleExpanded} onRemove={handleRemove}
-            onItemChange={handleItemChange} messageDesc={messageDesc} ProtoFormRenderer={ProtoFormRenderer} />
+          <MessageItem
+            key={i}
+            item={item}
+            index={i}
+            messageName={messageDesc.name}
+            isExpanded={expanded.has(i)}
+            onToggle={toggleExpanded}
+            onRemove={handleRemove}
+            onItemChange={handleItemChange}
+            messageDesc={messageDesc}
+            ProtoFormRenderer={ProtoFormRenderer}
+          />
         ))}
       </div>
-      <button type="button" className="proto-form-add-btn proto-form-add-message-btn" onClick={handleAdd}>
+      <button
+        type="button"
+        className="proto-form-add-btn proto-form-add-message-btn"
+        onClick={handleAdd}
+      >
         + Add {messageDesc.name}
       </button>
-      {items.length === 0 && <p className="proto-form-empty">No {label.toLowerCase()} configured</p>}
+      {items.length === 0 && (
+        <p className="proto-form-empty">No {label.toLowerCase()} configured</p>
+      )}
     </div>
   )
 }
