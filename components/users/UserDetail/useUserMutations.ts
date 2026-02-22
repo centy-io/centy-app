@@ -11,6 +11,7 @@ import {
   type User,
 } from '@/gen/centy_pb'
 import { isDaemonUnimplemented } from '@/lib/daemon-error'
+import { OperationError } from '@/lib/errors'
 
 function formatError(err: unknown): string {
   const msg = err instanceof Error ? err.message : 'Failed to connect to daemon'
@@ -55,7 +56,7 @@ export function useUserMutations(
         setUser(res.user)
         setIsEditing(false)
       } else {
-        setError(formatError(new Error(res.error || 'Failed to update')))
+        setError(formatError(new OperationError(res.error || 'Failed to update')))
       }
     } catch (err) {
       setError(formatError(err))
@@ -83,7 +84,7 @@ export function useUserMutations(
       if (res.success) {
         router.push(usersListUrl)
       } else {
-        setError(formatError(new Error(res.error || 'Failed to delete')))
+        setError(formatError(new OperationError(res.error || 'Failed to delete')))
         setShowDeleteConfirm(false)
       }
     } catch (err) {
