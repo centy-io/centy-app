@@ -1,11 +1,11 @@
 import { useState, useCallback, useEffect } from 'react'
 import { create } from '@bufbuild/protobuf'
-import { targetTypeToProto } from './LinkSection.types'
 import { useLinkRoutes } from './useLinkRoutes'
 import { centyClient } from '@/lib/grpc/client'
 import {
   ListLinksRequestSchema,
   DeleteLinkRequestSchema,
+  LinkTargetType,
   type Link as LinkType,
 } from '@/gen/centy_pb'
 import { usePathContext } from '@/components/providers/PathContextProvider'
@@ -28,8 +28,8 @@ export function useLinkSection(entityId: string, entityType: 'issue' | 'doc') {
       const request = create(ListLinksRequestSchema, {
         projectPath,
         entityId,
-        // eslint-disable-next-line security/detect-object-injection
-        entityType: targetTypeToProto[entityType],
+        entityType:
+          entityType === 'issue' ? LinkTargetType.ISSUE : LinkTargetType.DOC,
       })
       const response = await centyClient.listLinks(request)
       setLinks(response.links)
@@ -54,8 +54,8 @@ export function useLinkSection(entityId: string, entityType: 'issue' | 'doc') {
         const request = create(DeleteLinkRequestSchema, {
           projectPath,
           sourceId: entityId,
-          // eslint-disable-next-line security/detect-object-injection
-          sourceType: targetTypeToProto[entityType],
+          sourceType:
+            entityType === 'issue' ? LinkTargetType.ISSUE : LinkTargetType.DOC,
           targetId: link.targetId,
           targetType: link.targetType,
           linkType: link.linkType,

@@ -4,17 +4,13 @@ import type { Link as LinkType } from '@/gen/centy_pb'
 export function groupLinksByType(
   links: LinkType[]
 ): Record<string, LinkType[]> {
-  return links.reduce<Record<string, LinkType[]>>((acc, link) => {
+  const groups = new Map<string, LinkType[]>()
+  for (const link of links) {
     const type = link.linkType || 'related'
-    // eslint-disable-next-line security/detect-object-injection
-    if (!acc[type]) {
-      // eslint-disable-next-line security/detect-object-injection
-      acc[type] = []
-    }
-    // eslint-disable-next-line security/detect-object-injection
-    acc[type].push(link)
-    return acc
-  }, {})
+    const existing = groups.get(type)
+    groups.set(type, existing ? [...existing, link] : [link])
+  }
+  return Object.fromEntries(groups)
 }
 
 export function getLinkTypeDisplay(linkType: string): string {

@@ -1,14 +1,10 @@
 import { useCallback, useMemo } from 'react'
 import { useParams } from 'next/navigation'
 import { route, type RouteLiteral } from 'nextjs-routes'
-import { protoToTargetType } from './LinkSection.types'
 import { LinkTargetType } from '@/gen/centy_pb'
 
 export function useLinkRoutes(): {
-  buildLinkRoute: (
-    targetType: LinkTargetType,
-    targetId: string
-  ) => RouteLiteral
+  buildLinkRoute: (targetType: LinkTargetType, targetId: string) => RouteLiteral
 } {
   const params = useParams()
 
@@ -24,8 +20,12 @@ export function useLinkRoutes(): {
   const buildLinkRoute = useCallback(
     (targetType: LinkTargetType, targetId: string): RouteLiteral => {
       if (!projectContext) return route({ pathname: '/' })
-      // eslint-disable-next-line security/detect-object-injection
-      const targetTypeName = protoToTargetType[targetType]
+      const targetTypeName =
+        targetType === LinkTargetType.ISSUE
+          ? 'issue'
+          : targetType === LinkTargetType.DOC
+            ? 'doc'
+            : 'unknown'
       switch (targetTypeName) {
         case 'issue':
           return route({

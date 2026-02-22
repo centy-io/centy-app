@@ -1,11 +1,9 @@
 'use client'
 
-import Link from 'next/link'
-import { route } from 'nextjs-routes'
 import { useDaemonStatus } from '@/components/providers/DaemonStatusProvider'
 
 export function DaemonStatusIndicator() {
-  const { status } = useDaemonStatus()
+  const { status, checkNow } = useDaemonStatus()
 
   const statusConfig = {
     connected: {
@@ -26,17 +24,23 @@ export function DaemonStatusIndicator() {
     },
   }
 
-  // eslint-disable-next-line security/detect-object-injection
-  const config = statusConfig[status]
+  const config =
+    status === 'connected'
+      ? statusConfig.connected
+      : status === 'disconnected'
+        ? statusConfig.disconnected
+        : status === 'checking'
+          ? statusConfig.checking
+          : statusConfig.demo
 
   return (
-    <Link
-      href={route({ pathname: '/daemon' })}
+    <button
       className={`daemon-status-indicator ${config.className}`}
-      title={config.label}
+      onClick={checkNow}
+      title={`${config.label} - Click to refresh`}
     >
       <span className="daemon-status-dot" />
       <span className="daemon-status-label">{config.label}</span>
-    </Link>
+    </button>
   )
 }
