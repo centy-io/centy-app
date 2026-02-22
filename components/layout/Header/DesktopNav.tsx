@@ -29,9 +29,8 @@ export function DesktopNav({
         <>
           <div className="nav-group nav-group-project">
             {itemTypes.map(t => {
-              // eslint-disable-next-line no-restricted-syntax
               const href =
-                `/${effectiveOrg}/${effectiveProject}/${t.plural}` as RouteLiteral
+                `/${effectiveOrg}/${effectiveProject}/${t.plural}` as RouteLiteral // eslint-disable-line no-restricted-syntax
               return (
                 <Link
                   key={t.plural}
