@@ -30,6 +30,9 @@ declare module "nextjs-routes" {
     | StaticRoute<"/daemon">
     | StaticRoute<"/organizations">
     | DynamicRoute<"/organizations/[orgSlug]", { "orgSlug": string }>
+    | DynamicRoute<"/organizations/[orgSlug]/issues", { "orgSlug": string }>
+    | DynamicRoute<"/organizations/[orgSlug]/issues/new", { "orgSlug": string }>
+    | DynamicRoute<"/organizations/[orgSlug]/issues/[issueId]", { "orgSlug": string; "issueId": string }>
     | StaticRoute<"/organizations/new">
     | StaticRoute<"/project/config">
     | StaticRoute<"/project/init">
