@@ -8,8 +8,8 @@ export function useUserRoutes() {
   const projectContext = useProjectContext()
 
   const getUserRoute = useCallback(
-    (userId: string): RouteLiteral | '/' => {
-      if (!projectContext) return '/'
+    (userId: string): RouteLiteral => {
+      if (!projectContext) return route({ pathname: '/' })
       return route({
         pathname: '/[organization]/[project]/users/[userId]',
         query: { ...projectContext, userId },
@@ -18,8 +18,8 @@ export function useUserRoutes() {
     [projectContext]
   )
 
-  const newUserRoute: RouteLiteral | '/' = useMemo(() => {
-    if (!projectContext) return '/'
+  const newUserRoute: RouteLiteral = useMemo(() => {
+    if (!projectContext) return route({ pathname: '/' })
     return route({
       pathname: '/[organization]/[project]/users/new',
       query: projectContext,
