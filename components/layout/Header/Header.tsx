@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 'use client'
 
 import Link from 'next/link'
@@ -21,6 +22,7 @@ export function Header() {
     hasProjectContext,
     effectiveOrg,
     effectiveProject,
+    itemTypes,
     navLinks,
     isActive,
   } = useHeaderNav()
@@ -82,7 +84,14 @@ export function Header() {
       <p className="header-tagline">
         Local-first issue and documentation tracker
       </p>
-      <DesktopNav navLinks={navLinks} pathname={pathname} isActive={isActive} />
+      <DesktopNav
+        navLinks={navLinks}
+        pathname={pathname}
+        isActive={isActive}
+        effectiveOrg={effectiveOrg}
+        effectiveProject={effectiveProject}
+        itemTypes={itemTypes}
+      />
       <MobileMenu
         mobileMenuOpen={mobileMenuOpen}
         setMobileMenuOpen={setMobileMenuOpen}
@@ -90,6 +99,9 @@ export function Header() {
         navLinks={navLinks}
         pathname={pathname}
         isActive={isActive}
+        effectiveOrg={effectiveOrg}
+        effectiveProject={effectiveProject}
+        itemTypes={itemTypes}
       />
     </header>
   )

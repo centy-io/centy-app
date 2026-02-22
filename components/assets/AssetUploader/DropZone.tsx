@@ -40,7 +40,6 @@ export function DropZone({ fileInputRef, onFilesSelected }: DropZoneProps) {
         onChange={e => {
           if (e.target.files) onFilesSelected(e.target.files)
         }}
-        className="drop-zone-input"
         style={{ display: 'none' }}
       />
       <div className="drop-zone-content">
