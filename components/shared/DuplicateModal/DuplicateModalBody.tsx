@@ -35,7 +35,11 @@ export function DuplicateModalBody({ props, state }: DuplicateModalBodyProps) {
             className="move-modal-select"
           >
             {state.projects.map(project => (
-              <option className="move-modal-option" key={project.path} value={project.path}>
+              <option
+                className="move-modal-option"
+                key={project.path}
+                value={project.path}
+              >
                 {project.userTitle || project.projectTitle || project.name}
                 {project.path === props.currentProjectPath
                   ? ' (current)'

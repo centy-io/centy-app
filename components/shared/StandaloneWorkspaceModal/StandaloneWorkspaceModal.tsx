@@ -36,7 +36,9 @@ export function StandaloneWorkspaceModal(props: StandaloneWorkspaceModalProps) {
           </div>
 
           <div className="standalone-modal-field">
-            <label className="standalone-modal-label" htmlFor="workspace-name">Name (optional)</label>
+            <label className="standalone-modal-label" htmlFor="workspace-name">
+              Name (optional)
+            </label>
             <input
               id="workspace-name"
               type="text"
@@ -48,7 +50,10 @@ export function StandaloneWorkspaceModal(props: StandaloneWorkspaceModalProps) {
           </div>
 
           <div className="standalone-modal-field">
-            <label className="standalone-modal-label" htmlFor="workspace-description">
+            <label
+              className="standalone-modal-label"
+              htmlFor="workspace-description"
+            >
               Description (optional)
             </label>
             <textarea
@@ -62,7 +67,9 @@ export function StandaloneWorkspaceModal(props: StandaloneWorkspaceModalProps) {
           </div>
 
           <div className="standalone-modal-field">
-            <label className="standalone-modal-label" htmlFor="workspace-ttl">Workspace Duration</label>
+            <label className="standalone-modal-label" htmlFor="workspace-ttl">
+              Workspace Duration
+            </label>
             <select
               id="workspace-ttl"
               value={state.ttlHours}
@@ -70,7 +77,11 @@ export function StandaloneWorkspaceModal(props: StandaloneWorkspaceModalProps) {
               className="standalone-modal-select"
             >
               {TTL_OPTIONS.map(option => (
-                <option className="standalone-modal-option" key={option.value} value={option.value}>
+                <option
+                  className="standalone-modal-option"
+                  key={option.value}
+                  value={option.value}
+                >
                   {option.label}
                 </option>
               ))}

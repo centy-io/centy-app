@@ -23,7 +23,9 @@ export function DocDetailEditForm({
   return (
     <div className="edit-form">
       <div className="form-group">
-        <label className="form-label" htmlFor="edit-title">Title:</label>
+        <label className="form-label" htmlFor="edit-title">
+          Title:
+        </label>
         <input
           className="form-input"
           id="edit-title"
@@ -34,7 +36,9 @@ export function DocDetailEditForm({
       </div>
 
       <div className="form-group">
-        <label className="form-label" htmlFor="edit-slug">Slug (leave empty to keep current):</label>
+        <label className="form-label" htmlFor="edit-slug">
+          Slug (leave empty to keep current):
+        </label>
         <input
           className="form-input"
           id="edit-slug"
@@ -46,7 +50,9 @@ export function DocDetailEditForm({
       </div>
 
       <div className="form-group">
-        <label className="form-label" htmlFor="edit-content">Content (Markdown):</label>
+        <label className="form-label" htmlFor="edit-content">
+          Content (Markdown):
+        </label>
         <TextEditor
           value={editContent}
           onChange={setEditContent}

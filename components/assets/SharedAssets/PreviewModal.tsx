@@ -22,7 +22,11 @@ export function PreviewModal({ asset, url, onClose }: PreviewModalProps) {
           <video className="preview-video" src={url} controls />
         ) : (
           <div className="preview-download">
-            <a className="preview-download-link" href={url} download={asset.filename}>
+            <a
+              className="preview-download-link"
+              href={url}
+              download={asset.filename}
+            >
               Download File
             </a>
           </div>

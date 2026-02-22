@@ -59,7 +59,9 @@ export function WorkspaceModeModal({
     <div className="workspace-modal-overlay">
       <div className="workspace-modal" ref={modalRef}>
         <div className="workspace-modal-header">
-          <h3 className="workspace-modal-title">Open Agent for Issue #{issueNumber}</h3>
+          <h3 className="workspace-modal-title">
+            Open Agent for Issue #{issueNumber}
+          </h3>
           <button onClick={onClose} className="workspace-modal-close">
             Cancel
           </button>

@@ -30,7 +30,9 @@ export function OrganizationsList() {
       {state.error && <DaemonErrorMessage error={state.error} />}
       {state.showDeleteConfirm && (
         <div className="delete-confirm">
-          <p className="delete-confirm-message">Are you sure you want to delete this organization?</p>
+          <p className="delete-confirm-message">
+            Are you sure you want to delete this organization?
+          </p>
           {state.deleteError && (
             <p className="delete-error-message">{state.deleteError}</p>
           )}

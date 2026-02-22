@@ -22,7 +22,11 @@ export function AddLinkModalBody({ state }: AddLinkModalBodyProps) {
             className="link-modal-select"
           >
             {state.linkTypes.map(type => (
-              <option className="link-modal-option" key={type.name} value={type.name}>
+              <option
+                className="link-modal-option"
+                key={type.name}
+                value={type.name}
+              >
                 {type.name} {type.description ? `- ${type.description}` : ''}
               </option>
             ))}

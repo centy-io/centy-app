@@ -35,7 +35,9 @@ export function IssuesContent({
   if (!projectPath) {
     return (
       <div className="no-project-message">
-        <p className="no-project-text">Select a project from the header to view issues</p>
+        <p className="no-project-text">
+          Select a project from the header to view issues
+        </p>
       </div>
     )
   }
@@ -43,7 +45,9 @@ export function IssuesContent({
   if (isInitialized === false) {
     return (
       <div className="not-initialized-message">
-        <p className="not-initialized-text">Centy is not initialized in this directory</p>
+        <p className="not-initialized-text">
+          Centy is not initialized in this directory
+        </p>
         <Link href={createLink('/')}>Initialize Project</Link>
       </div>
     )

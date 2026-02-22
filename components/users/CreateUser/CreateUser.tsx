@@ -24,7 +24,9 @@ export function CreateUser() {
     return (
       <div className="create-user">
         <div className="not-initialized-message">
-          <p className="not-initialized-text">Centy is not initialized in this directory</p>
+          <p className="not-initialized-text">
+            Centy is not initialized in this directory
+          </p>
           <Link href="/">Initialize Project</Link>
         </div>
       </div>

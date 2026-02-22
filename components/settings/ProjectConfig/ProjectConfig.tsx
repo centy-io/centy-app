@@ -55,13 +55,17 @@ export function ProjectConfig() {
 
       {!projectPath && (
         <div className="no-project-message">
-          <p className="no-project-text">Select a project from the header to view project configuration</p>
+          <p className="no-project-text">
+            Select a project from the header to view project configuration
+          </p>
         </div>
       )}
 
       {projectPath && isInitialized === false && (
         <div className="not-initialized-message">
-          <p className="not-initialized-text">Centy is not initialized in this directory</p>
+          <p className="not-initialized-text">
+            Centy is not initialized in this directory
+          </p>
           <Link href="/">Initialize Project</Link>
         </div>
       )}

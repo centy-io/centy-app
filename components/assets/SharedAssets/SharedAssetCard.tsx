@@ -53,7 +53,9 @@ export function SharedAssetCard({
       </button>
       {deleteConfirm === asset.filename && (
         <div className="delete-confirm-overlay">
-          <p className="delete-confirm-message">Delete &ldquo;{asset.filename}&rdquo;?</p>
+          <p className="delete-confirm-message">
+            Delete &ldquo;{asset.filename}&rdquo;?
+          </p>
           <div className="delete-confirm-actions">
             <button
               onClick={() => onDeleteConfirm(null)}

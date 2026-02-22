@@ -70,7 +70,9 @@ export function DocCard({
       </button>
       {deleteConfirm === doc.slug && (
         <div className="delete-confirm-overlay">
-          <p className="delete-confirm-message">Delete &ldquo;{doc.title}&rdquo;?</p>
+          <p className="delete-confirm-message">
+            Delete &ldquo;{doc.title}&rdquo;?
+          </p>
           <div className="delete-confirm-actions">
             <button onClick={onDeleteCancel} className="cancel-btn">
               Cancel

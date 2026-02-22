@@ -48,7 +48,9 @@ export function CreateOrganizationForm({
       </div>
 
       <div className="form-group">
-        <label className="form-label" htmlFor="slug">Slug</label>
+        <label className="form-label" htmlFor="slug">
+          Slug
+        </label>
         <input
           className="form-input"
           id="slug"
@@ -63,7 +65,9 @@ export function CreateOrganizationForm({
       </div>
 
       <div className="form-group">
-        <label className="form-label" htmlFor="description">Description</label>
+        <label className="form-label" htmlFor="description">
+          Description
+        </label>
         <textarea
           className="form-textarea"
           id="description"

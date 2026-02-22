@@ -58,7 +58,9 @@ export function DaemonInfoSection({
 
         {showRestartConfirm && (
           <div className="confirm-dialog">
-            <p className="confirm-dialog-text">Are you sure you want to restart the daemon?</p>
+            <p className="confirm-dialog-text">
+              Are you sure you want to restart the daemon?
+            </p>
             <div className="confirm-actions">
               <button
                 onClick={() => onShowRestartConfirm(false)}

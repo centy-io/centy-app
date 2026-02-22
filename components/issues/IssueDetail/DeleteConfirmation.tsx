@@ -15,7 +15,9 @@ export function DeleteConfirmation({
 }: DeleteConfirmationProps): ReactElement {
   return (
     <div className="delete-confirm">
-      <p className="delete-confirm-message">Are you sure you want to delete this issue?</p>
+      <p className="delete-confirm-message">
+        Are you sure you want to delete this issue?
+      </p>
       <div className="delete-confirm-actions">
         <button onClick={onCancel} className="cancel-btn">
           Cancel

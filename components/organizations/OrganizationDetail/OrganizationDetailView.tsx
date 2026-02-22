@@ -92,7 +92,9 @@ export function OrganizationDetailView(props: OrganizationDetailViewProps) {
       {error && <DaemonErrorMessage error={error} />}
       {showDeleteConfirm && (
         <div className="delete-confirm">
-          <p className="delete-confirm-message">Are you sure you want to delete this organization?</p>
+          <p className="delete-confirm-message">
+            Are you sure you want to delete this organization?
+          </p>
           {projects.length > 0 && (
             <p className="delete-warning">
               This organization has {projects.length} project(s). They will
@@ -127,7 +129,9 @@ export function OrganizationDetailView(props: OrganizationDetailViewProps) {
         {isEditing ? (
           <div className="edit-form">
             <div className="form-group">
-              <label className="form-label" htmlFor="edit-name">Name:</label>
+              <label className="form-label" htmlFor="edit-name">
+                Name:
+              </label>
               <input
                 className="form-input"
                 id="edit-name"
@@ -138,7 +142,9 @@ export function OrganizationDetailView(props: OrganizationDetailViewProps) {
               />
             </div>
             <div className="form-group">
-              <label className="form-label" htmlFor="edit-slug">Slug:</label>
+              <label className="form-label" htmlFor="edit-slug">
+                Slug:
+              </label>
               <input
                 className="form-input"
                 id="edit-slug"
@@ -155,7 +161,9 @@ export function OrganizationDetailView(props: OrganizationDetailViewProps) {
               )}
             </div>
             <div className="form-group">
-              <label className="form-label" htmlFor="edit-description">Description:</label>
+              <label className="form-label" htmlFor="edit-description">
+                Description:
+              </label>
               <textarea
                 className="form-textarea"
                 id="edit-description"

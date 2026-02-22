@@ -33,7 +33,10 @@ export function AggregateTable({
         />
         <tbody className="issues-tbody">
           {table.getRowModel().rows.map(row => (
-            <tr className="issue-row" key={`${row.original.projectPath}-${row.original.issueNumber}`}>
+            <tr
+              className="issue-row"
+              key={`${row.original.projectPath}-${row.original.issueNumber}`}
+            >
               {row.getVisibleCells().map(cell => (
                 <td key={cell.id} className={getCellClassName(cell.column.id)}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}

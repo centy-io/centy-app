@@ -28,7 +28,9 @@ export function UserEditForm({
   return (
     <div className="edit-form">
       <div className="form-group">
-        <label className="form-label" htmlFor="edit-name">Name:</label>
+        <label className="form-label" htmlFor="edit-name">
+          Name:
+        </label>
         <input
           className="form-input"
           id="edit-name"
@@ -40,7 +42,9 @@ export function UserEditForm({
       </div>
 
       <div className="form-group">
-        <label className="form-label" htmlFor="edit-email">Email:</label>
+        <label className="form-label" htmlFor="edit-email">
+          Email:
+        </label>
         <input
           className="form-input"
           id="edit-email"

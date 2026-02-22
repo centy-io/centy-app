@@ -18,14 +18,17 @@ export function SuccessStep({
     <div className="success-step">
       <h3 className="result-step-title">Success!</h3>
       <p className="result-step-description">
-        Centy has been initialized in <code className="inline-code">{projectPath}</code>
+        Centy has been initialized in{' '}
+        <code className="inline-code">{projectPath}</code>
       </p>
       {result.created.length > 0 && (
         <div className="result-section">
           <h4 className="result-section-title">Created:</h4>
           <ul className="result-list">
             {result.created.map(path => (
-              <li className="result-list-item" key={path}>{path}</li>
+              <li className="result-list-item" key={path}>
+                {path}
+              </li>
             ))}
           </ul>
         </div>
@@ -35,7 +38,9 @@ export function SuccessStep({
           <h4 className="result-section-title">Restored:</h4>
           <ul className="result-list">
             {result.restored.map(path => (
-              <li className="result-list-item" key={path}>{path}</li>
+              <li className="result-list-item" key={path}>
+                {path}
+              </li>
             ))}
           </ul>
         </div>
@@ -45,7 +50,9 @@ export function SuccessStep({
           <h4 className="result-section-title">Reset:</h4>
           <ul className="result-list">
             {result.reset.map(path => (
-              <li className="result-list-item" key={path}>{path}</li>
+              <li className="result-list-item" key={path}>
+                {path}
+              </li>
             ))}
           </ul>
         </div>

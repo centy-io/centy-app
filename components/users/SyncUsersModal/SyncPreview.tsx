@@ -11,7 +11,9 @@ export function SyncPreview({ wouldCreate, wouldSkip }: SyncPreviewProps) {
   if (wouldCreate.length === 0 && wouldSkip.length === 0) {
     return (
       <div className="sync-empty">
-        <p className="sync-empty-text">No git contributors found in this repository.</p>
+        <p className="sync-empty-text">
+          No git contributors found in this repository.
+        </p>
       </div>
     )
   }
@@ -19,7 +21,9 @@ export function SyncPreview({ wouldCreate, wouldSkip }: SyncPreviewProps) {
   if (wouldCreate.length === 0) {
     return (
       <div className="sync-up-to-date">
-        <p className="sync-up-to-date-text">All git contributors are already in the users list.</p>
+        <p className="sync-up-to-date-text">
+          All git contributors are already in the users list.
+        </p>
       </div>
     )
   }
@@ -27,7 +31,9 @@ export function SyncPreview({ wouldCreate, wouldSkip }: SyncPreviewProps) {
   return (
     <>
       <div className="sync-section">
-        <h4 className="sync-section-title">Will Create ({wouldCreate.length})</h4>
+        <h4 className="sync-section-title">
+          Will Create ({wouldCreate.length})
+        </h4>
         <ul className="contributor-list">
           {wouldCreate.map((contributor, i) => (
             <li key={i} className="contributor-item create">

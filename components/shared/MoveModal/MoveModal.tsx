@@ -14,7 +14,9 @@ export function MoveModal(props: MoveModalProps) {
     <div className="move-modal-overlay">
       <div className="move-modal" ref={state.modalRef}>
         <div className="move-modal-header">
-          <h3 className="move-modal-title">Move {props.entityType === 'issue' ? 'Issue' : 'Document'}</h3>
+          <h3 className="move-modal-title">
+            Move {props.entityType === 'issue' ? 'Issue' : 'Document'}
+          </h3>
           <button className="move-modal-close" onClick={props.onClose}>
             x
           </button>
@@ -48,7 +50,11 @@ export function MoveModal(props: MoveModalProps) {
                 className="move-modal-select"
               >
                 {state.projects.map(project => (
-                  <option className="move-modal-option" key={project.path} value={project.path}>
+                  <option
+                    className="move-modal-option"
+                    key={project.path}
+                    value={project.path}
+                  >
                     {project.userTitle || project.projectTitle || project.name}{' '}
                     ({project.displayPath})
                   </option>
@@ -59,7 +65,9 @@ export function MoveModal(props: MoveModalProps) {
 
           {props.entityType === 'doc' && (
             <div className="move-modal-field">
-              <label className="move-modal-label">New Slug (optional - leave empty to keep current)</label>
+              <label className="move-modal-label">
+                New Slug (optional - leave empty to keep current)
+              </label>
               <input
                 type="text"
                 value={state.newSlug}

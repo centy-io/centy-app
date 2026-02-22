@@ -97,7 +97,8 @@ export function PlanStep({
     <div className="plan-step">
       <h3 className="plan-step-title">Reconciliation Plan</h3>
       <p className="plan-step-description">
-        Review what will happen when initializing <code className="inline-code">{projectPath}</code>
+        Review what will happen when initializing{' '}
+        <code className="inline-code">{projectPath}</code>
       </p>
       <FileList files={plan.toCreate} title="Files to Create" />
       <CheckboxList

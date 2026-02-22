@@ -27,7 +27,11 @@ export function EnumValuesEditor({
         {enumValues.map(value => (
           <span key={value} className="custom-field-enum-tag">
             {value}
-            <button className="custom-field-enum-remove-btn" type="button" onClick={() => onRemove(value)}>
+            <button
+              className="custom-field-enum-remove-btn"
+              type="button"
+              onClick={() => onRemove(value)}
+            >
               &times;
             </button>
           </span>

@@ -58,8 +58,12 @@ export function StateItem({
         }}
         className="state-default-select"
       >
-        <option className="state-option" value="">-</option>
-        <option className="state-option" value="default">Default</option>
+        <option className="state-option" value="">
+          -
+        </option>
+        <option className="state-option" value="default">
+          Default
+        </option>
       </select>
 
       <button

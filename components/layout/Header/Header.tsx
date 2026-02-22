@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 'use client'
 
 import Link from 'next/link'
@@ -80,7 +79,9 @@ export function Header() {
           <span className="hamburger-line" />
         </button>
       </div>
-      <p className="header-tagline">Local-first issue and documentation tracker</p>
+      <p className="header-tagline">
+        Local-first issue and documentation tracker
+      </p>
       <DesktopNav navLinks={navLinks} pathname={pathname} isActive={isActive} />
       <MobileMenu
         mobileMenuOpen={mobileMenuOpen}

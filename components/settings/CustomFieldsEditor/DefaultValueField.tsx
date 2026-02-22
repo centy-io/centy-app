@@ -20,7 +20,9 @@ export function DefaultValueField({
           onChange={e => onChange(e.target.value)}
           className="custom-field-form-select"
         >
-          <option className="form-option" value="">No default</option>
+          <option className="form-option" value="">
+            No default
+          </option>
           {enumValues.map(v => (
             <option className="form-option" key={v} value={v}>
               {v}
@@ -33,9 +35,15 @@ export function DefaultValueField({
           onChange={e => onChange(e.target.value)}
           className="custom-field-form-select"
         >
-          <option className="form-option" value="">No default</option>
-          <option className="form-option" value="true">True</option>
-          <option className="form-option" value="false">False</option>
+          <option className="form-option" value="">
+            No default
+          </option>
+          <option className="form-option" value="true">
+            True
+          </option>
+          <option className="form-option" value="false">
+            False
+          </option>
         </select>
       ) : (
         <input

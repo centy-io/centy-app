@@ -28,12 +28,24 @@ export function CreateIssueForm({
   return (
     <form className="create-issue-form" onSubmit={onSubmit}>
       <div className="form-group">
-        <label className="form-label" htmlFor="title">Title:</label>
-        <input className="form-input" id="title" type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="Issue title" required />
+        <label className="form-label" htmlFor="title">
+          Title:
+        </label>
+        <input
+          className="form-input"
+          id="title"
+          type="text"
+          value={title}
+          onChange={e => setTitle(e.target.value)}
+          placeholder="Issue title"
+          required
+        />
       </div>
 
       <div className="form-group">
-        <label className="form-label" htmlFor="description">Description:</label>
+        <label className="form-label" htmlFor="description">
+          Description:
+        </label>
         <TextEditor
           value={description}
           onChange={setDescription}
@@ -45,19 +57,31 @@ export function CreateIssueForm({
       </div>
 
       <div className="form-group">
-        <label className="form-label" htmlFor="priority">Priority:</label>
+        <label className="form-label" htmlFor="priority">
+          Priority:
+        </label>
         <select
           className="form-select"
           id="priority"
           value={priority}
           onChange={e => setPriority(Number(e.target.value))}
         >
-          <option className="form-option" value={1}>High</option><option className="form-option" value={2}>Medium</option><option className="form-option" value={3}>Low</option>
+          <option className="form-option" value={1}>
+            High
+          </option>
+          <option className="form-option" value={2}>
+            Medium
+          </option>
+          <option className="form-option" value={3}>
+            Low
+          </option>
         </select>
       </div>
 
       <div className="form-group">
-        <label className="form-label" htmlFor="status">Status:</label>
+        <label className="form-label" htmlFor="status">
+          Status:
+        </label>
         <select
           className="form-select"
           id="status"
@@ -65,7 +89,11 @@ export function CreateIssueForm({
           onChange={e => setStatus(e.target.value)}
         >
           {stateOptions.map(option => (
-            <option className="form-option" key={option.value} value={option.value}>
+            <option
+              className="form-option"
+              key={option.value}
+              value={option.value}
+            >
               {option.label}
             </option>
           ))}

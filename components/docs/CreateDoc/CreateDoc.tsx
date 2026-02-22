@@ -29,7 +29,9 @@ export function CreateDoc() {
       <div className="create-doc">
         <h2 className="create-doc-title">Create New Document</h2>
         <div className="no-project-message">
-          <p className="no-project-text">Select a project from the header to create a document</p>
+          <p className="no-project-text">
+            Select a project from the header to create a document
+          </p>
         </div>
       </div>
     )
@@ -40,7 +42,9 @@ export function CreateDoc() {
       <div className="create-doc">
         <h2 className="create-doc-title">Create New Document</h2>
         <div className="not-initialized-message">
-          <p className="not-initialized-text">Centy is not initialized in this directory</p>
+          <p className="not-initialized-text">
+            Centy is not initialized in this directory
+          </p>
           <Link href="/">Initialize Project</Link>
         </div>
       </div>
@@ -53,7 +57,9 @@ export function CreateDoc() {
 
       <form className="create-doc-form" onSubmit={handleSubmit}>
         <div className="form-group">
-          <label className="form-label" htmlFor="title">Title:</label>
+          <label className="form-label" htmlFor="title">
+            Title:
+          </label>
           <input
             className="form-input"
             id="title"
@@ -80,7 +86,9 @@ export function CreateDoc() {
         </div>
 
         <div className="form-group">
-          <label className="form-label" htmlFor="content">Content (Markdown):</label>
+          <label className="form-label" htmlFor="content">
+            Content (Markdown):
+          </label>
           <TextEditor
             value={content}
             onChange={setContent}

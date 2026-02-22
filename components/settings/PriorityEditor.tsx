@@ -98,7 +98,9 @@ export function PriorityEditor({
   return (
     <div className="priority-editor">
       <div className="priority-levels-selector">
-        <label className="form-label" htmlFor="priority-levels">Number of priority levels:</label>
+        <label className="form-label" htmlFor="priority-levels">
+          Number of priority levels:
+        </label>
         <select
           id="priority-levels"
           value={levels}

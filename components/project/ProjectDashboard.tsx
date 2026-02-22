@@ -23,7 +23,9 @@ export function ProjectDashboard() {
   if (isInitialized === false) {
     return (
       <div className="project-dashboard-not-initialized">
-        <p className="not-initialized-text">Centy is not initialized in this directory</p>
+        <p className="not-initialized-text">
+          Centy is not initialized in this directory
+        </p>
         <Link href={createLink('/')}>Initialize Project</Link>
       </div>
     )

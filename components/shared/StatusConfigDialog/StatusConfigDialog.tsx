@@ -17,7 +17,9 @@ export function StatusConfigDialog({
     <div className="status-config-dialog-overlay">
       <div className="status-config-dialog" ref={state.modalRef}>
         <div className="status-config-dialog-header">
-          <h3 className="status-config-dialog-title">Configure Status Update Behavior</h3>
+          <h3 className="status-config-dialog-title">
+            Configure Status Update Behavior
+          </h3>
           <button className="status-config-dialog-close" onClick={onClose}>
             x
           </button>

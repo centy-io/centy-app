@@ -69,7 +69,9 @@ export function MultiSelect({
                   checked={value.includes(option.value)}
                   onChange={() => handleOptionToggle(option.value)}
                 />
-                <span className="multi-select-option-label">{option.label}</span>
+                <span className="multi-select-option-label">
+                  {option.label}
+                </span>
               </label>
             ))}
           </div>

@@ -31,7 +31,9 @@ export function CreateIssue(): ReactElement {
       <div className="create-issue">
         <h2 className="create-issue-title">Create New Issue</h2>
         <div className="no-project-message">
-          <p className="no-project-text">Select a project from the header to create an issue</p>
+          <p className="no-project-text">
+            Select a project from the header to create an issue
+          </p>
         </div>
       </div>
     )
@@ -42,7 +44,9 @@ export function CreateIssue(): ReactElement {
       <div className="create-issue">
         <h2 className="create-issue-title">Create New Issue</h2>
         <div className="not-initialized-message">
-          <p className="not-initialized-text">Centy is not initialized in this directory</p>
+          <p className="not-initialized-text">
+            Centy is not initialized in this directory
+          </p>
           <Link href="/">Initialize Project</Link>
         </div>
       </div>

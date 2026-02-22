@@ -90,7 +90,9 @@ export function ProjectSelectorDropdown(props: ProjectSelectorDropdownProps) {
         <div className="project-selector-empty">
           {searchQuery ? (
             <>
-              <p className="empty-state-text">No projects match &quot;{searchQuery}&quot;</p>
+              <p className="empty-state-text">
+                No projects match &quot;{searchQuery}&quot;
+              </p>
               <p className="hint">Try a different search term</p>
             </>
           ) : (

@@ -78,7 +78,10 @@ export function CustomFieldDisplay({
       <div className="custom-field-details">
         {field.defaultValue && (
           <span className="custom-field-default">
-            Default: <code className="custom-field-default-value">{field.defaultValue}</code>
+            Default:{' '}
+            <code className="custom-field-default-value">
+              {field.defaultValue}
+            </code>
           </span>
         )}
         {field.fieldType === 'enum' && field.enumValues.length > 0 && (
