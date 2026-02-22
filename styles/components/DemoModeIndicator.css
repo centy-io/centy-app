@@ -3,7 +3,7 @@
   top: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(90deg, #7c3aed, #a78bfa);
+  background: linear-gradient(90deg, var(--color-demo-dark), var(--color-demo));
   z-index: 9998;
   padding: 8px 16px;
 }

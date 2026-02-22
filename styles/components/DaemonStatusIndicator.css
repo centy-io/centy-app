@@ -13,8 +13,8 @@
 }
 
 .daemon-status-indicator:hover {
-  background: #333;
-  border-color: #555;
+  background: var(--color-gray-200);
+  border-color: var(--color-gray-300);
 }
 
 .daemon-status-dot {
@@ -66,7 +66,7 @@
 }
 
 .daemon-status-indicator.demo .daemon-status-dot {
-  background-color: #a78bfa;
+  background-color: var(--color-demo);
   box-shadow: 0 0 6px rgba(167, 139, 250, 0.5);
 }
 
