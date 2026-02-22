@@ -1,33 +1,47 @@
 'use client'
 
 import Link from 'next/link'
-import type { NavLinks } from './types'
+import type { RouteLiteral } from 'nextjs-routes'
+import type { NavLinks, NavItemType } from './types'
 import { DOCS_URL } from '@/lib/constants/urls'
 
 interface DesktopNavProps {
   navLinks: NavLinks | null
   pathname: string
   isActive: (href: string, checkPrefix?: boolean) => boolean
+  effectiveOrg: string | undefined
+  effectiveProject: string | undefined
+  itemTypes: NavItemType[]
 }
 
-export function DesktopNav({ navLinks, pathname, isActive }: DesktopNavProps) {
+// eslint-disable-next-line max-lines-per-function
+export function DesktopNav({
+  navLinks,
+  pathname,
+  isActive,
+  effectiveOrg,
+  effectiveProject,
+  itemTypes,
+}: DesktopNavProps) {
   return (
     <nav className="app-nav">
       {navLinks && (
         <>
           <div className="nav-group nav-group-project">
-            <Link
-              href={navLinks.issues}
-              className={isActive(navLinks.issues) ? 'active' : ''}
-            >
-              Issues
-            </Link>
-            <Link
-              href={navLinks.docs}
-              className={isActive(navLinks.docs) ? 'active' : ''}
-            >
-              Docs
-            </Link>
+            {itemTypes.map(t => {
+              // eslint-disable-next-line no-restricted-syntax
+              const href =
+                `/${effectiveOrg}/${effectiveProject}/${t.plural}` as RouteLiteral
+              return (
+                <Link
+                  key={t.plural}
+                  href={href}
+                  className={isActive(href) ? 'active' : ''}
+                >
+                  {t.name}
+                </Link>
+              )
+            })}
             <Link
               href={navLinks.assets}
               className={isActive(navLinks.assets, false) ? 'active' : ''}

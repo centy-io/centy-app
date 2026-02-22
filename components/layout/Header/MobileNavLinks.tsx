@@ -1,37 +1,47 @@
 'use client'
 
 import Link from 'next/link'
-import type { NavLinks } from './types'
+import type { RouteLiteral } from 'nextjs-routes'
+import type { NavLinks, NavItemType } from './types'
 import { DOCS_URL } from '@/lib/constants/urls'
 
 interface MobileNavLinksProps {
   navLinks: NavLinks | null
   pathname: string
   isActive: (href: string, checkPrefix?: boolean) => boolean
+  effectiveOrg: string | undefined
+  effectiveProject: string | undefined
+  itemTypes: NavItemType[]
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function MobileNavLinks({
   navLinks,
   pathname,
   isActive,
+  effectiveOrg,
+  effectiveProject,
+  itemTypes,
 }: MobileNavLinksProps) {
   return (
     <nav className="mobile-menu-nav">
       {navLinks && (
         <>
           <div className="mobile-nav-group">
-            <Link
-              href={navLinks.issues}
-              className={isActive(navLinks.issues) ? 'active' : ''}
-            >
-              Issues
-            </Link>
-            <Link
-              href={navLinks.docs}
-              className={isActive(navLinks.docs) ? 'active' : ''}
-            >
-              Docs
-            </Link>
+            {itemTypes.map(t => {
+              // eslint-disable-next-line no-restricted-syntax
+              const href =
+                `/${effectiveOrg}/${effectiveProject}/${t.plural}` as RouteLiteral
+              return (
+                <Link
+                  key={t.plural}
+                  href={href}
+                  className={isActive(href) ? 'active' : ''}
+                >
+                  {t.name}
+                </Link>
+              )
+            })}
             <Link
               href={navLinks.assets}
               className={isActive(navLinks.assets, false) ? 'active' : ''}

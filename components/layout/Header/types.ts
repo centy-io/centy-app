@@ -1,11 +1,14 @@
 import type { RouteLiteral } from 'nextjs-routes'
 
 export interface NavLinks {
-  issues: RouteLiteral
-  docs: RouteLiteral
   assets: RouteLiteral
   users: RouteLiteral
   config: RouteLiteral
+}
+
+export interface NavItemType {
+  name: string
+  plural: string
 }
 
 /**

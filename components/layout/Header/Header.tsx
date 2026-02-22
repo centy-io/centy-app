@@ -23,6 +23,7 @@ export function Header() {
     effectiveProject,
     navLinks,
     isActive,
+    itemTypes,
   } = useHeaderNav()
   const { mobileMenuOpen, setMobileMenuOpen, toggleMobileMenu } =
     useMobileMenu(pathname)
@@ -80,7 +81,14 @@ export function Header() {
         </button>
       </div>
       <p>Local-first issue and documentation tracker</p>
-      <DesktopNav navLinks={navLinks} pathname={pathname} isActive={isActive} />
+      <DesktopNav
+        navLinks={navLinks}
+        pathname={pathname}
+        isActive={isActive}
+        effectiveOrg={effectiveOrg}
+        effectiveProject={effectiveProject}
+        itemTypes={itemTypes}
+      />
       <MobileMenu
         mobileMenuOpen={mobileMenuOpen}
         setMobileMenuOpen={setMobileMenuOpen}
@@ -88,6 +96,9 @@ export function Header() {
         navLinks={navLinks}
         pathname={pathname}
         isActive={isActive}
+        effectiveOrg={effectiveOrg}
+        effectiveProject={effectiveProject}
+        itemTypes={itemTypes}
       />
     </header>
   )

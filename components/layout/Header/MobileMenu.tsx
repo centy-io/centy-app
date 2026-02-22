@@ -1,6 +1,6 @@
 'use client'
 
-import type { NavLinks } from './types'
+import type { NavLinks, NavItemType } from './types'
 import { MobileNavLinks } from './MobileNavLinks'
 import { ThemeToggle } from '@/components/shared/ThemeToggle'
 import { DaemonStatusIndicator } from '@/components/shared/DaemonStatusIndicator'
@@ -14,6 +14,9 @@ interface MobileMenuProps {
   navLinks: NavLinks | null
   pathname: string
   isActive: (href: string, checkPrefix?: boolean) => boolean
+  effectiveOrg: string | undefined
+  effectiveProject: string | undefined
+  itemTypes: NavItemType[]
 }
 
 export function MobileMenu({
@@ -23,6 +26,9 @@ export function MobileMenu({
   navLinks,
   pathname,
   isActive,
+  effectiveOrg,
+  effectiveProject,
+  itemTypes,
 }: MobileMenuProps) {
   return (
     <>
@@ -44,6 +50,9 @@ export function MobileMenu({
           navLinks={navLinks}
           pathname={pathname}
           isActive={isActive}
+          effectiveOrg={effectiveOrg}
+          effectiveProject={effectiveProject}
+          itemTypes={itemTypes}
         />
       </div>
     </>

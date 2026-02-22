@@ -53,6 +53,7 @@ import {
   getInstruction,
   getCompact,
   spawnAgent,
+  listItemTypes,
 } from './stub'
 import {
   openInTempVscode,
@@ -129,6 +130,7 @@ export const mockHandlers: MockHandlers = {
   getInstruction,
   getCompact,
   spawnAgent,
+  listItemTypes,
   openInTempVscode,
   openInTempTerminal,
   getSupportedEditors,

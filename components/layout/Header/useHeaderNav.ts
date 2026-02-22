@@ -1,10 +1,15 @@
+/* eslint-disable max-lines */
 'use client'
 
-import { useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { usePathname, useParams } from 'next/navigation'
 import { route } from 'nextjs-routes'
-import type { NavLinks } from './types'
+import { create } from '@bufbuild/protobuf'
+import type { NavLinks, NavItemType } from './types'
 import { ROOT_ROUTES } from './types'
+import { ListItemTypesRequestSchema } from '@/gen/centy_pb'
+import { centyClient } from '@/lib/grpc/client'
+import { resolveProject } from '@/lib/project-resolver'
 
 // eslint-disable-next-line max-lines-per-function
 export function useHeaderNav() {
@@ -34,23 +39,42 @@ export function useHeaderNav() {
   const effectiveProject =
     project || (hasProjectContext ? pathSegments[1] : undefined)
 
+  const [itemTypes, setItemTypes] = useState<NavItemType[]>([])
+
+  useEffect(() => {
+    if (!hasProjectContext || !effectiveOrg || !effectiveProject) {
+      setItemTypes([])
+      return
+    }
+    let cancelled = false
+    async function fetchItemTypes() {
+      try {
+        const resolution = await resolveProject(
+          effectiveOrg!,
+          effectiveProject!
+        )
+        if (cancelled || !resolution) return
+        const req = create(ListItemTypesRequestSchema, {
+          projectPath: resolution.projectPath,
+        })
+        const res = await centyClient.listItemTypes(req)
+        if (cancelled) return
+        setItemTypes(
+          res.itemTypes.map(t => ({ name: t.name, plural: t.plural }))
+        )
+      } catch {
+        // silently fall back to empty
+      }
+    }
+    fetchItemTypes()
+    return () => {
+      cancelled = true
+    }
+  }, [hasProjectContext, effectiveOrg, effectiveProject])
+
   const navLinks: NavLinks | null = useMemo(() => {
     if (hasProjectContext && effectiveOrg && effectiveProject) {
       return {
-        issues: route({
-          pathname: '/[organization]/[project]/issues',
-          query: {
-            organization: effectiveOrg,
-            project: effectiveProject,
-          },
-        }),
-        docs: route({
-          pathname: '/[organization]/[project]/docs',
-          query: {
-            organization: effectiveOrg,
-            project: effectiveProject,
-          },
-        }),
         assets: route({
           pathname: '/[organization]/[project]/assets',
           query: {
@@ -97,5 +121,6 @@ export function useHeaderNav() {
     effectiveProject,
     navLinks,
     isActive,
+    itemTypes,
   }
 }
