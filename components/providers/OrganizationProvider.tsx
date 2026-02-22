@@ -17,35 +17,25 @@ import {
 } from '@/gen/centy_pb'
 import { isDaemonUnimplemented } from '@/lib/daemon-error'
 import { OrganizationProviderError } from '@/lib/errors'
+import { useUrlParams } from './PathContextProvider.useResolve'
 
 const OrganizationContext = createContext<OrganizationContextType | null>(null)
 
-const STORAGE_KEY = 'centy-selected-org'
-const EXPLICIT_SELECTION_KEY = 'centy-org-explicit-selection'
-
 export function OrganizationProvider({ children }: { children: ReactNode }) {
-  // Initialize to null to avoid hydration mismatch - load from localStorage after mount
+  const { urlOrg } = useUrlParams()
+  // Derive selected org from URL; allow local override without persistence
   const [selectedOrgSlug, setSelectedOrgSlugState] = useState<string | null>(
-    null
+    urlOrg ?? null
   )
-  // Track whether user has explicitly selected an org (including "All Orgs")
-  const [hasExplicitSelection, setHasExplicitSelection] = useState(false)
 
   const [organizations, setOrganizations] = useState<Organization[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // Load from localStorage after mount to avoid hydration mismatch
+  // Sync selected org from URL whenever the URL org changes
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    const explicitSelection = localStorage.getItem(EXPLICIT_SELECTION_KEY)
-    if (explicitSelection !== 'true') return
-    setHasExplicitSelection(true)
-    // Only restore the org slug if there was an explicit selection
-    if (stored !== null) {
-      setSelectedOrgSlugState(stored)
-    }
-  }, [])
+    setSelectedOrgSlugState(urlOrg ?? null)
+  }, [urlOrg])
 
   const refreshOrganizations = useCallback(async () => {
     setLoading(true)
@@ -78,15 +68,6 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
 
   const setSelectedOrgSlug = useCallback((slug: string | null) => {
     setSelectedOrgSlugState(slug)
-    setHasExplicitSelection(true)
-    // Persist to localStorage
-    if (typeof window === 'undefined') return
-    localStorage.setItem(EXPLICIT_SELECTION_KEY, 'true')
-    if (slug !== null) {
-      localStorage.setItem(STORAGE_KEY, slug)
-    } else {
-      localStorage.removeItem(STORAGE_KEY)
-    }
   }, [])
 
   return (
@@ -95,7 +76,6 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
       value={{
         selectedOrgSlug,
         setSelectedOrgSlug,
-        hasExplicitSelection,
         organizations,
         loading,
         error,

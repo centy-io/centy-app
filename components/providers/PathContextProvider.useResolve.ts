@@ -2,10 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import { useParams, usePathname } from 'next/navigation'
-import {
-  LAST_PROJECT_STORAGE_KEY,
-  ROOT_ROUTES,
-} from './PathContextProvider.types'
+import { ROOT_ROUTES } from './PathContextProvider.types'
 import { resolveProject, type ProjectResolution } from '@/lib/project-resolver'
 
 export function useUrlParams() {
@@ -72,9 +69,6 @@ export function useProjectResolution(
         if (cancelled) return
         if (result) {
           setResolution(result)
-          if (typeof window !== 'undefined') {
-            localStorage.setItem(LAST_PROJECT_STORAGE_KEY, result.projectPath)
-          }
         } else {
           setError(`Project not found: ${urlOrg}/${urlProject}`)
           setResolution(null)
