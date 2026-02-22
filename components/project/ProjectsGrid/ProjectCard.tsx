@@ -4,12 +4,16 @@ import type { ProjectInfo } from '@/gen/centy_pb'
 
 interface ProjectCardProps {
   project: ProjectInfo
+  orgSlug: string
+  orgName: string
   onClick: () => void
   onToggleFavorite: (e: React.MouseEvent, project: ProjectInfo) => void
 }
 
 export function ProjectCard({
   project,
+  orgSlug,
+  orgName,
   onClick,
   onToggleFavorite,
 }: ProjectCardProps) {
@@ -28,9 +32,16 @@ export function ProjectCard({
         </button>
       </div>
 
-      {!project.initialized && (
-        <div className="project-badge not-initialized">Not initialized</div>
-      )}
+      <div className="project-badges">
+        {orgSlug && (
+          <span className="project-badge org-badge" title={`Organization: ${orgName}`}>
+            {'\uD83C\uDFE2'} {orgName}
+          </span>
+        )}
+        {!project.initialized && (
+          <span className="project-badge not-initialized">Not initialized</span>
+        )}
+      </div>
 
       {project.initialized && (
         <div className="project-stats">
