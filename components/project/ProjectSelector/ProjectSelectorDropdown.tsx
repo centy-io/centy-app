@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 'use client'
 
+import { useRef } from 'react'
 import Link from 'next/link'
 import { route } from 'nextjs-routes'
 import type { GroupedProjects } from './ProjectSelector.types'
@@ -52,6 +53,21 @@ export function ProjectSelectorDropdown(props: ProjectSelectorDropdownProps) {
     toggleOrgCollapse,
   } = props
 
+  const listAreaRef = useRef<HTMLDivElement>(null)
+
+  const focusSearch = () => {
+    if (searchInputRef.current) searchInputRef.current.focus()
+  }
+
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key !== 'ArrowDown') return
+    e.preventDefault()
+    const listArea = listAreaRef.current
+    if (!listArea) return
+    const firstItem = listArea.querySelector<HTMLElement>('[role="option"]')
+    if (firstItem) firstItem.focus()
+  }
+
   return (
     <>
       <div className="project-selector-header">
@@ -71,6 +87,7 @@ export function ProjectSelectorDropdown(props: ProjectSelectorDropdownProps) {
           type="text"
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
+          onKeyDown={handleSearchKeyDown}
           placeholder="Search projects..."
           className="search-input"
         />
@@ -85,45 +102,49 @@ export function ProjectSelectorDropdown(props: ProjectSelectorDropdownProps) {
         )}
       </div>
       {error && <div className="project-selector-error">{error}</div>}
-      {loading ? (
-        <div className="project-selector-loading">Loading projects...</div>
-      ) : visibleProjects.length === 0 ? (
-        <div className="project-selector-empty">
-          {searchQuery ? (
-            <>
-              <p className="empty-state-text">
-                No projects match &quot;{searchQuery}&quot;
-              </p>
-              <p className="hint">Try a different search term</p>
-            </>
-          ) : (
-            <>
-              <p className="empty-state-text">No tracked projects found</p>
-              <p className="hint">
-                Initialize a project with Centy to see it here
-              </p>
-            </>
-          )}
-        </div>
-      ) : groupedProjects ? (
-        <ProjectGroupList
-          groupedProjects={groupedProjects}
-          projectPath={projectPath}
-          collapsedOrgs={collapsedOrgs}
-          toggleOrgCollapse={toggleOrgCollapse}
-          onSelect={handleSelectProject}
-          onToggleFavorite={handleToggleFavorite}
-          onArchive={handleArchiveProject}
-        />
-      ) : (
-        <ProjectFlatList
-          projects={visibleProjects}
-          projectPath={projectPath}
-          onSelect={handleSelectProject}
-          onToggleFavorite={handleToggleFavorite}
-          onArchive={handleArchiveProject}
-        />
-      )}
+      <div ref={listAreaRef} className="project-selector-list-area">
+        {loading ? (
+          <div className="project-selector-loading">Loading projects...</div>
+        ) : visibleProjects.length === 0 ? (
+          <div className="project-selector-empty">
+            {searchQuery ? (
+              <>
+                <p className="empty-state-text">
+                  No projects match &quot;{searchQuery}&quot;
+                </p>
+                <p className="hint">Try a different search term</p>
+              </>
+            ) : (
+              <>
+                <p className="empty-state-text">No tracked projects found</p>
+                <p className="hint">
+                  Initialize a project with Centy to see it here
+                </p>
+              </>
+            )}
+          </div>
+        ) : groupedProjects ? (
+          <ProjectGroupList
+            groupedProjects={groupedProjects}
+            projectPath={projectPath}
+            collapsedOrgs={collapsedOrgs}
+            toggleOrgCollapse={toggleOrgCollapse}
+            onSelect={handleSelectProject}
+            onToggleFavorite={handleToggleFavorite}
+            onArchive={handleArchiveProject}
+            onFocusSearch={focusSearch}
+          />
+        ) : (
+          <ProjectFlatList
+            projects={visibleProjects}
+            projectPath={projectPath}
+            onSelect={handleSelectProject}
+            onToggleFavorite={handleToggleFavorite}
+            onArchive={handleArchiveProject}
+            onFocusSearch={focusSearch}
+          />
+        )}
+      </div>
       <div className="project-selector-actions">
         <Link
           href={route({ pathname: '/' })}
