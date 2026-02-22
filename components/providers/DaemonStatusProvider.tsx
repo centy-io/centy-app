@@ -20,7 +20,6 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
   } = useDaemonStatusState()
 
   return (
-    // eslint-disable-next-line custom/jsx-classname-required
     <DaemonStatusContext.Provider
       value={{
         status,

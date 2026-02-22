@@ -10,6 +10,7 @@ import {
 } from 'react'
 import { create } from '@bufbuild/protobuf'
 import type { OrganizationContextType } from './OrganizationProvider.types'
+import { useUrlParams } from './PathContextProvider.useResolve'
 import { centyClient } from '@/lib/grpc/client'
 import {
   ListOrganizationsRequestSchema,
@@ -17,7 +18,6 @@ import {
 } from '@/gen/centy_pb'
 import { isDaemonUnimplemented } from '@/lib/daemon-error'
 import { OrganizationProviderError } from '@/lib/errors'
-import { useUrlParams } from './PathContextProvider.useResolve'
 
 const OrganizationContext = createContext<OrganizationContextType | null>(null)
 
@@ -25,7 +25,7 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
   const { urlOrg } = useUrlParams()
   // Derive selected org from URL; allow local override without persistence
   const [selectedOrgSlug, setSelectedOrgSlugState] = useState<string | null>(
-    urlOrg ?? null
+    urlOrg !== undefined ? urlOrg : null
   )
 
   const [organizations, setOrganizations] = useState<Organization[]>([])
@@ -34,7 +34,7 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
 
   // Sync selected org from URL whenever the URL org changes
   useEffect(() => {
-    setSelectedOrgSlugState(urlOrg ?? null)
+    setSelectedOrgSlugState(urlOrg !== undefined ? urlOrg : null)
   }, [urlOrg])
 
   const refreshOrganizations = useCallback(async () => {
@@ -71,7 +71,6 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
   }, [])
 
   return (
-    // eslint-disable-next-line custom/jsx-classname-required
     <OrganizationContext.Provider
       value={{
         selectedOrgSlug,

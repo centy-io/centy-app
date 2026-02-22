@@ -72,7 +72,6 @@ export function PathContextProvider({ children }: { children: ReactNode }) {
   ])
 
   return (
-    // eslint-disable-next-line custom/jsx-classname-required
     <PathContext.Provider value={contextValue}>{children}</PathContext.Provider>
   )
 }

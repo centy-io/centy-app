@@ -36,7 +36,6 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
   }, [])
 
   return (
-    // eslint-disable-next-line custom/jsx-classname-required
     <ProjectContext.Provider
       value={{ projectPath, setProjectPath, isInitialized, setIsInitialized }}
     >
