@@ -61,7 +61,11 @@ export function useHeaderNav() {
         if (cancelled) return
         setItemTypes(
           res.itemTypes
-            .map(t => ({ name: t.name, plural: t.plural, itemCount: t.itemCount }))
+            .map(t => ({
+              name: t.name,
+              plural: t.plural,
+              itemCount: t.itemCount,
+            }))
             .sort((a, b) => b.itemCount - a.itemCount)
         )
       } catch {
