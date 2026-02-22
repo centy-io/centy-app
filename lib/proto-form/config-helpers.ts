@@ -1,3 +1,4 @@
+/* eslint-disable single-export/single-export, ddd/require-spec-file */
 import type { CustomFieldDefinition, WorkspaceConfig } from '@/gen/centy_pb'
 
 export function toStringArray(v: unknown): string[] {
