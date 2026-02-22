@@ -50,8 +50,8 @@ export function ProjectCard({
         <div className="project-stats">
           <div className="project-stat">
             <span className="stat-icon">{'\uD83D\uDCCB'}</span>
-            <span className="stat-label">Issues</span>
-            <span className="stat-value">{project.issueCount}</span>
+            <span className="stat-label">Open Issues</span>
+            <span className="stat-value">{project.openIssueCount}</span>
           </div>
           <div className="project-stat">
             <span className="stat-icon">{'\uD83D\uDCC4'}</span>

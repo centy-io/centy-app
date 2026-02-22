@@ -59,8 +59,8 @@ export function ProjectItem({
         <div className="project-item-stats">
           {project.initialized && (
             <>
-              <span className="project-stat-issues" title="Issues">
-                {'\uD83D\uDCCB'} {project.issueCount}
+              <span className="project-stat-issues" title="Open issues">
+                {'\uD83D\uDCCB'} {project.openIssueCount}
               </span>
               <span className="project-stat-docs" title="Docs">
                 {'\uD83D\uDCC4'} {project.docCount}

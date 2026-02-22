@@ -975,7 +975,7 @@ message ProjectInfo {
   string path = 1;                // Absolute path to project (use this for API calls)
   string first_accessed = 2;      // ISO timestamp
   string last_accessed = 3;       // ISO timestamp
-  uint32 issue_count = 4;         // Fetched live from .centy/issues/
+  uint32 issue_count = 4;         // Fetched live from .centy/issues/ (total)
   uint32 doc_count = 5;           // Fetched live from .centy/docs/
   bool initialized = 6;           // Fetched live (manifest exists)
   string name = 7;                // Fetched live (directory name)
@@ -986,6 +986,7 @@ message ProjectInfo {
   string organization_name = 12;  // Organization display name (for convenience)
   string user_title = 13;         // User-scope custom title (from ~/.centy/projects.json)
   string project_title = 14;      // Project-scope custom title (from .centy/project.json)
+  uint32 open_issue_count = 15;   // Fetched live from .centy/issues/ (open only)
 }
 
 message ListProjectsRequest {

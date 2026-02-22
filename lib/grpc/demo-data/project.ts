@@ -10,6 +10,7 @@ export const DEMO_PROJECT: ProjectInfo = {
   firstAccessed: '2024-01-15T10:00:00Z',
   lastAccessed: new Date().toISOString(),
   issueCount: 7,
+  openIssueCount: 5,
   docCount: 3,
   initialized: true,
   name: 'centy-showcase',

@@ -96,6 +96,10 @@ export function createMockProjectInfo(
       resolvedOverrides.issueCount !== undefined
         ? resolvedOverrides.issueCount
         : 0,
+    openIssueCount:
+      resolvedOverrides.openIssueCount !== undefined
+        ? resolvedOverrides.openIssueCount
+        : 0,
     docCount:
       resolvedOverrides.docCount !== undefined ? resolvedOverrides.docCount : 0,
     initialized:
