@@ -25,7 +25,10 @@ export class StateManager {
 
   constructor(config?: Config | null, itemTypeStatuses?: string[]) {
     this.config = config !== undefined ? config : null
-    this.itemTypeStatuses = itemTypeStatuses ?? []
+    this.itemTypeStatuses =
+      itemTypeStatuses !== undefined && itemTypeStatuses !== null
+        ? itemTypeStatuses
+        : []
   }
 
   /**

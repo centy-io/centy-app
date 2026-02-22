@@ -1,17 +1,7 @@
 import type { DescField } from '@bufbuild/protobuf'
-import type { FieldOverride } from './types'
-
-export function protoNameToLabel(name: string): string {
-  return name
-    .split('_')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ')
-}
-
-export interface FieldMeta {
-  label: string
-  description?: string
-}
+import type { FieldOverride } from './FieldOverride.types'
+import type { FieldMeta } from './FieldMeta.types'
+import { protoNameToLabel } from './protoNameToLabel'
 
 export function getFieldMeta(
   field: DescField,
