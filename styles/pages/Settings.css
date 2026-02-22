@@ -1,3 +1,37 @@
+/* Daemon Page */
+.daemon-refresh-btn {
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-bg-surface);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.daemon-refresh-btn:hover {
+  background: var(--color-gray-100);
+  border-color: var(--color-gray-400);
+}
+
+.daemon-status-text.connected {
+  color: var(--color-success);
+}
+
+.daemon-status-text.disconnected {
+  color: var(--color-danger);
+}
+
+.daemon-status-text.checking {
+  color: var(--color-warning-dark);
+}
+
+.daemon-status-text.demo {
+  color: var(--color-demo);
+}
+
 /* Settings Page */
 .settings-page {
   max-width: 800px;

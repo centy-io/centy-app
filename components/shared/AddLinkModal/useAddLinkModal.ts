@@ -4,7 +4,7 @@ import type { AddLinkModalProps, EntityItem } from './AddLinkModal.types'
 import { useEntitySearch } from './useEntitySearch'
 import { useModalDismiss } from './useModalDismiss'
 import { useCreateLink } from './useCreateLink'
-import { useProject } from '@/components/providers/ProjectProvider'
+import { usePathContext } from '@/components/providers/PathContextProvider'
 import {
   GetAvailableLinkTypesRequestSchema,
   type LinkTypeInfo,
@@ -19,7 +19,7 @@ export function useAddLinkModal({
   onClose,
   onLinkCreated,
 }: AddLinkModalProps) {
-  const { projectPath } = useProject()
+  const { projectPath } = usePathContext()
   const modalRef = useRef<HTMLDivElement>(null)
 
   const [linkTypes, setLinkTypes] = useState<LinkTypeInfo[]>([])

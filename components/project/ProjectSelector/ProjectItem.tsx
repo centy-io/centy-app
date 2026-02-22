@@ -21,8 +21,14 @@ export function ProjectItem({
     <li
       role="option"
       aria-selected={isSelected}
+      tabIndex={0}
       className={`project-item ${isSelected ? 'selected' : ''}`}
       onClick={() => onSelect(project)}
+      onKeyDown={e => {
+        if (e.key !== 'Enter' && e.key !== ' ') return
+        e.preventDefault()
+        onSelect(project)
+      }}
     >
       <div className="project-item-main">
         <button

@@ -8,11 +8,11 @@ import {
   DeleteLinkRequestSchema,
   type Link as LinkType,
 } from '@/gen/centy_pb'
-import { useProject } from '@/components/providers/ProjectProvider'
+import { usePathContext } from '@/components/providers/PathContextProvider'
 
 // eslint-disable-next-line max-lines-per-function
 export function useLinkSection(entityId: string, entityType: 'issue' | 'doc') {
-  const { projectPath } = useProject()
+  const { projectPath } = usePathContext()
   const { buildLinkRoute } = useLinkRoutes()
   const [links, setLinks] = useState<LinkType[]>([])
   const [loading, setLoading] = useState(true)

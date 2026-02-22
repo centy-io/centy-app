@@ -21,6 +21,7 @@
 @import './components/ProjectSelector.css';
 @import './components/OrgSwitcher.css';
 @import './components/PinnedItemsSection.css';
+@import './components/ProtoForm.css';
 @import './components/StateListEditor.css';
 @import './components/TextEditor/TextEditor.css';
 @import './components/ThemeToggle.css';
@@ -127,11 +128,6 @@
   /* Priority low color (blue) */
   --color-priority-low-bg: #dbeafe;
   --color-priority-low-text: #1d4ed8;
-
-  /* Demo mode colors (violet) */
-  --color-demo: #a78bfa;
-  --color-demo-dark: #7c3aed;
-  --color-demo-hover: #c4b5fd;
 }
 
 /* Dark Mode Variables */
@@ -238,7 +234,7 @@ h6 {
   margin: 0;
   font-weight: 600;
   line-height: 1.3;
-  color: var(--color-text-primary);
+  color: var(--color-gray-900);
 }
 
 h1 {
@@ -351,7 +347,7 @@ label {
   display: block;
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--color-text-secondary);
+  color: var(--color-gray-700);
   margin-bottom: var(--space-2);
 }
 
@@ -549,8 +545,8 @@ code {
   width: 44px;
   height: 44px;
   padding: 10px;
-  background: rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #2a2a2a;
+  border: 1px solid #444;
   border-radius: 6px;
   cursor: pointer;
   transition:
@@ -559,8 +555,8 @@ code {
 }
 
 .mobile-menu-toggle:hover {
-  background: rgba(0, 0, 0, 0.35);
-  border-color: rgba(255, 255, 255, 0.35);
+  background: #333;
+  border-color: #555;
 }
 
 .mobile-menu-toggle .hamburger-line {
@@ -818,8 +814,8 @@ main {
 }
 
 .daemon-retry-button {
-  background: var(--color-primary);
-  color: white;
+  background: #3b82f6;
+  color: var(--color-text-primary);
   border: none;
   border-radius: 8px;
   padding: 12px 32px;
@@ -830,11 +826,11 @@ main {
 }
 
 .daemon-retry-button:hover {
-  background: var(--color-primary-hover);
+  background: #2563eb;
 }
 
 .daemon-retry-button:active {
-  background: var(--color-primary-dark);
+  background: #1d4ed8;
 }
 
 /* Daemon Status Indicator */
@@ -853,8 +849,8 @@ main {
 }
 
 .daemon-status-indicator:hover {
-  background: var(--color-gray-200);
-  border-color: var(--color-gray-300);
+  background: #333;
+  border-color: #555;
 }
 
 .daemon-status-dot {
@@ -925,8 +921,8 @@ main {
 }
 
 .project-selector-trigger:hover {
-  background: var(--color-gray-200);
-  border-color: var(--color-gray-300);
+  background: #333;
+  border-color: #555;
 }
 
 .project-icon {
@@ -987,7 +983,7 @@ main {
 }
 
 .project-selector-header .refresh-btn:hover {
-  background: var(--color-gray-200);
+  background: #333;
   color: var(--color-text-primary);
 }
 
@@ -1037,16 +1033,16 @@ main {
 .project-item {
   padding: 12px 16px;
   cursor: pointer;
-  border-bottom: 1px solid var(--color-border-default);
+  border-bottom: 1px solid #333;
   transition: background 0.2s;
 }
 
 .project-item:hover {
-  background: var(--color-gray-200);
+  background: #333;
 }
 
 .project-item.selected {
-  background: var(--color-success-light);
+  background: #2d4a3e;
   border-left: 3px solid var(--color-success);
 }
 
@@ -1121,7 +1117,7 @@ main {
 }
 
 .init-project-btn:hover {
-  background: var(--color-success-dark);
+  background: #22c55e;
 }
 
 .project-selector-manual {
@@ -1138,7 +1134,7 @@ main {
 .manual-path-input {
   flex: 1;
   padding: 8px 12px;
-  background: var(--color-gray-100);
+  background: #333;
   border: 1px solid var(--color-border-default);
   border-radius: 4px;
   color: var(--color-text-primary);
@@ -1147,7 +1143,7 @@ main {
 
 .manual-path-input:focus {
   outline: none;
-  border-color: var(--color-primary);
+  border-color: #646cff;
 }
 
 .manual-path-input::placeholder {
@@ -1166,7 +1162,7 @@ main {
 }
 
 .manual-path-submit:hover:not(:disabled) {
-  background: var(--color-primary-hover);
+  background: #535bf2;
 }
 
 .manual-path-submit:disabled {
@@ -1178,7 +1174,7 @@ main {
 .archive-btn {
   margin-left: auto;
   background: transparent;
-  border: 1px solid var(--color-gray-300);
+  border: 1px solid #555;
   color: var(--color-text-muted);
   padding: 4px 8px;
   border-radius: 4px;
@@ -1210,9 +1206,9 @@ main {
 }
 
 .view-archived-link:hover {
-  background: var(--color-gray-200);
+  background: #333;
   color: var(--color-text-primary);
-  border-color: var(--color-gray-300);
+  border-color: #555;
 }
 
 /* Daemon Error Message Content */

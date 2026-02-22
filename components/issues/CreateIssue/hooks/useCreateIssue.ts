@@ -1,10 +1,7 @@
-import { useState, useCallback, useEffect, useRef } from 'react'
-import { create } from '@bufbuild/protobuf'
+import { useState, useCallback, useRef } from 'react'
 import { useProjectContext } from './useProjectContext'
 import { useCreateIssueSubmit } from './useCreateIssueSubmit'
-import { centyClient } from '@/lib/grpc/client'
-import { IsInitializedRequestSchema } from '@/gen/centy_pb'
-import { useProject } from '@/components/providers/ProjectProvider'
+import { usePathContext } from '@/components/providers/PathContextProvider'
 import { useStateManager } from '@/lib/state'
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
 import type {
@@ -12,9 +9,8 @@ import type {
   PendingAsset,
 } from '@/components/assets/AssetUploader'
 
-// eslint-disable-next-line max-lines-per-function
 export function useCreateIssue() {
-  const { projectPath, isInitialized, setIsInitialized } = useProject()
+  const { projectPath, isInitialized } = usePathContext()
   const stateManager = useStateManager()
   const stateOptions = stateManager.getStateOptions()
 
@@ -41,31 +37,6 @@ export function useCreateIssue() {
     setLoading,
     setError,
   })
-
-  const checkInitialized = useCallback(
-    async (path: string) => {
-      if (!path.trim()) {
-        setIsInitialized(null)
-        return
-      }
-      try {
-        const request = create(IsInitializedRequestSchema, {
-          projectPath: path.trim(),
-        })
-        const response = await centyClient.isInitialized(request)
-        setIsInitialized(response.initialized)
-      } catch {
-        setIsInitialized(false)
-      }
-    },
-    [setIsInitialized]
-  )
-
-  useEffect(() => {
-    if (projectPath && isInitialized === null) {
-      checkInitialized(projectPath)
-    }
-  }, [projectPath, isInitialized, checkInitialized])
 
   const handleKeyboardSave = useCallback(() => {
     if (!projectPath.trim() || !title.trim() || loading) return

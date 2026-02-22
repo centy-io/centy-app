@@ -14,10 +14,10 @@ import { useDaemonActions } from '@/components/settings/GeneralSettings/useDaemo
 
 // eslint-disable-next-line max-lines-per-function
 export function Settings() {
-  const { projectPath, isInitialized, setIsInitialized } = useProject()
+  const { projectPath, isInitialized } = useProject()
 
   const daemon = useDaemonActions()
-  const settings = useSettingsData(projectPath, isInitialized, setIsInitialized)
+  const settings = useSettingsData(projectPath, isInitialized)
 
   const error = settings.error || daemon.error
   const success = settings.success || daemon.success
@@ -66,7 +66,9 @@ export function Settings() {
           <p className="not-initialized-text">
             Centy is not initialized in this directory
           </p>
-          <Link href={route({ pathname: '/project/init' })}>Initialize Project</Link>
+          <Link href={route({ pathname: '/project/init' })}>
+            Initialize Project
+          </Link>
         </div>
       )}
 

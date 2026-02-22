@@ -1,9 +1,11 @@
 'use client'
 
+import Link from 'next/link'
+import { route } from 'nextjs-routes'
 import { useDaemonStatus } from '@/components/providers/DaemonStatusProvider'
 
 export function DaemonStatusIndicator() {
-  const { status, checkNow } = useDaemonStatus()
+  const { status } = useDaemonStatus()
 
   const statusConfig = {
     connected: {
@@ -28,13 +30,13 @@ export function DaemonStatusIndicator() {
   const config = statusConfig[status]
 
   return (
-    <button
+    <Link
+      href={route({ pathname: '/daemon' })}
       className={`daemon-status-indicator ${config.className}`}
-      onClick={checkNow}
-      title={`${config.label} - Click to refresh`}
+      title={config.label}
     >
       <span className="daemon-status-dot" />
       <span className="daemon-status-label">{config.label}</span>
-    </button>
+    </Link>
   )
 }

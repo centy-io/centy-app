@@ -1,0 +1,184 @@
+/* eslint-disable max-lines */
+import { useState, useCallback, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { route } from 'nextjs-routes'
+import { create } from '@bufbuild/protobuf'
+import { centyClient } from '@/lib/grpc/client'
+import {
+  ListProjectsRequestSchema,
+  GetIssueRequestSchema,
+  UpdateIssueRequestSchema,
+  DeleteIssueRequestSchema,
+  type Issue,
+} from '@/gen/centy_pb'
+import { useStateManager } from '@/lib/state'
+
+function formatErr(err: unknown): string {
+  return err instanceof Error ? err.message : 'Failed to connect to daemon'
+}
+
+// eslint-disable-next-line max-lines-per-function
+export function useOrgIssueDetail(orgSlug: string, issueId: string) {
+  const router = useRouter()
+  const stateManager = useStateManager()
+  const stateOptions = stateManager.getStateOptions()
+
+  const [orgProjectPath, setOrgProjectPath] = useState<string | null>(null)
+  const [issue, setIssue] = useState<Issue | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  const [isEditing, setIsEditing] = useState(false)
+  const [editTitle, setEditTitle] = useState('')
+  const [editDescription, setEditDescription] = useState('')
+  const [editPriority, setEditPriority] = useState(2)
+  const [editStatus, setEditStatus] = useState('')
+  const [saving, setSaving] = useState(false)
+
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState<string | null>(null)
+
+  const fetchIssue = useCallback(async () => {
+    if (!orgSlug || !issueId) return
+    setLoading(true)
+    setError(null)
+    try {
+      const projectsRes = await centyClient.listProjects(
+        create(ListProjectsRequestSchema, { organizationSlug: orgSlug })
+      )
+      const orgProjects = projectsRes.projects.filter(p => p.initialized)
+      if (orgProjects.length === 0) {
+        setError('No initialized projects in this organization')
+        setLoading(false)
+        return
+      }
+
+      const projectPath = orgProjects[0].path
+      setOrgProjectPath(projectPath)
+
+      const res = await centyClient.getIssue(
+        create(GetIssueRequestSchema, { projectPath, issueId })
+      )
+      if (res.issue) {
+        const found = res.issue
+        setIssue(found)
+        setEditTitle(found.title)
+        setEditDescription(found.description)
+        const meta = found.metadata
+        setEditPriority(meta ? meta.priority : 2)
+        setEditStatus(meta ? meta.status : '')
+      } else {
+        setError(res.error || 'Issue not found')
+      }
+    } catch (err) {
+      setError(formatErr(err))
+    } finally {
+      setLoading(false)
+    }
+  }, [orgSlug, issueId])
+
+  useEffect(() => {
+    fetchIssue()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orgSlug, issueId])
+
+  const handleSave = useCallback(async () => {
+    if (!orgProjectPath || !issueId) return
+    setSaving(true)
+    setError(null)
+    try {
+      const res = await centyClient.updateIssue(
+        create(UpdateIssueRequestSchema, {
+          projectPath: orgProjectPath,
+          issueId,
+          title: editTitle.trim(),
+          description: editDescription.trim(),
+          priority: editPriority,
+          status: editStatus,
+        })
+      )
+      if (res.success && res.issue) {
+        setIssue(res.issue)
+        setIsEditing(false)
+      } else {
+        setError(res.error || 'Failed to update issue')
+      }
+    } catch (err) {
+      setError(formatErr(err))
+    } finally {
+      setSaving(false)
+    }
+  }, [
+    orgProjectPath,
+    issueId,
+    editTitle,
+    editDescription,
+    editPriority,
+    editStatus,
+  ])
+
+  const handleDelete = useCallback(async () => {
+    if (!orgProjectPath || !issueId) return
+    setDeleting(true)
+    setDeleteError(null)
+    try {
+      const res = await centyClient.deleteIssue(
+        create(DeleteIssueRequestSchema, {
+          projectPath: orgProjectPath,
+          issueId,
+        })
+      )
+      if (res.success) {
+        router.push(
+          route({
+            pathname: '/organizations/[orgSlug]/issues',
+            query: { orgSlug },
+          })
+        )
+      } else {
+        setDeleteError(res.error || 'Failed to delete issue')
+      }
+    } catch (err) {
+      setDeleteError(formatErr(err))
+    } finally {
+      setDeleting(false)
+    }
+  }, [orgProjectPath, issueId, orgSlug, router])
+
+  const handleCancelEdit = useCallback(() => {
+    if (!issue) return
+    setIsEditing(false)
+    setEditTitle(issue.title)
+    setEditDescription(issue.description)
+    const meta = issue.metadata
+    setEditPriority(meta ? meta.priority : 2)
+    setEditStatus(meta ? meta.status : '')
+  }, [issue])
+
+  return {
+    issue,
+    loading,
+    error,
+    isEditing,
+    editTitle,
+    editDescription,
+    editPriority,
+    editStatus,
+    saving,
+    showDeleteConfirm,
+    deleting,
+    deleteError,
+    stateOptions,
+    setIsEditing,
+    setEditTitle,
+    setEditDescription,
+    setEditPriority,
+    setEditStatus,
+    setShowDeleteConfirm,
+    setDeleteError,
+    handleSave,
+    handleDelete,
+    handleCancelEdit,
+  }
+}
