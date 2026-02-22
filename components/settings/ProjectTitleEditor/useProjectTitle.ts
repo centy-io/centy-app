@@ -2,11 +2,13 @@
 
 import { useState, useCallback, useEffect } from 'react'
 import { create } from '@bufbuild/protobuf'
-import { saveTitle, clearTitle, type TitleActionResult } from './titleActions'
+import { saveTitle, clearTitle } from './titleActions'
+import type { TitleActionResult } from './TitleActionResult'
+import type { TitleScope } from './TitleScope'
 import { centyClient } from '@/lib/grpc/client'
 import { ListProjectsRequestSchema, type ProjectInfo } from '@/gen/centy_pb'
 
-export type TitleScope = 'user' | 'project'
+export type { TitleScope } from './TitleScope'
 
 // eslint-disable-next-line max-lines-per-function
 export function useProjectTitle(projectPath: string) {

@@ -1,14 +1,9 @@
 import { useState, useCallback, useEffect } from 'react'
 import { create } from '@bufbuild/protobuf'
+import type { AggregateDoc } from './AggregateDoc'
 import { centyClient } from '@/lib/grpc/client'
-import { ListDocsRequestSchema, type Doc } from '@/gen/centy_pb'
+import { ListDocsRequestSchema } from '@/gen/centy_pb'
 import { getProjects } from '@/lib/project-resolver'
-
-export interface AggregateDoc extends Doc {
-  projectName: string
-  orgSlug: string | null
-  projectPath: string
-}
 
 export function useAggregateDocsData() {
   const [docs, setDocs] = useState<AggregateDoc[]>([])

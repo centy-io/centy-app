@@ -1,20 +1,2 @@
-import type { EditorInfo } from '@/gen/centy_pb'
-
-declare global {
-  interface Window {
-    __TEST_VSCODE_AVAILABLE__?: boolean
-  }
-}
-
-export type DaemonStatus = 'connected' | 'disconnected' | 'checking' | 'demo'
-
-export interface DaemonStatusContextType {
-  status: DaemonStatus
-  lastChecked: Date | null
-  checkNow: () => Promise<void>
-  enterDemoMode: () => void
-  exitDemoMode: () => void
-  demoProjectPath: string
-  vscodeAvailable: boolean | null // null = not yet checked
-  editors: EditorInfo[] // List of supported editors with availability
-}
+export type { DaemonStatus } from './DaemonStatus'
+export type { DaemonStatusContextType } from './DaemonStatusContextType'
