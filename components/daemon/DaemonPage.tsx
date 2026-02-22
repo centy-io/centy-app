@@ -45,7 +45,6 @@ export function DaemonPage() {
           <div className="info-grid">
             <div className="info-item">
               <span className="info-label">Connection</span>
-              {/* eslint-disable-next-line security/detect-object-injection */}
               <span className={`info-value daemon-status-text ${status}`}>
                 {/* eslint-disable-next-line security/detect-object-injection */}
                 {statusLabels[status]}

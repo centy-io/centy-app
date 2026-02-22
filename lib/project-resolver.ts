@@ -4,6 +4,7 @@ import { create } from '@bufbuild/protobuf'
 import { centyClient } from './grpc/client'
 import type { ProjectResolution, ProjectCache } from './project-resolver.types'
 import { ListProjectsRequestSchema, type ProjectInfo } from '@/gen/centy_pb'
+import { UnknownError } from '@/lib/errors'
 
 export type { ProjectResolution } from './project-resolver.types'
 
@@ -44,7 +45,7 @@ async function fetchProjects(): Promise<ProjectInfo[]> {
       )
       return projectCache.projects
     }
-    throw error instanceof Error ? error : new Error(String(error))
+    throw error instanceof Error ? error : new UnknownError(error)
   }
 }
 
