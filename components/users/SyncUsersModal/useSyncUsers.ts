@@ -5,7 +5,7 @@ import { create } from '@bufbuild/protobuf'
 import type { SyncState } from './SyncState'
 import { centyClient } from '@/lib/grpc/client'
 import { SyncUsersRequestSchema, type GitContributor } from '@/gen/centy_pb'
-import { useProject } from '@/components/providers/ProjectProvider'
+import { usePathContext } from '@/components/providers/PathContextProvider'
 import { isDaemonUnimplemented } from '@/lib/daemon-error'
 
 export type { SyncState } from './SyncState'
@@ -18,7 +18,7 @@ function formatError(err: unknown): string {
 }
 
 export function useSyncUsers() {
-  const { projectPath } = useProject()
+  const { projectPath } = usePathContext()
   const [state, setState] = useState<SyncState>('loading')
   const [error, setError] = useState<string | null>(null)
   const [wouldCreate, setWouldCreate] = useState<GitContributor[]>([])
