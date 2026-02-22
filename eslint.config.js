@@ -17,28 +17,6 @@ export default [
     ],
   },
   {
-    files: ['**/*.{ts,tsx,js,jsx}'],
-    rules: {
-      'single-export/single-export': 'off',
-      'ddd/require-spec-file': 'off',
-    },
-  },
-  {
-    files: [
-      'components/organizations/CreateOrganization.tsx',
-      'components/organizations/CreateOrgIssue/CreateOrgIssueForm.tsx',
-      'components/project/ProjectsGrid/ProjectsGrid.tsx',
-      'components/proto-form/AutoFieldRenderer.tsx',
-      'components/proto-form/renderers/MapFieldRenderer.tsx',
-      'components/proto-form/renderers/MessageListFieldRenderer.tsx',
-      'components/settings/DaemonSettings/DaemonHelpSection.tsx',
-    ],
-    rules: {
-      'max-lines': 'off',
-      'max-lines-per-function': 'off',
-    },
-  },
-  {
     files: ['**/*.cjs'],
     languageOptions: {
       globals: {
@@ -47,6 +25,19 @@ export default [
         __dirname: 'readonly',
         __filename: 'readonly',
       },
+    },
+  },
+  {
+    // Test infrastructure - e2e tests and vitest setup don't need their own spec files
+    files: [
+      'e2e/**',
+      '__tests__/setup.ts',
+      'instrumentation.ts',
+      'instrumentation-client.ts',
+    ],
+    rules: {
+      'ddd/require-spec-file': 'off',
+      'single-export/single-export': 'off',
     },
   },
 ]

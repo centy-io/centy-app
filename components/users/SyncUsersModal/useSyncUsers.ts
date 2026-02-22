@@ -2,13 +2,13 @@
 
 import { useState, useCallback, useEffect } from 'react'
 import { create } from '@bufbuild/protobuf'
+import type { SyncState } from './SyncState'
 import { centyClient } from '@/lib/grpc/client'
 import { SyncUsersRequestSchema, type GitContributor } from '@/gen/centy_pb'
 import { useProject } from '@/components/providers/ProjectProvider'
 import { isDaemonUnimplemented } from '@/lib/daemon-error'
-import { OperationError } from '@/lib/errors'
 
-export type SyncState = 'loading' | 'preview' | 'syncing' | 'success' | 'error'
+export type { SyncState } from './SyncState'
 
 function formatError(err: unknown): string {
   const msg = err instanceof Error ? err.message : 'Failed to connect to daemon'
@@ -39,9 +39,7 @@ export function useSyncUsers() {
         setWouldSkip(res.wouldSkip)
         setState('preview')
       } else {
-        setError(
-          formatError(new OperationError(res.error || 'Failed to fetch'))
-        )
+        setError(formatError(new Error(res.error || 'Failed to fetch')))
         setState('error')
       }
     } catch (err) {
@@ -68,7 +66,7 @@ export function useSyncUsers() {
         setSyncErrors(res.errors)
         setState('success')
       } else {
-        setError(formatError(new OperationError(res.error || 'Failed to sync')))
+        setError(formatError(new Error(res.error || 'Failed to sync')))
         setState('error')
       }
     } catch (err) {
