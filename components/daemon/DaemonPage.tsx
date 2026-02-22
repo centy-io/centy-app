@@ -23,11 +23,11 @@ export function DaemonPage() {
     handleRestart,
   } = useDaemonActions()
 
-  const statusLabels: Record<typeof status, string> = {
-    connected: 'Connected',
-    disconnected: 'Disconnected',
-    checking: 'Checking...',
-    demo: 'Demo Mode',
+  const getStatusLabel = (): string => {
+    if (status === 'connected') return 'Connected'
+    if (status === 'disconnected') return 'Disconnected'
+    if (status === 'checking') return 'Checking...'
+    return 'Demo Mode'
   }
 
   return (
@@ -45,10 +45,8 @@ export function DaemonPage() {
           <div className="info-grid">
             <div className="info-item">
               <span className="info-label">Connection</span>
-              {/* eslint-disable-next-line security/detect-object-injection */}
               <span className={`info-value daemon-status-text ${status}`}>
-                {/* eslint-disable-next-line security/detect-object-injection */}
-                {statusLabels[status]}
+                {getStatusLabel()}
               </span>
             </div>
             {lastChecked && (

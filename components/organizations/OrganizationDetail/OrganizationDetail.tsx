@@ -28,7 +28,10 @@ export function OrganizationDetail({ orgSlug }: OrganizationDetailProps) {
     return (
       <div className="organization-detail">
         <DaemonErrorMessage error={state.error} />
-        <Link href={route({ pathname: '/organizations' })} className="back-link">
+        <Link
+          href={route({ pathname: '/organizations' })}
+          className="back-link"
+        >
           Back to Organizations
         </Link>
       </div>
@@ -39,7 +42,10 @@ export function OrganizationDetail({ orgSlug }: OrganizationDetailProps) {
     return (
       <div className="organization-detail">
         <div className="error-message">Organization not found</div>
-        <Link href={route({ pathname: '/organizations' })} className="back-link">
+        <Link
+          href={route({ pathname: '/organizations' })}
+          className="back-link"
+        >
           Back to Organizations
         </Link>
       </div>

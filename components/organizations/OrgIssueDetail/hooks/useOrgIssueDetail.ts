@@ -109,7 +109,14 @@ export function useOrgIssueDetail(orgSlug: string, issueId: string) {
     } finally {
       setSaving(false)
     }
-  }, [orgProjectPath, issueId, editTitle, editDescription, editPriority, editStatus])
+  }, [
+    orgProjectPath,
+    issueId,
+    editTitle,
+    editDescription,
+    editPriority,
+    editStatus,
+  ])
 
   const handleDelete = useCallback(async () => {
     if (!orgProjectPath || !issueId) return

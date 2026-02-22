@@ -58,7 +58,10 @@ export function OrganizationDetailView(props: OrganizationDetailViewProps) {
   return (
     <div className="organization-detail">
       <div className="organization-header">
-        <Link href={route({ pathname: '/organizations' })} className="back-link">
+        <Link
+          href={route({ pathname: '/organizations' })}
+          className="back-link"
+        >
           Back to Organizations
         </Link>
         <div className="organization-actions">

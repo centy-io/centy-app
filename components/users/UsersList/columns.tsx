@@ -19,7 +19,11 @@ export function createUserColumns() {
         const meta = info.table.options.meta
         return (
           <Link
-            href={meta ? meta.getUserRoute(info.row.original.id) : route({ pathname: '/' })}
+            href={
+              meta
+                ? meta.getUserRoute(info.row.original.id)
+                : route({ pathname: '/' })
+            }
             className="user-name-link"
           >
             {info.getValue()}

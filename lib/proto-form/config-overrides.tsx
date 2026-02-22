@@ -1,7 +1,13 @@
 'use client'
 
 import type { FieldGroup, FieldOverride } from './types'
-import { toStringArray, toStringRecord, toNumber, toCustomFields, toWorkspaceConfig } from './config-helpers'
+import {
+  toStringArray,
+  toStringRecord,
+  toNumber,
+  toCustomFields,
+  toWorkspaceConfig,
+} from './config-helpers'
 import { StateListEditor } from '@/components/settings/StateListEditor'
 import { PriorityEditor } from '@/components/settings/PriorityEditor'
 import { CustomFieldsEditor } from '@/components/settings/CustomFieldsEditor'
@@ -17,7 +23,8 @@ export const CONFIG_FIELD_GROUPS: FieldGroup[] = [
     render: ({ value, onChange }) => {
       const allowedStates = toStringArray(value.allowedStates)
       const stateColors = toStringRecord(value.stateColors)
-      const defaultState = typeof value.defaultState === 'string' ? value.defaultState : ''
+      const defaultState =
+        typeof value.defaultState === 'string' ? value.defaultState : ''
       return (
         <StateListEditor
           states={allowedStates}

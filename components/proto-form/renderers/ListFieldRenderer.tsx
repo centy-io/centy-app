@@ -75,9 +75,7 @@ export function ListFieldRenderer({
         </button>
       </div>
 
-      {items.length === 0 && (
-        <p className="proto-form-empty">No items</p>
-      )}
+      {items.length === 0 && <p className="proto-form-empty">No items</p>}
     </div>
   )
 }

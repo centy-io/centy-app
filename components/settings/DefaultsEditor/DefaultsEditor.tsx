@@ -108,7 +108,9 @@ export function DefaultsEditor({
     handleAdd()
   }
 
-  const availableKeys = resolvedSuggestedKeys.filter(k => !Object.hasOwn(value, k))
+  const availableKeys = resolvedSuggestedKeys.filter(
+    k => !Object.hasOwn(value, k)
+  )
 
   return (
     <div className="defaults-editor">

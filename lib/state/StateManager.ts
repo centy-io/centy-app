@@ -66,7 +66,10 @@ export class StateManager {
       ? new Map(Object.entries(stateColors)).get(state)
       : undefined
     if (configColor) return configColor
-    return new Map(Object.entries(StateManager.DEFAULT_COLORS)).get(state) || '#888888'
+    return (
+      new Map(Object.entries(StateManager.DEFAULT_COLORS)).get(state) ||
+      '#888888'
+    )
   }
 
   /**

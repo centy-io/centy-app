@@ -57,3 +57,17 @@ export class UserNotFoundError extends NotFoundError {
     super('User', id)
   }
 }
+
+export class UnknownError extends Error {
+  constructor(value: unknown) {
+    super(String(value))
+    this.name = 'UnknownError'
+  }
+}
+
+export class OperationError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'OperationError'
+  }
+}
