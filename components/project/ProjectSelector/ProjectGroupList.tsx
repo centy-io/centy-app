@@ -4,6 +4,30 @@ import type { GroupedProjects } from './ProjectSelector.types'
 import { ProjectItem } from './ProjectItem'
 import type { ProjectInfo } from '@/gen/centy_pb'
 
+function makeKeyDownHandler(onFocusSearch: () => void) {
+  return (e: React.KeyboardEvent<HTMLDivElement>) => {
+    const items = Array.from(
+      e.currentTarget.querySelectorAll<HTMLElement>('[role="option"]')
+    )
+    const activeEl = document.activeElement
+    const idx = activeEl instanceof HTMLElement ? items.indexOf(activeEl) : -1
+    if (idx === -1) return
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      const next = items[Math.min(idx + 1, items.length - 1)]
+      if (next) next.focus()
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      if (idx <= 0) {
+        onFocusSearch()
+      } else {
+        const prev = items[idx - 1]
+        if (prev) prev.focus()
+      }
+    }
+  }
+}
+
 interface ProjectGroupListProps {
   groupedProjects: NonNullable<GroupedProjects>
   projectPath: string
@@ -12,6 +36,7 @@ interface ProjectGroupListProps {
   onSelect: (project: ProjectInfo) => void
   onToggleFavorite: (e: React.MouseEvent, project: ProjectInfo) => void
   onArchive: (e: React.MouseEvent, project: ProjectInfo) => void
+  onFocusSearch: () => void
 }
 
 export function ProjectGroupList({
@@ -22,9 +47,12 @@ export function ProjectGroupList({
   onSelect,
   onToggleFavorite,
   onArchive,
+  onFocusSearch,
 }: ProjectGroupListProps) {
+  const handleKeyDown = makeKeyDownHandler(onFocusSearch)
+
   return (
-    <div className="project-list-grouped" role="listbox">
+    <div className="project-list-grouped" role="listbox" onKeyDown={handleKeyDown}>
       {groupedProjects.map(([orgSlug, group]) => {
         const isCollapsed = collapsedOrgs.has(orgSlug)
         return (

@@ -440,6 +440,15 @@ button.project-group-header:hover {
   padding: 0;
 }
 
+/* List area wrapper - maintains flex layout for overflow scrolling */
+.project-selector-list-area {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
 /* Radix Popover animations */
 .project-selector-dropdown[data-state='open'] {
   animation: popover-in 150ms ease-out;
