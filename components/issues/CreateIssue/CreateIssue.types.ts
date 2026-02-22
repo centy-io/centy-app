@@ -56,4 +56,5 @@ export interface UseCreateIssueSubmitParams {
   getProjectContext: () => Promise<ProjectContext | null>
   setLoading: (loading: boolean) => void
   setError: (error: string | null) => void
+  clearDraft: () => void
 }
