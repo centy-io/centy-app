@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { create } from '@bufbuild/protobuf'
@@ -18,6 +19,7 @@ export function useCreateIssueSubmit({
   getProjectContext,
   setLoading,
   setError,
+  clearDraft,
 }: UseCreateIssueSubmitParams) {
   const router = useRouter()
 
@@ -40,6 +42,7 @@ export function useCreateIssueSubmit({
         const response = await centyClient.createIssue(request)
 
         if (response.success) {
+          clearDraft()
           if (pendingAssets.length > 0 && assetUploaderRef.current) {
             await assetUploaderRef.current.uploadAllPending(response.id)
           }
@@ -81,6 +84,7 @@ export function useCreateIssueSubmit({
       getProjectContext,
       setLoading,
       setError,
+      clearDraft,
     ]
   )
 
