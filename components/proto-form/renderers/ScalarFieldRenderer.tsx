@@ -2,7 +2,7 @@
 
 import { ScalarType } from '@bufbuild/protobuf'
 import { NumericField } from './NumericField'
-import type { FieldRenderProps } from '@/lib/proto-form/types'
+import type { FieldRenderProps } from '@/lib/proto-form/FieldRenderProps'
 
 interface ScalarFieldProps extends Omit<FieldRenderProps, 'field'> {
   scalar: ScalarType

@@ -10,8 +10,7 @@ export function DaemonHelpManagementSection() {
       </pre>
       <p className="daemon-help-text">
         Add <code className="inline-code">CENTY_CORS_ORIGINS</code> to your
-        shell profile (e.g.{' '}
-        <code className="inline-code">~/.zshrc</code> or{' '}
+        shell profile (e.g. <code className="inline-code">~/.zshrc</code> or{' '}
         <code className="inline-code">~/.bashrc</code>) so that CORS is
         configured on every startup:
       </p>

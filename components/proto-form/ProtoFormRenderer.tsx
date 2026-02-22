@@ -3,7 +3,8 @@
 import type { DescMessage } from '@bufbuild/protobuf'
 import { AutoFieldRenderer } from './AutoFieldRenderer'
 import { getFieldMeta } from '@/lib/proto-form/field-metadata'
-import type { FieldGroup, FieldOverride } from '@/lib/proto-form/types'
+import type { FieldGroup } from '@/lib/proto-form/FieldGroup'
+import type { FieldOverride } from '@/lib/proto-form/FieldOverride'
 
 interface ProtoFormRendererProps {
   schema: DescMessage
