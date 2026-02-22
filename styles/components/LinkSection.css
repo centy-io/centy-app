@@ -130,10 +130,6 @@
   color: var(--color-primary-dark);
 }
 
-.link-type-pr {
-  background: var(--color-success-light);
-  color: var(--color-success-dark);
-}
 
 .link-target-id {
   font-family: var(--font-mono);

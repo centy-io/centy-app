@@ -126,10 +126,6 @@
   color: var(--color-success, #16a34a);
 }
 
-.pinned-item-type-badge.type-pr {
-  background: var(--color-warning-light);
-  color: var(--color-warning-dark);
-}
 
 /* Card Content */
 .pinned-item-content {

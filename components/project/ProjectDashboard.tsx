@@ -65,18 +65,6 @@ export function ProjectDashboard() {
             </span>
           </div>
         </Link>
-        <Link
-          href={createLink('/pull-requests')}
-          className="dashboard-quick-link"
-        >
-          <span className="dashboard-quick-link-icon">&#8644;</span>
-          <div className="dashboard-quick-link-info">
-            <span className="dashboard-quick-link-title">Pull Requests</span>
-            <span className="dashboard-quick-link-desc">
-              Code review and merges
-            </span>
-          </div>
-        </Link>
       </div>
     </div>
   )
