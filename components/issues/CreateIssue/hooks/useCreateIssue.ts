@@ -4,7 +4,10 @@ import { create } from '@bufbuild/protobuf'
 import { useProjectContext } from './useProjectContext'
 import { useCreateItemSubmit } from '@/hooks/useCreateItemSubmit'
 import { centyClient } from '@/lib/grpc/client'
-import { IsInitializedRequestSchema, CreateIssueRequestSchema } from '@/gen/centy_pb'
+import {
+  IsInitializedRequestSchema,
+  CreateIssueRequestSchema,
+} from '@/gen/centy_pb'
 import { useProject } from '@/components/providers/ProjectProvider'
 import { useStateManager } from '@/lib/state'
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
@@ -77,27 +80,24 @@ export function useCreateIssue() {
   const handleSubmit = useCallback(
     async (e?: React.FormEvent) => {
       if (!title.trim()) return
-      return submitItem(
-        async () => {
-          const request = create(CreateIssueRequestSchema, {
-            projectPath: projectPath.trim(),
-            title: title.trim(),
-            description: description.trim(),
-            priority,
-            status,
-          })
-          const response = await centyClient.createIssue(request)
-          if (
-            response.success &&
-            pendingAssets.length > 0 &&
-            assetUploaderRef.current
-          ) {
-            await assetUploaderRef.current.uploadAllPending(response.id)
-          }
-          return response
-        },
-        e
-      )
+      return submitItem(async () => {
+        const request = create(CreateIssueRequestSchema, {
+          projectPath: projectPath.trim(),
+          title: title.trim(),
+          description: description.trim(),
+          priority,
+          status,
+        })
+        const response = await centyClient.createIssue(request)
+        if (
+          response.success &&
+          pendingAssets.length > 0 &&
+          assetUploaderRef.current
+        ) {
+          await assetUploaderRef.current.uploadAllPending(response.id)
+        }
+        return response
+      }, e)
     },
     [
       title,
