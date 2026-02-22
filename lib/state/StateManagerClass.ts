@@ -11,6 +11,7 @@ export class StateManager {
   private static DEFAULT_STATE: string
 
   private config: Config | null
+  private itemTypeStatuses: string[]
 
   static {
     StateManager.DEFAULT_STATES = ['open', 'in-progress', 'closed'] as const
@@ -22,8 +23,9 @@ export class StateManager {
     StateManager.DEFAULT_STATE = 'open'
   }
 
-  constructor(config?: Config | null) {
+  constructor(config?: Config | null, itemTypeStatuses?: string[]) {
     this.config = config !== undefined ? config : null
+    this.itemTypeStatuses = itemTypeStatuses ?? []
   }
 
   /**
@@ -37,6 +39,9 @@ export class StateManager {
       this.config.allowedStates.length > 0
     ) {
       return [...this.config.allowedStates]
+    }
+    if (this.itemTypeStatuses.length > 0) {
+      return [...this.itemTypeStatuses]
     }
     return [...StateManager.DEFAULT_STATES]
   }
