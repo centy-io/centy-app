@@ -8,7 +8,10 @@ export function useProjectContext() {
   const getProjectContext = useCallback(async () => {
     if (!projectName) return null
     return {
-      organization: orgSlug ?? UNGROUPED_ORG_MARKER,
+      organization:
+        orgSlug !== null && orgSlug !== undefined
+          ? orgSlug
+          : UNGROUPED_ORG_MARKER,
       project: projectName,
     }
   }, [orgSlug, projectName])
