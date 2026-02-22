@@ -271,6 +271,11 @@ service CentyDaemon {
 
   // Manually trigger a sync push
   rpc SyncPush(SyncPushRequest) returns (SyncPushResponse);
+
+  // ============ Item Type RPCs ============
+
+  // List all item types for a project
+  rpc ListItemTypes(ListItemTypesRequest) returns (ListItemTypesResponse);
 }
 
 // ============ Init Messages ============
@@ -1737,4 +1742,37 @@ message SyncPushResponse {
   bool success = 1;
   string error = 2;
   bool had_changes = 3;                 // Whether any changes were pushed
+}
+
+// ============ Item Type Messages ============
+
+message ItemTypeFeatures {
+  bool display_number = 1;
+  bool status = 2;
+  bool priority = 3;
+  bool assets = 4;
+  bool org_sync = 5;
+  bool move = 6;
+  bool duplicate = 7;
+}
+
+message ItemTypeConfigProto {
+  string name = 1;
+  string plural = 2;
+  string identifier = 3;
+  ItemTypeFeatures features = 4;
+  repeated string statuses = 5;
+  string default_status = 6;
+  uint32 priority_levels = 7;
+}
+
+message ListItemTypesRequest {
+  string project_path = 1;
+}
+
+message ListItemTypesResponse {
+  bool success = 1;
+  string error = 2;
+  repeated ItemTypeConfigProto item_types = 3;
+  int32 total_count = 4;
 }
