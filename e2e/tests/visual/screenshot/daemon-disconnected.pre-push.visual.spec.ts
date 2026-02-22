@@ -145,4 +145,103 @@ test.describe('Daemon Disconnected Overlay Pre-push Visual Test @visual', () => 
       )
     })
   })
+
+  test.describe('Tablet viewport (768x1024)', () => {
+    test.beforeEach(async ({ page }) => {
+      await page.setViewportSize({ width: 768, height: 1024 })
+    })
+
+    test('overlay content - tablet light theme', async ({ page }) => {
+      await page.emulateMedia({ colorScheme: 'light' })
+      await page.goto('/')
+
+      await expect(page.locator('.daemon-disconnected-overlay')).toBeVisible()
+      await page.waitForTimeout(500)
+
+      const content = page.locator('.daemon-disconnected-content')
+      await expect(content).toBeVisible()
+
+      await expect(content).toHaveScreenshot(
+        `daemon-disconnected-tablet-light-${platform}.png`,
+        {
+          maxDiffPixelRatio: 0.05,
+          threshold: 0.3,
+        }
+      )
+    })
+
+    test('overlay content - tablet dark theme', async ({ page }) => {
+      await page.emulateMedia({ colorScheme: 'dark' })
+      await page.goto('/')
+
+      await expect(page.locator('.daemon-disconnected-overlay')).toBeVisible()
+      await page.waitForTimeout(500)
+
+      const content = page.locator('.daemon-disconnected-content')
+      await expect(content).toBeVisible()
+
+      await expect(content).toHaveScreenshot(
+        `daemon-disconnected-tablet-dark-${platform}.png`,
+        {
+          maxDiffPixelRatio: 0.05,
+          threshold: 0.3,
+        }
+      )
+    })
+  })
+
+  test.describe('Demo mode section', () => {
+    test('demo mode button is visible and renders correctly', async ({
+      page,
+    }) => {
+      await page.goto('/')
+
+      await expect(page.locator('.daemon-disconnected-overlay')).toBeVisible()
+      await page.waitForTimeout(500)
+
+      const demoSection = page.locator('.daemon-disconnected-demo-section')
+      await expect(demoSection).toBeVisible()
+
+      const demoButton = page.locator('.daemon-demo-button')
+      await expect(demoButton).toBeVisible()
+      await expect(demoButton).toHaveText('Try Demo Mode')
+
+      // Verify button meets minimum touch target height
+      const boundingBox = await demoButton.boundingBox()
+      expect(boundingBox?.height).toBeGreaterThanOrEqual(36)
+
+      await expect(demoSection).toHaveScreenshot(
+        `daemon-demo-section-${platform}.png`,
+        {
+          maxDiffPixelRatio: 0.05,
+          threshold: 0.3,
+        }
+      )
+    })
+
+    test('demo mode button is full-width with adequate touch target on mobile', async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width: 375, height: 667 })
+      await page.goto('/')
+
+      await expect(page.locator('.daemon-disconnected-overlay')).toBeVisible()
+      await page.waitForTimeout(500)
+
+      const demoButton = page.locator('.daemon-demo-button')
+      await expect(demoButton).toBeVisible()
+
+      // On mobile the button should be full-width (min-height: 44px)
+      const boundingBox = await demoButton.boundingBox()
+      expect(boundingBox?.height).toBeGreaterThanOrEqual(44)
+
+      await expect(demoButton).toHaveScreenshot(
+        `daemon-demo-button-mobile-${platform}.png`,
+        {
+          maxDiffPixelRatio: 0.05,
+          threshold: 0.3,
+        }
+      )
+    })
+  })
 })
