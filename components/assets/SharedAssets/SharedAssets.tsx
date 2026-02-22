@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { route } from 'nextjs-routes'
 import { useSharedAssets } from './useSharedAssets'
 import { SharedAssetCard } from './SharedAssetCard'
 import { PreviewModal } from './PreviewModal'
@@ -49,7 +50,7 @@ export function SharedAssets() {
           <p className="not-initialized-text">
             Centy is not initialized in this directory
           </p>
-          <Link href="/">Initialize Project</Link>
+          <Link href={route({ pathname: '/' })}>Initialize Project</Link>
         </div>
       )}
 

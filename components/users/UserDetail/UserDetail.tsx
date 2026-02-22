@@ -23,7 +23,7 @@ interface UserDetailProps {
 
 export function UserDetail({ userId }: UserDetailProps) {
   const params = useParams()
-  const usersListUrl: RouteLiteral | '/' = useMemo(() => {
+  const usersListUrl: RouteLiteral = useMemo(() => {
     const orgP = params ? params.organization : undefined
     const org = typeof orgP === 'string' ? orgP : undefined
     const projP = params ? params.project : undefined
@@ -34,7 +34,7 @@ export function UserDetail({ userId }: UserDetailProps) {
         query: { organization: org, project: proj },
       })
     }
-    return '/'
+    return route({ pathname: '/' })
   }, [params])
 
   const data = useUserData(userId, usersListUrl)

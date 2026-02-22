@@ -3,6 +3,7 @@
 
 import { useEffect } from 'react'
 import Link from 'next/link'
+import { route } from 'nextjs-routes'
 import { useProjectConfigData } from './useProjectConfigData'
 import { useProjectOrg } from './useProjectOrg'
 import { OrgSection } from './OrgSection'
@@ -66,7 +67,7 @@ export function ProjectConfig() {
           <p className="not-initialized-text">
             Centy is not initialized in this directory
           </p>
-          <Link href="/">Initialize Project</Link>
+          <Link href={route({ pathname: '/' })}>Initialize Project</Link>
         </div>
       )}
 

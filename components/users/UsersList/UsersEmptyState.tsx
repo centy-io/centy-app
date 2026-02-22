@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { type RouteLiteral } from 'nextjs-routes'
 
 interface UsersEmptyStateProps {
-  newUserRoute: RouteLiteral | '/'
+  newUserRoute: RouteLiteral
   onSync: () => void
 }
 

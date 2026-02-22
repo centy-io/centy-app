@@ -17,7 +17,7 @@ import { SortableTableHeader } from '@/components/shared/SortableTableHeader'
 
 interface UsersTableProps {
   users: User[]
-  getUserRoute: (userId: string) => RouteLiteral | '/'
+  getUserRoute: (userId: string) => RouteLiteral
   onContextMenu: (e: React.MouseEvent, user: User) => void
 }
 

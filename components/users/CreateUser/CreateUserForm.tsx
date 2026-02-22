@@ -18,7 +18,7 @@ interface CreateUserFormProps {
   onGitUsernameChange: (i: number, v: string) => void
   saving: boolean
   onSubmit: () => void
-  usersListUrl: RouteLiteral | '/'
+  usersListUrl: RouteLiteral
 }
 
 export function CreateUserForm({

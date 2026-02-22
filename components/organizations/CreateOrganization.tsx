@@ -90,7 +90,7 @@ export function CreateOrganization() {
   return (
     <div className="create-organization">
       <div className="create-organization-header">
-        <Link href="/organizations" className="back-link">
+        <Link href={route({ pathname: '/organizations' })} className="back-link">
           Back to Organizations
         </Link>
         <h2 className="create-organization-title">Create New Organization</h2>

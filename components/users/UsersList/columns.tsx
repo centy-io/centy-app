@@ -1,11 +1,11 @@
 import Link from 'next/link'
 import { createColumnHelper } from '@tanstack/react-table'
-import { type RouteLiteral } from 'nextjs-routes'
+import { route, type RouteLiteral } from 'nextjs-routes'
 import { type User } from '@/gen/centy_pb'
 
 declare module '@tanstack/react-table' {
   interface TableMeta<TData> {
-    getUserRoute: (userId: string) => RouteLiteral | '/'
+    getUserRoute: (userId: string) => RouteLiteral
   }
 }
 
@@ -19,7 +19,7 @@ export function createUserColumns() {
         const meta = info.table.options.meta
         return (
           <Link
-            href={meta ? meta.getUserRoute(info.row.original.id) : '/'}
+            href={meta ? meta.getUserRoute(info.row.original.id) : route({ pathname: '/' })}
             className="user-name-link"
           >
             {info.getValue()}

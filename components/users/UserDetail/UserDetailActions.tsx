@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { type RouteLiteral } from 'nextjs-routes'
 
 interface UserDetailActionsProps {
-  usersListUrl: RouteLiteral | '/'
+  usersListUrl: RouteLiteral
   isEditing: boolean
   saving: boolean
   editName: string

@@ -16,7 +16,7 @@ function formatError(err: unknown): string {
     : msg
 }
 
-export function useUserData(userId: string, usersListUrl: RouteLiteral | '/') {
+export function useUserData(userId: string, usersListUrl: RouteLiteral) {
   const { projectPath } = useProject()
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)

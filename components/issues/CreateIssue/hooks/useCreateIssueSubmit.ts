@@ -56,7 +56,7 @@ export function useCreateIssueSubmit({
               })
             )
           } else {
-            router.push('/')
+            router.push(route({ pathname: '/' }))
           }
         } else {
           setError(response.error || 'Failed to create issue')

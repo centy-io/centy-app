@@ -8,7 +8,7 @@ export function useLinkRoutes(): {
   buildLinkRoute: (
     targetType: LinkTargetType,
     targetId: string
-  ) => RouteLiteral | '/'
+  ) => RouteLiteral
 } {
   const params = useParams()
 
@@ -22,8 +22,8 @@ export function useLinkRoutes(): {
   }, [params])
 
   const buildLinkRoute = useCallback(
-    (targetType: LinkTargetType, targetId: string): RouteLiteral | '/' => {
-      if (!projectContext) return '/'
+    (targetType: LinkTargetType, targetId: string): RouteLiteral => {
+      if (!projectContext) return route({ pathname: '/' })
       // eslint-disable-next-line security/detect-object-injection
       const targetTypeName = protoToTargetType[targetType]
       switch (targetTypeName) {
@@ -38,9 +38,9 @@ export function useLinkRoutes(): {
             query: { ...projectContext, slug: targetId },
           })
         case 'unknown':
-          return '/'
+          return route({ pathname: '/' })
       }
-      return '/'
+      return route({ pathname: '/' })
     },
     [projectContext]
   )

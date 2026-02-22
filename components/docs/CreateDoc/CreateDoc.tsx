@@ -2,6 +2,7 @@
 'use client'
 
 import Link from 'next/link'
+import { route } from 'nextjs-routes'
 import { useProjectContext } from './useProjectContext'
 import { useCreateDoc } from './useCreateDoc'
 import { TextEditor } from '@/components/shared/TextEditor'
@@ -45,7 +46,7 @@ export function CreateDoc() {
           <p className="not-initialized-text">
             Centy is not initialized in this directory
           </p>
-          <Link href="/">Initialize Project</Link>
+          <Link href={route({ pathname: '/' })}>Initialize Project</Link>
         </div>
       </div>
     )

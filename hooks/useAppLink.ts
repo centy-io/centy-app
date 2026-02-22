@@ -95,10 +95,6 @@ export function useAppLink() {
     []
   )
 
-  const createRootLink = useCallback((path: string): string => {
-    return path.startsWith('/') ? path : `/${path}`
-  }, [])
-
   const hasProjectContext = Boolean(org && project)
 
   const currentContext = hasProjectContext
@@ -111,7 +107,6 @@ export function useAppLink() {
   return {
     createLink,
     createProjectLink,
-    createRootLink,
     hasProjectContext,
     currentContext,
   }

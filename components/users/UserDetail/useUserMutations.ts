@@ -23,7 +23,7 @@ function formatError(err: unknown): string {
 export function useUserMutations(
   projectPath: string,
   userId: string,
-  usersListUrl: RouteLiteral | '/',
+  usersListUrl: RouteLiteral,
   editState: {
     editName: string
     editEmail: string

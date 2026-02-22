@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { route } from 'nextjs-routes'
 
 interface CreateOrganizationFormProps {
   name: string
@@ -79,7 +80,7 @@ export function CreateOrganizationForm({
       </div>
 
       <div className="form-actions">
-        <Link href="/organizations" className="cancel-btn">
+        <Link href={route({ pathname: '/organizations' })} className="cancel-btn">
           Cancel
         </Link>
         <button

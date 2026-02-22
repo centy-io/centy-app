@@ -34,8 +34,8 @@ export function useCreateUser() {
     return null
   }, [params])
 
-  const usersListUrl: RouteLiteral | '/' = useMemo(() => {
-    if (!projectContext) return '/'
+  const usersListUrl: RouteLiteral = useMemo(() => {
+    if (!projectContext) return route({ pathname: '/' })
     return route({
       pathname: '/[organization]/[project]/users',
       query: projectContext,
@@ -76,7 +76,7 @@ export function useCreateUser() {
             })
           )
         } else {
-          router.push('/')
+          router.push(route({ pathname: '/' }))
         }
       } else {
         setError(formatError(new Error(res.error || 'Failed to create user')))

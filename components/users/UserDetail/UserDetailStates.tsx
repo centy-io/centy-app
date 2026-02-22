@@ -5,7 +5,7 @@ import { type RouteLiteral } from 'nextjs-routes'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 interface StateProps {
-  usersListUrl: RouteLiteral | '/'
+  usersListUrl: RouteLiteral
 }
 
 export function NoProjectState({ usersListUrl }: StateProps) {

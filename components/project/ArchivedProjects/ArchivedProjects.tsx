@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { route } from 'nextjs-routes'
 import { useArchivedProjectActions } from './useArchivedProjectActions'
 import { ArchivedProjectItem } from './ArchivedProjectItem'
 import { ArchivedStaleItem } from './ArchivedStaleItem'
@@ -45,7 +46,7 @@ export function ArchivedProjects() {
               )}
             </>
           )}
-          <Link href="/" className="back-link">
+          <Link href={route({ pathname: '/' })} className="back-link">
             Back to Projects
           </Link>
         </div>

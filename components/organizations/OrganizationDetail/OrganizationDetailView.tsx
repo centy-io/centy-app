@@ -2,6 +2,7 @@
 'use client'
 
 import Link from 'next/link'
+import { route } from 'nextjs-routes'
 import { OrganizationReadView } from './OrganizationReadView'
 import type { Organization, ProjectInfo } from '@/gen/centy_pb'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
@@ -57,7 +58,7 @@ export function OrganizationDetailView(props: OrganizationDetailViewProps) {
   return (
     <div className="organization-detail">
       <div className="organization-header">
-        <Link href="/organizations" className="back-link">
+        <Link href={route({ pathname: '/organizations' })} className="back-link">
           Back to Organizations
         </Link>
         <div className="organization-actions">

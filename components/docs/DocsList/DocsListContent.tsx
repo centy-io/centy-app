@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { route } from 'nextjs-routes'
 import { DocCard } from './DocCard'
 import type { Doc } from '@/gen/centy_pb'
 import { useAppLink } from '@/hooks/useAppLink'
@@ -49,7 +50,7 @@ export function DocsListContent({
         <p className="not-initialized-text">
           Centy is not initialized in this directory
         </p>
-        <Link href="/">Initialize Project</Link>
+        <Link href={route({ pathname: '/' })}>Initialize Project</Link>
       </div>
     )
   }
