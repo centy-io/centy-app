@@ -1,28 +1,43 @@
-/* eslint-disable max-lines, max-lines-per-function */
+'use client'
+
 import { useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { route } from 'nextjs-routes'
+import type { CreateItemKind } from './CreateItemKind.types'
+import type { CreateItemResult } from './CreateItemResult.types'
+import type { UseCreateItemSubmitParams } from './UseCreateItemSubmitParams.types'
 
-export type CreateItemKind = 'doc' | 'issue'
-
-export interface CreateItemResult {
-  success: boolean
-  error?: string
-  slug?: string
-  issueNumber?: string
-  id?: string
+interface ProjectContext {
+  organization: string
+  project: string
 }
 
-interface UseCreateItemSubmitParams {
-  kind: CreateItemKind
-  projectPath: string
-  getProjectContext: () => Promise<{
-    organization: string
-    project: string
-  } | null>
-  setLoading: (loading: boolean) => void
-  setError: (error: string | null) => void
-  clearDraft: () => void
+function buildCancelPath(kind: CreateItemKind, ctx: ProjectContext | null) {
+  if (!ctx) return route({ pathname: '/' })
+  const { organization, project } = ctx
+  if (kind === 'doc') {
+    return route({ pathname: '/[organization]/[project]/docs', query: { organization, project } })
+  }
+  return route({ pathname: '/[organization]/[project]/issues', query: { organization, project } })
+}
+
+function buildSuccessPath(
+  kind: CreateItemKind,
+  ctx: ProjectContext | null,
+  result: CreateItemResult
+) {
+  if (!ctx) return route({ pathname: '/' })
+  const { organization, project } = ctx
+  if (kind === 'doc') {
+    return route({
+      pathname: '/[organization]/[project]/docs/[slug]',
+      query: { organization, project, slug: result.slug || '' },
+    })
+  }
+  return route({
+    pathname: '/[organization]/[project]/issues/[issueId]',
+    query: { organization, project, issueId: result.issueNumber || '' },
+  })
 }
 
 export function useCreateItemSubmit({
@@ -37,74 +52,26 @@ export function useCreateItemSubmit({
 
   const handleCancel = useCallback(async () => {
     const ctx = await getProjectContext()
-    if (ctx) {
-      if (kind === 'doc') {
-        router.push(
-          route({
-            pathname: '/[organization]/[project]/docs',
-            query: { organization: ctx.organization, project: ctx.project },
-          })
-        )
-      } else {
-        router.push(
-          route({
-            pathname: '/[organization]/[project]/issues',
-            query: { organization: ctx.organization, project: ctx.project },
-          })
-        )
-      }
-    } else {
-      router.push('/')
-    }
+    router.push(buildCancelPath(kind, ctx))
   }, [kind, router, getProjectContext])
 
   const submitItem = useCallback(
     async (createFn: () => Promise<CreateItemResult>, e?: React.FormEvent) => {
       if (e) e.preventDefault()
       if (!projectPath.trim()) return
-
       setLoading(true)
       setError(null)
-
       try {
         const result = await createFn()
         if (result.success) {
           clearDraft()
           const ctx = await getProjectContext()
-          if (ctx) {
-            if (kind === 'doc') {
-              router.push(
-                route({
-                  pathname: '/[organization]/[project]/docs/[slug]',
-                  query: {
-                    organization: ctx.organization,
-                    project: ctx.project,
-                    slug: result.slug || '',
-                  },
-                })
-              )
-            } else {
-              router.push(
-                route({
-                  pathname: '/[organization]/[project]/issues/[issueId]',
-                  query: {
-                    organization: ctx.organization,
-                    project: ctx.project,
-                    issueId: result.issueNumber || '',
-                  },
-                })
-              )
-            }
-          } else {
-            router.push(route({ pathname: '/' }))
-          }
+          router.push(buildSuccessPath(kind, ctx, result))
         } else {
           setError(result.error || `Failed to create ${kind}`)
         }
       } catch (err) {
-        setError(
-          err instanceof Error ? err.message : 'Failed to connect to daemon'
-        )
+        setError(err instanceof Error ? err.message : 'Failed to connect to daemon')
       } finally {
         setLoading(false)
       }

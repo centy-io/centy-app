@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import type { FieldRenderProps } from '@/lib/proto-form/types'
+import type { FieldRenderProps } from '@/lib/proto-form/FieldRenderProps.types'
 
 type ListFieldProps = Omit<FieldRenderProps, 'field'>
 
