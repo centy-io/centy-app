@@ -5,6 +5,7 @@ import { useOrgDisplayText } from './useOrgDisplayText'
 import { centyClient } from '@/lib/grpc/client'
 import { ListIssuesRequestSchema } from '@/gen/centy_pb'
 import { getProjects } from '@/lib/project-resolver'
+import { useAggregateTableSettings } from '@/hooks/useAggregateTableSettings'
 
 export function useAggregateIssues() {
   const { selectedOrgSlug, getOrgDisplayName, getOrgNoteText, getEmptyText } =
@@ -12,12 +13,8 @@ export function useAggregateIssues() {
   const [issues, setIssues] = useState<AggregateIssue[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [sorting, setSorting] = useState<{ id: string; desc: boolean }[]>([
-    { id: 'createdAt', desc: true },
-  ])
-  const [columnFilters, setColumnFilters] = useState<
-    { id: string; value: unknown }[]
-  >([])
+  const { sorting, setSorting, columnFilters, setColumnFilters } =
+    useAggregateTableSettings()
 
   const filteredIssues = useMemo(() => {
     if (selectedOrgSlug === null) return issues

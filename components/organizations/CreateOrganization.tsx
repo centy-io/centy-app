@@ -13,7 +13,6 @@ import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import { isDaemonUnimplemented } from '@/lib/daemon-error'
 import { generateSlug } from '@/lib/generate-slug'
 
-// eslint-disable-next-line max-lines-per-function
 export function CreateOrganization() {
   const router = useRouter()
 

@@ -9,7 +9,6 @@ import type {
   PendingAsset,
 } from '@/components/assets/AssetUploader'
 
-// eslint-disable-next-line max-lines-per-function
 export function useCreateIssue() {
   const { projectPath, isInitialized } = usePathContext()
   const stateManager = useStateManager()
