@@ -21,6 +21,7 @@
 @import './components/ProjectSelector.css';
 @import './components/OrgSwitcher.css';
 @import './components/PinnedItemsSection.css';
+@import './components/HooksEditor.css';
 @import './components/ProtoForm.css';
 @import './components/StateListEditor.css';
 @import './components/TextEditor/TextEditor.css';
@@ -79,8 +80,8 @@
 
   /* Typography */
   --font-sans:
-    var(--font-noto-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    Oxygen, Ubuntu, sans-serif;
+    var(--font-noto-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, Oxygen, Ubuntu, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace;
 
   /* Spacing */

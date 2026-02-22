@@ -1,11 +1,20 @@
+/* eslint-disable max-lines */
 'use client'
 
 import type { FieldGroup, FieldOverride } from './types'
-import { toStringArray, toStringRecord, toNumber, toCustomFields, toWorkspaceConfig } from './config-helpers'
+import {
+  toStringArray,
+  toStringRecord,
+  toNumber,
+  toCustomFields,
+  toHooksArray,
+  toWorkspaceConfig,
+} from './config-helpers'
 import { StateListEditor } from '@/components/settings/StateListEditor'
 import { PriorityEditor } from '@/components/settings/PriorityEditor'
 import { CustomFieldsEditor } from '@/components/settings/CustomFieldsEditor'
 import { DefaultsEditor } from '@/components/settings/DefaultsEditor'
+import { HooksEditor } from '@/components/settings/HooksEditor'
 import { WorkspaceSettingsEditor } from '@/components/settings/WorkspaceSettingsEditor'
 
 export const CONFIG_FIELD_GROUPS: FieldGroup[] = [
@@ -17,7 +26,8 @@ export const CONFIG_FIELD_GROUPS: FieldGroup[] = [
     render: ({ value, onChange }) => {
       const allowedStates = toStringArray(value.allowedStates)
       const stateColors = toStringRecord(value.stateColors)
-      const defaultState = typeof value.defaultState === 'string' ? value.defaultState : ''
+      const defaultState =
+        typeof value.defaultState === 'string' ? value.defaultState : ''
       return (
         <StateListEditor
           states={allowedStates}
@@ -82,6 +92,18 @@ export const CONFIG_FIELD_GROUPS: FieldGroup[] = [
       <WorkspaceSettingsEditor
         value={toWorkspaceConfig(value.workspace)}
         onChange={ws => onChange({ workspace: ws })}
+      />
+    ),
+  },
+  {
+    key: 'hooks',
+    claimedFields: ['hooks'],
+    title: 'Lifecycle Hooks',
+    order: 60,
+    render: ({ value, onChange }) => (
+      <HooksEditor
+        hooks={toHooksArray(value.hooks)}
+        onChange={hooks => onChange({ hooks })}
       />
     ),
   },

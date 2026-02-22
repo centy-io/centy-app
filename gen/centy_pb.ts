@@ -1771,7 +1771,7 @@ export const CustomFieldDefinitionSchema: GenMessage<CustomFieldDefinition> =
  */
 export type HookDefinition = Message<'centy.v1.HookDefinition'> & {
   /**
-   * Pattern like "pre:issue:create" or "*:*:delete"
+   * Pattern like "pre:item:create" or "*:*:delete"
    *
    * @generated from field: string pattern = 1;
    */

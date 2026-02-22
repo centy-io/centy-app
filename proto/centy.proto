@@ -680,7 +680,7 @@ message CustomFieldDefinition {
 
 // Lifecycle hook definition (bash scripts to run before/after operations)
 message HookDefinition {
-  string pattern = 1;                   // Pattern like "pre:issue:create" or "*:*:delete"
+  string pattern = 1;                   // Pattern like "pre:item:create" or "*:*:delete"
   string command = 2;                   // Bash command to execute
   bool run_async = 3;                   // If true, run in background (post-hooks only)
   uint64 timeout = 4;                   // Timeout in seconds (default: 30)

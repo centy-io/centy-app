@@ -1,0 +1,211 @@
+.hooks-editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.hooks-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.hooks-empty {
+  font-size: 0.875rem;
+  color: var(--color-gray-500);
+  margin: 0;
+}
+
+.hook-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+}
+
+.hook-fields {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.hook-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.hook-field-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-gray-600);
+  margin: 0;
+}
+
+.hook-input {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-family: var(--font-mono);
+  width: 100%;
+}
+
+.hook-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+}
+
+.hook-input-narrow {
+  width: 80px;
+}
+
+.hook-field-inline {
+  flex-direction: row;
+  align-items: flex-end;
+  gap: var(--space-4);
+}
+
+.hook-checkbox-group {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+  flex: 1;
+}
+
+.hook-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.875rem;
+  color: var(--color-gray-700);
+  margin: 0;
+  cursor: pointer;
+}
+
+.hook-checkbox-label input[type='checkbox'] {
+  width: auto;
+  cursor: pointer;
+}
+
+.hook-timeout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.hook-remove-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--color-gray-400);
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
+  padding: 0;
+}
+
+.hook-remove-btn:hover {
+  background: var(--color-danger);
+  color: white;
+}
+
+.hooks-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.hook-add-btn {
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-gray-100);
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-gray-700);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.hook-add-btn:hover {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+
+/* Help Section */
+.hooks-help {
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  font-size: 0.875rem;
+}
+
+.hooks-help-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-gray-800);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.hooks-help-title:not(:first-child) {
+  margin-top: var(--space-4);
+}
+
+.hooks-help-text {
+  color: var(--color-gray-600);
+  margin: 0 0 var(--space-2) 0;
+  line-height: 1.5;
+}
+
+.hooks-help-pre {
+  background: var(--color-gray-800);
+  color: var(--color-gray-100);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  margin: var(--space-2) 0;
+}
+
+.hooks-help-pre code {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+}
+
+.hooks-pattern-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  margin-top: var(--space-2);
+}
+
+.hooks-pattern-row:first-child .hooks-pattern-cell {
+  background: var(--color-gray-100);
+  color: var(--color-gray-700);
+  font-weight: 600;
+  border-bottom: 1px solid var(--color-gray-200);
+}
+
+.hooks-pattern-cell {
+  text-align: left;
+  padding: var(--space-2) var(--space-3);
+  color: var(--color-gray-700);
+  border-bottom: 1px solid var(--color-gray-100);
+}
+
+.hooks-pattern-row:last-child .hooks-pattern-cell {
+  border-bottom: none;
+}
