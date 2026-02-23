@@ -79,7 +79,7 @@ export function useProjectsData() {
   )
 
   const groupedProjects: GroupedProject[] = useMemo(() => {
-    if (selectedOrgSlug === null) return allGroupedProjects
+    if (selectedOrgSlug == null) return allGroupedProjects
     return allGroupedProjects.filter(([slug]) => slug === selectedOrgSlug)
   }, [allGroupedProjects, selectedOrgSlug])
 
