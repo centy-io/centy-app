@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
 import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
-import { MoveIssueRequestSchema, MoveDocRequestSchema } from '@/gen/centy_pb'
+import { MoveItemRequestSchema } from '@/gen/centy_pb'
 
 export function useMoveAction(
   entityType: 'issue' | 'doc',
@@ -20,30 +20,29 @@ export function useMoveAction(
     setError(null)
     try {
       if (entityType === 'issue') {
-        const request = create(MoveIssueRequestSchema, {
+        const request = create(MoveItemRequestSchema, {
           sourceProjectPath: currentProjectPath,
-          issueId: entityId,
+          itemType: 'issues',
+          itemId: entityId,
           targetProjectPath: selectedProject,
         })
-        const response = await centyClient.moveIssue(request)
+        const response = await centyClient.moveItem(request)
         if (response.success) {
-          onMoved(
-            selectedProject,
-            response.issue ? response.issue.id : undefined
-          )
+          onMoved(selectedProject, response.item ? response.item.id : undefined)
         } else {
           setError(response.error || 'Failed to move issue')
         }
       } else {
-        const request = create(MoveDocRequestSchema, {
+        const request = create(MoveItemRequestSchema, {
           sourceProjectPath: currentProjectPath,
-          slug: entityId,
+          itemType: 'docs',
+          itemId: entityId,
           targetProjectPath: selectedProject,
-          newSlug: newSlug || undefined,
+          newId: newSlug || undefined,
         })
-        const response = await centyClient.moveDoc(request)
+        const response = await centyClient.moveItem(request)
         if (response.success) {
-          onMoved(selectedProject, response.doc ? response.doc.slug : undefined)
+          onMoved(selectedProject, response.item ? response.item.id : undefined)
         } else {
           setError(response.error || 'Failed to move document')
         }

@@ -2,11 +2,12 @@ import { useState, useCallback, useEffect } from 'react'
 import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
 import {
-  GetIssueRequestSchema,
+  GetItemRequestSchema,
   ListAssetsRequestSchema,
   type Issue,
   type Asset,
 } from '@/gen/centy_pb'
+import { genericItemToIssue } from '@/lib/genericItemToIssue'
 import { useLastSeenIssues } from '@/hooks/useLastSeenIssues'
 
 export function useIssueDetail(projectPath: string, issueNumber: string) {
@@ -26,13 +27,14 @@ export function useIssueDetail(projectPath: string, issueNumber: string) {
     setError(null)
 
     try {
-      const request = create(GetIssueRequestSchema, {
+      const request = create(GetItemRequestSchema, {
         projectPath,
-        issueId: issueNumber,
+        itemType: 'issues',
+        itemId: issueNumber,
       })
-      const response = await centyClient.getIssue(request)
-      if (response.issue) {
-        setIssue(response.issue)
+      const response = await centyClient.getItem(request)
+      if (response.item) {
+        setIssue(genericItemToIssue(response.item))
       } else {
         setError(response.error || 'Issue not found')
       }

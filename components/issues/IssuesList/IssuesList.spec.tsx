@@ -1,13 +1,13 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { IssuesList } from './IssuesList'
-import type { Issue } from '@/gen/centy_pb'
+import type { GenericItem } from '@/gen/centy_pb'
 import { centyClient } from '@/lib/grpc/client'
 
 vi.mock('@/lib/grpc/client', () => ({
   centyClient: {
     isInitialized: vi.fn(),
-    listIssues: vi.fn(),
+    listItems: vi.fn(),
   },
 }))
 
@@ -28,25 +28,24 @@ vi.mock('@/components/providers/ProjectProvider', () => ({
   }),
 }))
 
-// Helper to create mock Issue data
-const createMockIssue = (
+// Helper to create mock GenericItem data
+const createMockGenericItem = (
   overrides: {
-    issueNumber?: string
+    id?: string
     displayNumber?: number
     title?: string
-    description?: string
+    body?: string
     status?: string
     priority?: number
     priorityLabel?: string
     hasMetadata?: boolean
   } = {}
-): Issue =>
+): GenericItem =>
   ({
-    id: overrides.issueNumber || '0001',
-    displayNumber: overrides.displayNumber || 1,
-    issueNumber: overrides.issueNumber || '0001',
+    id: overrides.id || '0001',
+    itemType: 'issues',
     title: overrides.title || 'Test Issue',
-    description: overrides.description || 'Test description',
+    body: overrides.body || 'Test description',
     metadata:
       overrides.hasMetadata === false
         ? undefined
@@ -54,16 +53,18 @@ const createMockIssue = (
             displayNumber: overrides.displayNumber || 1,
             status: overrides.status || 'open',
             priority: overrides.priority || 2,
-            priorityLabel: overrides.priorityLabel || 'medium',
             createdAt: '2024-01-15T10:00:00Z',
             updatedAt: '2024-01-15T10:00:00Z',
-            customFields: {},
-            $typeName: 'centy.v1.IssueMetadata' as const,
+            deletedAt: '',
+            customFields: {
+              priority_label: overrides.priorityLabel || 'medium',
+            },
+            $typeName: 'centy.v1.GenericItemMetadata' as const,
             $unknown: undefined,
           },
-    $typeName: 'centy.v1.Issue' as const,
+    $typeName: 'centy.v1.GenericItem' as const,
     $unknown: undefined,
-  }) as Issue
+  }) as GenericItem
 
 describe('IssuesList', () => {
   beforeEach(() => {
@@ -124,11 +125,11 @@ describe('IssuesList', () => {
   })
 
   it('should show empty state when no issues exist', async () => {
-    const mockListIssues = vi.mocked(centyClient.listIssues)
-    mockListIssues.mockResolvedValue({
-      issues: [],
+    const mockListItems = vi.mocked(centyClient.listItems)
+    mockListItems.mockResolvedValue({
+      items: [],
       totalCount: 0,
-      $typeName: 'centy.v1.ListIssuesResponse',
+      $typeName: 'centy.v1.ListItemsResponse',
       $unknown: undefined,
       success: true,
       error: '',
@@ -155,28 +156,28 @@ describe('IssuesList', () => {
   })
 
   it('should display list of issues', async () => {
-    const mockListIssues = vi.mocked(centyClient.listIssues)
-    mockListIssues.mockResolvedValue({
-      issues: [
-        createMockIssue({
-          issueNumber: '0001',
+    const mockListItems = vi.mocked(centyClient.listItems)
+    mockListItems.mockResolvedValue({
+      items: [
+        createMockGenericItem({
+          id: '0001',
           displayNumber: 1,
           title: 'First Issue',
-          description: 'Description 1',
+          body: 'Description 1',
           status: 'open',
           priority: 1,
           priorityLabel: 'high',
         }),
-        createMockIssue({
-          issueNumber: '0002',
+        createMockGenericItem({
+          id: '0002',
           displayNumber: 2,
           title: 'Second Issue',
-          description: 'Description 2',
+          body: 'Description 2',
           status: 'in-progress',
         }),
       ],
       totalCount: 2,
-      $typeName: 'centy.v1.ListIssuesResponse',
+      $typeName: 'centy.v1.ListItemsResponse',
       $unknown: undefined,
       success: true,
       error: '',
@@ -205,11 +206,11 @@ describe('IssuesList', () => {
   })
 
   it('should show refresh button when project is initialized', async () => {
-    const mockListIssues = vi.mocked(centyClient.listIssues)
-    mockListIssues.mockResolvedValue({
-      issues: [],
+    const mockListItems = vi.mocked(centyClient.listItems)
+    mockListItems.mockResolvedValue({
+      items: [],
       totalCount: 0,
-      $typeName: 'centy.v1.ListIssuesResponse',
+      $typeName: 'centy.v1.ListItemsResponse',
       $unknown: undefined,
       success: true,
       error: '',
@@ -235,9 +236,9 @@ describe('IssuesList', () => {
   })
 
   it('should handle network errors', async () => {
-    const mockListIssues = vi.mocked(centyClient.listIssues)
+    const mockListItems = vi.mocked(centyClient.listItems)
     const errorMessage = 'Connection refused'
-    mockListIssues.mockRejectedValue(new Error(errorMessage))
+    mockListItems.mockRejectedValue(new Error(errorMessage))
 
     mockUsePathContext.mockReturnValue({
       projectPath: '/test/path',
@@ -259,11 +260,11 @@ describe('IssuesList', () => {
   })
 
   it('should refresh issues when clicking refresh button', async () => {
-    const mockListIssues = vi.mocked(centyClient.listIssues)
-    mockListIssues.mockResolvedValue({
-      issues: [],
+    const mockListItems = vi.mocked(centyClient.listItems)
+    mockListItems.mockResolvedValue({
+      items: [],
       totalCount: 0,
-      $typeName: 'centy.v1.ListIssuesResponse',
+      $typeName: 'centy.v1.ListItemsResponse',
       $unknown: undefined,
       success: true,
       error: '',
@@ -287,28 +288,28 @@ describe('IssuesList', () => {
       expect(screen.getByText('Refresh')).toBeInTheDocument()
     })
 
-    mockListIssues.mockClear()
+    mockListItems.mockClear()
 
     const refreshBtn = screen.getByText('Refresh')
     fireEvent.click(refreshBtn)
 
     await waitFor(() => {
-      expect(mockListIssues).toHaveBeenCalled()
+      expect(mockListItems).toHaveBeenCalled()
     })
   })
 
   it('should display status and priority badges with correct styling', async () => {
-    const mockListIssues = vi.mocked(centyClient.listIssues)
-    mockListIssues.mockResolvedValue({
-      issues: [
-        createMockIssue({
+    const mockListItems = vi.mocked(centyClient.listItems)
+    mockListItems.mockResolvedValue({
+      items: [
+        createMockGenericItem({
           status: 'open',
           priority: 1,
           priorityLabel: 'high',
         }),
       ],
       totalCount: 1,
-      $typeName: 'centy.v1.ListIssuesResponse',
+      $typeName: 'centy.v1.ListItemsResponse',
       $unknown: undefined,
       success: true,
       error: '',
@@ -338,8 +339,8 @@ describe('IssuesList', () => {
   })
 
   it('should handle non-Error rejection', async () => {
-    const mockListIssues = vi.mocked(centyClient.listIssues)
-    mockListIssues.mockRejectedValue('string error')
+    const mockListItems = vi.mocked(centyClient.listItems)
+    mockListItems.mockRejectedValue('string error')
 
     mockUsePathContext.mockReturnValue({
       projectPath: '/test/path',

@@ -4,7 +4,7 @@ import { route } from 'nextjs-routes'
 import { create } from '@bufbuild/protobuf'
 import { useOrgProjectPath } from './useOrgProjectPath'
 import { centyClient } from '@/lib/grpc/client'
-import { CreateIssueRequestSchema } from '@/gen/centy_pb'
+import { CreateItemRequestSchema } from '@/gen/centy_pb'
 import { useStateManager } from '@/lib/state'
 
 // eslint-disable-next-line max-lines-per-function
@@ -29,14 +29,15 @@ export function useCreateOrgIssue(orgSlug: string) {
       setLoading(true)
       setError(null)
       try {
-        const res = await centyClient.createIssue(
-          create(CreateIssueRequestSchema, {
+        const res = await centyClient.createItem(
+          create(CreateItemRequestSchema, {
             projectPath: orgProjectPath,
+            itemType: 'issues',
             title: title.trim(),
-            description: description.trim(),
+            body: description.trim(),
             priority,
             status,
-            isOrgIssue: true,
+            customFields: { is_org_issue: 'true' },
           })
         )
         if (res.success) {

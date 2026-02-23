@@ -5,14 +5,14 @@ import {
   LinkTargetType,
   type Link as LinkType,
   type LinkTypeInfo,
+  type GenericItem,
 } from '@/gen/centy_pb'
 import { centyClient } from '@/lib/grpc/client'
 
 vi.mock('@/lib/grpc/client', () => ({
   centyClient: {
     getAvailableLinkTypes: vi.fn(),
-    listIssues: vi.fn(),
-    listDocs: vi.fn(),
+    listItems: vi.fn(),
     createLink: vi.fn(),
   },
 }))
@@ -34,6 +34,43 @@ const createMockLinkTypeInfo = (
     $typeName: 'centy.v1.LinkTypeInfo' as const,
     $unknown: undefined,
   }) as LinkTypeInfo
+
+const createMockGenericItem = (overrides: {
+  id?: string
+  itemType?: string
+  title?: string
+  body?: string
+  displayNumber?: number
+  status?: string
+}): GenericItem =>
+  ({
+    id: overrides.id || 'item-1',
+    itemType: overrides.itemType || 'issues',
+    title: overrides.title || 'Test Item',
+    body: overrides.body || '',
+    metadata: {
+      displayNumber: overrides.displayNumber || 1,
+      status: overrides.status || 'open',
+      priority: 2,
+      createdAt: '2024-01-01T00:00:00Z',
+      updatedAt: '2024-01-01T00:00:00Z',
+      deletedAt: '',
+      customFields: {},
+      $typeName: 'centy.v1.GenericItemMetadata' as const,
+      $unknown: undefined,
+    },
+    $typeName: 'centy.v1.GenericItem' as const,
+    $unknown: undefined,
+  }) as GenericItem
+
+const makeListItemsResponse = (items: GenericItem[]) => ({
+  items,
+  totalCount: items.length,
+  $typeName: 'centy.v1.ListItemsResponse' as const,
+  $unknown: undefined,
+  success: true,
+  error: '',
+})
 
 describe('AddLinkModal', () => {
   const mockOnClose = vi.fn()
@@ -67,50 +104,20 @@ describe('AddLinkModal', () => {
       $unknown: undefined,
     })
 
-    vi.mocked(centyClient.listIssues).mockResolvedValue({
-      issues: [
-        {
+    vi.mocked(centyClient.listItems).mockResolvedValue(
+      makeListItemsResponse([
+        createMockGenericItem({
           id: 'issue-1',
           displayNumber: 1,
-          issueNumber: 'issue-1',
           title: 'First Issue',
-          description: 'First issue description',
-          $typeName: 'centy.v1.Issue',
-          $unknown: undefined,
-        },
-        {
+        }),
+        createMockGenericItem({
           id: 'issue-2',
           displayNumber: 2,
-          issueNumber: 'issue-2',
           title: 'Second Issue',
-          description: 'Second issue description',
-          $typeName: 'centy.v1.Issue',
-          $unknown: undefined,
-        },
-      ],
-      totalCount: 2,
-      $typeName: 'centy.v1.ListIssuesResponse',
-      $unknown: undefined,
-      success: true,
-      error: '',
-    })
-
-    vi.mocked(centyClient.listDocs).mockResolvedValue({
-      docs: [
-        {
-          slug: 'doc-1',
-          title: 'First Doc',
-          content: 'First doc content',
-          $typeName: 'centy.v1.Doc',
-          $unknown: undefined,
-        },
-      ],
-      totalCount: 1,
-      $typeName: 'centy.v1.ListDocsResponse',
-      $unknown: undefined,
-      success: true,
-      error: '',
-    })
+        }),
+      ])
+    )
   })
 
   it('should render modal with header and close button', async () => {
@@ -162,7 +169,7 @@ describe('AddLinkModal', () => {
     fireEvent.click(screen.getByText('Docs'))
 
     await waitFor(() => {
-      expect(centyClient.listDocs).toHaveBeenCalled()
+      expect(centyClient.listItems).toHaveBeenCalled()
     })
   })
 
@@ -186,33 +193,20 @@ describe('AddLinkModal', () => {
   })
 
   it('should exclude self from search results', async () => {
-    vi.mocked(centyClient.listIssues).mockResolvedValue({
-      issues: [
-        {
-          id: 'entity-123', // Same as entityId
+    vi.mocked(centyClient.listItems).mockResolvedValue(
+      makeListItemsResponse([
+        createMockGenericItem({
+          id: 'entity-123',
           displayNumber: 1,
-          issueNumber: 'entity-123',
           title: 'Self Issue',
-          description: 'Self issue description',
-          $typeName: 'centy.v1.Issue',
-          $unknown: undefined,
-        },
-        {
+        }),
+        createMockGenericItem({
           id: 'other-issue',
           displayNumber: 2,
-          issueNumber: 'other-issue',
           title: 'Other Issue',
-          description: 'Other issue description',
-          $typeName: 'centy.v1.Issue',
-          $unknown: undefined,
-        },
-      ],
-      totalCount: 2,
-      $typeName: 'centy.v1.ListIssuesResponse',
-      $unknown: undefined,
-      success: true,
-      error: '',
-    })
+        }),
+      ])
+    )
 
     render(<AddLinkModal {...defaultProps} />)
 
@@ -333,14 +327,9 @@ describe('AddLinkModal', () => {
   })
 
   it('should show empty state when no search results', async () => {
-    vi.mocked(centyClient.listIssues).mockResolvedValue({
-      issues: [],
-      totalCount: 0,
-      $typeName: 'centy.v1.ListIssuesResponse',
-      $unknown: undefined,
-      success: true,
-      error: '',
-    })
+    vi.mocked(centyClient.listItems).mockResolvedValue(
+      makeListItemsResponse([])
+    )
 
     render(<AddLinkModal {...defaultProps} />)
 

@@ -2,7 +2,8 @@ import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
-import { UpdateDocRequestSchema, type Doc } from '@/gen/centy_pb'
+import { UpdateItemRequestSchema, type Doc } from '@/gen/centy_pb'
+import { genericItemToDoc } from '@/lib/genericItemToDoc'
 import { useAppLink } from '@/hooks/useAppLink'
 
 interface UseDocSaveParams {
@@ -37,20 +38,21 @@ export function useDocSave({
     setError(null)
 
     try {
-      const request = create(UpdateDocRequestSchema, {
+      const request = create(UpdateItemRequestSchema, {
         projectPath,
-        slug,
+        itemType: 'docs',
+        itemId: slug,
         title: editTitle,
-        content: editContent,
-        newSlug: editSlug || undefined,
+        body: editContent,
       })
-      const response = await centyClient.updateDoc(request)
+      const response = await centyClient.updateItem(request)
 
-      if (response.success && response.doc) {
-        setDoc(response.doc)
+      if (response.success && response.item) {
+        const doc = genericItemToDoc(response.item)
+        setDoc(doc)
         setIsEditing(false)
         if (editSlug && editSlug !== slug) {
-          router.replace(createLink(`/docs/${editSlug}`))
+          router.replace(createLink(`/docs/${doc.slug}`))
         }
       } else {
         setError(response.error || 'Failed to update document')

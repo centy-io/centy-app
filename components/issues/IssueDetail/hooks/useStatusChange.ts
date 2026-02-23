@@ -1,7 +1,8 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
-import { UpdateIssueRequestSchema, type Issue } from '@/gen/centy_pb'
+import { UpdateItemRequestSchema, type Issue } from '@/gen/centy_pb'
+import { genericItemToIssue } from '@/lib/genericItemToIssue'
 
 // eslint-disable-next-line max-lines-per-function
 export function useStatusChange(
@@ -48,18 +49,17 @@ export function useStatusChange(
       setError(null)
 
       try {
-        const request = create(UpdateIssueRequestSchema, {
+        const request = create(UpdateItemRequestSchema, {
           projectPath,
-          issueId: issueNumber,
+          itemType: 'issues',
+          itemId: issueNumber,
           status: newStatus,
         })
-        const response = await centyClient.updateIssue(request)
-        if (response.success && response.issue) {
-          setIssue(response.issue)
-          setEditStatus(
-            (response.issue.metadata && response.issue.metadata.status) ||
-              'open'
-          )
+        const response = await centyClient.updateItem(request)
+        if (response.success && response.item) {
+          const updated = genericItemToIssue(response.item)
+          setIssue(updated)
+          setEditStatus((updated.metadata && updated.metadata.status) || 'open')
         } else {
           setError(response.error || 'Failed to update status')
         }

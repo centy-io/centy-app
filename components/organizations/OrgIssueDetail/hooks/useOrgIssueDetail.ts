@@ -6,11 +6,12 @@ import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
 import {
   ListProjectsRequestSchema,
-  GetIssueRequestSchema,
-  UpdateIssueRequestSchema,
-  DeleteIssueRequestSchema,
+  GetItemRequestSchema,
+  UpdateItemRequestSchema,
+  DeleteItemRequestSchema,
   type Issue,
 } from '@/gen/centy_pb'
+import { genericItemToIssue } from '@/lib/genericItemToIssue'
 import { useStateManager } from '@/lib/state'
 
 function formatErr(err: unknown): string {
@@ -57,11 +58,15 @@ export function useOrgIssueDetail(orgSlug: string, issueId: string) {
       const projectPath = orgProjects[0].path
       setOrgProjectPath(projectPath)
 
-      const res = await centyClient.getIssue(
-        create(GetIssueRequestSchema, { projectPath, issueId })
+      const res = await centyClient.getItem(
+        create(GetItemRequestSchema, {
+          projectPath,
+          itemType: 'issues',
+          itemId: issueId,
+        })
       )
-      if (res.issue) {
-        const found = res.issue
+      if (res.item) {
+        const found = genericItemToIssue(res.item)
         setIssue(found)
         setEditTitle(found.title)
         setEditDescription(found.description)
@@ -88,18 +93,19 @@ export function useOrgIssueDetail(orgSlug: string, issueId: string) {
     setSaving(true)
     setError(null)
     try {
-      const res = await centyClient.updateIssue(
-        create(UpdateIssueRequestSchema, {
+      const res = await centyClient.updateItem(
+        create(UpdateItemRequestSchema, {
           projectPath: orgProjectPath,
-          issueId,
+          itemType: 'issues',
+          itemId: issueId,
           title: editTitle.trim(),
-          description: editDescription.trim(),
+          body: editDescription.trim(),
           priority: editPriority,
           status: editStatus,
         })
       )
-      if (res.success && res.issue) {
-        setIssue(res.issue)
+      if (res.success && res.item) {
+        setIssue(genericItemToIssue(res.item))
         setIsEditing(false)
       } else {
         setError(res.error || 'Failed to update issue')
@@ -123,10 +129,11 @@ export function useOrgIssueDetail(orgSlug: string, issueId: string) {
     setDeleting(true)
     setDeleteError(null)
     try {
-      const res = await centyClient.deleteIssue(
-        create(DeleteIssueRequestSchema, {
+      const res = await centyClient.deleteItem(
+        create(DeleteItemRequestSchema, {
           projectPath: orgProjectPath,
-          issueId,
+          itemType: 'issues',
+          itemId: issueId,
         })
       )
       if (res.success) {

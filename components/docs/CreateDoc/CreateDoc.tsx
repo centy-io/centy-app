@@ -8,7 +8,7 @@ import { route } from 'nextjs-routes'
 import { useProjectContext } from './useProjectContext'
 import { useCreateItemSubmit } from '@/hooks/useCreateItemSubmit'
 import { centyClient } from '@/lib/grpc/client'
-import { CreateDocRequestSchema } from '@/gen/centy_pb'
+import { CreateItemRequestSchema } from '@/gen/centy_pb'
 import { TextEditor } from '@/components/shared/TextEditor'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import { getDraftStorageKey } from '@/hooks/getDraftStorageKey'
@@ -67,20 +67,23 @@ export function CreateDoc() {
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
       if (!title.trim()) return
-      return submitItem(
-        () =>
-          centyClient.createDoc(
-            create(CreateDocRequestSchema, {
-              projectPath: projectPath.trim(),
-              title: title.trim(),
-              content: content.trim(),
-              slug: slug.trim() || undefined,
-            })
-          ),
-        e
-      )
+      return submitItem(async () => {
+        const response = await centyClient.createItem(
+          create(CreateItemRequestSchema, {
+            projectPath: projectPath.trim(),
+            itemType: 'docs',
+            title: title.trim(),
+            body: content.trim(),
+          })
+        )
+        return {
+          success: response.success,
+          error: response.error,
+          slug: response.item ? response.item.id : undefined,
+        }
+      }, e)
     },
-    [projectPath, title, content, slug, submitItem]
+    [projectPath, title, content, submitItem]
   )
 
   if (!projectPath) {
