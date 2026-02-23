@@ -18,6 +18,7 @@ function toRecordArray(v: unknown): Record<string, unknown>[] {
   return []
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function MessageListFieldRenderer({
   messageDesc,
   label,
