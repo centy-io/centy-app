@@ -1,4 +1,3 @@
-// eslint-disable-next-line ddd/require-spec-file
 export function toStringRecord(v: unknown): Record<string, string> {
   if (
     v !== null &&

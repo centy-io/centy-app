@@ -27,11 +27,11 @@ export function useStateManager(): StateManager {
         const res = await centyClient.listItemTypes(req)
         if (cancelled) return
         const issueType = res.itemTypes.find(t => t.plural === 'issues')
-        setItemTypeStatuses(
+        const statuses =
           issueType !== undefined && issueType !== null
             ? issueType.statuses
             : []
-        )
+        setItemTypeStatuses(statuses)
       } catch {
         // silently fall back to empty
       }

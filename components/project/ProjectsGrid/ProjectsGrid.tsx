@@ -1,11 +1,10 @@
-/* eslint-disable max-lines, max-lines-per-function */
 'use client'
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { route } from 'nextjs-routes'
 import { useProjectsData } from './useProjectsData'
-import { OrgGroup } from './OrgGroup'
+import { ProjectsGridContent } from './ProjectsGridContent'
 import type { ProjectInfo } from '@/gen/centy_pb'
 import { UNGROUPED_ORG_MARKER } from '@/lib/project-resolver'
 
@@ -71,47 +70,11 @@ export function ProjectsGrid() {
   }
 
   return (
-    <div className="projects-grid-container">
-      <div className="projects-grid-header">
-        <h1 className="projects-grid-title">Projects</h1>
-        <div className="projects-grid-actions">
-          <button onClick={fetchData} className="refresh-btn">
-            Refresh
-          </button>
-          <Link
-            href={route({ pathname: '/project/init' })}
-            className="init-project-btn"
-          >
-            + Init Project
-          </Link>
-          <Link
-            href={route({ pathname: '/organizations/new' })}
-            className="create-org-btn"
-          >
-            + New Organization
-          </Link>
-        </div>
-      </div>
-
-      {groupedProjects.map(([orgSlug, group]) => (
-        <OrgGroup
-          key={orgSlug || '__ungrouped'}
-          orgSlug={orgSlug}
-          groupName={group.name}
-          projects={group.projects}
-          onProjectClick={handleProjectClick}
-          onToggleFavorite={handleToggleFavorite}
-        />
-      ))}
-
-      <div className="projects-grid-footer">
-        <Link
-          href={route({ pathname: '/organizations' })}
-          className="view-all-link"
-        >
-          Manage Organizations
-        </Link>
-      </div>
-    </div>
+    <ProjectsGridContent
+      fetchData={fetchData}
+      groupedProjects={groupedProjects}
+      onProjectClick={handleProjectClick}
+      onToggleFavorite={handleToggleFavorite}
+    />
   )
 }

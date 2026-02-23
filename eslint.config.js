@@ -36,7 +36,6 @@ export default [
       'instrumentation-client.ts',
     ],
     rules: {
-      'ddd/require-spec-file': 'off',
       'single-export/single-export': 'off',
     },
   },

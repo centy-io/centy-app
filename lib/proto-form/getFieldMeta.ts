@@ -1,6 +1,6 @@
 import type { DescField } from '@bufbuild/protobuf'
-import type { FieldOverride } from './FieldOverride'
-import type { FieldMeta } from './FieldMeta'
+import type { FieldOverride } from './FieldOverride.types'
+import type { FieldMeta } from './FieldMeta.types'
 import { protoNameToLabel } from './protoNameToLabel'
 
 export function getFieldMeta(

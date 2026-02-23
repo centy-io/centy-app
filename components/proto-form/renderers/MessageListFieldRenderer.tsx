@@ -1,20 +1,9 @@
-/* eslint-disable max-lines, max-lines-per-function */
 'use client'
 
 import { useState } from 'react'
 import { create } from '@bufbuild/protobuf'
-import type { DescMessage } from '@bufbuild/protobuf'
 import { MessageItem } from './MessageItem'
-import type { FieldRenderProps } from '@/lib/proto-form/FieldRenderProps'
-
-interface MessageListFieldProps extends Omit<FieldRenderProps, 'field'> {
-  messageDesc: DescMessage
-  ProtoFormRenderer: React.ComponentType<{
-    schema: DescMessage
-    value: Record<string, unknown>
-    onChange: (updates: Record<string, unknown>) => void
-  }>
-}
+import type { MessageListFieldProps } from './MessageListFieldProps.types'
 
 function toRecordArray(v: unknown): Record<string, unknown>[] {
   if (Array.isArray(v)) {
@@ -50,14 +39,14 @@ export function MessageListFieldRenderer({
 
   const handleRemove = (index: number) => {
     onChange(items.filter((_, i) => i !== index))
-    setExpanded(prev => {
-      const next = new Set<number>()
-      for (const idx of prev) {
-        if (idx < index) next.add(idx)
-        else if (idx > index) next.add(idx - 1)
-      }
-      return next
-    })
+    setExpanded(
+      prev =>
+        new Set(
+          Array.from(prev)
+            .filter(i => i !== index)
+            .map(i => (i > index ? i - 1 : i))
+        )
+    )
   }
 
   const handleItemChange = (

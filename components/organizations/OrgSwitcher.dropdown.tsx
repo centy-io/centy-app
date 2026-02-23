@@ -9,11 +9,11 @@ interface OrgSwitcherDropdownProps {
     setFloating: (node: HTMLElement | null) => void
   }
   floatingStyles: React.CSSProperties
-  selectedOrgSlug: string | null
+  selectedOrgSlug: string | null | undefined
   organizations: Organization[]
   loading: boolean
   onRefresh: () => void
-  onSelect: (slug: string | null) => void
+  onSelect: (slug: string | null | undefined) => void
   onClose: () => void
 }
 

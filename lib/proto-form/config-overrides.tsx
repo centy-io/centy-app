@@ -1,14 +1,12 @@
 'use client'
 
-import type { FieldGroup } from './FieldGroup'
-import type { FieldOverride } from './FieldOverride'
-import {
-  toStringArray,
-  toStringRecord,
-  toNumber,
-  toCustomFields,
-  toWorkspaceConfig,
-} from './config-helpers'
+import type { FieldGroup } from './FieldGroup.types'
+import type { FieldOverride } from './FieldOverride.types'
+import { toStringArray } from './toStringArray'
+import { toStringRecord } from './toStringRecord'
+import { toNumber } from './toNumber'
+import { toCustomFields } from './toCustomFields'
+import { toWorkspaceConfig } from './toWorkspaceConfig'
 import { StateListEditor } from '@/components/settings/StateListEditor'
 import { PriorityEditor } from '@/components/settings/PriorityEditor'
 import { CustomFieldsEditor } from '@/components/settings/CustomFieldsEditor'

@@ -1,15 +1,16 @@
 'use client'
 
 import { DEMO_DOCS } from '../demo-data'
-import type { Doc } from '@/gen/centy_pb'
+import type { CreateDocResponse } from '@/gen/centy_pb'
 
-export async function createDoc(): Promise<{
-  success: boolean
-  doc: Doc
-}> {
+export async function createDoc(): Promise<CreateDocResponse> {
   console.warn('[Demo Mode] createDoc called - changes not persisted')
   return {
+    $typeName: 'centy.v1.CreateDocResponse',
     success: true,
-    doc: DEMO_DOCS[0],
+    error: '',
+    slug: DEMO_DOCS[0].slug,
+    createdFile: '',
+    syncResults: [],
   }
 }

@@ -24,9 +24,10 @@ const OrganizationContext = createContext<OrganizationContextType | null>(null)
 export function OrganizationProvider({ children }: { children: ReactNode }) {
   const { urlOrg } = useUrlParams()
   // Derive selected org from URL; allow local override without persistence
-  const [selectedOrgSlug, setSelectedOrgSlugState] = useState<string | null>(
-    urlOrg !== undefined ? urlOrg : null
-  )
+  // undefined = not yet selected (initial), null = all orgs, string = specific org or ''
+  const [selectedOrgSlug, setSelectedOrgSlugState] = useState<
+    string | null | undefined
+  >(urlOrg)
 
   const [organizations, setOrganizations] = useState<Organization[]>([])
   const [loading, setLoading] = useState(false)
@@ -34,7 +35,7 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
 
   // Sync selected org from URL whenever the URL org changes
   useEffect(() => {
-    setSelectedOrgSlugState(urlOrg !== undefined ? urlOrg : null)
+    setSelectedOrgSlugState(urlOrg)
   }, [urlOrg])
 
   const refreshOrganizations = useCallback(async () => {
@@ -66,7 +67,7 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const setSelectedOrgSlug = useCallback((slug: string | null) => {
+  const setSelectedOrgSlug = useCallback((slug: string | null | undefined) => {
     setSelectedOrgSlugState(slug)
   }, [])
 

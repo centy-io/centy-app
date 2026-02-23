@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect, useMemo } from 'react'
 import { create } from '@bufbuild/protobuf'
-import { type GroupedProject } from './GroupedProject'
+import type { GroupedProject } from './GroupedProject'
 import { groupProjects } from './groupProjects'
 import { centyClient } from '@/lib/grpc/client'
 import {

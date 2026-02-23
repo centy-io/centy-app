@@ -50,7 +50,9 @@ export function useProjectSelector() {
       const req = create(ListProjectsRequestSchema, {
         includeStale: false,
         organizationSlug:
-          selectedOrgSlug !== null && selectedOrgSlug !== ''
+          selectedOrgSlug !== null &&
+          selectedOrgSlug !== undefined &&
+          selectedOrgSlug !== ''
             ? selectedOrgSlug
             : undefined,
         ungroupedOnly: selectedOrgSlug === '',
@@ -99,7 +101,7 @@ export function useProjectSelector() {
   }, [projects, isArchived, searchQuery])
 
   const groupedProjects: GroupedProjects = useMemo(() => {
-    if (selectedOrgSlug !== null) return null
+    if (selectedOrgSlug !== null && selectedOrgSlug !== undefined) return null
     const groups = new Map<string, { name: string; projects: ProjectInfo[] }>()
     groups.set('', { name: 'Ungrouped', projects: [] })
     for (const p of visibleProjects) {
