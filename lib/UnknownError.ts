@@ -1,6 +1,9 @@
 export class UnknownError extends Error {
   constructor(cause: unknown) {
-    super(String(cause))
+    const message =
+      typeof cause === 'string' ? cause : 'An unknown error occurred'
+    super(message)
     this.name = 'UnknownError'
+    this.cause = cause
   }
 }

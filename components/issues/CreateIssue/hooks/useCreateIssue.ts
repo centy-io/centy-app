@@ -4,8 +4,8 @@ import { create } from '@bufbuild/protobuf'
 import { useProjectContext } from './useProjectContext'
 import { useCreateItemSubmit } from '@/hooks/useCreateItemSubmit'
 import { centyClient } from '@/lib/grpc/client'
-import { IsInitializedRequestSchema, CreateIssueRequestSchema } from '@/gen/centy_pb'
-import { useProject } from '@/components/providers/ProjectProvider'
+import { CreateIssueRequestSchema } from '@/gen/centy_pb'
+import { usePathContext } from '@/components/providers/PathContextProvider'
 import { useStateManager } from '@/lib/state'
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
 import { getDraftStorageKey } from '@/hooks/getDraftStorageKey'
@@ -25,7 +25,7 @@ interface IssueDraft {
 
 // eslint-disable-next-line max-lines-per-function
 export function useCreateIssue() {
-  const { projectPath, isInitialized, setIsInitialized } = useProject()
+  const { projectPath, isInitialized } = usePathContext()
   const stateManager = useStateManager()
   const stateOptions = stateManager.getStateOptions()
 
@@ -75,27 +75,24 @@ export function useCreateIssue() {
   const handleSubmit = useCallback(
     async (e?: React.FormEvent) => {
       if (!title.trim()) return
-      return submitItem(
-        async () => {
-          const request = create(CreateIssueRequestSchema, {
-            projectPath: projectPath.trim(),
-            title: title.trim(),
-            description: description.trim(),
-            priority,
-            status,
-          })
-          const response = await centyClient.createIssue(request)
-          if (
-            response.success &&
-            pendingAssets.length > 0 &&
-            assetUploaderRef.current
-          ) {
-            await assetUploaderRef.current.uploadAllPending(response.id)
-          }
-          return response
-        },
-        e
-      )
+      return submitItem(async () => {
+        const request = create(CreateIssueRequestSchema, {
+          projectPath: projectPath.trim(),
+          title: title.trim(),
+          description: description.trim(),
+          priority,
+          status,
+        })
+        const response = await centyClient.createIssue(request)
+        if (
+          response.success &&
+          pendingAssets.length > 0 &&
+          assetUploaderRef.current
+        ) {
+          await assetUploaderRef.current.uploadAllPending(response.id)
+        }
+        return response
+      }, e)
     },
     [
       title,
@@ -108,31 +105,6 @@ export function useCreateIssue() {
       submitItem,
     ]
   )
-
-  const checkInitialized = useCallback(
-    async (path: string) => {
-      if (!path.trim()) {
-        setIsInitialized(null)
-        return
-      }
-      try {
-        const request = create(IsInitializedRequestSchema, {
-          projectPath: path.trim(),
-        })
-        const response = await centyClient.isInitialized(request)
-        setIsInitialized(response.initialized)
-      } catch {
-        setIsInitialized(false)
-      }
-    },
-    [setIsInitialized]
-  )
-
-  useEffect(() => {
-    if (projectPath && isInitialized === null) {
-      checkInitialized(projectPath)
-    }
-  }, [projectPath, isInitialized, checkInitialized])
 
   const handleKeyboardSave = useCallback(() => {
     if (!projectPath.trim() || !title.trim() || loading) return
