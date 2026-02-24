@@ -3,11 +3,11 @@
 import { useCallback } from 'react'
 import { create } from '@bufbuild/protobuf'
 import { useExecutePlan } from './useExecutePlan'
+import { useGetPlan } from './useGetPlan'
 import type { InitStep } from './InitProject.types'
 import { centyClient } from '@/lib/grpc/client'
 import {
   InitRequestSchema,
-  GetReconciliationPlanRequestSchema,
   type ReconciliationPlan,
   type InitResponse,
 } from '@/gen/centy_pb'
@@ -26,18 +26,9 @@ interface InitActionsState {
 }
 
 export function useInitProjectActions(state: InitActionsState) {
-  const {
-    projectPath,
-    setLoading,
-    setError,
-    setStep,
-    setPlan,
-    setResult,
-    setSelectedRestore,
-    setSelectedReset,
-  } = state
-
+  const { projectPath, setLoading, setError, setStep, setResult } = state
   const { handleExecutePlan } = useExecutePlan(state)
+  const { handleGetPlan } = useGetPlan(state)
 
   const handleQuickInit = useCallback(async () => {
     if (!projectPath.trim()) return
@@ -66,38 +57,6 @@ export function useInitProjectActions(state: InitActionsState) {
       setLoading(false)
     }
   }, [projectPath, setLoading, setError, setResult, setStep])
-
-  const handleGetPlan = useCallback(async () => {
-    if (!projectPath.trim()) return
-    setLoading(true)
-    setError(null)
-    try {
-      const res = await centyClient.getReconciliationPlan(
-        create(GetReconciliationPlanRequestSchema, {
-          projectPath: projectPath.trim(),
-        })
-      )
-      setPlan(res)
-      setStep('plan')
-      setSelectedRestore(new Set(res.toRestore.map(f => f.path)))
-      setSelectedReset(new Set())
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to connect to daemon'
-      )
-      setStep('error')
-    } finally {
-      setLoading(false)
-    }
-  }, [
-    projectPath,
-    setLoading,
-    setError,
-    setPlan,
-    setStep,
-    setSelectedRestore,
-    setSelectedReset,
-  ])
 
   return { handleQuickInit, handleGetPlan, handleExecutePlan }
 }

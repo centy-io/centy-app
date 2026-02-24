@@ -1,36 +1,13 @@
 import { useState, useCallback, useEffect } from 'react'
-import { create } from '@bufbuild/protobuf'
 import { useOrgIssueSave } from './useOrgIssueSave'
 import { useOrgIssueDelete } from './useOrgIssueDelete'
-import { centyClient } from '@/lib/grpc/client'
-import {
-  ListProjectsRequestSchema,
-  GetItemRequestSchema,
-  type Issue,
-} from '@/gen/centy_pb'
+import { fetchOrgIssue } from './fetchOrgIssue'
+import { type Issue } from '@/gen/centy_pb'
 import { genericItemToIssue } from '@/lib/genericItemToIssue'
 import { useStateManager } from '@/lib/state'
 
 function formatErr(err: unknown): string {
   return err instanceof Error ? err.message : 'Failed to connect to daemon'
-}
-
-async function fetchOrgIssue(orgSlug: string, issueId: string) {
-  const projectsRes = await centyClient.listProjects(
-    create(ListProjectsRequestSchema, { organizationSlug: orgSlug })
-  )
-  const orgProjects = projectsRes.projects.filter(p => p.initialized)
-  if (orgProjects.length === 0)
-    return { error: 'No initialized projects in this organization' }
-  const projectPath = orgProjects[0].path
-  const res = await centyClient.getItem(
-    create(GetItemRequestSchema, {
-      projectPath,
-      itemType: 'issues',
-      itemId: issueId,
-    })
-  )
-  return { projectPath, item: res.item, error: res.error }
 }
 
 function useOrgIssueEditState(issue: Issue | null) {

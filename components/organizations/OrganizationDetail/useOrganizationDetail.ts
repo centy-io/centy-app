@@ -1,36 +1,10 @@
 'use client'
 
 import { useState, useCallback, useEffect } from 'react'
-import { create } from '@bufbuild/protobuf'
 import { useOrgSave } from './useOrgSave'
 import { useOrgDelete } from './useOrgDelete'
-import { centyClient } from '@/lib/grpc/client'
-import {
-  GetOrganizationRequestSchema,
-  ListProjectsRequestSchema,
-  type Organization,
-  type ProjectInfo,
-} from '@/gen/centy_pb'
-import { isDaemonUnimplemented } from '@/lib/daemon-error'
-
-function formatErr(err: unknown): string {
-  const m = err instanceof Error ? err.message : 'Failed to connect to daemon'
-  return isDaemonUnimplemented(m)
-    ? 'Organizations feature is not available. Please update your daemon.'
-    : m
-}
-
-async function fetchOrgAndProjects(orgSlug: string) {
-  const res = await centyClient.getOrganization(
-    create(GetOrganizationRequestSchema, { slug: orgSlug })
-  )
-  if (!res.found || !res.organization)
-    return { error: 'Organization not found' }
-  const listRes = await centyClient.listProjects(
-    create(ListProjectsRequestSchema, { organizationSlug: orgSlug })
-  )
-  return { organization: res.organization, projects: listRes.projects }
-}
+import { fetchOrgAndProjects, formatOrgErr } from './fetchOrgAndProjects'
+import { type Organization, type ProjectInfo } from '@/gen/centy_pb'
 
 function useOrgEditState(organization: Organization | null) {
   const [isEditing, setIsEditing] = useState(false)
@@ -88,7 +62,7 @@ export function useOrganizationDetail(orgSlug: string) {
       editState.initFromOrg(org)
       setProjects(result.projects || [])
     } catch (err) {
-      setLoadError(formatErr(err))
+      setLoadError(formatOrgErr(err))
     } finally {
       setLoading(false)
     }
