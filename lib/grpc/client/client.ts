@@ -42,15 +42,12 @@ function wrapWithMetrics(
 // Create a proxy that intercepts calls for metrics and demo mode
 export const centyClient: Client<typeof CentyDaemon> = new Proxy(realClient, {
   get(target, prop: string) {
-    const clientRecord: Record<string, unknown> = target
-    // eslint-disable-next-line security/detect-object-injection
-    const value: unknown = clientRecord[prop]
+    const value: unknown = Reflect.get(target, prop)
 
     // If in demo mode, use mock handlers
     if (isDemoMode()) {
       if (typeof value === 'function') {
-        // eslint-disable-next-line security/detect-object-injection
-        const mockHandler = mockHandlers[prop]
+        const mockHandler = Reflect.get(mockHandlers, prop)
         if (mockHandler) {
           return wrapWithMetrics(async (...args: unknown[]) => {
             try {

@@ -43,10 +43,8 @@ export function MapFieldRenderer({
   }
 
   const handleRemove = (key: string) => {
-    const next = { ...map }
-    // eslint-disable-next-line security/detect-object-injection
-    delete next[key]
-    onChange(next)
+    const entries = Object.entries(map).filter(([k]) => k !== key)
+    onChange(Object.fromEntries(entries))
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
