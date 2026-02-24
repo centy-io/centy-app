@@ -147,6 +147,60 @@ function DeleteConfirmDialog({
   )
 }
 
+function OrgDetailHeader({
+  isEditing,
+  editName,
+  saving,
+  setIsEditing,
+  setShowDeleteConfirm,
+  handleSave,
+  handleCancelEdit,
+}: {
+  isEditing: boolean
+  editName: string
+  saving: boolean
+  setIsEditing: (v: boolean) => void
+  setShowDeleteConfirm: (v: boolean) => void
+  handleSave: () => Promise<void>
+  handleCancelEdit: () => void
+}) {
+  return (
+    <div className="organization-header">
+      <Link href={route({ pathname: '/organizations' })} className="back-link">
+        Back to Organizations
+      </Link>
+      <div className="organization-actions">
+        {!isEditing ? (
+          <>
+            <button onClick={() => setIsEditing(true)} className="edit-btn">
+              Edit
+            </button>
+            <button
+              onClick={() => setShowDeleteConfirm(true)}
+              className="delete-btn"
+            >
+              Delete
+            </button>
+          </>
+        ) : (
+          <>
+            <button onClick={handleCancelEdit} className="cancel-btn">
+              Cancel
+            </button>
+            <button
+              onClick={handleSave}
+              disabled={saving || !editName.trim()}
+              className="save-btn"
+            >
+              {saving ? 'Saving...' : 'Save'}
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  )
+}
+
 export function OrganizationDetailView(props: OrganizationDetailViewProps) {
   const {
     organization,
@@ -173,42 +227,15 @@ export function OrganizationDetailView(props: OrganizationDetailViewProps) {
 
   return (
     <div className="organization-detail">
-      <div className="organization-header">
-        <Link
-          href={route({ pathname: '/organizations' })}
-          className="back-link"
-        >
-          Back to Organizations
-        </Link>
-        <div className="organization-actions">
-          {!isEditing ? (
-            <>
-              <button onClick={() => setIsEditing(true)} className="edit-btn">
-                Edit
-              </button>
-              <button
-                onClick={() => setShowDeleteConfirm(true)}
-                className="delete-btn"
-              >
-                Delete
-              </button>
-            </>
-          ) : (
-            <>
-              <button onClick={handleCancelEdit} className="cancel-btn">
-                Cancel
-              </button>
-              <button
-                onClick={handleSave}
-                disabled={saving || !editName.trim()}
-                className="save-btn"
-              >
-                {saving ? 'Saving...' : 'Save'}
-              </button>
-            </>
-          )}
-        </div>
-      </div>
+      <OrgDetailHeader
+        isEditing={isEditing}
+        editName={editName}
+        saving={saving}
+        setIsEditing={setIsEditing}
+        setShowDeleteConfirm={setShowDeleteConfirm}
+        handleSave={handleSave}
+        handleCancelEdit={handleCancelEdit}
+      />
       {error && <DaemonErrorMessage error={error} />}
       {showDeleteConfirm && (
         <DeleteConfirmDialog
