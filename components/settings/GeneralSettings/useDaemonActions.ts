@@ -12,50 +12,27 @@ import {
 
 type StatusSetter = (msg: string | null) => void
 
-async function runShutdown(
+async function runDaemonOperation(
+  action: () => Promise<{ success: boolean; message?: string }>,
+  labels: { success: string; fail: string },
   setError: StatusSetter,
   setSuccess: StatusSetter,
-  setShuttingDown: (v: boolean) => void,
+  setRunning: (v: boolean) => void,
   setShowConfirm: (v: boolean) => void
 ) {
-  setShuttingDown(true)
+  setRunning(true)
   setError(null)
   try {
-    const request = create(ShutdownRequestSchema, {})
-    const response = await centyClient.shutdown(request)
+    const response = await action()
     if (response.success) {
-      setSuccess(response.message || 'Daemon is shutting down...')
+      setSuccess(response.message || labels.success)
     } else {
-      setError('Failed to shutdown daemon')
+      setError(labels.fail)
     }
   } catch (err) {
     setError(err instanceof Error ? err.message : 'Failed to connect to daemon')
   } finally {
-    setShuttingDown(false)
-    setShowConfirm(false)
-  }
-}
-
-async function runRestart(
-  setError: StatusSetter,
-  setSuccess: StatusSetter,
-  setRestarting: (v: boolean) => void,
-  setShowConfirm: (v: boolean) => void
-) {
-  setRestarting(true)
-  setError(null)
-  try {
-    const request = create(RestartRequestSchema, {})
-    const response = await centyClient.restart(request)
-    if (response.success) {
-      setSuccess(response.message || 'Daemon is restarting...')
-    } else {
-      setError('Failed to restart daemon')
-    }
-  } catch (err) {
-    setError(err instanceof Error ? err.message : 'Failed to connect to daemon')
-  } finally {
-    setRestarting(false)
+    setRunning(false)
     setShowConfirm(false)
   }
 }
@@ -81,7 +58,12 @@ export function useDaemonActions() {
 
   const handleShutdown = useCallback(
     () =>
-      runShutdown(
+      runDaemonOperation(
+        () => centyClient.shutdown(create(ShutdownRequestSchema, {})),
+        {
+          success: 'Daemon is shutting down...',
+          fail: 'Failed to shutdown daemon',
+        },
         setError,
         setSuccess,
         setShuttingDown,
@@ -92,7 +74,17 @@ export function useDaemonActions() {
 
   const handleRestart = useCallback(
     () =>
-      runRestart(setError, setSuccess, setRestarting, setShowRestartConfirm),
+      runDaemonOperation(
+        () => centyClient.restart(create(RestartRequestSchema, {})),
+        {
+          success: 'Daemon is restarting...',
+          fail: 'Failed to restart daemon',
+        },
+        setError,
+        setSuccess,
+        setRestarting,
+        setShowRestartConfirm
+      ),
     []
   )
 

@@ -3,6 +3,7 @@
 import '@/styles/components/MoveModal.css'
 import type { MoveModalProps } from './MoveModal.types'
 import { useMoveModal } from './useMoveModal'
+import { MoveModalSlugField } from './MoveModalSlugField'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 type S = ReturnType<typeof useMoveModal>
@@ -41,23 +42,7 @@ function MoveModalBody({ props, state }: { props: MoveModalProps; state: S }) {
         <label className="move-modal-label">Target Project</label>
         <ProjectSelector state={state} />
       </div>
-      {props.entityType === 'doc' && (
-        <div className="move-modal-field">
-          <label className="move-modal-label">
-            New Slug (optional - leave empty to keep current)
-          </label>
-          <input
-            type="text"
-            value={state.newSlug}
-            onChange={e => state.setNewSlug(e.target.value)}
-            placeholder={props.entityId}
-            className="move-modal-input"
-          />
-          <span className="move-modal-hint">
-            Change if the slug already exists in the target project
-          </span>
-        </div>
-      )}
+      <MoveModalSlugField props={props} state={state} />
       {state.selectedProjectInfo && (
         <div className="move-modal-preview">
           <span className="move-modal-preview-label">
@@ -72,10 +57,31 @@ function MoveModalBody({ props, state }: { props: MoveModalProps; state: S }) {
   )
 }
 
+function MoveModalFooter({
+  props,
+  state,
+}: {
+  props: MoveModalProps
+  state: S
+}) {
+  return (
+    <div className="move-modal-footer">
+      <button className="move-modal-cancel" onClick={props.onClose}>
+        Cancel
+      </button>
+      <button
+        className="move-modal-submit"
+        onClick={state.handleMove}
+        disabled={state.isDisabled}
+      >
+        {state.loading ? 'Moving...' : 'Move'}
+      </button>
+    </div>
+  )
+}
+
 export function MoveModal(props: MoveModalProps) {
   const state = useMoveModal(props)
-  const isDisabled =
-    state.loading || !state.selectedProject || state.projects.length === 0
   return (
     <div className="move-modal-overlay">
       <div className="move-modal" ref={state.modalRef}>
@@ -88,18 +94,7 @@ export function MoveModal(props: MoveModalProps) {
           </button>
         </div>
         <MoveModalBody props={props} state={state} />
-        <div className="move-modal-footer">
-          <button className="move-modal-cancel" onClick={props.onClose}>
-            Cancel
-          </button>
-          <button
-            className="move-modal-submit"
-            onClick={state.handleMove}
-            disabled={isDisabled}
-          >
-            {state.loading ? 'Moving...' : 'Move'}
-          </button>
-        </div>
+        <MoveModalFooter props={props} state={state} />
       </div>
     </div>
   )

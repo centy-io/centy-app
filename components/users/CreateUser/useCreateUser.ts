@@ -50,6 +50,19 @@ function useGitUsernames() {
   }
 }
 
+function useUserIdState(name: string) {
+  const [userId, setUserId] = useState('')
+  const [userIdManuallySet, setUserIdManuallySet] = useState(false)
+  useEffect(() => {
+    if (!userIdManuallySet && name) setUserId(generateSlug(name))
+  }, [name, userIdManuallySet])
+  const onUserIdChange = (v: string) => {
+    setUserId(v)
+    setUserIdManuallySet(true)
+  }
+  return { userId, onUserIdChange }
+}
+
 export function useCreateUser() {
   const router = useRouter()
   const { projectPath, isInitialized } = usePathContext()
@@ -60,6 +73,11 @@ export function useCreateUser() {
     onRemoveGitUsername,
     onGitUsernameChange,
   } = useGitUsernames()
+  const [name, setName] = useState('')
+  const { userId, onUserIdChange } = useUserIdState(name)
+  const [email, setEmail] = useState('')
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const usersListUrl: RouteLiteral = useMemo(() => {
     if (!projectContext) return route({ pathname: '/' })
@@ -68,17 +86,6 @@ export function useCreateUser() {
       query: projectContext,
     })
   }, [projectContext])
-
-  const [name, setName] = useState('')
-  const [userId, setUserId] = useState('')
-  const [userIdManuallySet, setUserIdManuallySet] = useState(false)
-  const [email, setEmail] = useState('')
-  const [saving, setSaving] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    if (!userIdManuallySet && name) setUserId(generateSlug(name))
-  }, [name, userIdManuallySet])
 
   const handleSubmit = useCallback(async () => {
     if (!projectPath || !name.trim()) return
@@ -118,11 +125,6 @@ export function useCreateUser() {
     onSave: handleSubmit,
     enabled: !saving && !!name.trim() && !!projectPath,
   })
-
-  const onUserIdChange = (v: string) => {
-    setUserId(v)
-    setUserIdManuallySet(true)
-  }
 
   return {
     projectPath,

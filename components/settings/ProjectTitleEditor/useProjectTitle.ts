@@ -10,27 +10,16 @@ import { ListProjectsRequestSchema, type ProjectInfo } from '@/gen/centy_pb'
 
 export type { TitleScope } from './TitleScope'
 
-interface TitleSetters {
-  setProjectInfo: (p: ProjectInfo) => void
-  setUserTitle: (t: string) => void
-  setProjectTitle: (t: string) => void
-}
-
-function applyProjectInfo(project: ProjectInfo, setters: TitleSetters) {
-  setters.setProjectInfo(project)
-  setters.setUserTitle(project.userTitle || '')
-  setters.setProjectTitle(project.projectTitle || '')
-}
-
 async function fetchTitleProjectInfo(
   projectPath: string,
-  setters: TitleSetters
+  applyProject: (p: ProjectInfo) => void
 ) {
   try {
-    const request = create(ListProjectsRequestSchema, {})
-    const response = await centyClient.listProjects(request)
+    const response = await centyClient.listProjects(
+      create(ListProjectsRequestSchema, {})
+    )
     const project = response.projects.find(p => p.path === projectPath)
-    if (project) applyProjectInfo(project, setters)
+    if (project) applyProject(project)
   } catch (err) {
     console.error('Failed to fetch project info:', err)
   }
@@ -78,12 +67,8 @@ export function useProjectTitle(projectPath: string) {
 
   useEffect(() => {
     if (!projectPath) return
-    fetchTitleProjectInfo(projectPath, {
-      setProjectInfo,
-      setUserTitle,
-      setProjectTitle,
-    })
-  }, [projectPath])
+    fetchTitleProjectInfo(projectPath, applyProject)
+  }, [projectPath, applyProject])
 
   const handleSave = useCallback(
     () =>
@@ -111,10 +96,12 @@ export function useProjectTitle(projectPath: string) {
 
   const currentTitle = scope === 'user' ? userTitle : projectTitle
   const setCurrentTitle = scope === 'user' ? setUserTitle : setProjectTitle
+  const storedUserTitle = (projectInfo ? projectInfo.userTitle : '') || ''
+  const storedProjectTitle = (projectInfo ? projectInfo.projectTitle : '') || ''
   const hasChanges =
     scope === 'user'
-      ? userTitle !== ((projectInfo ? projectInfo.userTitle : '') || '')
-      : projectTitle !== ((projectInfo ? projectInfo.projectTitle : '') || '')
+      ? userTitle !== storedUserTitle
+      : projectTitle !== storedProjectTitle
 
   return {
     projectInfo,

@@ -91,6 +91,7 @@ export function useMoveModal({
 
   const selectedProjectInfo = projects.find(p => p.path === selectedProject)
 
+  const isDisabled = loading || !selectedProject || projects.length === 0
   return {
     modalRef,
     projects,
@@ -103,5 +104,6 @@ export function useMoveModal({
     error,
     handleMove,
     selectedProjectInfo,
+    isDisabled,
   }
 }

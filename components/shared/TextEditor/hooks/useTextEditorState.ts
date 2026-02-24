@@ -53,8 +53,7 @@ export function useTextEditorState({
 }: TextEditorProps) {
   const resolvedFormat = format !== undefined ? format : 'md'
   const resolvedMode = mode !== undefined ? mode : 'edit'
-  const resolvedPlaceholder =
-    placeholder !== undefined ? placeholder : 'Write your content...'
+  const resolvedPlaceholder = placeholder || 'Write your content...'
   const [isRawMode, setIsRawMode] = useState(false)
 
   const markdownContent = useAsciidocConverter(value, resolvedFormat)

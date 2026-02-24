@@ -13,17 +13,17 @@ import {
 import { isDaemonUnimplemented } from '@/lib/daemon-error'
 import { OperationError } from '@/lib/errors'
 
+interface EditState {
+  editName: string
+  editEmail: string
+  editGitUsernames: string[]
+}
+
 function formatError(err: unknown): string {
   const msg = err instanceof Error ? err.message : 'Failed to connect to daemon'
   return isDaemonUnimplemented(msg)
     ? 'User management is not yet available. Please update your daemon to the latest version.'
     : msg
-}
-
-interface EditState {
-  editName: string
-  editEmail: string
-  editGitUsernames: string[]
 }
 
 function useSaveUser(
