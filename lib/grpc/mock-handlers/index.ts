@@ -52,7 +52,7 @@ import {
   listUncompactedIssues,
   getInstruction,
   getCompact,
-  spawnAgent,
+  spawnWorkspace,
   listItemTypes,
 } from './stub'
 import {
@@ -129,7 +129,7 @@ export const mockHandlers: MockHandlers = {
   listUncompactedIssues,
   getInstruction,
   getCompact,
-  spawnAgent,
+  spawnAgent: spawnWorkspace,
   listItemTypes,
   openInTempVscode,
   openInTempTerminal,
