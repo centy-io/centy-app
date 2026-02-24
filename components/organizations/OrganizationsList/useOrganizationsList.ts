@@ -24,6 +24,36 @@ import {
 import type { ContextMenuItem } from '@/components/shared/ContextMenu'
 import { isDaemonUnimplemented } from '@/lib/daemon-error'
 
+type SortPreset = 'name-asc' | 'name-desc' | 'projects-desc' | 'projects-asc'
+
+const SORT_SESSION_KEY = 'centy-orgs-sort'
+
+function isSortPreset(value: string): value is SortPreset {
+  return (
+    value === 'name-asc' ||
+    value === 'name-desc' ||
+    value === 'projects-desc' ||
+    value === 'projects-asc'
+  )
+}
+
+function getSortingForPreset(preset: SortPreset): SortingState {
+  if (preset === 'name-asc') return [{ id: 'name', desc: false }]
+  if (preset === 'name-desc') return [{ id: 'name', desc: true }]
+  if (preset === 'projects-desc') return [{ id: 'projectCount', desc: true }]
+  return [{ id: 'projectCount', desc: false }]
+}
+
+function getInitialSortPreset(): SortPreset {
+  try {
+    const stored = sessionStorage.getItem(SORT_SESSION_KEY)
+    if (stored !== null && isSortPreset(stored)) return stored
+  } catch {
+    // ignore
+  }
+  return 'name-asc'
+}
+
 // eslint-disable-next-line max-lines-per-function
 export function useOrganizationsList() {
   const router = useRouter()
@@ -36,8 +66,23 @@ export function useOrganizationsList() {
   )
   const [deleteError, setDeleteError] = useState<string | null>(null)
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null)
-  const [sorting, setSorting] = useState<SortingState>([])
+  const initialPreset = useMemo(getInitialSortPreset, [])
+  const [sortPreset, setSortPresetState] = useState<SortPreset>(initialPreset)
+  const [sorting, setSorting] = useState<SortingState>(
+    getSortingForPreset(initialPreset)
+  )
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+
+  const setSortPreset = useCallback((raw: string) => {
+    if (!isSortPreset(raw)) return
+    setSortPresetState(raw)
+    setSorting(getSortingForPreset(raw))
+    try {
+      sessionStorage.setItem(SORT_SESSION_KEY, raw)
+    } catch {
+      // ignore
+    }
+  }, [])
 
   const columns = useMemo(() => getColumns(), [])
 
@@ -152,6 +197,8 @@ export function useOrganizationsList() {
     contextMenu,
     contextMenuItems,
     table,
+    sortPreset,
+    setSortPreset,
     fetchOrganizations,
     handleDelete,
     handleContextMenu,

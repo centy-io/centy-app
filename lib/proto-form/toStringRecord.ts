@@ -5,14 +5,10 @@ export function toStringRecord(v: unknown): Record<string, string> {
     typeof v === 'object' &&
     !Array.isArray(v)
   ) {
-    const result: Record<string, string> = {}
-    for (const [k, val] of Object.entries(v)) {
-      if (typeof val === 'string') {
-        // eslint-disable-next-line security/detect-object-injection
-        result[k] = val
-      }
-    }
-    return result
+    const entries = Object.entries(v).filter(
+      (pair): pair is [string, string] => typeof pair[1] === 'string'
+    )
+    return Object.fromEntries(entries)
   }
   return {}
 }
