@@ -7,7 +7,7 @@ import { centyClient } from '@/lib/grpc/client'
 import { SyncUsersRequestSchema, type GitContributor } from '@/gen/centy_pb'
 import { usePathContext } from '@/components/providers/PathContextProvider'
 import { isDaemonUnimplemented } from '@/lib/daemon-error'
-import { OperationError } from '@/lib/errors'
+import { OperationError } from '@/lib/OperationError'
 
 export type { SyncState } from './SyncState'
 
