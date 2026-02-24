@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 'use client'
 
 import Link from 'next/link'
@@ -6,6 +7,13 @@ import { useOrganizationsList } from './useOrganizationsList'
 import { OrganizationsTable } from './OrganizationsTable'
 import { ContextMenu } from '@/components/shared/ContextMenu'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
+
+const SORT_OPTIONS: { value: string; label: string }[] = [
+  { value: 'name-asc', label: 'Name A–Z' },
+  { value: 'name-desc', label: 'Name Z–A' },
+  { value: 'projects-desc', label: 'Most Projects' },
+  { value: 'projects-asc', label: 'Fewest Projects' },
+]
 
 // eslint-disable-next-line max-lines-per-function
 export function OrganizationsList() {
@@ -29,6 +37,25 @@ export function OrganizationsList() {
           >
             + New Organization
           </Link>
+        </div>
+      </div>
+      <div className="organizations-toolbar">
+        <div className="sort-control">
+          <label className="sort-label" htmlFor="orgs-sort-select">
+            Sort by
+          </label>
+          <select
+            id="orgs-sort-select"
+            className="sort-select"
+            value={state.sortPreset}
+            onChange={e => state.setSortPreset(e.target.value)}
+          >
+            {SORT_OPTIONS.map(opt => (
+              <option key={opt.value} value={opt.value} className="sort-option">
+                {opt.label}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
       {state.error && <DaemonErrorMessage error={state.error} />}
