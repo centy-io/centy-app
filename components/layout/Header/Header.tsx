@@ -7,6 +7,7 @@ import { useMobileMenu } from './useMobileMenu'
 import { ContextLink } from './ContextLink'
 import { DesktopNav } from './DesktopNav'
 import { MobileMenu } from './MobileMenu'
+import { MobileMenuToggle } from './MobileMenuToggle'
 import { DaemonStatusIndicator } from '@/components/shared/DaemonStatusIndicator'
 import { ThemeToggle } from '@/components/shared/ThemeToggle'
 import { OrgSwitcher } from '@/components/organizations/OrgSwitcher'
@@ -55,16 +56,7 @@ export function Header() {
           <OrgSwitcher />
           {selectedOrgSlug !== undefined && <ProjectSelector />}
         </div>
-        <button
-          className={`mobile-menu-toggle ${mobileMenuOpen ? 'open' : ''}`}
-          onClick={toggleMobileMenu}
-          aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
-          aria-expanded={mobileMenuOpen}
-        >
-          <span className="hamburger-line" />
-          <span className="hamburger-line" />
-          <span className="hamburger-line" />
-        </button>
+        <MobileMenuToggle isOpen={mobileMenuOpen} onToggle={toggleMobileMenu} />
       </div>
       <p className="header-tagline">
         Local-first issue and documentation tracker
