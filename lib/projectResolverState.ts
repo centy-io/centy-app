@@ -4,6 +4,7 @@ import { create } from '@bufbuild/protobuf'
 import type { ProjectCache } from './ProjectCache'
 import { centyClient } from './grpc/client'
 import { ListProjectsRequestSchema, type ProjectInfo } from '@/gen/centy_pb'
+import { UnknownError } from '@/lib/errors'
 
 const CACHE_TTL_MS = 30_000 // 30 seconds
 let projectCache: ProjectCache | null = null
@@ -35,7 +36,7 @@ export const projectResolverState = {
         )
         return projectCache.projects
       }
-      throw error instanceof Error ? error : new Error(String(error))
+      throw error instanceof Error ? error : new UnknownError(error)
     }
   },
 

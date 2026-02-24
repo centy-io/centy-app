@@ -1,6 +1,7 @@
 'use client'
 
 import { startSpan } from '@sentry/nextjs'
+import { UnknownError } from '@/lib/errors'
 
 /**
  * Measure async operation duration using Sentry spans
@@ -23,7 +24,7 @@ export async function measureAsync<T>(
         return result
       } catch (error) {
         span.setStatus({ code: 2, message: 'error' })
-        throw error instanceof Error ? error : new Error(String(error))
+        throw error instanceof Error ? error : new UnknownError(error)
       }
     }
   )

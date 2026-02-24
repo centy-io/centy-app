@@ -7,6 +7,7 @@ import { centyClient } from '@/lib/grpc/client'
 import { SyncUsersRequestSchema, type GitContributor } from '@/gen/centy_pb'
 import { usePathContext } from '@/components/providers/PathContextProvider'
 import { isDaemonUnimplemented } from '@/lib/daemon-error'
+import { OperationError } from '@/lib/errors'
 
 export type { SyncState } from './SyncState'
 
@@ -39,7 +40,7 @@ export function useSyncUsers() {
         setWouldSkip(res.wouldSkip)
         setState('preview')
       } else {
-        setError(formatError(new Error(res.error || 'Failed to fetch')))
+        setError(formatError(new OperationError(res.error || 'Failed to fetch')))
         setState('error')
       }
     } catch (err) {
@@ -66,7 +67,7 @@ export function useSyncUsers() {
         setSyncErrors(res.errors)
         setState('success')
       } else {
-        setError(formatError(new Error(res.error || 'Failed to sync')))
+        setError(formatError(new OperationError(res.error || 'Failed to sync')))
         setState('error')
       }
     } catch (err) {

@@ -105,8 +105,7 @@ export function useCreateUser() {
     setGitUsernames(gitUsernames.filter((_, idx) => idx !== i))
   const onGitUsernameChange = (i: number, v: string) => {
     const u = [...gitUsernames]
-    // eslint-disable-next-line security/detect-object-injection
-    u[i] = v
+    u.splice(i, 1, v)
     setGitUsernames(u)
   }
 
