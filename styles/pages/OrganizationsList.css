@@ -19,6 +19,41 @@
   color: var(--color-gray-900);
 }
 
+/* Toolbar */
+.organizations-toolbar {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--space-4);
+}
+
+.sort-control {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.sort-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-gray-600);
+}
+
+.sort-select {
+  font-size: 0.875rem;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-card);
+  color: var(--color-gray-900);
+  cursor: pointer;
+}
+
+.sort-select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-light);
+}
+
 /* Organizations Table */
 .organizations-table {
   overflow-x: auto;
