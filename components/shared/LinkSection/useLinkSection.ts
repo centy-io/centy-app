@@ -10,79 +10,76 @@ import {
 } from '@/gen/centy_pb'
 import { usePathContext } from '@/components/providers/PathContextProvider'
 
-function toProtoTargetType(entityType: 'issue' | 'doc') {
+type SetState<T> = React.Dispatch<React.SetStateAction<T>>
+
+function toProto(entityType: 'issue' | 'doc') {
   return entityType === 'issue' ? LinkTargetType.ISSUE : LinkTargetType.DOC
 }
 
-function useFetchLinks(
+async function fetchLinksApi(
   projectPath: string,
   entityId: string,
   entityType: 'issue' | 'doc',
-  setLinks: React.Dispatch<React.SetStateAction<LinkType[]>>,
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>,
-  setError: React.Dispatch<React.SetStateAction<string | null>>
+  setLinks: SetState<LinkType[]>,
+  setLoading: SetState<boolean>,
+  setError: SetState<string | null>
 ) {
-  return useCallback(async () => {
-    if (!projectPath || !entityId) return
-    setLoading(true)
-    setError(null)
-    try {
-      const request = create(ListLinksRequestSchema, {
+  if (!projectPath || !entityId) return
+  setLoading(true)
+  setError(null)
+  try {
+    const response = await centyClient.listLinks(
+      create(ListLinksRequestSchema, {
         projectPath,
         entityId,
-        entityType: toProtoTargetType(entityType),
+        entityType: toProto(entityType),
       })
-      const response = await centyClient.listLinks(request)
-      setLinks(response.links)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load links')
-    } finally {
-      setLoading(false)
-    }
-  }, [projectPath, entityId, entityType, setLinks, setLoading, setError])
+    )
+    setLinks(response.links)
+  } catch (err) {
+    setError(err instanceof Error ? err.message : 'Failed to load links')
+  } finally {
+    setLoading(false)
+  }
 }
 
-function useDeleteLink(
+async function deleteLinkApi(
   projectPath: string,
   entityId: string,
   entityType: 'issue' | 'doc',
-  setLinks: React.Dispatch<React.SetStateAction<LinkType[]>>,
-  setDeletingLinkId: React.Dispatch<React.SetStateAction<string | null>>,
-  setError: React.Dispatch<React.SetStateAction<string | null>>
+  link: LinkType,
+  setLinks: SetState<LinkType[]>,
+  setDeletingId: SetState<string | null>,
+  setError: SetState<string | null>
 ) {
-  return useCallback(
-    async (link: LinkType) => {
-      if (!projectPath || !entityId) return
-      setDeletingLinkId(`${link.targetId}-${link.linkType}`)
-      setError(null)
-      try {
-        const request = create(DeleteLinkRequestSchema, {
-          projectPath,
-          sourceId: entityId,
-          sourceType: toProtoTargetType(entityType),
-          targetId: link.targetId,
-          targetType: link.targetType,
-          linkType: link.linkType,
-        })
-        const response = await centyClient.deleteLink(request)
-        if (response.success) {
-          setLinks(prev =>
-            prev.filter(
-              l =>
-                !(l.targetId === link.targetId && l.linkType === link.linkType)
-            )
-          )
-        } else {
-          setError(response.error || 'Failed to delete link')
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to delete link')
-      } finally {
-        setDeletingLinkId(null)
-      }
-    },
-    [projectPath, entityId, entityType, setLinks, setDeletingLinkId, setError]
-  )
+  if (!projectPath || !entityId) return
+  setDeletingId(`${link.targetId}-${link.linkType}`)
+  setError(null)
+  try {
+    const response = await centyClient.deleteLink(
+      create(DeleteLinkRequestSchema, {
+        projectPath,
+        sourceId: entityId,
+        sourceType: toProto(entityType),
+        targetId: link.targetId,
+        targetType: link.targetType,
+        linkType: link.linkType,
+      })
+    )
+    if (response.success) {
+      setLinks(prev =>
+        prev.filter(
+          l => !(l.targetId === link.targetId && l.linkType === link.linkType)
+        )
+      )
+    } else {
+      setError(response.error || 'Failed to delete link')
+    }
+  } catch (err) {
+    setError(err instanceof Error ? err.message : 'Failed to delete link')
+  } finally {
+    setDeletingId(null)
+  }
 }
 
 export function useLinkSection(entityId: string, entityType: 'issue' | 'doc') {
@@ -93,21 +90,30 @@ export function useLinkSection(entityId: string, entityType: 'issue' | 'doc') {
   const [error, setError] = useState<string | null>(null)
   const [showAddModal, setShowAddModal] = useState(false)
   const [deletingLinkId, setDeletingLinkId] = useState<string | null>(null)
-  const fetchLinks = useFetchLinks(
-    projectPath,
-    entityId,
-    entityType,
-    setLinks,
-    setLoading,
-    setError
+  const fetchLinks = useCallback(
+    () =>
+      fetchLinksApi(
+        projectPath,
+        entityId,
+        entityType,
+        setLinks,
+        setLoading,
+        setError
+      ),
+    [projectPath, entityId, entityType]
   )
-  const handleDeleteLink = useDeleteLink(
-    projectPath,
-    entityId,
-    entityType,
-    setLinks,
-    setDeletingLinkId,
-    setError
+  const handleDeleteLink = useCallback(
+    (link: LinkType) =>
+      deleteLinkApi(
+        projectPath,
+        entityId,
+        entityType,
+        link,
+        setLinks,
+        setDeletingLinkId,
+        setError
+      ),
+    [projectPath, entityId, entityType]
   )
   useEffect(() => {
     fetchLinks()

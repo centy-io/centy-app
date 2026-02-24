@@ -55,13 +55,13 @@ function WorkspaceFormFields({ state }: { state: WorkspaceState }) {
           onChange={e => state.setTtlHours(Number(e.target.value))}
           className="standalone-modal-select"
         >
-          {TTL_OPTIONS.map(option => (
+          {TTL_OPTIONS.map(o => (
             <option
               className="standalone-modal-option"
-              key={option.value}
-              value={option.value}
+              key={o.value}
+              value={o.value}
             >
-              {option.label}
+              {o.label}
             </option>
           ))}
         </select>

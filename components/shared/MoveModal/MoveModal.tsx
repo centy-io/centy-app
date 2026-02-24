@@ -5,9 +5,9 @@ import type { MoveModalProps } from './MoveModal.types'
 import { useMoveModal } from './useMoveModal'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
-type MoveModalState = ReturnType<typeof useMoveModal>
+type S = ReturnType<typeof useMoveModal>
 
-function ProjectSelector({ state }: { state: MoveModalState }) {
+function ProjectSelector({ state }: { state: S }) {
   if (state.loadingProjects)
     return <div className="move-modal-loading">Loading projects...</div>
   if (state.projects.length === 0)
@@ -18,27 +18,16 @@ function ProjectSelector({ state }: { state: MoveModalState }) {
       onChange={e => state.setSelectedProject(e.target.value)}
       className="move-modal-select"
     >
-      {state.projects.map(project => (
-        <option
-          className="move-modal-option"
-          key={project.path}
-          value={project.path}
-        >
-          {project.userTitle || project.projectTitle || project.name} (
-          {project.displayPath})
+      {state.projects.map(p => (
+        <option className="move-modal-option" key={p.path} value={p.path}>
+          {p.userTitle || p.projectTitle || p.name} ({p.displayPath})
         </option>
       ))}
     </select>
   )
 }
 
-function MoveModalBody({
-  props,
-  state,
-}: {
-  props: MoveModalProps
-  state: MoveModalState
-}) {
+function MoveModalBody({ props, state }: { props: MoveModalProps; state: S }) {
   return (
     <div className="move-modal-body">
       {state.error && (

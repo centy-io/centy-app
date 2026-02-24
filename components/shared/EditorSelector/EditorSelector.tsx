@@ -7,19 +7,15 @@ import { VscodeIcon, TerminalIcon } from './EditorIcons'
 import { EditorDropdown } from './EditorDropdown'
 import { EditorType } from '@/gen/centy_pb'
 
-type EditorSelectorState = ReturnType<typeof useEditorSelector>
-
-interface PrimaryButtonProps {
-  state: EditorSelectorState
-  resolvedDisabled: boolean
-  resolvedLoading: boolean
-}
-
 function PrimaryButton({
   state,
   resolvedDisabled,
   resolvedLoading,
-}: PrimaryButtonProps) {
+}: {
+  state: ReturnType<typeof useEditorSelector>
+  resolvedDisabled: boolean
+  resolvedLoading: boolean
+}) {
   const isTerminal = state.preferredEditor === EditorType.TERMINAL
   const btnClass = `editor-primary-btn ${isTerminal ? 'terminal' : 'vscode'}`
   const title = state.preferredEditorAvailable
@@ -74,7 +70,7 @@ export function EditorSelector({
     return null
   }
 
-  const isTerminal = state.preferredEditor === EditorType.TERMINAL
+  const dropdownBtnClass = `editor-dropdown-btn ${state.preferredEditor === EditorType.TERMINAL ? 'terminal' : 'vscode'}`
   return (
     <div className="editor-selector" ref={state.dropdownRef}>
       <div className="editor-selector-button-group">
@@ -84,7 +80,7 @@ export function EditorSelector({
           resolvedLoading={resolvedLoading}
         />
         <button
-          className={`editor-dropdown-btn ${isTerminal ? 'terminal' : 'vscode'}`}
+          className={dropdownBtnClass}
           onClick={() => state.setShowDropdown(!state.showDropdown)}
           disabled={resolvedDisabled || resolvedLoading}
           aria-label="Select editor"
