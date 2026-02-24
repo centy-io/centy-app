@@ -52,12 +52,8 @@ function WorkspaceFormFields({ state }: { state: WorkspaceState }) {
           onChange={e => state.setTtlHours(Number(e.target.value))}
           className="standalone-modal-select"
         >
-          {TTL_OPTIONS.map(o => (
-            <option
-              key={o.value}
-              value={o.value}
-              className="standalone-modal-option"
-            >
+          {TTL_OPTIONS.map((o, i) => (
+            <option key={i} value={o.value} className="standalone-modal-option">
               {o.label}
             </option>
           ))}
@@ -74,7 +70,7 @@ function WorkspaceFormFields({ state }: { state: WorkspaceState }) {
 
 export function StandaloneWorkspaceModal(props: StandaloneWorkspaceModalProps) {
   const state = useStandaloneWorkspace(props)
-  const err = state.error
+  const e = state.error
   return (
     <div className="standalone-modal-overlay">
       <div className="standalone-modal" ref={state.modalRef}>
@@ -85,11 +81,8 @@ export function StandaloneWorkspaceModal(props: StandaloneWorkspaceModalProps) {
           </button>
         </div>
         <div className="standalone-modal-body">
-          {err && (
-            <DaemonErrorMessage
-              error={err}
-              className="standalone-modal-error"
-            />
+          {e && (
+            <DaemonErrorMessage error={e} className="standalone-modal-error" />
           )}
           <WorkspaceFormFields state={state} />
         </div>
