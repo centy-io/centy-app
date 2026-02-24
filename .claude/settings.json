@@ -162,7 +162,10 @@
       "Bash(pnpm lint:fix:*)",
       "Bash(pnpm knip:*)",
       "Bash(npx eslint:*)",
-      "Bash(npx vitest run:*)"
+      "Bash(npx vitest run:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(centy:*)"
     ],
     "deny": ["Bash(npm install)", "Bash(gh issue create:*)"]
   },
