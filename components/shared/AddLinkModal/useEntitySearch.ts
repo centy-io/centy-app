@@ -3,11 +3,9 @@ import { create } from '@bufbuild/protobuf'
 import type { EntityItem } from './AddLinkModal.types'
 import { filterAndMapIssues, filterAndMapDocs } from './entityFilters'
 import { centyClient } from '@/lib/grpc/client'
-import {
-  ListIssuesRequestSchema,
-  ListDocsRequestSchema,
-  type Link as LinkType,
-} from '@/gen/centy_pb'
+import { ListItemsRequestSchema, type Link as LinkType } from '@/gen/centy_pb'
+import { genericItemToIssue } from '@/lib/genericItemToIssue'
+import { genericItemToDoc } from '@/lib/genericItemToDoc'
 
 export function useEntitySearch(
   projectPath: string,
@@ -28,20 +26,26 @@ export function useEntitySearch(
     try {
       let results: EntityItem[] = []
       if (targetTypeFilter === 'issue') {
-        const request = create(ListIssuesRequestSchema, { projectPath })
-        const response = await centyClient.listIssues(request)
+        const request = create(ListItemsRequestSchema, {
+          projectPath,
+          itemType: 'issues',
+        })
+        const response = await centyClient.listItems(request)
         results = filterAndMapIssues(
-          response.issues,
+          response.items.map(genericItemToIssue),
           entityId,
           existingLinks,
           selectedLinkType,
           searchQuery
         )
       } else if (targetTypeFilter === 'doc') {
-        const request = create(ListDocsRequestSchema, { projectPath })
-        const response = await centyClient.listDocs(request)
+        const request = create(ListItemsRequestSchema, {
+          projectPath,
+          itemType: 'docs',
+        })
+        const response = await centyClient.listItems(request)
         results = filterAndMapDocs(
-          response.docs,
+          response.items.map(genericItemToDoc),
           entityId,
           existingLinks,
           selectedLinkType,

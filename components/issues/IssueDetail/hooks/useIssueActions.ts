@@ -1,13 +1,15 @@
+/* eslint-disable max-lines */
 import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { create } from '@bufbuild/protobuf'
 import type { RouteLiteral } from 'nextjs-routes'
 import { centyClient } from '@/lib/grpc/client'
 import {
-  UpdateIssueRequestSchema,
-  DeleteIssueRequestSchema,
+  UpdateItemRequestSchema,
+  DeleteItemRequestSchema,
   type Issue,
 } from '@/gen/centy_pb'
+import { genericItemToIssue } from '@/lib/genericItemToIssue'
 
 interface UseIssueActionsParams {
   projectPath: string
@@ -43,17 +45,18 @@ export function useIssueActions({
       setError(null)
 
       try {
-        const request = create(UpdateIssueRequestSchema, {
+        const request = create(UpdateItemRequestSchema, {
           projectPath,
-          issueId: issueNumber,
+          itemType: 'issues',
+          itemId: issueNumber,
           title: editState.editTitle,
-          description: editState.editDescription,
+          body: editState.editDescription,
           status: editState.editStatus,
           priority: editState.editPriority,
         })
-        const response = await centyClient.updateIssue(request)
-        if (response.success && response.issue) {
-          setIssue(response.issue)
+        const response = await centyClient.updateItem(request)
+        if (response.success && response.item) {
+          setIssue(genericItemToIssue(response.item))
           editState.setIsEditing(false)
         } else {
           setError(response.error || 'Failed to update issue')
@@ -75,11 +78,12 @@ export function useIssueActions({
     setError(null)
 
     try {
-      const request = create(DeleteIssueRequestSchema, {
+      const request = create(DeleteItemRequestSchema, {
         projectPath,
-        issueId: issueNumber,
+        itemType: 'issues',
+        itemId: issueNumber,
       })
-      const response = await centyClient.deleteIssue(request)
+      const response = await centyClient.deleteItem(request)
       if (response.success) {
         router.push(issuesListUrl)
       } else {

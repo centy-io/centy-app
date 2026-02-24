@@ -1,14 +1,10 @@
 import { useState, useCallback, useEffect } from 'react'
 import { create } from '@bufbuild/protobuf'
+import type { AggregateDoc } from './AggregateDoc'
 import { centyClient } from '@/lib/grpc/client'
-import { ListDocsRequestSchema, type Doc } from '@/gen/centy_pb'
+import { ListItemsRequestSchema } from '@/gen/centy_pb'
+import { genericItemToDoc } from '@/lib/genericItemToDoc'
 import { getProjects } from '@/lib/project-resolver'
-
-export interface AggregateDoc extends Doc {
-  projectName: string
-  orgSlug: string | null
-  projectPath: string
-}
 
 export function useAggregateDocsData() {
   const [docs, setDocs] = useState<AggregateDoc[]>([])
@@ -25,12 +21,13 @@ export function useAggregateDocsData() {
 
       const docPromises = initializedProjects.map(async project => {
         try {
-          const request = create(ListDocsRequestSchema, {
+          const request = create(ListItemsRequestSchema, {
             projectPath: project.path,
+            itemType: 'docs',
           })
-          const response = await centyClient.listDocs(request)
-          return response.docs.map(doc => ({
-            ...doc,
+          const response = await centyClient.listItems(request)
+          return response.items.map(item => ({
+            ...genericItemToDoc(item),
             projectName: project.name,
             orgSlug: project.organizationSlug || null,
             projectPath: project.path,

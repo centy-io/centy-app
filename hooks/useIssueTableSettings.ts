@@ -8,10 +8,10 @@ import {
   getServerSnapshot,
   updateSettings,
 } from './useIssueTableSettings.store'
-import { useProject } from '@/components/providers/ProjectProvider'
+import { usePathContext } from '@/components/providers/PathContextProvider'
 
 export function useIssueTableSettings() {
-  const { projectPath } = useProject()
+  const { projectPath } = usePathContext()
 
   const settings = useSyncExternalStore(
     useCallback(listener => subscribe(projectPath, listener), [projectPath]),

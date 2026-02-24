@@ -4,17 +4,17 @@ import type { Issue } from '@/gen/centy_pb'
 
 const columnHelper = createColumnHelper<Issue>()
 
-const PRIORITY_ORDER: Record<string, number> = {
-  high: 1,
-  critical: 1,
-  p1: 1,
-  medium: 2,
-  normal: 2,
-  p2: 2,
-  low: 3,
-  p3: 3,
-  unknown: 4,
-}
+const PRIORITY_ORDER = new Map<string, number>([
+  ['high', 1],
+  ['critical', 1],
+  ['p1', 1],
+  ['medium', 2],
+  ['normal', 2],
+  ['p2', 2],
+  ['low', 3],
+  ['p3', 3],
+  ['unknown', 4],
+])
 
 export function createPriorityColumn() {
   return columnHelper.accessor(
@@ -40,8 +40,7 @@ export function createPriorityColumn() {
       sortingFn: (rowA, rowB) => {
         const a = String(rowA.getValue('priority')).toLowerCase()
         const b = String(rowB.getValue('priority')).toLowerCase()
-        // eslint-disable-next-line security/detect-object-injection
-        return (PRIORITY_ORDER[a] || 4) - (PRIORITY_ORDER[b] || 4)
+        return (PRIORITY_ORDER.get(a) || 4) - (PRIORITY_ORDER.get(b) || 4)
       },
     }
   )

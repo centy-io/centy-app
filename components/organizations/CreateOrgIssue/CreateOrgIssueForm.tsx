@@ -1,10 +1,11 @@
 'use client'
 
-import type { CreateOrgIssueFormProps } from './CreateOrgIssue.types'
+import type { CreateOrgIssueFormProps } from './CreateOrgIssueForm.types'
+import { OrgIssuePrioritySelect } from './OrgIssuePrioritySelect'
+import { OrgIssueStatusSelect } from './OrgIssueStatusSelect'
 import { TextEditor } from '@/components/shared/TextEditor'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
-// eslint-disable-next-line max-lines-per-function
 export function CreateOrgIssueForm({
   title,
   setTitle,
@@ -51,43 +52,13 @@ export function CreateOrgIssueForm({
         />
       </div>
 
-      <div className="form-group">
-        <label className="form-label" htmlFor="org-issue-priority">
-          Priority:
-        </label>
-        <select
-          className="form-select"
-          id="org-issue-priority"
-          value={priority}
-          onChange={e => setPriority(Number(e.target.value))}
-        >
-          <option className="form-option" value={1}>High</option>
-          <option className="form-option" value={2}>Medium</option>
-          <option className="form-option" value={3}>Low</option>
-        </select>
-      </div>
+      <OrgIssuePrioritySelect priority={priority} setPriority={setPriority} />
 
-      <div className="form-group">
-        <label className="form-label" htmlFor="org-issue-status">
-          Status:
-        </label>
-        <select
-          className="form-select"
-          id="org-issue-status"
-          value={status}
-          onChange={e => setStatus(e.target.value)}
-        >
-          {stateOptions.map(option => (
-            <option
-              className="form-option"
-              key={option.value}
-              value={option.value}
-            >
-              {option.label}
-            </option>
-          ))}
-        </select>
-      </div>
+      <OrgIssueStatusSelect
+        status={status}
+        setStatus={setStatus}
+        stateOptions={stateOptions}
+      />
 
       {error && <DaemonErrorMessage error={error} />}
 

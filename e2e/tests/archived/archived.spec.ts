@@ -91,11 +91,20 @@ test.describe('Archived Projects Page', () => {
     }) => {
       await navigateTo(page, '/archived')
 
-      // Wait for content to load
+      // Wait for the full archived list to be stable before asserting the
+      // remove-all button. The button is rendered in the same render pass as
+      // the list, but a single `.archived-item` becoming visible can race
+      // ahead of the surrounding container paint. Waiting for the list
+      // container itself to be visible (which wraps both the items and the
+      // remove-all button) provides a more reliable synchronization point.
+      await expect(page.locator('.archived-projects')).toBeVisible()
       await expect(page.locator('.archived-item')).toBeVisible()
 
-      // Should show remove all button
-      await expect(page.locator('.remove-all-btn')).toBeVisible()
+      // Now assert the button with an explicit timeout so the test does not
+      // fail if the button appears fractionally after the item.
+      await expect(page.locator('.remove-all-btn')).toBeVisible({
+        timeout: 5000,
+      })
     })
 
     test('should show confirmation when clicking remove', async ({ page }) => {

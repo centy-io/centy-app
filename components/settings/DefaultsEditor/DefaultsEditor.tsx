@@ -91,10 +91,8 @@ export function DefaultsEditor({
   }
 
   const handleRemove = (key: string) => {
-    const newDefaults = { ...value }
-    // eslint-disable-next-line security/detect-object-injection
-    delete newDefaults[key]
-    onChange(newDefaults)
+    const { [key]: _removed, ...rest } = value
+    onChange(rest)
   }
 
   const handleValueChange = (key: string, newVal: string) => {
@@ -110,8 +108,9 @@ export function DefaultsEditor({
     handleAdd()
   }
 
-  // eslint-disable-next-line security/detect-object-injection
-  const availableKeys = resolvedSuggestedKeys.filter(k => !value[k])
+  const availableKeys = resolvedSuggestedKeys.filter(
+    k => !Object.hasOwn(value, k)
+  )
 
   return (
     <div className="defaults-editor">

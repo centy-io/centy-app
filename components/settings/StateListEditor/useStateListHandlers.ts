@@ -14,8 +14,11 @@ export function useStateListHandlers(
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
 
   const getColor = (state: string) => {
-    // eslint-disable-next-line security/detect-object-injection
-    return stateColors[state] || DEFAULT_STATE_COLORS[state] || '#888888'
+    return (
+      new Map(Object.entries(stateColors)).get(state) ||
+      new Map(Object.entries(DEFAULT_STATE_COLORS)).get(state) ||
+      '#888888'
+    )
   }
 
   const handleAddState = () => {
@@ -30,9 +33,7 @@ export function useStateListHandlers(
     if (state === defaultState) return
     const newStates = states.filter(s => s !== state)
     onStatesChange(newStates)
-    const newColors = { ...stateColors }
-    // eslint-disable-next-line security/detect-object-injection
-    delete newColors[state]
+    const { [state]: _removed, ...newColors } = stateColors
     onColorsChange(newColors)
   }
 

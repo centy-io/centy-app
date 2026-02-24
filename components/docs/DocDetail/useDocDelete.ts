@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation'
 import type { RouteLiteral } from 'nextjs-routes'
 import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
-import { DeleteDocRequestSchema } from '@/gen/centy_pb'
+import { DeleteItemRequestSchema } from '@/gen/centy_pb'
 
 interface UseDocDeleteParams {
   projectPath: string
@@ -29,11 +29,12 @@ export function useDocDelete({
     setError(null)
 
     try {
-      const request = create(DeleteDocRequestSchema, {
+      const request = create(DeleteItemRequestSchema, {
         projectPath,
-        slug,
+        itemType: 'docs',
+        itemId: slug,
       })
-      const response = await centyClient.deleteDoc(request)
+      const response = await centyClient.deleteItem(request)
 
       if (response.success) {
         router.push(docsListUrl)

@@ -39,8 +39,7 @@ export function addUpdateDocHandler(
         }
       }
 
-      // eslint-disable-next-line security/detect-object-injection
-      const existing = docs[index]
+      const existing = docs.at(index)!
       const updatedDoc = options.onUpdateDoc
         ? options.onUpdateDoc(request, existing)
         : {
@@ -54,8 +53,7 @@ export function addUpdateDocHandler(
             },
           }
 
-      // eslint-disable-next-line security/detect-object-injection
-      docs[index] = updatedDoc
+      docs.splice(index, 1, updatedDoc)
 
       return {
         success: true,

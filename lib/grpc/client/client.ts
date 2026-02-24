@@ -7,7 +7,7 @@ import { isDemoMode } from './demo-mode'
 import { getDaemonUrl } from './daemon-url'
 import { CentyDaemon } from '@/gen/centy_pb'
 import { trackGrpcCall } from '@/lib/metrics'
-import { DemoModeError } from '@/lib/errors'
+import { DemoModeError, UnknownError } from '@/lib/errors'
 
 const transport = createGrpcWebTransport({
   baseUrl: getDaemonUrl(),
@@ -34,7 +34,7 @@ function wrapWithMetrics(
     } catch (error) {
       const duration = performance.now() - start
       trackGrpcCall(methodName, duration, false)
-      throw error instanceof Error ? error : new Error(String(error))
+      throw error instanceof Error ? error : new UnknownError(error)
     }
   }
 }
@@ -60,7 +60,7 @@ export const centyClient: Client<typeof CentyDaemon> = new Proxy(realClient, {
                 `[Demo Mode] Error in mock handler for ${prop}:`,
                 error
               )
-              throw error instanceof Error ? error : new Error(String(error))
+              throw error instanceof Error ? error : new UnknownError(error)
             }
           }, prop)
         }

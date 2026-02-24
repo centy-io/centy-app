@@ -6,10 +6,9 @@ import { centyClient } from '@/lib/grpc/client'
 import {
   ListUsersRequestSchema,
   DeleteUserRequestSchema,
-  IsInitializedRequestSchema,
   type User,
 } from '@/gen/centy_pb'
-import { useProject } from '@/components/providers/ProjectProvider'
+import { usePathContext } from '@/components/providers/PathContextProvider'
 import { isDaemonUnimplemented } from '@/lib/daemon-error'
 
 function formatError(err: unknown): string {
@@ -21,32 +20,12 @@ function formatError(err: unknown): string {
   return message
 }
 
-// eslint-disable-next-line max-lines-per-function
 export function useUsersData() {
-  const { projectPath, isInitialized, setIsInitialized } = useProject()
+  const { projectPath, isInitialized } = usePathContext()
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [deleting, setDeleting] = useState(false)
-
-  const checkInitialized = useCallback(
-    async (path: string) => {
-      if (!path.trim()) {
-        setIsInitialized(null)
-        return
-      }
-      try {
-        const request = create(IsInitializedRequestSchema, {
-          projectPath: path.trim(),
-        })
-        const response = await centyClient.isInitialized(request)
-        setIsInitialized(response.initialized)
-      } catch {
-        setIsInitialized(false)
-      }
-    },
-    [setIsInitialized]
-  )
 
   const fetchUsers = useCallback(async () => {
     if (!projectPath.trim() || isInitialized !== true) return
@@ -64,11 +43,6 @@ export function useUsersData() {
       setLoading(false)
     }
   }, [projectPath, isInitialized])
-
-  useEffect(() => {
-    const timeoutId = setTimeout(() => checkInitialized(projectPath), 300)
-    return () => clearTimeout(timeoutId)
-  }, [projectPath, checkInitialized])
 
   useEffect(() => {
     if (isInitialized === true) fetchUsers()

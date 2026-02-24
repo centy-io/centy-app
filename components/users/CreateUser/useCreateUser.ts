@@ -7,9 +7,10 @@ import { route, type RouteLiteral } from 'nextjs-routes'
 import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
 import { CreateUserRequestSchema } from '@/gen/centy_pb'
-import { useProject } from '@/components/providers/ProjectProvider'
+import { usePathContext } from '@/components/providers/PathContextProvider'
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
 import { isDaemonUnimplemented } from '@/lib/daemon-error'
+import { OperationError } from '@/lib/errors'
 import { generateSlug } from '@/lib/generate-slug'
 
 function formatError(err: unknown): string {
@@ -23,7 +24,7 @@ function formatError(err: unknown): string {
 export function useCreateUser() {
   const router = useRouter()
   const params = useParams()
-  const { projectPath, isInitialized } = useProject()
+  const { projectPath, isInitialized } = usePathContext()
 
   const projectContext = useMemo(() => {
     const orgP = params ? params.organization : undefined
@@ -79,7 +80,9 @@ export function useCreateUser() {
           router.push(route({ pathname: '/' }))
         }
       } else {
-        setError(formatError(new Error(res.error || 'Failed to create user')))
+        setError(
+          formatError(new OperationError(res.error || 'Failed to create user'))
+        )
       }
     } catch (err) {
       setError(formatError(err))

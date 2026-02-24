@@ -40,9 +40,10 @@ export function OrgIssuesTable({ orgSlug, issues }: OrgIssuesTableProps) {
             const orgNum = meta ? meta.orgDisplayNumber : issue.displayNumber
             const status = (meta && meta.status) || '—'
             const priority = meta ? meta.priority : 2
-            const createdAt = meta && meta.createdAt
-              ? new Date(meta.createdAt).toLocaleDateString()
-              : '—'
+            const createdAt =
+              meta && meta.createdAt
+                ? new Date(meta.createdAt).toLocaleDateString()
+                : '—'
             return (
               <tr key={issue.id} className="org-issue-row">
                 <td className="org-issue-number">{orgNum}</td>
