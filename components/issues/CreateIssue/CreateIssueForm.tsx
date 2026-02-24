@@ -3,6 +3,7 @@
 import type { ReactElement } from 'react'
 import type { CreateIssueFormProps } from './CreateIssue.types'
 import { PrioritySelect, StatusSelect } from './IssueFormSelects'
+import { IssueFormActions } from './IssueFormActions'
 import { AssetUploader } from '@/components/assets/AssetUploader'
 import { TextEditor } from '@/components/shared/TextEditor'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
@@ -70,18 +71,7 @@ export function CreateIssueForm({
         />
       </div>
       {error && <DaemonErrorMessage error={error} />}
-      <div className="actions">
-        <button type="button" onClick={onCancel} className="secondary">
-          Cancel
-        </button>
-        <button
-          type="submit"
-          disabled={!title.trim() || loading}
-          className="primary"
-        >
-          {loading ? 'Creating...' : 'Create Issue'}
-        </button>
-      </div>
+      <IssueFormActions title={title} loading={loading} onCancel={onCancel} />
     </form>
   )
 }
