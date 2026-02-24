@@ -26,11 +26,9 @@ export function useAssetUploader({
   const [error, setError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const initialAssetsKey = JSON.stringify(initialAssets.map(a => a.filename))
   useEffect(() => {
     setAssets(initialAssets)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialAssetsKey])
+  }, [initialAssets])
 
   const validateFile = useCallback((file: File): string | null => {
     if (!Object.keys(ALLOWED_TYPES).includes(file.type)) {

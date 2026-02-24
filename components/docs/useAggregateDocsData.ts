@@ -63,8 +63,7 @@ export function useAggregateDocsData() {
 
   useEffect(() => {
     fetchAllDocs()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [fetchAllDocs])
 
   return {
     docs,

@@ -76,8 +76,7 @@ export function useOrgIssues(orgSlug: string) {
 
   useEffect(() => {
     fetchIssues()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orgSlug])
+  }, [orgSlug, fetchIssues])
 
   return { issues, loading, error, orgProjectPath, fetchIssues }
 }

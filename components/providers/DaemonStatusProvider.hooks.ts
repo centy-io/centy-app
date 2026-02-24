@@ -83,8 +83,7 @@ export function useDaemonStatusState() {
     disableDemoMode()
     setStatus('checking')
     setTimeout(() => checkDaemonStatus(), 100)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [checkDaemonStatus])
 
   useEffect(() => {
     if (!hasMounted || isDemoMode()) return
@@ -94,8 +93,7 @@ export function useDaemonStatusState() {
       clearTimeout(timeoutId)
       clearInterval(interval)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasMounted])
+  }, [hasMounted, checkDaemonStatus])
 
   return {
     status,

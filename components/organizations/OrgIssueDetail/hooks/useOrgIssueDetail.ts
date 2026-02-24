@@ -85,8 +85,7 @@ export function useOrgIssueDetail(orgSlug: string, issueId: string) {
 
   useEffect(() => {
     fetchIssue()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orgSlug, issueId])
+  }, [orgSlug, issueId, fetchIssue])
 
   const handleSave = useCallback(async () => {
     if (!orgProjectPath || !issueId) return

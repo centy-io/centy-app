@@ -63,8 +63,7 @@ export function useAggregateIssues() {
 
   useEffect(() => {
     fetchAllIssues()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [fetchAllIssues])
 
   return {
     filteredIssues,

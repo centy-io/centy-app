@@ -33,8 +33,7 @@ export function OrgSwitcher() {
     if (isOpen) {
       refreshOrganizations()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen])
+  }, [isOpen, refreshOrganizations])
 
   // Close on click outside
   useEffect(() => {

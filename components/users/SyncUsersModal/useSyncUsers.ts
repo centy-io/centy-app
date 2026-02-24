@@ -53,8 +53,7 @@ export function useSyncUsers() {
 
   useEffect(() => {
     void fetchPreview()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [fetchPreview])
 
   const handleSync = useCallback(async () => {
     if (!projectPath) return

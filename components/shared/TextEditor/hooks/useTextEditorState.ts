@@ -48,8 +48,7 @@ export function useTextEditorState({
 
   useEffect(() => {
     setCurrentMode(resolvedMode)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mode])
+  }, [resolvedMode])
 
   useEffect(() => {
     if (!editor || markdownContent === rawValue) return
