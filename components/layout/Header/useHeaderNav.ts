@@ -2,50 +2,10 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import { usePathname, useParams } from 'next/navigation'
-import { route } from 'nextjs-routes'
-import { create } from '@bufbuild/protobuf'
-import type { NavLinks, NavItemType } from './types'
+import type { NavItemType, NavLinks } from './types'
 import { ROOT_ROUTES } from './types'
-import { ListItemTypesRequestSchema } from '@/gen/centy_pb'
-import { centyClient } from '@/lib/grpc/client'
-import { resolveProject } from '@/lib/project-resolver'
-
-function buildNavLinks(
-  hasProjectContext: boolean,
-  effectiveOrg: string | undefined,
-  effectiveProject: string | undefined
-): NavLinks | null {
-  if (!hasProjectContext || !effectiveOrg || !effectiveProject) return null
-  return {
-    assets: route({
-      pathname: '/[organization]/[project]/assets',
-      query: { organization: effectiveOrg, project: effectiveProject },
-    }),
-    users: route({
-      pathname: '/[organization]/[project]/users',
-      query: { organization: effectiveOrg, project: effectiveProject },
-    }),
-    config: route({
-      pathname: '/[organization]/[project]/config',
-      query: { organization: effectiveOrg, project: effectiveProject },
-    }),
-  }
-}
-
-async function loadItemTypes(
-  effectiveOrg: string,
-  effectiveProject: string
-): Promise<NavItemType[]> {
-  const resolution = await resolveProject(effectiveOrg, effectiveProject)
-  if (!resolution) return []
-  const req = create(ListItemTypesRequestSchema, {
-    projectPath: resolution.projectPath,
-  })
-  const res = await centyClient.listItemTypes(req)
-  return res.itemTypes
-    .map(t => ({ name: t.name, plural: t.plural, itemCount: t.itemCount }))
-    .sort((a, b) => b.itemCount - a.itemCount)
-}
+import { buildNavLinks } from './buildNavLinks'
+import { loadItemTypes } from './loadItemTypes'
 
 export function useHeaderNav() {
   const pathname = usePathname()

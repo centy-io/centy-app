@@ -1,57 +1,11 @@
-/* eslint-disable max-lines */
 'use client'
 
 import { useState, useCallback, useEffect } from 'react'
 import { open } from '@tauri-apps/plugin-dialog'
-import { create } from '@bufbuild/protobuf'
+import { useInitProjectActions } from './useInitProjectActions'
+import { useInitProjectSelections } from './useInitProjectSelections'
 import type { InitStep } from './InitProject.types'
-import { centyClient } from '@/lib/grpc/client'
-import {
-  InitRequestSchema,
-  GetReconciliationPlanRequestSchema,
-  ExecuteReconciliationRequestSchema,
-  ReconciliationDecisionsSchema,
-  type ReconciliationPlan,
-  type InitResponse,
-} from '@/gen/centy_pb'
-
-async function runQuickInit(projectPath: string) {
-  return centyClient.init(
-    create(InitRequestSchema, { projectPath: projectPath.trim(), force: true })
-  )
-}
-
-async function runGetPlan(projectPath: string) {
-  return centyClient.getReconciliationPlan(
-    create(GetReconciliationPlanRequestSchema, {
-      projectPath: projectPath.trim(),
-    })
-  )
-}
-
-async function runExecutePlan(
-  projectPath: string,
-  selectedRestore: Set<string>,
-  selectedReset: Set<string>
-) {
-  const decisions = create(ReconciliationDecisionsSchema, {
-    restore: Array.from(selectedRestore),
-    reset: Array.from(selectedReset),
-  })
-  return centyClient.executeReconciliation(
-    create(ExecuteReconciliationRequestSchema, {
-      projectPath: projectPath.trim(),
-      decisions,
-    })
-  )
-}
-
-function toggleSetItem(prev: Set<string>, path: string): Set<string> {
-  const next = new Set(prev)
-  if (next.has(path)) next.delete(path)
-  else next.add(path)
-  return next
-}
+import type { ReconciliationPlan, InitResponse } from '@/gen/centy_pb'
 
 export function useInitProject() {
   const [projectPath, setProjectPath] = useState('')
@@ -59,10 +13,21 @@ export function useInitProject() {
   const [plan, setPlan] = useState<ReconciliationPlan | null>(null)
   const [result, setResult] = useState<InitResponse | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [selectedRestore, setSelectedRestore] = useState<Set<string>>(new Set())
-  const [selectedReset, setSelectedReset] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(false)
   const [isTauri, setIsTauri] = useState(false)
+  const selections = useInitProjectSelections()
+  const actions = useInitProjectActions({
+    projectPath,
+    selectedRestore: selections.selectedRestore,
+    selectedReset: selections.selectedReset,
+    setLoading,
+    setError,
+    setStep,
+    setPlan,
+    setResult,
+    setSelectedRestore: selections.setSelectedRestore,
+    setSelectedReset: selections.setSelectedReset,
+  })
 
   useEffect(() => {
     setIsTauri(typeof window !== 'undefined' && '__TAURI__' in window)
@@ -83,90 +48,14 @@ export function useInitProject() {
     }
   }, [isTauri])
 
-  const handleQuickInit = useCallback(async () => {
-    if (!projectPath.trim()) return
-    setLoading(true)
-    setError(null)
-    try {
-      const res = await runQuickInit(projectPath)
-      if (res.success) {
-        setResult(res)
-        setStep('success')
-      } else {
-        setError(res.error || 'Initialization failed')
-        setStep('error')
-      }
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to connect to daemon'
-      )
-      setStep('error')
-    } finally {
-      setLoading(false)
-    }
-  }, [projectPath])
-
-  const handleGetPlan = useCallback(async () => {
-    if (!projectPath.trim()) return
-    setLoading(true)
-    setError(null)
-    try {
-      const res = await runGetPlan(projectPath)
-      setPlan(res)
-      setStep('plan')
-      setSelectedRestore(new Set(res.toRestore.map(f => f.path)))
-      setSelectedReset(new Set())
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to connect to daemon'
-      )
-      setStep('error')
-    } finally {
-      setLoading(false)
-    }
-  }, [projectPath])
-
-  const handleExecutePlan = useCallback(async () => {
-    if (!projectPath.trim()) return
-    setLoading(true)
-    setStep('executing')
-    try {
-      const res = await runExecutePlan(
-        projectPath,
-        selectedRestore,
-        selectedReset
-      )
-      if (res.success) {
-        setResult(res)
-        setStep('success')
-      } else {
-        setError(res.error || 'Initialization failed')
-        setStep('error')
-      }
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to connect to daemon'
-      )
-      setStep('error')
-    } finally {
-      setLoading(false)
-    }
-  }, [projectPath, selectedRestore, selectedReset])
-
-  const toggleRestore = useCallback((path: string) => {
-    setSelectedRestore(prev => toggleSetItem(prev, path))
-  }, [])
-  const toggleReset = useCallback((path: string) => {
-    setSelectedReset(prev => toggleSetItem(prev, path))
-  }, [])
   const handleReset = useCallback(() => {
     setStep('input')
     setPlan(null)
     setResult(null)
     setError(null)
-    setSelectedRestore(new Set())
-    setSelectedReset(new Set())
-  }, [])
+    selections.setSelectedRestore(new Set())
+    selections.setSelectedReset(new Set())
+  }, [selections])
 
   return {
     projectPath,
@@ -174,17 +63,12 @@ export function useInitProject() {
     plan,
     result,
     error,
-    selectedRestore,
-    selectedReset,
     loading,
     isTauri,
     setProjectPath,
     handleSelectFolder,
-    handleQuickInit,
-    handleGetPlan,
-    handleExecutePlan,
-    toggleRestore,
-    toggleReset,
     handleReset,
+    ...selections,
+    ...actions,
   }
 }
