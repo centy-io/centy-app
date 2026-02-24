@@ -10,7 +10,17 @@ function getCommitSha() {
   }
 }
 
-const { NODE_ENV, COMMIT_SHA, CI } = process.env
+const {
+  NODE_ENV,
+  COMMIT_SHA,
+  CI,
+  NEXT_PUBLIC_DAEMON_URL,
+  NEXT_PUBLIC_DOCS_URL,
+  NEXT_PUBLIC_DAEMON_INSTALL_URL,
+  NEXT_PUBLIC_CORS_DOCS_URL,
+  NEXT_PUBLIC_GOOGLE_ANALYTICS_URL,
+  NEXT_PUBLIC_SENTRY_DSN,
+} = process.env
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -21,6 +31,19 @@ const nextConfig = {
   },
   env: {
     NEXT_PUBLIC_COMMIT_SHA: COMMIT_SHA || getCommitSha(),
+    NEXT_PUBLIC_DAEMON_URL: NEXT_PUBLIC_DAEMON_URL || 'http://localhost:50051',
+    NEXT_PUBLIC_DOCS_URL: NEXT_PUBLIC_DOCS_URL || 'https://docs.centy.io',
+    NEXT_PUBLIC_DAEMON_INSTALL_URL:
+      NEXT_PUBLIC_DAEMON_INSTALL_URL ||
+      'https://github.com/centy-io/installer/releases/latest/download/install.sh',
+    NEXT_PUBLIC_CORS_DOCS_URL:
+      NEXT_PUBLIC_CORS_DOCS_URL || 'https://app.centy.io',
+    NEXT_PUBLIC_GOOGLE_ANALYTICS_URL:
+      NEXT_PUBLIC_GOOGLE_ANALYTICS_URL ||
+      'https://www.googletagmanager.com/gtag/js?id=G-ZV5SD70Z2D',
+    NEXT_PUBLIC_SENTRY_DSN:
+      NEXT_PUBLIC_SENTRY_DSN ||
+      'https://98aef6a0676becdbe5b6a8a8ee14b8d3@o4510682522976256.ingest.de.sentry.io/4510682527367248',
   },
 }
 
