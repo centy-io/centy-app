@@ -55,13 +55,14 @@ export function OrgSwitcher() {
   }, [isOpen])
 
   const getCurrentLabel = () => {
+    if (selectedOrgSlug === undefined) return 'Select Org'
     if (selectedOrgSlug === null) return 'All Orgs'
     if (selectedOrgSlug === '') return 'Ungrouped'
     const org = organizations.find(o => o.slug === selectedOrgSlug)
     return (org ? org.name : '') || selectedOrgSlug
   }
 
-  const handleSelect = (slug: string | null) => {
+  const handleSelect = (slug: string | null | undefined) => {
     setSelectedOrgSlug(slug)
     setIsOpen(false)
   }

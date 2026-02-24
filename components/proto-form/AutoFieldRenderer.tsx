@@ -1,13 +1,11 @@
-/* eslint-disable max-lines */
 'use client'
 
 import type { DescMessage } from '@bufbuild/protobuf'
 import { ScalarFieldRenderer } from './renderers/ScalarFieldRenderer'
 import { MapFieldRenderer } from './renderers/MapFieldRenderer'
-import { ListFieldRenderer } from './renderers/ListFieldRenderer'
 import { MessageFieldRenderer } from './renderers/MessageFieldRenderer'
-import { MessageListFieldRenderer } from './renderers/MessageListFieldRenderer'
-import type { FieldRenderProps } from '@/lib/proto-form/types'
+import { renderListField } from './renderListField'
+import type { FieldRenderProps } from '@/lib/proto-form/FieldRenderProps.types'
 
 type ProtoFormRendererType = React.ComponentType<{
   schema: DescMessage
@@ -17,39 +15,6 @@ type ProtoFormRendererType = React.ComponentType<{
 
 interface AutoFieldRendererProps extends FieldRenderProps {
   ProtoFormRenderer: ProtoFormRendererType
-}
-
-type SharedProps = Pick<
-  AutoFieldRendererProps,
-  'label' | 'description' | 'value' | 'onChange' | 'ProtoFormRenderer'
->
-
-function renderList(
-  field: Extract<FieldRenderProps['field'], { fieldKind: 'list' }>,
-  shared: SharedProps
-) {
-  const { label, description, value, onChange, ProtoFormRenderer } = shared
-  if (field.listKind === 'message') {
-    return (
-      <MessageListFieldRenderer
-        messageDesc={field.message}
-        label={label}
-        description={description}
-        value={value}
-        onChange={onChange}
-        ProtoFormRenderer={ProtoFormRenderer}
-      />
-    )
-  }
-  // scalar list or enum list — render as scalar list
-  return (
-    <ListFieldRenderer
-      label={label}
-      description={description}
-      value={value}
-      onChange={onChange}
-    />
-  )
 }
 
 export function AutoFieldRenderer({
@@ -84,7 +49,7 @@ export function AutoFieldRenderer({
   }
 
   if (field.fieldKind === 'list') {
-    return renderList(field, {
+    return renderListField(field, {
       label,
       description,
       value,

@@ -276,6 +276,19 @@ service CentyDaemon {
 
   // List all item types for a project
   rpc ListItemTypes(ListItemTypesRequest) returns (ListItemTypesResponse);
+
+  // ============ Generic Item RPCs ============
+
+  rpc CreateItem(CreateItemRequest) returns (CreateItemResponse);
+  rpc GetItem(GetItemRequest) returns (GetItemResponse);
+  rpc ListItems(ListItemsRequest) returns (ListItemsResponse);
+  rpc UpdateItem(UpdateItemRequest) returns (UpdateItemResponse);
+  rpc DeleteItem(DeleteItemRequest) returns (DeleteItemResponse);
+  rpc SoftDeleteItem(SoftDeleteItemRequest) returns (SoftDeleteItemResponse);
+  rpc RestoreItem(RestoreItemRequest) returns (RestoreItemResponse);
+  rpc DuplicateItem(DuplicateItemRequest) returns (DuplicateItemResponse);
+  rpc MoveItem(MoveItemRequest) returns (MoveItemResponse);
+  rpc SearchItems(SearchItemsRequest) returns (SearchItemsResponse);
 }
 
 // ============ Init Messages ============
@@ -1776,4 +1789,171 @@ message ListItemTypesResponse {
   string error = 2;
   repeated ItemTypeConfigProto item_types = 3;
   int32 total_count = 4;
+}
+
+// ============ Generic Item Messages ============
+
+message GenericItemMetadata {
+  uint32 display_number = 1;
+  string status = 2;
+  uint32 priority = 3;
+  string created_at = 4;
+  string updated_at = 5;
+  string deleted_at = 6;
+  map<string, string> custom_fields = 7;
+}
+
+message GenericItem {
+  string id = 1;
+  string item_type = 2;
+  string title = 3;
+  string body = 4;
+  GenericItemMetadata metadata = 5;
+}
+
+message CreateItemRequest {
+  string project_path = 1;
+  string item_type = 2;
+  string title = 3;
+  string body = 4;
+  string status = 5;
+  int32 priority = 6;
+  map<string, string> custom_fields = 7;
+}
+
+message CreateItemResponse {
+  bool success = 1;
+  string error = 2;
+  GenericItem item = 3;
+}
+
+message GetItemRequest {
+  string project_path = 1;
+  string item_type = 2;
+  string item_id = 3;
+  optional uint32 display_number = 4;
+}
+
+message GetItemResponse {
+  bool success = 1;
+  string error = 2;
+  GenericItem item = 3;
+}
+
+message ListItemsRequest {
+  string project_path = 1;
+  string item_type = 2;
+  uint32 limit = 6;
+  uint32 offset = 7;
+  string filter = 8;
+}
+
+message ListItemsResponse {
+  bool success = 1;
+  string error = 2;
+  repeated GenericItem items = 3;
+  int32 total_count = 4;
+}
+
+message UpdateItemRequest {
+  string project_path = 1;
+  string item_type = 2;
+  string item_id = 3;
+  string title = 4;
+  string body = 5;
+  string status = 6;
+  int32 priority = 7;
+  map<string, string> custom_fields = 8;
+}
+
+message UpdateItemResponse {
+  bool success = 1;
+  string error = 2;
+  GenericItem item = 3;
+}
+
+message DeleteItemRequest {
+  string project_path = 1;
+  string item_type = 2;
+  string item_id = 3;
+  bool force = 4;
+}
+
+message DeleteItemResponse {
+  bool success = 1;
+  string error = 2;
+}
+
+message SoftDeleteItemRequest {
+  string project_path = 1;
+  string item_type = 2;
+  string item_id = 3;
+}
+
+message SoftDeleteItemResponse {
+  bool success = 1;
+  string error = 2;
+  GenericItem item = 3;
+}
+
+message RestoreItemRequest {
+  string project_path = 1;
+  string item_type = 2;
+  string item_id = 3;
+}
+
+message RestoreItemResponse {
+  bool success = 1;
+  string error = 2;
+  GenericItem item = 3;
+}
+
+message DuplicateItemRequest {
+  string source_project_path = 1;
+  string item_type = 2;
+  string item_id = 3;
+  string target_project_path = 4;
+  string new_id = 5;
+  string new_title = 6;
+}
+
+message DuplicateItemResponse {
+  bool success = 1;
+  string error = 2;
+  GenericItem item = 3;
+  string original_id = 4;
+}
+
+message MoveItemRequest {
+  string source_project_path = 1;
+  string item_type = 2;
+  string item_id = 3;
+  string target_project_path = 4;
+  string new_id = 5;
+}
+
+message MoveItemResponse {
+  bool success = 1;
+  string error = 2;
+  GenericItem item = 3;
+}
+
+message ItemWithProject {
+  GenericItem item = 1;
+  string project_path = 2;
+  string project_name = 3;
+  string display_path = 4;
+}
+
+message SearchItemsRequest {
+  string item_type = 1;
+  string item_id = 2;
+}
+
+message SearchItemsResponse {
+  repeated ItemWithProject items = 1;
+  int32 total_count = 2;
+  repeated string errors = 3;
+  bool success = 4;
+  string error = 5;
 }

@@ -33,8 +33,7 @@ export function addUpdateIssueHandler(
         }
       }
 
-      // eslint-disable-next-line security/detect-object-injection
-      const existing = issues[index]
+      const existing = issues.at(index)!
       const updatedIssue = options.onUpdateIssue
         ? options.onUpdateIssue(request, existing)
         : {
@@ -58,8 +57,7 @@ export function addUpdateIssueHandler(
             },
           }
 
-      // eslint-disable-next-line security/detect-object-injection
-      issues[index] = updatedIssue
+      issues.splice(index, 1, updatedIssue)
 
       return {
         success: true,

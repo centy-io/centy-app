@@ -1,23 +1,15 @@
-/* eslint-disable max-lines */
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { route } from 'nextjs-routes'
-import { create } from '@bufbuild/protobuf'
 import { CreateOrganizationForm } from './CreateOrganization.form'
-import { centyClient } from '@/lib/grpc/client'
-import { CreateOrganizationRequestSchema } from '@/gen/centy_pb'
+import { useCreateOrganizationSubmit } from './useCreateOrganizationSubmit'
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
-import { isDaemonUnimplemented } from '@/lib/daemon-error'
 import { generateSlug } from '@/lib/generate-slug'
 
-// eslint-disable-next-line max-lines-per-function
 export function CreateOrganization() {
-  const router = useRouter()
-
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
   const [slugManuallySet, setSlugManuallySet] = useState(false)
@@ -37,51 +29,13 @@ export function CreateOrganization() {
     setSlugManuallySet(true)
   }
 
-  const handleSubmit = useCallback(async () => {
-    if (!name.trim()) return
-
-    setSaving(true)
-    setError(null)
-
-    try {
-      const request = create(CreateOrganizationRequestSchema, {
-        slug: slug.trim() || undefined,
-        name: name.trim(),
-        description: description.trim() || undefined,
-      })
-      const response = await centyClient.createOrganization(request)
-
-      if (response.success && response.organization) {
-        router.push(
-          route({
-            pathname: '/organizations/[orgSlug]',
-            query: { orgSlug: response.organization.slug },
-          })
-        )
-      } else {
-        const errorMsg = response.error || 'Failed to create organization'
-        if (isDaemonUnimplemented(errorMsg)) {
-          setError(
-            'Organizations feature is not available. Please update your daemon.'
-          )
-        } else {
-          setError(errorMsg)
-        }
-      }
-    } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to connect to daemon'
-      if (isDaemonUnimplemented(message)) {
-        setError(
-          'Organizations feature is not available. Please update your daemon.'
-        )
-      } else {
-        setError(message)
-      }
-    } finally {
-      setSaving(false)
-    }
-  }, [name, slug, description, router])
+  const handleSubmit = useCreateOrganizationSubmit({
+    name,
+    slug,
+    description,
+    setSaving,
+    setError,
+  })
 
   useSaveShortcut({
     onSave: handleSubmit,

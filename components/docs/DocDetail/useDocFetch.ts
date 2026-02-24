@@ -1,7 +1,8 @@
 import { useState, useCallback, useEffect } from 'react'
 import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
-import { GetDocRequestSchema, type Doc } from '@/gen/centy_pb'
+import { GetItemRequestSchema, type Doc } from '@/gen/centy_pb'
+import { genericItemToDoc } from '@/lib/genericItemToDoc'
 
 export function useDocFetch(projectPath: string, slug: string) {
   const [doc, setDoc] = useState<Doc | null>(null)
@@ -22,15 +23,17 @@ export function useDocFetch(projectPath: string, slug: string) {
     setError(null)
 
     try {
-      const request = create(GetDocRequestSchema, {
+      const request = create(GetItemRequestSchema, {
         projectPath,
-        slug,
+        itemType: 'docs',
+        itemId: slug,
       })
-      const response = await centyClient.getDoc(request)
-      if (response.doc) {
-        setDoc(response.doc)
-        setEditTitle(response.doc.title)
-        setEditContent(response.doc.content)
+      const response = await centyClient.getItem(request)
+      if (response.item) {
+        const doc = genericItemToDoc(response.item)
+        setDoc(doc)
+        setEditTitle(doc.title)
+        setEditContent(doc.content)
         setEditSlug('')
       } else {
         setError(response.error || 'Document not found')

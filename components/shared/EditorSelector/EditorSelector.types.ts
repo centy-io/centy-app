@@ -1,8 +1,2 @@
-export const EDITOR_PREFERENCE_KEY = 'centy-preferred-editor'
-
-export interface EditorSelectorProps {
-  onOpenInVscode: () => Promise<void>
-  onOpenInTerminal: () => Promise<void>
-  disabled?: boolean
-  loading?: boolean
-}
+export { EDITOR_PREFERENCE_KEY } from './EDITOR_PREFERENCE_KEY'
+export type { EditorSelectorProps } from './EditorSelectorProps'

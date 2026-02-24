@@ -1,29 +1,90 @@
 /* eslint-disable max-lines */
 'use client'
 
+import { useState, useCallback, useEffect } from 'react'
+import { create } from '@bufbuild/protobuf'
 import Link from 'next/link'
 import { route } from 'nextjs-routes'
 import { useProjectContext } from './useProjectContext'
-import { useCreateDoc } from './useCreateDoc'
+import { useCreateItemSubmit } from '@/hooks/useCreateItemSubmit'
+import { centyClient } from '@/lib/grpc/client'
+import { CreateItemRequestSchema } from '@/gen/centy_pb'
 import { TextEditor } from '@/components/shared/TextEditor'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
+import { getDraftStorageKey } from '@/hooks/getDraftStorageKey'
+import { loadFormDraft } from '@/hooks/loadFormDraft'
+import { saveFormDraft } from '@/hooks/saveFormDraft'
+import { clearFormDraft } from '@/hooks/clearFormDraft'
+
+interface DocDraft {
+  title: string
+  content: string
+  slug: string
+}
 
 // eslint-disable-next-line max-lines-per-function
 export function CreateDoc() {
   const { projectPath, isInitialized, getProjectContext } = useProjectContext()
 
-  const {
-    title,
-    setTitle,
-    content,
-    setContent,
-    slug,
-    setSlug,
-    loading,
-    error,
-    handleSubmit,
-    handleCancel,
-  } = useCreateDoc({ projectPath, getProjectContext })
+  const [title, setTitle] = useState('')
+  const [content, setContent] = useState('')
+  const [slug, setSlug] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [draftLoaded, setDraftLoaded] = useState(false)
+
+  const draftKey = projectPath ? getDraftStorageKey('doc', projectPath) : ''
+
+  // Load draft from localStorage when projectPath becomes available
+  useEffect(() => {
+    if (!draftKey || draftLoaded) return
+    const draft = loadFormDraft<DocDraft>(draftKey)
+    if (draft.title !== undefined) setTitle(draft.title)
+    if (draft.content !== undefined) setContent(draft.content)
+    if (draft.slug !== undefined) setSlug(draft.slug)
+    setDraftLoaded(true)
+  }, [draftKey, draftLoaded])
+
+  // Auto-save draft on field changes
+  useEffect(() => {
+    if (!draftKey || !draftLoaded) return
+    saveFormDraft<DocDraft>(draftKey, { title, content, slug })
+  }, [draftKey, title, content, slug, draftLoaded])
+
+  const clearDraft = useCallback(() => {
+    clearFormDraft(draftKey)
+  }, [draftKey])
+
+  const { submitItem, handleCancel } = useCreateItemSubmit({
+    kind: 'doc',
+    projectPath,
+    getProjectContext,
+    setLoading,
+    setError,
+    clearDraft,
+  })
+
+  const handleSubmit = useCallback(
+    (e: React.FormEvent) => {
+      if (!title.trim()) return
+      return submitItem(async () => {
+        const response = await centyClient.createItem(
+          create(CreateItemRequestSchema, {
+            projectPath: projectPath.trim(),
+            itemType: 'docs',
+            title: title.trim(),
+            body: content.trim(),
+          })
+        )
+        return {
+          success: response.success,
+          error: response.error,
+          slug: response.item ? response.item.id : undefined,
+        }
+      }, e)
+    },
+    [projectPath, title, content, submitItem]
+  )
 
   if (!projectPath) {
     return (

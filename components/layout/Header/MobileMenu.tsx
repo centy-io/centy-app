@@ -10,7 +10,7 @@ import { ProjectSelector } from '@/components/project/ProjectSelector'
 interface MobileMenuProps {
   mobileMenuOpen: boolean
   setMobileMenuOpen: (open: boolean) => void
-  selectedOrgSlug: string | null
+  selectedOrgSlug: string | null | undefined
   navLinks: NavLinks | null
   pathname: string
   isActive: (href: string, checkPrefix?: boolean) => boolean
@@ -44,7 +44,7 @@ export function MobileMenu({
         </div>
         <div className="mobile-menu-selectors">
           <OrgSwitcher />
-          {selectedOrgSlug !== null && <ProjectSelector />}
+          {selectedOrgSlug !== undefined && <ProjectSelector />}
         </div>
         <MobileNavLinks
           navLinks={navLinks}

@@ -2,18 +2,16 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { create } from '@bufbuild/protobuf'
 import { useProjectContext } from './useProjectContext'
-import { useCreateIssueSubmit } from './useCreateIssueSubmit'
+import { useCreateItemSubmit } from '@/hooks/useCreateItemSubmit'
 import { centyClient } from '@/lib/grpc/client'
-import { IsInitializedRequestSchema } from '@/gen/centy_pb'
-import { useProject } from '@/components/providers/ProjectProvider'
+import { CreateItemRequestSchema } from '@/gen/centy_pb'
+import { usePathContext } from '@/components/providers/PathContextProvider'
 import { useStateManager } from '@/lib/state'
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
-import {
-  getDraftStorageKey,
-  loadFormDraft,
-  saveFormDraft,
-  clearFormDraft,
-} from '@/hooks/useFormDraft'
+import { getDraftStorageKey } from '@/hooks/getDraftStorageKey'
+import { loadFormDraft } from '@/hooks/loadFormDraft'
+import { saveFormDraft } from '@/hooks/saveFormDraft'
+import { clearFormDraft } from '@/hooks/clearFormDraft'
 import type {
   AssetUploaderHandle,
   PendingAsset,
@@ -27,7 +25,7 @@ interface IssueDraft {
 
 // eslint-disable-next-line max-lines-per-function
 export function useCreateIssue() {
-  const { projectPath, isInitialized, setIsInitialized } = useProject()
+  const { projectPath, isInitialized } = usePathContext()
   const stateManager = useStateManager()
   const stateOptions = stateManager.getStateOptions()
 
@@ -65,44 +63,56 @@ export function useCreateIssue() {
 
   const { getProjectContext } = useProjectContext(projectPath)
 
-  const { handleSubmit, handleCancel } = useCreateIssueSubmit({
+  const { submitItem, handleCancel } = useCreateItemSubmit({
+    kind: 'issue',
     projectPath,
-    title,
-    description,
-    priority,
-    status,
-    pendingAssets,
-    assetUploaderRef,
     getProjectContext,
     setLoading,
     setError,
     clearDraft,
   })
 
-  const checkInitialized = useCallback(
-    async (path: string) => {
-      if (!path.trim()) {
-        setIsInitialized(null)
-        return
-      }
-      try {
-        const request = create(IsInitializedRequestSchema, {
-          projectPath: path.trim(),
+  const handleSubmit = useCallback(
+    async (e?: React.FormEvent) => {
+      if (!title.trim()) return
+      return submitItem(async () => {
+        const request = create(CreateItemRequestSchema, {
+          projectPath: projectPath.trim(),
+          itemType: 'issues',
+          title: title.trim(),
+          body: description.trim(),
+          priority,
+          status,
         })
-        const response = await centyClient.isInitialized(request)
-        setIsInitialized(response.initialized)
-      } catch {
-        setIsInitialized(false)
-      }
+        const response = await centyClient.createItem(request)
+        if (
+          response.success &&
+          pendingAssets.length > 0 &&
+          assetUploaderRef.current
+        ) {
+          await assetUploaderRef.current.uploadAllPending(
+            response.item ? response.item.id : ''
+          )
+        }
+        return {
+          success: response.success,
+          error: response.error,
+          id: response.item ? response.item.id : undefined,
+          issueNumber: response.item ? response.item.id : undefined,
+        }
+      }, e)
     },
-    [setIsInitialized]
+    [
+      title,
+      description,
+      priority,
+      status,
+      pendingAssets,
+      assetUploaderRef,
+      projectPath,
+      submitItem,
+    ]
   )
-
-  useEffect(() => {
-    if (projectPath && isInitialized === null) {
-      checkInitialized(projectPath)
-    }
-  }, [projectPath, isInitialized, checkInitialized])
 
   const handleKeyboardSave = useCallback(() => {
     if (!projectPath.trim() || !title.trim() || loading) return

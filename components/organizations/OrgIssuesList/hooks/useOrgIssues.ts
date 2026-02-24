@@ -3,9 +3,10 @@ import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
 import {
   ListProjectsRequestSchema,
-  ListIssuesRequestSchema,
+  ListItemsRequestSchema,
   type Issue,
 } from '@/gen/centy_pb'
+import { genericItemToIssue } from '@/lib/genericItemToIssue'
 
 async function fetchOrgIssuesFromProjects(
   orgSlug: string
@@ -14,8 +15,7 @@ async function fetchOrgIssuesFromProjects(
     create(ListProjectsRequestSchema, { organizationSlug: orgSlug })
   )
   const orgProjects = projectsRes.projects.filter(p => p.initialized)
-  const firstProjectPath =
-    orgProjects.length > 0 ? orgProjects[0].path : null
+  const firstProjectPath = orgProjects.length > 0 ? orgProjects[0].path : null
 
   const seen = new Set<string>()
   const orgIssues: Issue[] = []
@@ -23,10 +23,13 @@ async function fetchOrgIssuesFromProjects(
   await Promise.all(
     orgProjects.map(async project => {
       try {
-        const res = await centyClient.listIssues(
-          create(ListIssuesRequestSchema, { projectPath: project.path })
+        const res = await centyClient.listItems(
+          create(ListItemsRequestSchema, {
+            projectPath: project.path,
+            itemType: 'issues',
+          })
         )
-        for (const issue of res.issues) {
+        for (const issue of res.items.map(genericItemToIssue)) {
           const meta = issue.metadata
           if (!meta || !meta.isOrgIssue || meta.orgSlug !== orgSlug) continue
           if (seen.has(issue.id)) continue

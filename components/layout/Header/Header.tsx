@@ -68,7 +68,7 @@ export function Header() {
           <ThemeToggle />
           <DaemonStatusIndicator />
           <OrgSwitcher />
-          {selectedOrgSlug !== null && <ProjectSelector />}
+          {selectedOrgSlug !== undefined && <ProjectSelector />}
         </div>
         <button
           className={`mobile-menu-toggle ${mobileMenuOpen ? 'open' : ''}`}
