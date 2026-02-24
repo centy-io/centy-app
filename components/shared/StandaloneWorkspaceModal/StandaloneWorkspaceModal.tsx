@@ -53,7 +53,11 @@ function WorkspaceFormFields({ state }: { state: WorkspaceState }) {
           className="standalone-modal-select"
         >
           {TTL_OPTIONS.map(o => (
-            <option key={o.value} value={o.value} className="o">
+            <option
+              key={o.value}
+              value={o.value}
+              className="standalone-modal-option"
+            >
               {o.label}
             </option>
           ))}
@@ -70,6 +74,7 @@ function WorkspaceFormFields({ state }: { state: WorkspaceState }) {
 
 export function StandaloneWorkspaceModal(props: StandaloneWorkspaceModalProps) {
   const state = useStandaloneWorkspace(props)
+  const err = state.error
   return (
     <div className="standalone-modal-overlay">
       <div className="standalone-modal" ref={state.modalRef}>
@@ -80,9 +85,9 @@ export function StandaloneWorkspaceModal(props: StandaloneWorkspaceModalProps) {
           </button>
         </div>
         <div className="standalone-modal-body">
-          {state.error && (
+          {err && (
             <DaemonErrorMessage
-              error={state.error}
+              error={err}
               className="standalone-modal-error"
             />
           )}

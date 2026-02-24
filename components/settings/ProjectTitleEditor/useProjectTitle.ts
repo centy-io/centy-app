@@ -3,8 +3,8 @@
 import { useState, useCallback, useEffect } from 'react'
 import { create } from '@bufbuild/protobuf'
 import { saveTitle, clearTitle } from './titleActions'
-import type { TitleActionResult } from './TitleActionResult'
 import type { TitleScope } from './TitleScope'
+import { runTitleAction } from './runTitleAction'
 import { centyClient } from '@/lib/grpc/client'
 import { ListProjectsRequestSchema, type ProjectInfo } from '@/gen/centy_pb'
 
@@ -22,31 +22,6 @@ async function fetchTitleProjectInfo(
     if (project) applyProject(project)
   } catch (err) {
     console.error('Failed to fetch project info:', err)
-  }
-}
-
-async function runTitleAction(
-  action: () => Promise<TitleActionResult>,
-  setError: (e: string | null) => void,
-  setSuccess: (s: string | null) => void,
-  setSaving: (v: boolean) => void,
-  applyProject: (p: ProjectInfo) => void
-) {
-  setError(null)
-  setSuccess(null)
-  setSaving(true)
-  try {
-    const result = await action()
-    if (!result.success) {
-      setError(result.error || 'Operation failed')
-      return
-    }
-    if (result.project) applyProject(result.project)
-    setSuccess(result.message || 'Done')
-  } catch (err) {
-    setError(err instanceof Error ? err.message : 'Operation failed')
-  } finally {
-    setSaving(false)
   }
 }
 
