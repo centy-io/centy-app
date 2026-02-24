@@ -9,7 +9,6 @@ import { OrgSection } from './OrgSection'
 import { usePathContext } from '@/components/providers/PathContextProvider'
 import { useOrganization } from '@/components/providers/OrganizationProvider'
 import { ProjectTitleEditor } from '@/components/settings/ProjectTitleEditor'
-import { AgentConfigEditor } from '@/components/settings/AgentConfigEditor'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import { ConfigSections } from '@/components/settings/Settings/ConfigSections'
 import { ManifestSection } from '@/components/settings/Settings/ManifestSection'
@@ -96,13 +95,6 @@ export function ProjectConfig() {
                   onReset={data.handleResetConfig}
                 />
               )}
-
-              <section className="settings-section">
-                <h3 className="settings-section-title">Agent Configuration</h3>
-                <div className="settings-card">
-                  <AgentConfigEditor />
-                </div>
-              </section>
 
               <ManifestSection manifest={data.manifest} />
             </>

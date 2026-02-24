@@ -3,7 +3,6 @@
 @import './App.css';
 
 /* Component styles */
-@import './components/AgentConfigEditor.css';
 @import './components/AssetUploader.css';
 @import './components/ColorPicker.css';
 @import './components/CustomFieldsEditor.css';
