@@ -15,7 +15,12 @@ export function ProjectSelector() {
   return (
     <PopoverRoot open={state.isOpen} onOpenChange={state.setIsOpen}>
       <PopoverTrigger asChild>
-        <button className="project-selector-trigger" aria-haspopup="listbox">
+        <button
+          className="project-selector-trigger"
+          aria-haspopup="listbox"
+          aria-expanded={state.isOpen}
+          aria-controls="project-listbox"
+        >
           <span className="project-icon">{'\uD83D\uDCC1'}</span>
           <span className="project-name">{state.getCurrentProjectName()}</span>
           <span className="dropdown-arrow">

@@ -10,6 +10,10 @@ interface ProjectItemProps {
   onArchive: (e: React.MouseEvent, project: ProjectInfo) => void
 }
 
+function toOptionId(path: string) {
+  return `project-option-${path.replace(/[^a-z0-9]/gi, '-')}`
+}
+
 export function ProjectItem({
   project,
   isSelected,
@@ -19,6 +23,7 @@ export function ProjectItem({
 }: ProjectItemProps) {
   return (
     <li
+      id={toOptionId(project.path)}
       role="option"
       aria-selected={isSelected}
       tabIndex={0}
