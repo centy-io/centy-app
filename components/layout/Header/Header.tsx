@@ -1,20 +1,19 @@
-/* eslint-disable max-lines */
 'use client'
 
 import Link from 'next/link'
 import { route } from 'nextjs-routes'
 import { useHeaderNav } from './useHeaderNav'
 import { useMobileMenu } from './useMobileMenu'
+import { ContextLink } from './ContextLink'
 import { DesktopNav } from './DesktopNav'
 import { MobileMenu } from './MobileMenu'
+import { MobileMenuToggle } from './MobileMenuToggle'
 import { DaemonStatusIndicator } from '@/components/shared/DaemonStatusIndicator'
 import { ThemeToggle } from '@/components/shared/ThemeToggle'
 import { OrgSwitcher } from '@/components/organizations/OrgSwitcher'
 import { ProjectSelector } from '@/components/project/ProjectSelector'
 import { useOrganization } from '@/components/providers/OrganizationProvider'
-import { UNGROUPED_ORG_MARKER } from '@/lib/project-resolver'
 
-// eslint-disable-next-line max-lines-per-function
 export function Header() {
   const { selectedOrgSlug } = useOrganization()
   const {
@@ -28,24 +27,6 @@ export function Header() {
   } = useHeaderNav()
   const { mobileMenuOpen, setMobileMenuOpen, toggleMobileMenu } =
     useMobileMenu(pathname)
-
-  const contextDisplay =
-    hasProjectContext && effectiveOrg && effectiveProject ? (
-      <Link
-        href={
-          effectiveOrg === UNGROUPED_ORG_MARKER
-            ? route({ pathname: '/organizations' })
-            : route({
-                pathname: '/organizations/[orgSlug]',
-                query: { orgSlug: effectiveOrg },
-              })
-        }
-        className="header-context-link"
-      >
-        {effectiveOrg === UNGROUPED_ORG_MARKER ? '' : `${effectiveOrg} / `}
-        {effectiveProject}
-      </Link>
-    ) : null
 
   return (
     <header className="app-header">
@@ -62,7 +43,12 @@ export function Header() {
             />
             <span className="header-app-name">Centy</span>
           </Link>
-          {contextDisplay}
+          {hasProjectContext && effectiveOrg && effectiveProject && (
+            <ContextLink
+              effectiveOrg={effectiveOrg}
+              effectiveProject={effectiveProject}
+            />
+          )}
         </h1>
         <div className="header-controls">
           <ThemeToggle />
@@ -70,16 +56,7 @@ export function Header() {
           <OrgSwitcher />
           {selectedOrgSlug !== undefined && <ProjectSelector />}
         </div>
-        <button
-          className={`mobile-menu-toggle ${mobileMenuOpen ? 'open' : ''}`}
-          onClick={toggleMobileMenu}
-          aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
-          aria-expanded={mobileMenuOpen}
-        >
-          <span className="hamburger-line" />
-          <span className="hamburger-line" />
-          <span className="hamburger-line" />
-        </button>
+        <MobileMenuToggle isOpen={mobileMenuOpen} onToggle={toggleMobileMenu} />
       </div>
       <p className="header-tagline">
         Local-first issue and documentation tracker
@@ -88,8 +65,6 @@ export function Header() {
         navLinks={navLinks}
         pathname={pathname}
         isActive={isActive}
-        effectiveOrg={effectiveOrg}
-        effectiveProject={effectiveProject}
         itemTypes={itemTypes}
       />
       <MobileMenu
@@ -99,8 +74,6 @@ export function Header() {
         navLinks={navLinks}
         pathname={pathname}
         isActive={isActive}
-        effectiveOrg={effectiveOrg}
-        effectiveProject={effectiveProject}
         itemTypes={itemTypes}
       />
     </header>

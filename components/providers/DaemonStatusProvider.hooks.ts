@@ -8,6 +8,7 @@ import {
   applyDemoState,
   buildDemoUrl,
   buildDemoRedirectUrl,
+  initializeDemoFromUrl,
 } from './DaemonStatusProvider.helpers'
 import {
   centyClient,
@@ -19,7 +20,6 @@ import { DEMO_ORG_SLUG, DEMO_PROJECT_PATH } from '@/lib/grpc/demo-data'
 import type { EditorInfo } from '@/gen/centy_pb'
 import { trackDaemonConnection } from '@/lib/metrics'
 
-// eslint-disable-next-line max-lines-per-function
 export function useDaemonStatusState() {
   const [status, setStatus] = useState<DaemonStatus>('checking')
   const [lastChecked, setLastChecked] = useState<Date | null>(null)
@@ -29,15 +29,7 @@ export function useDaemonStatusState() {
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      const urlParams = new URLSearchParams(window.location.search)
-      if (urlParams.get('demo') === 'true' && !isDemoMode()) {
-        enableDemoMode()
-        applyDemoState(setStatus, setVscodeAvailable, setEditors)
-        const newUrl = buildDemoUrl(DEMO_ORG_SLUG, DEMO_PROJECT_PATH)
-        window.history.replaceState({}, '', newUrl)
-      } else if (isDemoMode()) {
-        applyDemoState(setStatus, setVscodeAvailable, setEditors)
-      }
+      initializeDemoFromUrl(setStatus, setVscodeAvailable, setEditors)
       setHasMounted(true)
     }, 0)
     return () => clearTimeout(timeoutId)
@@ -54,12 +46,10 @@ export function useDaemonStatusState() {
       setStatus('connected')
       setVscodeAvailable(daemonInfo.vscodeAvailable)
       trackDaemonConnection(true, false)
-      try {
-        const resp = await centyClient.getSupportedEditors({})
-        setEditors(resp.editors)
-      } catch {
-        setEditors(createFallbackEditors(daemonInfo.vscodeAvailable))
-      }
+      const resp = await centyClient.getSupportedEditors({}).catch(() => null)
+      setEditors(
+        resp ? resp.editors : createFallbackEditors(daemonInfo.vscodeAvailable)
+      )
     } catch {
       setStatus('disconnected')
       setVscodeAvailable(null)
@@ -83,8 +73,7 @@ export function useDaemonStatusState() {
     disableDemoMode()
     setStatus('checking')
     setTimeout(() => checkDaemonStatus(), 100)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [checkDaemonStatus])
 
   useEffect(() => {
     if (!hasMounted || isDemoMode()) return
@@ -94,8 +83,7 @@ export function useDaemonStatusState() {
       clearTimeout(timeoutId)
       clearInterval(interval)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasMounted])
+  }, [hasMounted, checkDaemonStatus])
 
   return {
     status,
