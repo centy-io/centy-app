@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 'use client'
 
 import { useCallback } from 'react'
@@ -27,7 +26,27 @@ interface UseProjectActionsParams {
   manualPath: string
 }
 
-// eslint-disable-next-line max-lines-per-function
+function getCurrentPageFromParams(
+  routeParams: ReturnType<typeof useParams>,
+  pathname: string
+): string {
+  const orgP = routeParams ? routeParams.organization : undefined
+  const org = typeof orgP === 'string' ? orgP : undefined
+  const projP = routeParams ? routeParams.project : undefined
+  const proj = typeof projP === 'string' ? projP : undefined
+  const segments = pathname.split('/').filter(Boolean)
+  if (org && proj) return segments[2] || 'issues'
+  if (segments.length >= 2 && !ROOT_ROUTES.has(segments[0]))
+    return segments[2] || 'issues'
+  return segments[0] || 'issues'
+}
+
+async function registerProjectPath(path: string) {
+  return centyClient.registerProject(
+    create(RegisterProjectRequestSchema, { projectPath: path })
+  )
+}
+
 export function useProjectActions(params: UseProjectActionsParams) {
   const router = useRouter()
   const routeParams = useParams()
@@ -35,17 +54,10 @@ export function useProjectActions(params: UseProjectActionsParams) {
   const { projectPath, setProjectPath, setIsInitialized } = useProject()
   const { archiveProject } = useArchivedProjects()
 
-  const getCurrentPage = useCallback(() => {
-    const orgP = routeParams ? routeParams.organization : undefined
-    const org = typeof orgP === 'string' ? orgP : undefined
-    const projP = routeParams ? routeParams.project : undefined
-    const proj = typeof projP === 'string' ? projP : undefined
-    const segments = pathname.split('/').filter(Boolean)
-    if (org && proj) return segments[2] || 'issues'
-    if (segments.length >= 2 && !ROOT_ROUTES.has(segments[0]))
-      return segments[2] || 'issues'
-    return segments[0] || 'issues'
-  }, [routeParams, pathname])
+  const getCurrentPage = useCallback(
+    () => getCurrentPageFromParams(routeParams, pathname),
+    [routeParams, pathname]
+  )
 
   const handleSelectProject = (project: ProjectInfo) => {
     const orgSlug = project.organizationSlug || UNGROUPED_ORG_MARKER
@@ -67,8 +79,7 @@ export function useProjectActions(params: UseProjectActionsParams) {
     if (!params.manualPath.trim()) return
     const path = params.manualPath.trim()
     try {
-      const req = create(RegisterProjectRequestSchema, { projectPath: path })
-      const res = await centyClient.registerProject(req)
+      const res = await registerProjectPath(path)
       if (res.success && res.project) {
         setProjectPath(path)
         setIsInitialized(res.project.initialized)

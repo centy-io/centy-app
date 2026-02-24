@@ -4,7 +4,29 @@ import { centyClient } from '@/lib/grpc/client'
 import { UpdateItemRequestSchema, type Issue } from '@/gen/centy_pb'
 import { genericItemToIssue } from '@/lib/genericItemToIssue'
 
-// eslint-disable-next-line max-lines-per-function
+function useClickOutsideDropdown(
+  ref: React.RefObject<HTMLDivElement | null>,
+  showDropdown: boolean,
+  onClose: () => void
+) {
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        ref.current &&
+        !(event.target instanceof Node && ref.current.contains(event.target))
+      ) {
+        onClose()
+      }
+    }
+    if (showDropdown) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [ref, showDropdown, onClose])
+}
+
 export function useStatusChange(
   projectPath: string,
   issueNumber: string,
@@ -17,26 +39,8 @@ export function useStatusChange(
   const [updatingStatus, setUpdatingStatus] = useState(false)
   const statusDropdownRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        statusDropdownRef.current &&
-        !(
-          event.target instanceof Node &&
-          statusDropdownRef.current.contains(event.target)
-        )
-      ) {
-        setShowStatusDropdown(false)
-      }
-    }
-
-    if (showStatusDropdown) {
-      document.addEventListener('mousedown', handleClickOutside)
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [showStatusDropdown])
+  const closeDropdown = useCallback(() => setShowStatusDropdown(false), [])
+  useClickOutsideDropdown(statusDropdownRef, showStatusDropdown, closeDropdown)
 
   const handleStatusChange = useCallback(
     async (newStatus: string) => {
@@ -47,7 +51,6 @@ export function useStatusChange(
       }
       setUpdatingStatus(true)
       setError(null)
-
       try {
         const request = create(UpdateItemRequestSchema, {
           projectPath,

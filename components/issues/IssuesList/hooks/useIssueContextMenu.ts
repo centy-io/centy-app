@@ -1,11 +1,55 @@
 import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import type { RouteLiteral } from 'nextjs-routes'
 import { buildContextMenuItems } from './buildContextMenuItems'
 import { useIssueMoveActions } from './useIssueMoveActions'
 import type { Issue } from '@/gen/centy_pb'
-import { usePinnedItems } from '@/hooks/usePinnedItems'
+import { usePinnedItems, type PinnedItem } from '@/hooks/usePinnedItems'
 
-// eslint-disable-next-line max-lines-per-function
+interface PinActions {
+  isPinned: (id: string) => boolean
+  pinItem: (item: Omit<PinnedItem, 'pinnedAt'>) => void
+  unpinItem: (id: string) => void
+}
+
+interface ContextMenuState {
+  x: number
+  y: number
+  issue: Issue
+}
+
+function buildMenuItems(
+  contextMenu: ContextMenuState | null,
+  pinActions: PinActions,
+  createLink: (path: string) => RouteLiteral,
+  router: ReturnType<typeof useRouter>,
+  setContextMenu: (v: ContextMenuState | null) => void,
+  setSelectedIssue: (v: Issue | null) => void,
+  setShowMoveModal: (v: boolean) => void,
+  setShowDuplicateModal: (v: boolean) => void
+) {
+  if (!contextMenu) return []
+  return buildContextMenuItems({
+    issue: contextMenu.issue,
+    pinActions,
+    onView: () => {
+      router.push(createLink(`/issues/${contextMenu.issue.id}`))
+      setContextMenu(null)
+    },
+    onMove: () => {
+      setSelectedIssue(contextMenu.issue)
+      setShowMoveModal(true)
+      setContextMenu(null)
+    },
+    onDuplicate: () => {
+      setSelectedIssue(contextMenu.issue)
+      setShowDuplicateModal(true)
+      setContextMenu(null)
+    },
+    onClose: () => setContextMenu(null),
+  })
+}
+
 export function useIssueContextMenu(
   projectPath: string,
   fetchIssues: () => void
@@ -17,11 +61,7 @@ export function useIssueContextMenu(
     fetchIssues
   )
 
-  const [contextMenu, setContextMenu] = useState<{
-    x: number
-    y: number
-    issue: Issue
-  } | null>(null)
+  const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null)
   const [showMoveModal, setShowMoveModal] = useState(false)
   const [showDuplicateModal, setShowDuplicateModal] = useState(false)
   const [showStandaloneModal, setShowStandaloneModal] = useState(false)
@@ -42,27 +82,16 @@ export function useIssueContextMenu(
     [handleDuplicated]
   )
 
-  const contextMenuItems = contextMenu
-    ? buildContextMenuItems({
-        issue: contextMenu.issue,
-        pinActions: { isPinned, pinItem, unpinItem },
-        onView: () => {
-          router.push(createLink(`/issues/${contextMenu.issue.id}`))
-          setContextMenu(null)
-        },
-        onMove: () => {
-          setSelectedIssue(contextMenu.issue)
-          setShowMoveModal(true)
-          setContextMenu(null)
-        },
-        onDuplicate: () => {
-          setSelectedIssue(contextMenu.issue)
-          setShowDuplicateModal(true)
-          setContextMenu(null)
-        },
-        onClose: () => setContextMenu(null),
-      })
-    : []
+  const contextMenuItems = buildMenuItems(
+    contextMenu,
+    { isPinned, pinItem, unpinItem },
+    createLink,
+    router,
+    setContextMenu,
+    setSelectedIssue,
+    setShowMoveModal,
+    setShowDuplicateModal
+  )
 
   return {
     contextMenu,

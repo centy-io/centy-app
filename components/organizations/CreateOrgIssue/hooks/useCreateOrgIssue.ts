@@ -7,7 +7,33 @@ import { centyClient } from '@/lib/grpc/client'
 import { CreateItemRequestSchema } from '@/gen/centy_pb'
 import { useStateManager } from '@/lib/state'
 
-// eslint-disable-next-line max-lines-per-function
+function orgIssuesRoute(orgSlug: string) {
+  return route({
+    pathname: '/organizations/[orgSlug]/issues',
+    query: { orgSlug },
+  })
+}
+
+async function createOrgIssueRequest(
+  orgProjectPath: string,
+  title: string,
+  description: string,
+  priority: number,
+  status: string
+) {
+  return centyClient.createItem(
+    create(CreateItemRequestSchema, {
+      projectPath: orgProjectPath,
+      itemType: 'issues',
+      title: title.trim(),
+      body: description.trim(),
+      priority,
+      status,
+      customFields: { is_org_issue: 'true' },
+    })
+  )
+}
+
 export function useCreateOrgIssue(orgSlug: string) {
   const router = useRouter()
   const stateManager = useStateManager()
@@ -25,28 +51,18 @@ export function useCreateOrgIssue(orgSlug: string) {
     async (e?: React.FormEvent) => {
       if (e) e.preventDefault()
       if (!orgProjectPath || !title.trim()) return
-
       setLoading(true)
       setError(null)
       try {
-        const res = await centyClient.createItem(
-          create(CreateItemRequestSchema, {
-            projectPath: orgProjectPath,
-            itemType: 'issues',
-            title: title.trim(),
-            body: description.trim(),
-            priority,
-            status,
-            customFields: { is_org_issue: 'true' },
-          })
+        const res = await createOrgIssueRequest(
+          orgProjectPath,
+          title,
+          description,
+          priority,
+          status
         )
         if (res.success) {
-          router.push(
-            route({
-              pathname: '/organizations/[orgSlug]/issues',
-              query: { orgSlug },
-            })
-          )
+          router.push(orgIssuesRoute(orgSlug))
         } else {
           setError(res.error || 'Failed to create org issue')
         }
@@ -62,12 +78,7 @@ export function useCreateOrgIssue(orgSlug: string) {
   )
 
   const handleCancel = useCallback(() => {
-    router.push(
-      route({
-        pathname: '/organizations/[orgSlug]/issues',
-        query: { orgSlug },
-      })
-    )
+    router.push(orgIssuesRoute(orgSlug))
   }, [orgSlug, router])
 
   return {

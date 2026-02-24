@@ -15,7 +15,44 @@ import {
   type InitResponse,
 } from '@/gen/centy_pb'
 
-// eslint-disable-next-line max-lines-per-function
+async function runQuickInit(projectPath: string) {
+  return centyClient.init(
+    create(InitRequestSchema, { projectPath: projectPath.trim(), force: true })
+  )
+}
+
+async function runGetPlan(projectPath: string) {
+  return centyClient.getReconciliationPlan(
+    create(GetReconciliationPlanRequestSchema, {
+      projectPath: projectPath.trim(),
+    })
+  )
+}
+
+async function runExecutePlan(
+  projectPath: string,
+  selectedRestore: Set<string>,
+  selectedReset: Set<string>
+) {
+  const decisions = create(ReconciliationDecisionsSchema, {
+    restore: Array.from(selectedRestore),
+    reset: Array.from(selectedReset),
+  })
+  return centyClient.executeReconciliation(
+    create(ExecuteReconciliationRequestSchema, {
+      projectPath: projectPath.trim(),
+      decisions,
+    })
+  )
+}
+
+function toggleSetItem(prev: Set<string>, path: string): Set<string> {
+  const next = new Set(prev)
+  if (next.has(path)) next.delete(path)
+  else next.add(path)
+  return next
+}
+
 export function useInitProject() {
   const [projectPath, setProjectPath] = useState('')
   const [step, setStep] = useState<InitStep>('input')
@@ -51,11 +88,7 @@ export function useInitProject() {
     setLoading(true)
     setError(null)
     try {
-      const req = create(InitRequestSchema, {
-        projectPath: projectPath.trim(),
-        force: true,
-      })
-      const res = await centyClient.init(req)
+      const res = await runQuickInit(projectPath)
       if (res.success) {
         setResult(res)
         setStep('success')
@@ -78,10 +111,7 @@ export function useInitProject() {
     setLoading(true)
     setError(null)
     try {
-      const req = create(GetReconciliationPlanRequestSchema, {
-        projectPath: projectPath.trim(),
-      })
-      const res = await centyClient.getReconciliationPlan(req)
+      const res = await runGetPlan(projectPath)
       setPlan(res)
       setStep('plan')
       setSelectedRestore(new Set(res.toRestore.map(f => f.path)))
@@ -101,15 +131,11 @@ export function useInitProject() {
     setLoading(true)
     setStep('executing')
     try {
-      const decisions = create(ReconciliationDecisionsSchema, {
-        restore: Array.from(selectedRestore),
-        reset: Array.from(selectedReset),
-      })
-      const req = create(ExecuteReconciliationRequestSchema, {
-        projectPath: projectPath.trim(),
-        decisions,
-      })
-      const res = await centyClient.executeReconciliation(req)
+      const res = await runExecutePlan(
+        projectPath,
+        selectedRestore,
+        selectedReset
+      )
       if (res.success) {
         setResult(res)
         setStep('success')
@@ -128,23 +154,11 @@ export function useInitProject() {
   }, [projectPath, selectedRestore, selectedReset])
 
   const toggleRestore = useCallback((path: string) => {
-    setSelectedRestore(prev => {
-      const next = new Set(prev)
-      if (next.has(path)) next.delete(path)
-      else next.add(path)
-      return next
-    })
+    setSelectedRestore(prev => toggleSetItem(prev, path))
   }, [])
-
   const toggleReset = useCallback((path: string) => {
-    setSelectedReset(prev => {
-      const next = new Set(prev)
-      if (next.has(path)) next.delete(path)
-      else next.add(path)
-      return next
-    })
+    setSelectedReset(prev => toggleSetItem(prev, path))
   }, [])
-
   const handleReset = useCallback(() => {
     setStep('input')
     setPlan(null)

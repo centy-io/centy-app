@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 'use client'
 
 import { useState, useCallback, useEffect } from 'react'
@@ -17,7 +16,28 @@ import {
 } from '@/components/providers/ProjectProvider'
 import { UNGROUPED_ORG_MARKER } from '@/lib/project-resolver'
 
-// eslint-disable-next-line max-lines-per-function
+async function untrackProjectRequest(projectPath: string) {
+  return centyClient.untrackProject(
+    create(UntrackProjectRequestSchema, { projectPath })
+  )
+}
+
+async function removeAllArchived(
+  archivedProjects: ProjectInfo[],
+  archivedPathsNotInDaemon: string[],
+  removeArchivedProject: (path: string) => void
+): Promise<string | null> {
+  for (const project of archivedProjects) {
+    const response = await untrackProjectRequest(project.path)
+    if (!response.success && response.error) return response.error
+    removeArchivedProject(project.path)
+  }
+  for (const path of archivedPathsNotInDaemon) {
+    removeArchivedProject(path)
+  }
+  return null
+}
+
 export function useArchivedProjectActions() {
   const router = useRouter()
   const { archivedPaths, unarchiveProject, removeArchivedProject } =
@@ -35,8 +55,9 @@ export function useArchivedProjectActions() {
     setLoading(true)
     setError(null)
     try {
-      const request = create(ListProjectsRequestSchema, { includeStale: true })
-      const response = await centyClient.listProjects(request)
+      const response = await centyClient.listProjects(
+        create(ListProjectsRequestSchema, { includeStale: true })
+      )
       setAllProjects(response.projects)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load projects')
@@ -77,8 +98,7 @@ export function useArchivedProjectActions() {
     setRemovingPath(projectPath)
     setError(null)
     try {
-      const request = create(UntrackProjectRequestSchema, { projectPath })
-      const response = await centyClient.untrackProject(request)
+      const response = await untrackProjectRequest(projectPath)
       if (!response.success && response.error) {
         setError(response.error)
       } else {
@@ -102,21 +122,16 @@ export function useArchivedProjectActions() {
     setRemovingAll(true)
     setError(null)
     try {
-      for (const project of archivedProjects) {
-        const request = create(UntrackProjectRequestSchema, {
-          projectPath: project.path,
-        })
-        const response = await centyClient.untrackProject(request)
-        if (!response.success && response.error) {
-          setError(response.error)
-          setRemovingAll(false)
-          setConfirmRemoveAll(false)
-          return
-        }
-        removeArchivedProject(project.path)
-      }
-      for (const path of archivedPathsNotInDaemon) {
-        removeArchivedProject(path)
+      const err = await removeAllArchived(
+        archivedProjects,
+        archivedPathsNotInDaemon,
+        removeArchivedProject
+      )
+      if (err) {
+        setError(err)
+        setRemovingAll(false)
+        setConfirmRemoveAll(false)
+        return
       }
       setAllProjects(prev => prev.filter(p => !archivedPaths.includes(p.path)))
     } catch (err) {

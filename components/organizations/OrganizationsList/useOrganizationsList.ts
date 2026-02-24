@@ -54,7 +54,43 @@ function getInitialSortPreset(): SortPreset {
   return 'name-asc'
 }
 
-// eslint-disable-next-line max-lines-per-function
+function buildOrgContextMenuItems(
+  contextMenu: ContextMenuState | null,
+  router: ReturnType<typeof useRouter>,
+  setContextMenu: (v: ContextMenuState | null) => void,
+  setShowDeleteConfirm: (v: string | null) => void
+): ContextMenuItem[] {
+  if (!contextMenu) return []
+  const orgRoute = route({
+    pathname: '/organizations/[orgSlug]',
+    query: { orgSlug: contextMenu.org.slug },
+  })
+  return [
+    {
+      label: 'View',
+      onClick: () => {
+        router.push(orgRoute)
+        setContextMenu(null)
+      },
+    },
+    {
+      label: 'Edit',
+      onClick: () => {
+        router.push(orgRoute)
+        setContextMenu(null)
+      },
+    },
+    {
+      label: 'Delete',
+      onClick: () => {
+        setShowDeleteConfirm(contextMenu.org.slug)
+        setContextMenu(null)
+      },
+      danger: true,
+    },
+  ]
+}
+
 export function useOrganizationsList() {
   const router = useRouter()
   const [organizations, setOrganizations] = useState<Organization[]>([])
@@ -80,12 +116,11 @@ export function useOrganizationsList() {
     try {
       sessionStorage.setItem(SORT_SESSION_KEY, raw)
     } catch {
-      // ignore
+      /* ignore */
     }
   }, [])
 
   const columns = useMemo(() => getColumns(), [])
-
   const table = useReactTable({
     data: organizations,
     columns,
@@ -101,8 +136,9 @@ export function useOrganizationsList() {
     setLoading(true)
     setError(null)
     try {
-      const request = create(ListOrganizationsRequestSchema, {})
-      const response = await centyClient.listOrganizations(request)
+      const response = await centyClient.listOrganizations(
+        create(ListOrganizationsRequestSchema, {})
+      )
       setOrganizations(response.organizations)
     } catch (err) {
       const message =
@@ -125,14 +161,13 @@ export function useOrganizationsList() {
     setDeleting(true)
     setDeleteError(null)
     try {
-      const request = create(DeleteOrganizationRequestSchema, { slug })
-      const response = await centyClient.deleteOrganization(request)
+      const response = await centyClient.deleteOrganization(
+        create(DeleteOrganizationRequestSchema, { slug })
+      )
       if (response.success) {
         setOrganizations(prev => prev.filter(o => o.slug !== slug))
         setShowDeleteConfirm(null)
-      } else {
-        setDeleteError(response.error || 'Failed to delete organization')
-      }
+      } else setDeleteError(response.error || 'Failed to delete organization')
     } catch (err) {
       setDeleteError(
         err instanceof Error ? err.message : 'Failed to connect to daemon'
@@ -150,42 +185,12 @@ export function useOrganizationsList() {
     []
   )
 
-  const contextMenuItems: ContextMenuItem[] = contextMenu
-    ? [
-        {
-          label: 'View',
-          onClick: () => {
-            router.push(
-              route({
-                pathname: '/organizations/[orgSlug]',
-                query: { orgSlug: contextMenu.org.slug },
-              })
-            )
-            setContextMenu(null)
-          },
-        },
-        {
-          label: 'Edit',
-          onClick: () => {
-            router.push(
-              route({
-                pathname: '/organizations/[orgSlug]',
-                query: { orgSlug: contextMenu.org.slug },
-              })
-            )
-            setContextMenu(null)
-          },
-        },
-        {
-          label: 'Delete',
-          onClick: () => {
-            setShowDeleteConfirm(contextMenu.org.slug)
-            setContextMenu(null)
-          },
-          danger: true,
-        },
-      ]
-    : []
+  const contextMenuItems = buildOrgContextMenuItems(
+    contextMenu,
+    router,
+    setContextMenu,
+    setShowDeleteConfirm
+  )
 
   return {
     organizations,

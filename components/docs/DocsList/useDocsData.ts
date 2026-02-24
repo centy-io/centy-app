@@ -8,7 +8,28 @@ import {
 } from '@/gen/centy_pb'
 import { genericItemToDoc } from '@/lib/genericItemToDoc'
 
-// eslint-disable-next-line max-lines-per-function
+async function fetchDocsRequest(projectPath: string): Promise<Doc[]> {
+  const request = create(ListItemsRequestSchema, {
+    projectPath: projectPath.trim(),
+    itemType: 'docs',
+  })
+  const response = await centyClient.listItems(request)
+  return response.items.map(genericItemToDoc)
+}
+
+async function deleteDocRequest(
+  projectPath: string,
+  slug: string
+): Promise<{ success: boolean; error?: string }> {
+  const request = create(DeleteItemRequestSchema, {
+    projectPath,
+    itemType: 'docs',
+    itemId: slug,
+  })
+  const response = await centyClient.deleteItem(request)
+  return { success: response.success, error: response.error }
+}
+
 export function useDocsData(
   projectPath: string,
   isInitialized: boolean | null
@@ -21,17 +42,10 @@ export function useDocsData(
 
   const fetchDocs = useCallback(async () => {
     if (!projectPath.trim() || isInitialized !== true) return
-
     setLoading(true)
     setError(null)
-
     try {
-      const request = create(ListItemsRequestSchema, {
-        projectPath: projectPath.trim(),
-        itemType: 'docs',
-      })
-      const response = await centyClient.listItems(request)
-      setDocs(response.items.map(genericItemToDoc))
+      setDocs(await fetchDocsRequest(projectPath))
     } catch (err) {
       setError(
         err instanceof Error ? err.message : 'Failed to connect to daemon'
@@ -44,23 +58,15 @@ export function useDocsData(
   const handleDelete = useCallback(
     async (slug: string) => {
       if (!projectPath) return
-
       setDeleting(true)
       setError(null)
-
       try {
-        const request = create(DeleteItemRequestSchema, {
-          projectPath,
-          itemType: 'docs',
-          itemId: slug,
-        })
-        const response = await centyClient.deleteItem(request)
-
-        if (response.success) {
+        const result = await deleteDocRequest(projectPath, slug)
+        if (result.success) {
           setDocs(prev => prev.filter(d => d.slug !== slug))
           setDeleteConfirm(null)
         } else {
-          setError(response.error || 'Failed to delete document')
+          setError(result.error || 'Failed to delete document')
         }
       } catch (err) {
         setError(

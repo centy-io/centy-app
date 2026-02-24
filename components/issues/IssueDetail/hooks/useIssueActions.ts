@@ -19,7 +19,40 @@ interface UseIssueActionsParams {
   setError: (error: string | null) => void
 }
 
-// eslint-disable-next-line max-lines-per-function
+interface SaveEditState {
+  editTitle: string
+  editDescription: string
+  editStatus: string
+  editPriority: number
+  setIsEditing: (v: boolean) => void
+}
+
+async function saveIssueRequest(
+  projectPath: string,
+  issueNumber: string,
+  editState: SaveEditState
+) {
+  const request = create(UpdateItemRequestSchema, {
+    projectPath,
+    itemType: 'issues',
+    itemId: issueNumber,
+    title: editState.editTitle,
+    body: editState.editDescription,
+    status: editState.editStatus,
+    priority: editState.editPriority,
+  })
+  return centyClient.updateItem(request)
+}
+
+async function deleteIssueRequest(projectPath: string, issueNumber: string) {
+  const request = create(DeleteItemRequestSchema, {
+    projectPath,
+    itemType: 'issues',
+    itemId: issueNumber,
+  })
+  return centyClient.deleteItem(request)
+}
+
 export function useIssueActions({
   projectPath,
   issueNumber,
@@ -33,28 +66,16 @@ export function useIssueActions({
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   const handleSave = useCallback(
-    async (editState: {
-      editTitle: string
-      editDescription: string
-      editStatus: string
-      editPriority: number
-      setIsEditing: (v: boolean) => void
-    }) => {
+    async (editState: SaveEditState) => {
       if (!projectPath || !issueNumber) return
       setSaving(true)
       setError(null)
-
       try {
-        const request = create(UpdateItemRequestSchema, {
+        const response = await saveIssueRequest(
           projectPath,
-          itemType: 'issues',
-          itemId: issueNumber,
-          title: editState.editTitle,
-          body: editState.editDescription,
-          status: editState.editStatus,
-          priority: editState.editPriority,
-        })
-        const response = await centyClient.updateItem(request)
+          issueNumber,
+          editState
+        )
         if (response.success && response.item) {
           setIssue(genericItemToIssue(response.item))
           editState.setIsEditing(false)
@@ -76,14 +97,8 @@ export function useIssueActions({
     if (!projectPath || !issueNumber) return
     setDeleting(true)
     setError(null)
-
     try {
-      const request = create(DeleteItemRequestSchema, {
-        projectPath,
-        itemType: 'issues',
-        itemId: issueNumber,
-      })
-      const response = await centyClient.deleteItem(request)
+      const response = await deleteIssueRequest(projectPath, issueNumber)
       if (response.success) {
         router.push(issuesListUrl)
       } else {

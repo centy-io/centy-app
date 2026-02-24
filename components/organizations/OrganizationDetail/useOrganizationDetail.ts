@@ -23,21 +23,76 @@ function formatErr(err: unknown): string {
     : m
 }
 
-// eslint-disable-next-line max-lines-per-function
+async function fetchOrgAndProjects(orgSlug: string) {
+  const res = await centyClient.getOrganization(
+    create(GetOrganizationRequestSchema, { slug: orgSlug })
+  )
+  if (!res.found || !res.organization)
+    return { error: 'Organization not found' }
+  const listRes = await centyClient.listProjects(
+    create(ListProjectsRequestSchema, { organizationSlug: orgSlug })
+  )
+  return { organization: res.organization, projects: listRes.projects }
+}
+
+async function updateOrgRequest(
+  orgSlug: string,
+  editName: string,
+  editDescription: string,
+  editSlug: string
+) {
+  return centyClient.updateOrganization(
+    create(UpdateOrganizationRequestSchema, {
+      slug: orgSlug,
+      name: editName,
+      description: editDescription,
+      newSlug: editSlug !== orgSlug ? editSlug : undefined,
+    })
+  )
+}
+
+function useOrgEditState(organization: Organization | null) {
+  const [isEditing, setIsEditing] = useState(false)
+  const [editName, setEditName] = useState('')
+  const [editDescription, setEditDescription] = useState('')
+  const [editSlug, setEditSlug] = useState('')
+
+  const initFromOrg = useCallback((org: Organization) => {
+    setEditName(org.name)
+    setEditDescription(org.description || '')
+    setEditSlug(org.slug)
+  }, [])
+
+  const handleCancelEdit = useCallback(() => {
+    setIsEditing(false)
+    if (organization) initFromOrg(organization)
+  }, [organization, initFromOrg])
+
+  return {
+    isEditing,
+    setIsEditing,
+    editName,
+    setEditName,
+    editDescription,
+    setEditDescription,
+    editSlug,
+    setEditSlug,
+    initFromOrg,
+    handleCancelEdit,
+  }
+}
+
 export function useOrganizationDetail(orgSlug: string) {
   const router = useRouter()
   const [organization, setOrganization] = useState<Organization | null>(null)
   const [projects, setProjects] = useState<ProjectInfo[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [isEditing, setIsEditing] = useState(false)
-  const [editName, setEditName] = useState('')
-  const [editDescription, setEditDescription] = useState('')
-  const [editSlug, setEditSlug] = useState('')
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleteError, setDeleteError] = useState<string | null>(null)
+  const editState = useOrgEditState(organization)
 
   const fetchOrganization = useCallback(async () => {
     if (!orgSlug) {
@@ -48,32 +103,21 @@ export function useOrganizationDetail(orgSlug: string) {
     setLoading(true)
     setError(null)
     try {
-      const res = await centyClient.getOrganization(
-        create(GetOrganizationRequestSchema, { slug: orgSlug })
-      )
-      if (!res.found || !res.organization) {
-        setError('Organization not found')
-        setLoading(false)
+      const result = await fetchOrgAndProjects(orgSlug)
+      if (result.error) {
+        setError(result.error)
         return
       }
-      const org = res.organization
+      const org = result.organization!
       setOrganization(org)
-      setEditName(org.name)
-      setEditDescription(org.description || '')
-      setEditSlug(org.slug)
-      setProjects(
-        (
-          await centyClient.listProjects(
-            create(ListProjectsRequestSchema, { organizationSlug: orgSlug })
-          )
-        ).projects
-      )
+      editState.initFromOrg(org)
+      setProjects(result.projects || [])
     } catch (err) {
       setError(formatErr(err))
     } finally {
       setLoading(false)
     }
-  }, [orgSlug])
+  }, [orgSlug, editState])
 
   useEffect(() => {
     fetchOrganization()
@@ -84,17 +128,15 @@ export function useOrganizationDetail(orgSlug: string) {
     setSaving(true)
     setError(null)
     try {
-      const res = await centyClient.updateOrganization(
-        create(UpdateOrganizationRequestSchema, {
-          slug: orgSlug,
-          name: editName,
-          description: editDescription,
-          newSlug: editSlug !== orgSlug ? editSlug : undefined,
-        })
+      const res = await updateOrgRequest(
+        orgSlug,
+        editState.editName,
+        editState.editDescription,
+        editState.editSlug
       )
       if (res.success && res.organization) {
         setOrganization(res.organization)
-        setIsEditing(false)
+        editState.setIsEditing(false)
         if (res.organization.slug !== orgSlug)
           router.push(
             route({
@@ -110,7 +152,7 @@ export function useOrganizationDetail(orgSlug: string) {
     } finally {
       setSaving(false)
     }
-  }, [orgSlug, editName, editDescription, editSlug, router])
+  }, [orgSlug, editState, router])
 
   const handleDelete = useCallback(async () => {
     if (!orgSlug) return
@@ -131,35 +173,19 @@ export function useOrganizationDetail(orgSlug: string) {
     }
   }, [orgSlug, router])
 
-  const handleCancelEdit = () => {
-    setIsEditing(false)
-    if (!organization) return
-    setEditName(organization.name)
-    setEditDescription(organization.description || '')
-    setEditSlug(organization.slug)
-  }
-
   return {
     organization,
     projects,
     loading,
     error,
-    isEditing,
-    editName,
-    editDescription,
-    editSlug,
     saving,
     deleting,
     showDeleteConfirm,
     deleteError,
-    setIsEditing,
-    setEditName,
-    setEditDescription,
-    setEditSlug,
     setShowDeleteConfirm,
     setDeleteError,
     handleSave,
     handleDelete,
-    handleCancelEdit,
+    ...editState,
   }
 }

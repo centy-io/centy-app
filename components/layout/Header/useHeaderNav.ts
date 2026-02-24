@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
@@ -11,7 +10,43 @@ import { ListItemTypesRequestSchema } from '@/gen/centy_pb'
 import { centyClient } from '@/lib/grpc/client'
 import { resolveProject } from '@/lib/project-resolver'
 
-// eslint-disable-next-line max-lines-per-function
+function buildNavLinks(
+  hasProjectContext: boolean,
+  effectiveOrg: string | undefined,
+  effectiveProject: string | undefined
+): NavLinks | null {
+  if (!hasProjectContext || !effectiveOrg || !effectiveProject) return null
+  return {
+    assets: route({
+      pathname: '/[organization]/[project]/assets',
+      query: { organization: effectiveOrg, project: effectiveProject },
+    }),
+    users: route({
+      pathname: '/[organization]/[project]/users',
+      query: { organization: effectiveOrg, project: effectiveProject },
+    }),
+    config: route({
+      pathname: '/[organization]/[project]/config',
+      query: { organization: effectiveOrg, project: effectiveProject },
+    }),
+  }
+}
+
+async function loadItemTypes(
+  effectiveOrg: string,
+  effectiveProject: string
+): Promise<NavItemType[]> {
+  const resolution = await resolveProject(effectiveOrg, effectiveProject)
+  if (!resolution) return []
+  const req = create(ListItemTypesRequestSchema, {
+    projectPath: resolution.projectPath,
+  })
+  const res = await centyClient.listItemTypes(req)
+  return res.itemTypes
+    .map(t => ({ name: t.name, plural: t.plural, itemCount: t.itemCount }))
+    .sort((a, b) => b.itemCount - a.itemCount)
+}
+
 export function useHeaderNav() {
   const pathname = usePathname()
   const params = useParams()
@@ -23,16 +58,14 @@ export function useHeaderNav() {
   const project: string | undefined =
     typeof projectParam === 'string' ? projectParam : undefined
 
-  const pathSegments = useMemo(() => {
-    return pathname.split('/').filter(Boolean)
-  }, [pathname])
+  const pathSegments = useMemo(
+    () => pathname.split('/').filter(Boolean),
+    [pathname]
+  )
 
   const hasProjectContext = useMemo(() => {
     if (org && project) return true
-    if (pathSegments.length >= 2 && !ROOT_ROUTES.has(pathSegments[0])) {
-      return true
-    }
-    return false
+    return pathSegments.length >= 2 && !ROOT_ROUTES.has(pathSegments[0])
   }, [org, project, pathSegments])
 
   const effectiveOrg = org || (hasProjectContext ? pathSegments[0] : undefined)
@@ -49,25 +82,8 @@ export function useHeaderNav() {
     let cancelled = false
     async function fetchItemTypes() {
       try {
-        const resolution = await resolveProject(
-          effectiveOrg!,
-          effectiveProject!
-        )
-        if (cancelled || !resolution) return
-        const req = create(ListItemTypesRequestSchema, {
-          projectPath: resolution.projectPath,
-        })
-        const res = await centyClient.listItemTypes(req)
-        if (cancelled) return
-        setItemTypes(
-          res.itemTypes
-            .map(t => ({
-              name: t.name,
-              plural: t.plural,
-              itemCount: t.itemCount,
-            }))
-            .sort((a, b) => b.itemCount - a.itemCount)
-        )
+        const types = await loadItemTypes(effectiveOrg!, effectiveProject!)
+        if (!cancelled) setItemTypes(types)
       } catch {
         // silently fall back to empty
       }
@@ -78,34 +94,10 @@ export function useHeaderNav() {
     }
   }, [hasProjectContext, effectiveOrg, effectiveProject])
 
-  const navLinks: NavLinks | null = useMemo(() => {
-    if (hasProjectContext && effectiveOrg && effectiveProject) {
-      return {
-        assets: route({
-          pathname: '/[organization]/[project]/assets',
-          query: {
-            organization: effectiveOrg,
-            project: effectiveProject,
-          },
-        }),
-        users: route({
-          pathname: '/[organization]/[project]/users',
-          query: {
-            organization: effectiveOrg,
-            project: effectiveProject,
-          },
-        }),
-        config: route({
-          pathname: '/[organization]/[project]/config',
-          query: {
-            organization: effectiveOrg,
-            project: effectiveProject,
-          },
-        }),
-      }
-    }
-    return null
-  }, [hasProjectContext, effectiveOrg, effectiveProject])
+  const navLinks: NavLinks | null = useMemo(
+    () => buildNavLinks(hasProjectContext, effectiveOrg, effectiveProject),
+    [hasProjectContext, effectiveOrg, effectiveProject]
+  )
 
   const isActive = (href: string, checkPrefix?: boolean) => {
     const resolvedCheckPrefix = checkPrefix !== undefined ? checkPrefix : true
