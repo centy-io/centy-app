@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import { FieldsList } from './FieldsList'
 import { CustomFieldForm } from './CustomFieldForm'
-import { CustomFieldDisplay } from './CustomFieldDisplay'
 import type { CustomFieldDefinition } from '@/gen/centy_pb'
 
 interface CustomFieldsEditorProps {
@@ -10,7 +10,30 @@ interface CustomFieldsEditorProps {
   onChange: (fields: CustomFieldDefinition[]) => void
 }
 
-// eslint-disable-next-line max-lines-per-function
+function moveFieldUp(
+  fields: CustomFieldDefinition[],
+  index: number
+): CustomFieldDefinition[] {
+  if (index === 0) return fields
+  const newFields = [...fields]
+  const curr = newFields.at(index)
+  if (curr === undefined) return fields
+  newFields.splice(index - 1, 2, curr, newFields[index - 1])
+  return newFields
+}
+
+function moveFieldDown(
+  fields: CustomFieldDefinition[],
+  index: number
+): CustomFieldDefinition[] {
+  if (index === fields.length - 1) return fields
+  const newFields = [...fields]
+  const curr = newFields.at(index)
+  if (curr === undefined) return fields
+  newFields.splice(index, 2, newFields[index + 1], curr)
+  return newFields
+}
+
 export function CustomFieldsEditor({
   fields,
   onChange,
@@ -30,59 +53,20 @@ export function CustomFieldsEditor({
     setEditingIndex(null)
   }
 
-  const handleRemove = (index: number) => {
-    onChange(fields.filter((_, i) => i !== index))
-  }
-
-  const handleMoveUp = (index: number) => {
-    if (index === 0) return
-    const newFields = [...fields]
-    const curr = newFields.at(index)
-    if (curr === undefined) return
-    newFields.splice(index - 1, 2, curr, newFields[index - 1])
-    onChange(newFields)
-  }
-
-  const handleMoveDown = (index: number) => {
-    if (index === fields.length - 1) return
-    const newFields = [...fields]
-    const curr = newFields.at(index)
-    if (curr === undefined) return
-    newFields.splice(index, 2, newFields[index + 1], curr)
-    onChange(newFields)
-  }
-
   return (
     <div className="custom-fields-editor">
       {fields.length > 0 && (
-        <div className="custom-fields-list">
-          {fields.map((field, index) => (
-            <div key={field.name} className="custom-field-item">
-              {editingIndex === index ? (
-                <CustomFieldForm
-                  field={field}
-                  existingNames={fields
-                    .filter((_, i) => i !== index)
-                    .map(f => f.name)}
-                  onSave={f => handleUpdate(index, f)}
-                  onCancel={() => setEditingIndex(null)}
-                />
-              ) : (
-                <CustomFieldDisplay
-                  field={field}
-                  index={index}
-                  totalCount={fields.length}
-                  onEdit={() => setEditingIndex(index)}
-                  onRemove={() => handleRemove(index)}
-                  onMoveUp={() => handleMoveUp(index)}
-                  onMoveDown={() => handleMoveDown(index)}
-                />
-              )}
-            </div>
-          ))}
-        </div>
+        <FieldsList
+          fields={fields}
+          editingIndex={editingIndex}
+          onEdit={setEditingIndex}
+          onUpdate={handleUpdate}
+          onCancelEdit={() => setEditingIndex(null)}
+          onRemove={index => onChange(fields.filter((_, i) => i !== index))}
+          onMoveUp={index => onChange(moveFieldUp(fields, index))}
+          onMoveDown={index => onChange(moveFieldDown(fields, index))}
+        />
       )}
-
       {isAdding ? (
         <div className="custom-field-item">
           <CustomFieldForm
@@ -100,7 +84,6 @@ export function CustomFieldsEditor({
           + Add Custom Field
         </button>
       )}
-
       {fields.length === 0 && !isAdding && (
         <p className="custom-fields-empty">No custom fields configured</p>
       )}

@@ -11,7 +11,23 @@ interface CustomFieldFormProps {
   onCancel: () => void
 }
 
-// eslint-disable-next-line max-lines-per-function
+function buildFieldDefinition(
+  name: string,
+  fieldType: string,
+  required: boolean,
+  defaultValue: string,
+  enumValues: string[]
+): CustomFieldDefinition {
+  return {
+    name: name.trim(),
+    fieldType,
+    required,
+    defaultValue: defaultValue || '',
+    enumValues: fieldType === 'enum' ? enumValues : [],
+    $typeName: 'centy.v1.CustomFieldDefinition',
+  }
+}
+
 export function CustomFieldForm({
   field,
   existingNames,
@@ -35,21 +51,14 @@ export function CustomFieldForm({
 
   const handleSave = () => {
     if (!isValid) return
-    onSave({
-      name: name.trim(),
-      fieldType,
-      required,
-      defaultValue: defaultValue || '',
-      enumValues: fieldType === 'enum' ? enumValues : [],
-      $typeName: 'centy.v1.CustomFieldDefinition',
-    })
+    onSave(
+      buildFieldDefinition(name, fieldType, required, defaultValue, enumValues)
+    )
   }
 
   const handleRemoveEnumValue = (value: string) => {
     setEnumValues(enumValues.filter(v => v !== value))
-    if (defaultValue === value) {
-      setDefaultValue('')
-    }
+    if (defaultValue === value) setDefaultValue('')
   }
 
   return (
@@ -62,7 +71,6 @@ export function CustomFieldForm({
         onFieldTypeChange={setFieldType}
         onRequiredChange={setRequired}
       />
-
       {fieldType === 'enum' && (
         <EnumValuesEditor
           enumValues={enumValues}
@@ -70,14 +78,12 @@ export function CustomFieldForm({
           onRemove={handleRemoveEnumValue}
         />
       )}
-
       <DefaultValueField
         fieldType={fieldType}
         defaultValue={defaultValue}
         enumValues={enumValues}
         onChange={setDefaultValue}
       />
-
       <div className="custom-field-form-actions">
         <button type="button" onClick={onCancel} className="secondary">
           Cancel

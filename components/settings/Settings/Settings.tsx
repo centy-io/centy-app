@@ -12,13 +12,47 @@ import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import { DaemonInfoSection } from '@/components/settings/GeneralSettings/DaemonInfoSection'
 import { useDaemonActions } from '@/components/settings/GeneralSettings/useDaemonActions'
 
-// eslint-disable-next-line max-lines-per-function
+type SettingsData = ReturnType<typeof useSettingsData>
+
+interface ProjectSettingsContentProps {
+  projectPath: string
+  settings: SettingsData
+}
+
+function ProjectSettingsContent({
+  projectPath,
+  settings,
+}: ProjectSettingsContentProps) {
+  if (settings.loading) {
+    return <div className="loading">Loading project settings...</div>
+  }
+  return (
+    <>
+      <section className="settings-section">
+        <h3 className="settings-section-title">Project Title</h3>
+        <div className="settings-card">
+          <ProjectTitleEditor projectPath={projectPath} />
+        </div>
+      </section>
+      {settings.config && (
+        <ConfigSections
+          config={settings.config}
+          saving={settings.saving}
+          isDirty={settings.isDirty}
+          updateConfig={settings.updateConfig}
+          onSave={settings.handleSaveConfig}
+          onReset={settings.handleResetConfig}
+        />
+      )}
+      <ManifestSection manifest={settings.manifest} />
+    </>
+  )
+}
+
 export function Settings() {
   const { projectPath, isInitialized } = useProject()
-
   const daemon = useDaemonActions()
   const settings = useSettingsData(projectPath, isInitialized)
-
   const error = settings.error || daemon.error
   const success = settings.success || daemon.success
 
@@ -30,10 +64,8 @@ export function Settings() {
           <span className="unsaved-indicator">Unsaved changes</span>
         )}
       </div>
-
       {error && <DaemonErrorMessage error={error} />}
       {success && <div className="success-message">{success}</div>}
-
       <DaemonInfoSection
         daemonInfo={daemon.daemonInfo}
         restarting={daemon.restarting}
@@ -45,14 +77,12 @@ export function Settings() {
         onRestart={daemon.handleRestart}
         onShutdown={daemon.handleShutdown}
       />
-
       <section className="settings-section">
         <h3 className="settings-section-title">Daemon Connection</h3>
         <div className="settings-card">
           <DaemonSettings />
         </div>
       </section>
-
       {!projectPath && (
         <div className="no-project-message">
           <p className="no-project-text">
@@ -60,7 +90,6 @@ export function Settings() {
           </p>
         </div>
       )}
-
       {projectPath && isInitialized === false && (
         <div className="not-initialized-message">
           <p className="not-initialized-text">
@@ -71,35 +100,8 @@ export function Settings() {
           </Link>
         </div>
       )}
-
       {projectPath && isInitialized === true && (
-        <>
-          {settings.loading ? (
-            <div className="loading">Loading project settings...</div>
-          ) : (
-            <>
-              <section className="settings-section">
-                <h3 className="settings-section-title">Project Title</h3>
-                <div className="settings-card">
-                  <ProjectTitleEditor projectPath={projectPath} />
-                </div>
-              </section>
-
-              {settings.config && (
-                <ConfigSections
-                  config={settings.config}
-                  saving={settings.saving}
-                  isDirty={settings.isDirty}
-                  updateConfig={settings.updateConfig}
-                  onSave={settings.handleSaveConfig}
-                  onReset={settings.handleResetConfig}
-                />
-              )}
-
-              <ManifestSection manifest={settings.manifest} />
-            </>
-          )}
-        </>
+        <ProjectSettingsContent projectPath={projectPath} settings={settings} />
       )}
     </div>
   )

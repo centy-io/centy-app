@@ -5,7 +5,51 @@ import type { Config, Manifest } from '@/gen/centy_pb'
 import { fetchProjectData } from '@/components/settings/Settings/settingsApi'
 import { useConfigMutations } from '@/components/settings/Settings/useConfigMutations'
 
-// eslint-disable-next-line max-lines-per-function
+function useUnsavedChangesWarning(isDirty: boolean) {
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (!isDirty) return
+      e.preventDefault()
+      e.returnValue = ''
+    }
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
+  }, [isDirty])
+}
+
+interface ProjectDataSetters {
+  setConfig: (c: Config | null) => void
+  setOriginalConfig: (c: Config | null) => void
+  setManifest: (m: Manifest | null) => void
+  setLoading: (l: boolean) => void
+  setError: (e: string | null) => void
+}
+
+async function loadProjectData(
+  projectPath: string,
+  isInitialized: boolean | null,
+  setters: ProjectDataSetters
+) {
+  if (!projectPath.trim() || isInitialized !== true) return
+  setters.setLoading(true)
+  setters.setError(null)
+  try {
+    const result = await fetchProjectData(projectPath)
+    if (result.error) setters.setError(result.error)
+    if (result.config) {
+      setters.setConfig(result.config)
+      setters.setOriginalConfig(structuredClone(result.config))
+    }
+    if (result.manifest) setters.setManifest(result.manifest)
+  } catch (err) {
+    setters.setError(
+      err instanceof Error ? err.message : 'Failed to connect to daemon'
+    )
+  } finally {
+    setters.setLoading(false)
+  }
+}
+
 export function useProjectConfigData(
   projectPath: string,
   isInitialized: boolean | null
@@ -23,40 +67,19 @@ export function useProjectConfigData(
       ? JSON.stringify(config) !== JSON.stringify(originalConfig)
       : false
 
-  useEffect(() => {
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (!isDirty) return
-      e.preventDefault()
-      e.returnValue = ''
-    }
-    window.addEventListener('beforeunload', handleBeforeUnload)
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
-  }, [isDirty])
+  useUnsavedChangesWarning(isDirty)
 
-  const doFetchProjectData = useCallback(async () => {
-    if (!projectPath.trim() || isInitialized !== true) return
-    setLoading(true)
-    setError(null)
-    try {
-      const result = await fetchProjectData(projectPath)
-      if (result.error) {
-        setError(result.error)
-      }
-      if (result.config) {
-        setConfig(result.config)
-        setOriginalConfig(structuredClone(result.config))
-      }
-      if (result.manifest) {
-        setManifest(result.manifest)
-      }
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to connect to daemon'
-      )
-    } finally {
-      setLoading(false)
-    }
-  }, [projectPath, isInitialized])
+  const doFetchProjectData = useCallback(
+    () =>
+      loadProjectData(projectPath, isInitialized, {
+        setConfig,
+        setOriginalConfig,
+        setManifest,
+        setLoading,
+        setError,
+      }),
+    [projectPath, isInitialized]
+  )
 
   const mutations = useConfigMutations(projectPath, {
     config,

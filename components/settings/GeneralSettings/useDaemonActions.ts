@@ -10,7 +10,56 @@ import {
   type DaemonInfo,
 } from '@/gen/centy_pb'
 
-// eslint-disable-next-line max-lines-per-function
+type StatusSetter = (msg: string | null) => void
+
+async function runShutdown(
+  setError: StatusSetter,
+  setSuccess: StatusSetter,
+  setShuttingDown: (v: boolean) => void,
+  setShowConfirm: (v: boolean) => void
+) {
+  setShuttingDown(true)
+  setError(null)
+  try {
+    const request = create(ShutdownRequestSchema, {})
+    const response = await centyClient.shutdown(request)
+    if (response.success) {
+      setSuccess(response.message || 'Daemon is shutting down...')
+    } else {
+      setError('Failed to shutdown daemon')
+    }
+  } catch (err) {
+    setError(err instanceof Error ? err.message : 'Failed to connect to daemon')
+  } finally {
+    setShuttingDown(false)
+    setShowConfirm(false)
+  }
+}
+
+async function runRestart(
+  setError: StatusSetter,
+  setSuccess: StatusSetter,
+  setRestarting: (v: boolean) => void,
+  setShowConfirm: (v: boolean) => void
+) {
+  setRestarting(true)
+  setError(null)
+  try {
+    const request = create(RestartRequestSchema, {})
+    const response = await centyClient.restart(request)
+    if (response.success) {
+      setSuccess(response.message || 'Daemon is restarting...')
+    } else {
+      setError('Failed to restart daemon')
+    }
+  } catch (err) {
+    setError(err instanceof Error ? err.message : 'Failed to connect to daemon')
+  } finally {
+    setRestarting(false)
+    setShowConfirm(false)
+  }
+}
+
 export function useDaemonActions() {
   const [daemonInfo, setDaemonInfo] = useState<DaemonInfo | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -30,47 +79,22 @@ export function useDaemonActions() {
     }
   }, [])
 
-  const handleShutdown = useCallback(async () => {
-    setShuttingDown(true)
-    setError(null)
-    try {
-      const request = create(ShutdownRequestSchema, {})
-      const response = await centyClient.shutdown(request)
-      if (response.success) {
-        setSuccess(response.message || 'Daemon is shutting down...')
-      } else {
-        setError('Failed to shutdown daemon')
-      }
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to connect to daemon'
-      )
-    } finally {
-      setShuttingDown(false)
-      setShowShutdownConfirm(false)
-    }
-  }, [])
+  const handleShutdown = useCallback(
+    () =>
+      runShutdown(
+        setError,
+        setSuccess,
+        setShuttingDown,
+        setShowShutdownConfirm
+      ),
+    []
+  )
 
-  const handleRestart = useCallback(async () => {
-    setRestarting(true)
-    setError(null)
-    try {
-      const request = create(RestartRequestSchema, {})
-      const response = await centyClient.restart(request)
-      if (response.success) {
-        setSuccess(response.message || 'Daemon is restarting...')
-      } else {
-        setError('Failed to restart daemon')
-      }
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to connect to daemon'
-      )
-    } finally {
-      setRestarting(false)
-      setShowRestartConfirm(false)
-    }
-  }, [])
+  const handleRestart = useCallback(
+    () =>
+      runRestart(setError, setSuccess, setRestarting, setShowRestartConfirm),
+    []
+  )
 
   useEffect(() => {
     fetchDaemonInfo()

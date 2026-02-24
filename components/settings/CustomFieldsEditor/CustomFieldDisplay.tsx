@@ -1,4 +1,6 @@
 import { FIELD_TYPES } from './constants'
+import { MoveButtons } from './MoveButtons'
+import { FieldDetails } from './FieldDetails'
 import type { CustomFieldDefinition } from '@/gen/centy_pb'
 
 interface CustomFieldDisplayProps {
@@ -11,7 +13,11 @@ interface CustomFieldDisplayProps {
   onMoveDown: () => void
 }
 
-// eslint-disable-next-line max-lines-per-function
+function getTypeLabel(fieldType: string): string {
+  const found = FIELD_TYPES.find(t => t.value === fieldType)
+  return found ? found.label : fieldType
+}
+
 export function CustomFieldDisplay({
   field,
   index,
@@ -21,42 +27,20 @@ export function CustomFieldDisplay({
   onMoveUp,
   onMoveDown,
 }: CustomFieldDisplayProps) {
-  const typeLabel =
-    (() => {
-      const found = FIELD_TYPES.find(t => t.value === field.fieldType)
-      return found ? found.label : ''
-    })() || field.fieldType
+  const typeLabel = getTypeLabel(field.fieldType)
 
   return (
     <div className="custom-field-display">
       <div className="custom-field-header">
-        <div className="custom-field-move-btns">
-          <button
-            type="button"
-            onClick={onMoveUp}
-            disabled={index === 0}
-            className="custom-field-move-btn"
-            title="Move up"
-          >
-            &uarr;
-          </button>
-          <button
-            type="button"
-            onClick={onMoveDown}
-            disabled={index === totalCount - 1}
-            className="custom-field-move-btn"
-            title="Move down"
-          >
-            &darr;
-          </button>
-        </div>
-
+        <MoveButtons
+          index={index}
+          totalCount={totalCount}
+          onMoveUp={onMoveUp}
+          onMoveDown={onMoveDown}
+        />
         <span className="custom-field-name">{field.name}</span>
-
         {field.required && <span className="custom-field-required">*</span>}
-
         <span className="custom-field-type">{typeLabel}</span>
-
         <div className="custom-field-actions">
           <button
             type="button"
@@ -74,28 +58,7 @@ export function CustomFieldDisplay({
           </button>
         </div>
       </div>
-
-      <div className="custom-field-details">
-        {field.defaultValue && (
-          <span className="custom-field-default">
-            Default:{' '}
-            <code className="custom-field-default-value">
-              {field.defaultValue}
-            </code>
-          </span>
-        )}
-        {field.fieldType === 'enum' && field.enumValues.length > 0 && (
-          <span className="custom-field-enum-values">
-            Options:{' '}
-            {field.enumValues.map((v, i) => (
-              <code className="custom-field-enum-value" key={v}>
-                {v}
-                {i < field.enumValues.length - 1 ? ', ' : ''}
-              </code>
-            ))}
-          </span>
-        )}
-      </div>
+      <FieldDetails field={field} />
     </div>
   )
 }

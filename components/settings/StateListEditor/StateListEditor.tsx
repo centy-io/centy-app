@@ -1,5 +1,6 @@
 'use client'
 
+import type { KeyboardEvent } from 'react'
 import { StateItem } from './StateItem'
 import { useStateListHandlers } from './useStateListHandlers'
 
@@ -12,7 +13,43 @@ interface StateListEditorProps {
   onDefaultChange: (defaultState: string) => void
 }
 
-// eslint-disable-next-line max-lines-per-function
+interface AddStateRowProps {
+  newState: string
+  isAddDisabled: boolean
+  onChange: (value: string) => void
+  onKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void
+  onAdd: () => void
+}
+
+function AddStateRow({
+  newState,
+  isAddDisabled,
+  onChange,
+  onKeyDown,
+  onAdd,
+}: AddStateRowProps) {
+  return (
+    <div className="state-add-row">
+      <input
+        type="text"
+        value={newState}
+        onChange={e => onChange(e.target.value)}
+        onKeyDown={onKeyDown}
+        placeholder="New state name..."
+        className="state-add-input"
+      />
+      <button
+        type="button"
+        onClick={onAdd}
+        disabled={isAddDisabled}
+        className="state-add-btn"
+      >
+        + Add State
+      </button>
+    </div>
+  )
+}
+
 export function StateListEditor({
   states,
   stateColors,
@@ -62,26 +99,13 @@ export function StateListEditor({
           />
         ))}
       </div>
-
-      <div className="state-add-row">
-        <input
-          type="text"
-          value={newState}
-          onChange={e => setNewState(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="New state name..."
-          className="state-add-input"
-        />
-        <button
-          type="button"
-          onClick={handleAddState}
-          disabled={isAddDisabled}
-          className="state-add-btn"
-        >
-          + Add State
-        </button>
-      </div>
-
+      <AddStateRow
+        newState={newState}
+        isAddDisabled={isAddDisabled}
+        onChange={setNewState}
+        onKeyDown={handleKeyDown}
+        onAdd={handleAddState}
+      />
       <p className="state-hint">
         Drag to reorder. The default state is used for new issues.
       </p>

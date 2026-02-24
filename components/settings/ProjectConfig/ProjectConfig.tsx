@@ -14,20 +14,67 @@ import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import { ConfigSections } from '@/components/settings/Settings/ConfigSections'
 import { ManifestSection } from '@/components/settings/Settings/ManifestSection'
 
-// eslint-disable-next-line max-lines-per-function
+interface ProjectContentProps {
+  projectPath: string
+  organizations: ReturnType<typeof useOrganization>['organizations']
+  data: ReturnType<typeof useProjectConfigData>
+  org: ReturnType<typeof useProjectOrg>
+}
+
+function ProjectContent({
+  projectPath,
+  organizations,
+  data,
+  org,
+}: ProjectContentProps) {
+  if (data.loading) {
+    return <div className="loading">Loading project configuration...</div>
+  }
+  return (
+    <>
+      <OrgSection
+        organizations={organizations}
+        projectOrgSlug={org.projectOrgSlug}
+        savingOrg={org.savingOrg}
+        onOrgChange={org.handleOrgChange}
+      />
+      <section className="settings-section">
+        <h3 className="settings-section-title">Project Title</h3>
+        <div className="settings-card">
+          <ProjectTitleEditor projectPath={projectPath} />
+        </div>
+      </section>
+      {data.config && (
+        <ConfigSections
+          config={data.config}
+          saving={data.saving}
+          isDirty={data.isDirty}
+          updateConfig={data.updateConfig}
+          onSave={data.handleSaveConfig}
+          onReset={data.handleResetConfig}
+        />
+      )}
+      <section className="settings-section">
+        <h3 className="settings-section-title">Agent Configuration</h3>
+        <div className="settings-card">
+          <AgentConfigEditor />
+        </div>
+      </section>
+      <ManifestSection manifest={data.manifest} />
+    </>
+  )
+}
+
 export function ProjectConfig() {
   const { projectPath, isInitialized } = usePathContext()
   const { organizations, refreshOrganizations } = useOrganization()
-
   const data = useProjectConfigData(projectPath, isInitialized)
-
   const org = useProjectOrg(
     projectPath,
     refreshOrganizations,
     data.setError,
     data.setSuccess
   )
-
   const { doFetchProjectData } = data
   const { fetchProjectOrg } = org
 
@@ -45,10 +92,8 @@ export function ProjectConfig() {
           <span className="unsaved-indicator">Unsaved changes</span>
         )}
       </div>
-
       {data.error && <DaemonErrorMessage error={data.error} />}
       {data.success && <div className="success-message">{data.success}</div>}
-
       {!projectPath && (
         <div className="no-project-message">
           <p className="no-project-text">
@@ -56,7 +101,6 @@ export function ProjectConfig() {
           </p>
         </div>
       )}
-
       {projectPath && isInitialized === false && (
         <div className="not-initialized-message">
           <p className="not-initialized-text">
@@ -65,49 +109,13 @@ export function ProjectConfig() {
           <Link href={route({ pathname: '/' })}>Initialize Project</Link>
         </div>
       )}
-
       {projectPath && isInitialized === true && (
-        <>
-          {data.loading ? (
-            <div className="loading">Loading project configuration...</div>
-          ) : (
-            <>
-              <OrgSection
-                organizations={organizations}
-                projectOrgSlug={org.projectOrgSlug}
-                savingOrg={org.savingOrg}
-                onOrgChange={org.handleOrgChange}
-              />
-
-              <section className="settings-section">
-                <h3 className="settings-section-title">Project Title</h3>
-                <div className="settings-card">
-                  <ProjectTitleEditor projectPath={projectPath} />
-                </div>
-              </section>
-
-              {data.config && (
-                <ConfigSections
-                  config={data.config}
-                  saving={data.saving}
-                  isDirty={data.isDirty}
-                  updateConfig={data.updateConfig}
-                  onSave={data.handleSaveConfig}
-                  onReset={data.handleResetConfig}
-                />
-              )}
-
-              <section className="settings-section">
-                <h3 className="settings-section-title">Agent Configuration</h3>
-                <div className="settings-card">
-                  <AgentConfigEditor />
-                </div>
-              </section>
-
-              <ManifestSection manifest={data.manifest} />
-            </>
-          )}
-        </>
+        <ProjectContent
+          projectPath={projectPath}
+          organizations={organizations}
+          data={data}
+          org={org}
+        />
       )}
     </div>
   )
