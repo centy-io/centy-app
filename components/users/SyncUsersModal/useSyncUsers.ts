@@ -40,7 +40,9 @@ export function useSyncUsers() {
         setWouldSkip(res.wouldSkip)
         setState('preview')
       } else {
-        setError(formatError(new OperationError(res.error || 'Failed to fetch')))
+        setError(
+          formatError(new OperationError(res.error || 'Failed to fetch'))
+        )
         setState('error')
       }
     } catch (err) {
