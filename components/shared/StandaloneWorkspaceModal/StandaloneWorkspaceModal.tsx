@@ -7,15 +7,15 @@ import { useStandaloneWorkspace } from './useStandaloneWorkspace'
 import { EditorPicker } from './EditorPicker'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
+const DESCRIPTION =
+  'Create a temporary workspace without associating it with an issue. Great for quick experiments or exploratory work.'
+
 type WorkspaceState = ReturnType<typeof useStandaloneWorkspace>
 
 function WorkspaceFormFields({ state }: { state: WorkspaceState }) {
   return (
     <>
-      <div className="standalone-modal-description">
-        Create a temporary workspace without associating it with an issue. Great
-        for quick experiments or exploratory work.
-      </div>
+      <div className="standalone-modal-description">{DESCRIPTION}</div>
       <div className="standalone-modal-field">
         <label className="standalone-modal-label" htmlFor="workspace-name">
           Name (optional)
@@ -30,14 +30,11 @@ function WorkspaceFormFields({ state }: { state: WorkspaceState }) {
         />
       </div>
       <div className="standalone-modal-field">
-        <label
-          className="standalone-modal-label"
-          htmlFor="workspace-description"
-        >
+        <label className="standalone-modal-label" htmlFor="ws-desc">
           Description (optional)
         </label>
         <textarea
-          id="workspace-description"
+          id="ws-desc"
           value={state.description}
           onChange={e => state.setDescription(e.target.value)}
           placeholder="What would you like to work on in this workspace?"
@@ -56,11 +53,7 @@ function WorkspaceFormFields({ state }: { state: WorkspaceState }) {
           className="standalone-modal-select"
         >
           {TTL_OPTIONS.map(o => (
-            <option
-              className="standalone-modal-option"
-              key={o.value}
-              value={o.value}
-            >
+            <option key={o.value} value={o.value} className="o">
               {o.label}
             </option>
           ))}
