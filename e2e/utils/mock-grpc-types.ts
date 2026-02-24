@@ -7,6 +7,7 @@ export type GrpcHandler<Req extends DescMessage, Res extends DescMessage> = (
 export interface HandlerConfig {
   requestSchema: DescMessage
   responseSchema: DescMessage
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  handler: (request: any) => any
+  handler(
+    request: MessageShape<DescMessage>
+  ): MessageShape<DescMessage> | Promise<MessageShape<DescMessage>>
 }
