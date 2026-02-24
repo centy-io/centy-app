@@ -1,7 +1,5 @@
-/* eslint-disable max-lines */
 'use client'
 
-import { useRef } from 'react'
 import Link from 'next/link'
 import { route } from 'nextjs-routes'
 import type { GroupedProjects } from './ProjectSelector.types'
@@ -30,7 +28,6 @@ interface ProjectSelectorDropdownProps {
   toggleOrgCollapse: (orgSlug: string) => void
 }
 
-// eslint-disable-next-line max-lines-per-function
 export function ProjectSelectorDropdown(props: ProjectSelectorDropdownProps) {
   const {
     loading,
@@ -53,8 +50,6 @@ export function ProjectSelectorDropdown(props: ProjectSelectorDropdownProps) {
     toggleOrgCollapse,
   } = props
 
-  const listAreaRef = useRef<HTMLDivElement>(null)
-
   const focusSearch = () => {
     if (searchInputRef.current) searchInputRef.current.focus()
   }
@@ -62,9 +57,9 @@ export function ProjectSelectorDropdown(props: ProjectSelectorDropdownProps) {
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== 'ArrowDown') return
     e.preventDefault()
-    const listArea = listAreaRef.current
-    if (!listArea) return
-    const firstItem = listArea.querySelector<HTMLElement>('[role="option"]')
+    const firstItem = document.querySelector<HTMLElement>(
+      '#project-listbox [role="option"]'
+    )
     if (firstItem) firstItem.focus()
   }
 
@@ -84,6 +79,11 @@ export function ProjectSelectorDropdown(props: ProjectSelectorDropdownProps) {
       <div className="project-selector-search">
         <input
           ref={searchInputRef}
+          role="combobox"
+          aria-expanded="true"
+          aria-controls="project-listbox"
+          aria-autocomplete="list"
+          aria-label="Search projects"
           type="text"
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
@@ -102,7 +102,7 @@ export function ProjectSelectorDropdown(props: ProjectSelectorDropdownProps) {
         )}
       </div>
       {error && <div className="project-selector-error">{error}</div>}
-      <div ref={listAreaRef} className="project-selector-list-area">
+      <div className="project-selector-list-area">
         {loading ? (
           <div className="project-selector-loading">Loading projects...</div>
         ) : visibleProjects.length === 0 ? (

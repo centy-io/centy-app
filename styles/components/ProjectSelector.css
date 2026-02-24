@@ -21,6 +21,11 @@
   border-color: var(--color-gray-300);
 }
 
+.project-selector-trigger:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
 .project-icon {
   font-size: 1.1em;
 }
@@ -183,9 +188,15 @@
   background: var(--color-gray-200);
 }
 
-.project-item.selected {
+.project-item.selected,
+.project-item[aria-selected='true'] {
   background: var(--color-success-light);
   border-left: 3px solid var(--color-success);
+}
+
+.project-item:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
 }
 
 .project-item:last-child {
