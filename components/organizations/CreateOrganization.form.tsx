@@ -14,7 +14,82 @@ interface CreateOrganizationFormProps {
   onSubmit: () => void
 }
 
-// eslint-disable-next-line max-lines-per-function
+function NameField({
+  name,
+  setName,
+}: {
+  name: string
+  setName: (v: string) => void
+}) {
+  return (
+    <div className="form-group">
+      <label className="form-label" htmlFor="name">
+        Name <span className="required">*</span>
+      </label>
+      <input
+        className="form-input"
+        id="name"
+        type="text"
+        value={name}
+        onChange={e => setName(e.target.value)}
+        placeholder="Organization name"
+        required
+      />
+    </div>
+  )
+}
+
+function SlugField({
+  slug,
+  onSlugChange,
+}: {
+  slug: string
+  onSlugChange: (v: string) => void
+}) {
+  return (
+    <div className="form-group">
+      <label className="form-label" htmlFor="slug">
+        Slug
+      </label>
+      <input
+        className="form-input"
+        id="slug"
+        type="text"
+        value={slug}
+        onChange={e => onSlugChange(e.target.value)}
+        placeholder="Auto-generated from name"
+      />
+      <span className="form-hint">
+        Unique identifier (kebab-case). Leave empty to auto-generate.
+      </span>
+    </div>
+  )
+}
+
+function DescriptionField({
+  description,
+  setDescription,
+}: {
+  description: string
+  setDescription: (v: string) => void
+}) {
+  return (
+    <div className="form-group">
+      <label className="form-label" htmlFor="description">
+        Description
+      </label>
+      <textarea
+        className="form-textarea"
+        id="description"
+        value={description}
+        onChange={e => setDescription(e.target.value)}
+        placeholder="Description (optional)"
+        rows={3}
+      />
+    </div>
+  )
+}
+
 export function CreateOrganizationForm({
   name,
   setName,
@@ -33,52 +108,12 @@ export function CreateOrganizationForm({
       }}
       className="create-organization-form"
     >
-      <div className="form-group">
-        <label className="form-label" htmlFor="name">
-          Name <span className="required">*</span>
-        </label>
-        <input
-          className="form-input"
-          id="name"
-          type="text"
-          value={name}
-          onChange={e => setName(e.target.value)}
-          placeholder="Organization name"
-          required
-        />
-      </div>
-
-      <div className="form-group">
-        <label className="form-label" htmlFor="slug">
-          Slug
-        </label>
-        <input
-          className="form-input"
-          id="slug"
-          type="text"
-          value={slug}
-          onChange={e => onSlugChange(e.target.value)}
-          placeholder="Auto-generated from name"
-        />
-        <span className="form-hint">
-          Unique identifier (kebab-case). Leave empty to auto-generate.
-        </span>
-      </div>
-
-      <div className="form-group">
-        <label className="form-label" htmlFor="description">
-          Description
-        </label>
-        <textarea
-          className="form-textarea"
-          id="description"
-          value={description}
-          onChange={e => setDescription(e.target.value)}
-          placeholder="Description (optional)"
-          rows={3}
-        />
-      </div>
-
+      <NameField name={name} setName={setName} />
+      <SlugField slug={slug} onSlugChange={onSlugChange} />
+      <DescriptionField
+        description={description}
+        setDescription={setDescription}
+      />
       <div className="form-actions">
         <Link
           href={route({ pathname: '/organizations' })}

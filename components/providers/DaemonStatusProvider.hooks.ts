@@ -19,31 +19,43 @@ import { DEMO_ORG_SLUG, DEMO_PROJECT_PATH } from '@/lib/grpc/demo-data'
 import type { EditorInfo } from '@/gen/centy_pb'
 import { trackDaemonConnection } from '@/lib/metrics'
 
-// eslint-disable-next-line max-lines-per-function
-export function useDaemonStatusState() {
-  const [status, setStatus] = useState<DaemonStatus>('checking')
-  const [lastChecked, setLastChecked] = useState<Date | null>(null)
-  const [hasMounted, setHasMounted] = useState(false)
-  const [vscodeAvailable, setVscodeAvailable] = useState<boolean | null>(null)
-  const [editors, setEditors] = useState<EditorInfo[]>([])
+type SetStatus = (s: DaemonStatus) => void
+type SetBool = (v: boolean | null) => void
+type SetEditors = (e: EditorInfo[]) => void
 
+function useDemoModeInit(
+  setStatus: SetStatus,
+  setVscodeAvailable: SetBool,
+  setEditors: SetEditors,
+  setHasMounted: (v: boolean) => void
+) {
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       const urlParams = new URLSearchParams(window.location.search)
       if (urlParams.get('demo') === 'true' && !isDemoMode()) {
         enableDemoMode()
         applyDemoState(setStatus, setVscodeAvailable, setEditors)
-        const newUrl = buildDemoUrl(DEMO_ORG_SLUG, DEMO_PROJECT_PATH)
-        window.history.replaceState({}, '', newUrl)
+        window.history.replaceState(
+          {},
+          '',
+          buildDemoUrl(DEMO_ORG_SLUG, DEMO_PROJECT_PATH)
+        )
       } else if (isDemoMode()) {
         applyDemoState(setStatus, setVscodeAvailable, setEditors)
       }
       setHasMounted(true)
     }, 0)
     return () => clearTimeout(timeoutId)
-  }, [])
+  }, [setStatus, setVscodeAvailable, setEditors, setHasMounted])
+}
 
-  const checkDaemonStatus = useCallback(async () => {
+function useCheckDaemon(
+  setStatus: SetStatus,
+  setVscodeAvailable: SetBool,
+  setEditors: SetEditors,
+  setLastChecked: (d: Date) => void
+) {
+  return useCallback(async () => {
     if (isDemoMode()) {
       applyDemoState(setStatus, setVscodeAvailable, setEditors)
       return
@@ -67,7 +79,23 @@ export function useDaemonStatusState() {
       trackDaemonConnection(false, false)
     }
     setLastChecked(new Date())
-  }, [])
+  }, [setStatus, setVscodeAvailable, setEditors, setLastChecked])
+}
+
+export function useDaemonStatusState() {
+  const [status, setStatus] = useState<DaemonStatus>('checking')
+  const [lastChecked, setLastChecked] = useState<Date | null>(null)
+  const [hasMounted, setHasMounted] = useState(false)
+  const [vscodeAvailable, setVscodeAvailable] = useState<boolean | null>(null)
+  const [editors, setEditors] = useState<EditorInfo[]>([])
+
+  useDemoModeInit(setStatus, setVscodeAvailable, setEditors, setHasMounted)
+  const checkDaemonStatus = useCheckDaemon(
+    setStatus,
+    setVscodeAvailable,
+    setEditors,
+    setLastChecked
+  )
 
   const enterDemoMode = useCallback(() => {
     enableDemoMode()

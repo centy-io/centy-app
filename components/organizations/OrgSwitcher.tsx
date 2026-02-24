@@ -10,18 +10,13 @@ import {
 } from '@floating-ui/react'
 import { OrgSwitcherDropdown } from './OrgSwitcher.dropdown'
 import { useOrganization } from '@/components/providers/OrganizationProvider'
+import type { Organization } from '@/gen/centy_pb'
 
-// eslint-disable-next-line max-lines-per-function
-export function OrgSwitcher() {
-  const {
-    selectedOrgSlug,
-    setSelectedOrgSlug,
-    organizations,
-    loading,
-    refreshOrganizations,
-  } = useOrganization()
-  const [isOpen, setIsOpen] = useState(false)
-
+function useOrgSwitcher(
+  isOpen: boolean,
+  setIsOpen: (v: boolean) => void,
+  refreshOrganizations: () => void
+) {
   const { refs, floatingStyles } = useFloating({
     open: isOpen,
     placement: 'bottom-start',
@@ -30,15 +25,11 @@ export function OrgSwitcher() {
   })
 
   useEffect(() => {
-    if (isOpen) {
-      refreshOrganizations()
-    }
+    if (isOpen) refreshOrganizations()
   }, [isOpen, refreshOrganizations])
 
-  // Close on click outside
   useEffect(() => {
     if (!isOpen) return
-
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target
       if (
@@ -48,18 +39,38 @@ export function OrgSwitcher() {
         setIsOpen(false)
       }
     }
-
     document.addEventListener('click', handleClickOutside)
     return () => document.removeEventListener('click', handleClickOutside)
-  }, [isOpen])
+  }, [isOpen, setIsOpen])
 
-  const getCurrentLabel = () => {
-    if (selectedOrgSlug === undefined) return 'Select Org'
-    if (selectedOrgSlug === null) return 'All Orgs'
-    if (selectedOrgSlug === '') return 'Ungrouped'
-    const org = organizations.find(o => o.slug === selectedOrgSlug)
-    return (org ? org.name : '') || selectedOrgSlug
-  }
+  return { refs, floatingStyles }
+}
+
+function getCurrentLabel(
+  selectedOrgSlug: string | null | undefined,
+  organizations: Organization[]
+) {
+  if (selectedOrgSlug === undefined) return 'Select Org'
+  if (selectedOrgSlug === null) return 'All Orgs'
+  if (selectedOrgSlug === '') return 'Ungrouped'
+  const org = organizations.find(o => o.slug === selectedOrgSlug)
+  return (org ? org.name : '') || selectedOrgSlug
+}
+
+export function OrgSwitcher() {
+  const {
+    selectedOrgSlug,
+    setSelectedOrgSlug,
+    organizations,
+    loading,
+    refreshOrganizations,
+  } = useOrganization()
+  const [isOpen, setIsOpen] = useState(false)
+  const { refs, floatingStyles } = useOrgSwitcher(
+    isOpen,
+    setIsOpen,
+    refreshOrganizations
+  )
 
   const handleSelect = (slug: string | null | undefined) => {
     setSelectedOrgSlug(slug)
@@ -77,10 +88,11 @@ export function OrgSwitcher() {
         title="Filter by organization"
       >
         <span className="org-icon">🏢</span>
-        <span className="org-label">{getCurrentLabel()}</span>
+        <span className="org-label">
+          {getCurrentLabel(selectedOrgSlug, organizations)}
+        </span>
         <span className="dropdown-arrow">{isOpen ? '▲' : '▼'}</span>
       </button>
-
       {isOpen && (
         <OrgSwitcherDropdown
           refs={refs}

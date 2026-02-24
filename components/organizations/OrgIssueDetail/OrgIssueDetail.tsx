@@ -3,6 +3,7 @@
 
 import Link from 'next/link'
 import { route } from 'nextjs-routes'
+import type { RouteLiteral } from 'nextjs-routes'
 import type { OrgIssueDetailProps } from './OrgIssueDetail.types'
 import { useOrgIssueDetail } from './hooks/useOrgIssueDetail'
 import { OrgIssueEditForm } from './OrgIssueEditForm'
@@ -10,7 +11,86 @@ import { OrgIssueReadView } from './OrgIssueReadView'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
 
-// eslint-disable-next-line max-lines-per-function
+type IssueState = ReturnType<typeof useOrgIssueDetail>
+
+function IssueDetailHeader({
+  state,
+  backLink,
+}: {
+  state: IssueState
+  backLink: RouteLiteral
+}) {
+  return (
+    <div className="issue-detail-header">
+      <Link href={backLink} className="back-link">
+        ← Back to Org Issues
+      </Link>
+      <div className="issue-actions">
+        {!state.isEditing ? (
+          <>
+            <button
+              onClick={() => state.setIsEditing(true)}
+              className="edit-btn"
+            >
+              Edit
+            </button>
+            <button
+              onClick={() => state.setShowDeleteConfirm(true)}
+              className="delete-btn"
+            >
+              Delete
+            </button>
+          </>
+        ) : (
+          <>
+            <button onClick={state.handleCancelEdit} className="cancel-btn">
+              Cancel
+            </button>
+            <button
+              onClick={state.handleSave}
+              disabled={state.saving || !state.editTitle.trim()}
+              className="save-btn"
+            >
+              {state.saving ? 'Saving...' : 'Save'}
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function DeleteConfirm({ state }: { state: IssueState }) {
+  return (
+    <div className="delete-confirm">
+      <p className="delete-confirm-message">
+        Delete this org issue? This will remove it from all org projects.
+      </p>
+      {state.deleteError && (
+        <p className="delete-error-message">{state.deleteError}</p>
+      )}
+      <div className="delete-confirm-actions">
+        <button
+          onClick={() => {
+            state.setShowDeleteConfirm(false)
+            state.setDeleteError(null)
+          }}
+          className="cancel-btn"
+        >
+          Cancel
+        </button>
+        <button
+          onClick={state.handleDelete}
+          disabled={state.deleting}
+          className="confirm-delete-btn"
+        >
+          {state.deleting ? 'Deleting...' : 'Yes, Delete'}
+        </button>
+      </div>
+    </div>
+  )
+}
+
 export function OrgIssueDetail({ orgSlug, issueId }: OrgIssueDetailProps) {
   const state = useOrgIssueDetail(orgSlug, issueId)
 
@@ -56,74 +136,9 @@ export function OrgIssueDetail({ orgSlug, issueId }: OrgIssueDetailProps) {
 
   return (
     <div className="issue-detail">
-      <div className="issue-detail-header">
-        <Link href={backLink} className="back-link">
-          ← Back to Org Issues
-        </Link>
-        <div className="issue-actions">
-          {!state.isEditing ? (
-            <>
-              <button
-                onClick={() => state.setIsEditing(true)}
-                className="edit-btn"
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => state.setShowDeleteConfirm(true)}
-                className="delete-btn"
-              >
-                Delete
-              </button>
-            </>
-          ) : (
-            <>
-              <button onClick={state.handleCancelEdit} className="cancel-btn">
-                Cancel
-              </button>
-              <button
-                onClick={state.handleSave}
-                disabled={state.saving || !state.editTitle.trim()}
-                className="save-btn"
-              >
-                {state.saving ? 'Saving...' : 'Save'}
-              </button>
-            </>
-          )}
-        </div>
-      </div>
-
+      <IssueDetailHeader state={state} backLink={backLink} />
       {state.error && <DaemonErrorMessage error={state.error} />}
-
-      {state.showDeleteConfirm && (
-        <div className="delete-confirm">
-          <p className="delete-confirm-message">
-            Delete this org issue? This will remove it from all org projects.
-          </p>
-          {state.deleteError && (
-            <p className="delete-error-message">{state.deleteError}</p>
-          )}
-          <div className="delete-confirm-actions">
-            <button
-              onClick={() => {
-                state.setShowDeleteConfirm(false)
-                state.setDeleteError(null)
-              }}
-              className="cancel-btn"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={state.handleDelete}
-              disabled={state.deleting}
-              className="confirm-delete-btn"
-            >
-              {state.deleting ? 'Deleting...' : 'Yes, Delete'}
-            </button>
-          </div>
-        </div>
-      )}
-
+      {state.showDeleteConfirm && <DeleteConfirm state={state} />}
       <div className="issue-detail-content">
         {state.isEditing ? (
           <OrgIssueEditForm state={state} />

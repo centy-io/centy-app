@@ -17,7 +17,56 @@ interface OrgSwitcherDropdownProps {
   onClose: () => void
 }
 
-// eslint-disable-next-line max-lines-per-function
+function OrgOptionsList({
+  selectedOrgSlug,
+  organizations,
+  loading,
+  onSelect,
+}: {
+  selectedOrgSlug: string | null | undefined
+  organizations: Organization[]
+  loading: boolean
+  onSelect: (slug: string | null | undefined) => void
+}) {
+  return (
+    <ul className="org-options" role="listbox">
+      <li
+        role="option"
+        aria-selected={selectedOrgSlug === null}
+        className={`org-option ${selectedOrgSlug === null ? 'selected' : ''}`}
+        onClick={() => onSelect(null)}
+      >
+        <span className="org-option-name">All Organizations</span>
+      </li>
+      <li
+        role="option"
+        aria-selected={selectedOrgSlug === ''}
+        className={`org-option ${selectedOrgSlug === '' ? 'selected' : ''}`}
+        onClick={() => onSelect('')}
+      >
+        <span className="org-option-name">Ungrouped Projects</span>
+      </li>
+      {organizations.length > 0 && <li className="org-divider" />}
+      {loading && organizations.length === 0 ? (
+        <li className="org-loading">Loading...</li>
+      ) : (
+        organizations.map(org => (
+          <li
+            key={org.slug}
+            role="option"
+            aria-selected={selectedOrgSlug === org.slug}
+            className={`org-option ${selectedOrgSlug === org.slug ? 'selected' : ''}`}
+            onClick={() => onSelect(org.slug)}
+          >
+            <span className="org-option-name">{org.name}</span>
+            <span className="org-project-count">{org.projectCount}</span>
+          </li>
+        ))
+      )}
+    </ul>
+  )
+}
+
 export function OrgSwitcherDropdown({
   refs,
   floatingStyles,
@@ -45,45 +94,12 @@ export function OrgSwitcherDropdown({
           ↻
         </button>
       </div>
-
-      <ul className="org-options" role="listbox">
-        <li
-          role="option"
-          aria-selected={selectedOrgSlug === null}
-          className={`org-option ${selectedOrgSlug === null ? 'selected' : ''}`}
-          onClick={() => onSelect(null)}
-        >
-          <span className="org-option-name">All Organizations</span>
-        </li>
-        <li
-          role="option"
-          aria-selected={selectedOrgSlug === ''}
-          className={`org-option ${selectedOrgSlug === '' ? 'selected' : ''}`}
-          onClick={() => onSelect('')}
-        >
-          <span className="org-option-name">Ungrouped Projects</span>
-        </li>
-
-        {organizations.length > 0 && <li className="org-divider" />}
-
-        {loading && organizations.length === 0 ? (
-          <li className="org-loading">Loading...</li>
-        ) : (
-          organizations.map(org => (
-            <li
-              key={org.slug}
-              role="option"
-              aria-selected={selectedOrgSlug === org.slug}
-              className={`org-option ${selectedOrgSlug === org.slug ? 'selected' : ''}`}
-              onClick={() => onSelect(org.slug)}
-            >
-              <span className="org-option-name">{org.name}</span>
-              <span className="org-project-count">{org.projectCount}</span>
-            </li>
-          ))
-        )}
-      </ul>
-
+      <OrgOptionsList
+        selectedOrgSlug={selectedOrgSlug}
+        organizations={organizations}
+        loading={loading}
+        onSelect={onSelect}
+      />
       <div className="org-switcher-footer">
         <Link
           href={route({ pathname: '/organizations' })}
