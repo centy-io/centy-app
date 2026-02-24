@@ -1,7 +1,7 @@
 'use client'
 
 import { startSpan } from '@sentry/nextjs'
-import { UnknownError } from '@/lib/errors'
+import { UnknownError } from '@/lib/UnknownError'
 
 /**
  * Measure async operation duration using Sentry spans

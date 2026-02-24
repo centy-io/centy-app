@@ -4,7 +4,7 @@ import { create } from '@bufbuild/protobuf'
 import type { ProjectCache } from './ProjectCache'
 import { centyClient } from './grpc/client'
 import { ListProjectsRequestSchema, type ProjectInfo } from '@/gen/centy_pb'
-import { UnknownError } from '@/lib/errors'
+import { UnknownError } from '@/lib/UnknownError'
 
 const CACHE_TTL_MS = 30_000 // 30 seconds
 let projectCache: ProjectCache | null = null
