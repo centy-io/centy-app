@@ -3,14 +3,34 @@ import { EDITOR_PREFERENCE_KEY } from './EditorSelector.types'
 import { EditorType, type EditorInfo } from '@/gen/centy_pb'
 import { useDaemonStatus } from '@/components/providers/DaemonStatusProvider'
 
-// eslint-disable-next-line max-lines-per-function
-export function useEditorPreference() {
-  const { editors } = useDaemonStatus()
-  const [showDropdown, setShowDropdown] = useState(false)
+function useDropdownDismiss(
+  dropdownRef: React.RefObject<HTMLDivElement | null>,
+  showDropdown: boolean,
+  setShowDropdown: (v: boolean) => void
+) {
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        event.target instanceof Node &&
+        !dropdownRef.current.contains(event.target)
+      ) {
+        setShowDropdown(false)
+      }
+    }
+    if (showDropdown) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [dropdownRef, showDropdown, setShowDropdown])
+}
+
+function usePersistedEditorType() {
   const [preferredEditor, setPreferredEditor] = useState<EditorType>(
     EditorType.VSCODE
   )
-  const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -31,23 +51,17 @@ export function useEditorPreference() {
     localStorage.setItem(EDITOR_PREFERENCE_KEY, String(editorType))
   }, [])
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        event.target instanceof Node &&
-        !dropdownRef.current.contains(event.target)
-      ) {
-        setShowDropdown(false)
-      }
-    }
-    if (showDropdown) {
-      document.addEventListener('mousedown', handleClickOutside)
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [showDropdown])
+  return { preferredEditor, savePreference }
+}
+
+export function useEditorPreference() {
+  const { editors } = useDaemonStatus()
+  const [showDropdown, setShowDropdown] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  const { preferredEditor, savePreference } = usePersistedEditorType()
+
+  useDropdownDismiss(dropdownRef, showDropdown, setShowDropdown)
 
   const getEditorInfo = useCallback(
     (type: EditorType): EditorInfo | undefined => {

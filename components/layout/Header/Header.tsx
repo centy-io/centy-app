@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 'use client'
 
 import Link from 'next/link'
@@ -14,22 +13,24 @@ import { ProjectSelector } from '@/components/project/ProjectSelector'
 import { useOrganization } from '@/components/providers/OrganizationProvider'
 import { UNGROUPED_ORG_MARKER } from '@/lib/project-resolver'
 
-// eslint-disable-next-line max-lines-per-function
-export function Header() {
-  const { selectedOrgSlug } = useOrganization()
-  const {
-    pathname,
-    hasProjectContext,
-    effectiveOrg,
-    effectiveProject,
-    itemTypes,
-    navLinks,
-    isActive,
-  } = useHeaderNav()
-  const { mobileMenuOpen, setMobileMenuOpen, toggleMobileMenu } =
-    useMobileMenu(pathname)
+interface HeaderTopProps {
+  selectedOrgSlug: string | null | undefined
+  hasProjectContext: boolean
+  effectiveOrg: string | undefined
+  effectiveProject: string | undefined
+  mobileMenuOpen: boolean
+  toggleMobileMenu: () => void
+}
 
-  const contextDisplay =
+function HeaderTop({
+  selectedOrgSlug,
+  hasProjectContext,
+  effectiveOrg,
+  effectiveProject,
+  mobileMenuOpen,
+  toggleMobileMenu,
+}: HeaderTopProps) {
+  const contextLink =
     hasProjectContext && effectiveOrg && effectiveProject ? (
       <Link
         href={
@@ -46,41 +47,65 @@ export function Header() {
         {effectiveProject}
       </Link>
     ) : null
+  return (
+    <div className="header-top">
+      <h1 className="header-title">
+        <Link href={route({ pathname: '/' })} className="header-logo-link">
+          <img
+            src="/logo.svg"
+            alt=""
+            className="header-logo-icon"
+            width={28}
+            height={28}
+            aria-hidden="true"
+          />
+          <span className="header-app-name">Centy</span>
+        </Link>
+        {contextLink}
+      </h1>
+      <div className="header-controls">
+        <ThemeToggle />
+        <DaemonStatusIndicator />
+        <OrgSwitcher />
+        {selectedOrgSlug !== undefined && <ProjectSelector />}
+      </div>
+      <button
+        className={`mobile-menu-toggle ${mobileMenuOpen ? 'open' : ''}`}
+        onClick={toggleMobileMenu}
+        aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+        aria-expanded={mobileMenuOpen}
+      >
+        <span className="hamburger-line" />
+        <span className="hamburger-line" />
+        <span className="hamburger-line" />
+      </button>
+    </div>
+  )
+}
 
+export function Header() {
+  const { selectedOrgSlug } = useOrganization()
+  const {
+    pathname,
+    hasProjectContext,
+    effectiveOrg,
+    effectiveProject,
+    itemTypes,
+    navLinks,
+    isActive,
+  } = useHeaderNav()
+  const { mobileMenuOpen, setMobileMenuOpen, toggleMobileMenu } =
+    useMobileMenu(pathname)
   return (
     <header className="app-header">
-      <div className="header-top">
-        <h1 className="header-title">
-          <Link href={route({ pathname: '/' })} className="header-logo-link">
-            <img
-              src="/logo.svg"
-              alt=""
-              className="header-logo-icon"
-              width={28}
-              height={28}
-              aria-hidden="true"
-            />
-            <span className="header-app-name">Centy</span>
-          </Link>
-          {contextDisplay}
-        </h1>
-        <div className="header-controls">
-          <ThemeToggle />
-          <DaemonStatusIndicator />
-          <OrgSwitcher />
-          {selectedOrgSlug !== undefined && <ProjectSelector />}
-        </div>
-        <button
-          className={`mobile-menu-toggle ${mobileMenuOpen ? 'open' : ''}`}
-          onClick={toggleMobileMenu}
-          aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
-          aria-expanded={mobileMenuOpen}
-        >
-          <span className="hamburger-line" />
-          <span className="hamburger-line" />
-          <span className="hamburger-line" />
-        </button>
-      </div>
+      <HeaderTop
+        selectedOrgSlug={selectedOrgSlug}
+        hasProjectContext={hasProjectContext}
+        effectiveOrg={effectiveOrg}
+        effectiveProject={effectiveProject}
+        mobileMenuOpen={mobileMenuOpen}
+        toggleMobileMenu={toggleMobileMenu}
+      />
       <p className="header-tagline">
         Local-first issue and documentation tracker
       </p>

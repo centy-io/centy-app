@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 'use client'
 
 import { useState, useCallback, useEffect, useMemo } from 'react'
@@ -20,13 +19,9 @@ function formatError(err: unknown): string {
     : msg
 }
 
-// eslint-disable-next-line max-lines-per-function
-export function useCreateUser() {
-  const router = useRouter()
+function useProjectContext() {
   const params = useParams()
-  const { projectPath, isInitialized } = usePathContext()
-
-  const projectContext = useMemo(() => {
+  return useMemo(() => {
     const orgP = params ? params.organization : undefined
     const org = typeof orgP === 'string' ? orgP : undefined
     const projP = params ? params.project : undefined
@@ -34,6 +29,37 @@ export function useCreateUser() {
     if (org && proj) return { organization: org, project: proj }
     return null
   }, [params])
+}
+
+function useGitUsernames() {
+  const [gitUsernames, setGitUsernames] = useState<string[]>([])
+  const onAddGitUsername = () => setGitUsernames(prev => [...prev, ''])
+  const onRemoveGitUsername = (i: number) =>
+    setGitUsernames(prev => prev.filter((_, idx) => idx !== i))
+  const onGitUsernameChange = (i: number, v: string) =>
+    setGitUsernames(prev => {
+      const u = [...prev]
+      u.splice(i, 1, v)
+      return u
+    })
+  return {
+    gitUsernames,
+    onAddGitUsername,
+    onRemoveGitUsername,
+    onGitUsernameChange,
+  }
+}
+
+export function useCreateUser() {
+  const router = useRouter()
+  const { projectPath, isInitialized } = usePathContext()
+  const projectContext = useProjectContext()
+  const {
+    gitUsernames,
+    onAddGitUsername,
+    onRemoveGitUsername,
+    onGitUsernameChange,
+  } = useGitUsernames()
 
   const usersListUrl: RouteLiteral = useMemo(() => {
     if (!projectContext) return route({ pathname: '/' })
@@ -47,7 +73,6 @@ export function useCreateUser() {
   const [userId, setUserId] = useState('')
   const [userIdManuallySet, setUserIdManuallySet] = useState(false)
   const [email, setEmail] = useState('')
-  const [gitUsernames, setGitUsernames] = useState<string[]>([])
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -69,16 +94,14 @@ export function useCreateUser() {
       })
       const res = await centyClient.createUser(req)
       if (res.success && res.user) {
-        if (projectContext) {
-          router.push(
-            route({
-              pathname: '/[organization]/[project]/users/[userId]',
-              query: { ...projectContext, userId: res.user.id },
-            })
-          )
-        } else {
-          router.push(route({ pathname: '/' }))
-        }
+        router.push(
+          projectContext
+            ? route({
+                pathname: '/[organization]/[project]/users/[userId]',
+                query: { ...projectContext, userId: res.user.id },
+              })
+            : route({ pathname: '/' })
+        )
       } else {
         setError(
           formatError(new OperationError(res.error || 'Failed to create user'))
@@ -99,14 +122,6 @@ export function useCreateUser() {
   const onUserIdChange = (v: string) => {
     setUserId(v)
     setUserIdManuallySet(true)
-  }
-  const onAddGitUsername = () => setGitUsernames([...gitUsernames, ''])
-  const onRemoveGitUsername = (i: number) =>
-    setGitUsernames(gitUsernames.filter((_, idx) => idx !== i))
-  const onGitUsernameChange = (i: number, v: string) => {
-    const u = [...gitUsernames]
-    u.splice(i, 1, v)
-    setGitUsernames(u)
   }
 
   return {

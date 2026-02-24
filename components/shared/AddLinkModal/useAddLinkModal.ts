@@ -11,39 +11,10 @@ import {
 } from '@/gen/centy_pb'
 import { centyClient } from '@/lib/grpc/client'
 
-// eslint-disable-next-line max-lines-per-function
-export function useAddLinkModal({
-  entityId,
-  entityType,
-  existingLinks,
-  onClose,
-  onLinkCreated,
-}: AddLinkModalProps) {
-  const { projectPath } = usePathContext()
-  const modalRef = useRef<HTMLDivElement>(null)
-
+function useLinkTypes(projectPath: string) {
   const [linkTypes, setLinkTypes] = useState<LinkTypeInfo[]>([])
   const [selectedLinkType, setSelectedLinkType] = useState('')
-  const [selectedTarget, setSelectedTarget] = useState<EntityItem | null>(null)
   const [loadingTypes, setLoadingTypes] = useState(true)
-
-  const search = useEntitySearch(
-    projectPath,
-    entityId,
-    existingLinks,
-    selectedLinkType
-  )
-
-  const { loading, error, handleCreateLink } = useCreateLink(
-    projectPath,
-    entityId,
-    entityType,
-    selectedTarget,
-    selectedLinkType,
-    onLinkCreated
-  )
-
-  useModalDismiss(modalRef, onClose)
 
   useEffect(() => {
     async function loadLinkTypes() {
@@ -66,17 +37,53 @@ export function useAddLinkModal({
     loadLinkTypes()
   }, [projectPath])
 
-  const getInverseLinkType = (linkType: string) => {
-    const type = linkTypes.find(t => t.name === linkType)
-    return (type ? type.inverse : '') || linkType
-  }
+  return { linkTypes, selectedLinkType, setSelectedLinkType, loadingTypes }
+}
 
-  const getEntityLabel = (item: EntityItem) => {
-    if (item.displayNumber) {
-      return `#${item.displayNumber} - ${item.title}`
-    }
-    return `${item.id} - ${item.title}`
+function getInverseLinkType(linkTypes: LinkTypeInfo[], linkType: string) {
+  const type = linkTypes.find(t => t.name === linkType)
+  return (type ? type.inverse : '') || linkType
+}
+
+function getEntityLabel(item: EntityItem) {
+  if (item.displayNumber) {
+    return `#${item.displayNumber} - ${item.title}`
   }
+  return `${item.id} - ${item.title}`
+}
+
+export function useAddLinkModal({
+  entityId,
+  entityType,
+  existingLinks,
+  onClose,
+  onLinkCreated,
+}: AddLinkModalProps) {
+  const { projectPath } = usePathContext()
+  const modalRef = useRef<HTMLDivElement>(null)
+
+  const [selectedTarget, setSelectedTarget] = useState<EntityItem | null>(null)
+
+  const { linkTypes, selectedLinkType, setSelectedLinkType, loadingTypes } =
+    useLinkTypes(projectPath)
+
+  const search = useEntitySearch(
+    projectPath,
+    entityId,
+    existingLinks,
+    selectedLinkType
+  )
+
+  const { loading, error, handleCreateLink } = useCreateLink(
+    projectPath,
+    entityId,
+    entityType,
+    selectedTarget,
+    selectedLinkType,
+    onLinkCreated
+  )
+
+  useModalDismiss(modalRef, onClose)
 
   return {
     modalRef,
@@ -89,7 +96,8 @@ export function useAddLinkModal({
     loadingTypes,
     error,
     handleCreateLink,
-    getInverseLinkType,
+    getInverseLinkType: (linkType: string) =>
+      getInverseLinkType(linkTypes, linkType),
     getEntityLabel,
     entityType,
     ...search,

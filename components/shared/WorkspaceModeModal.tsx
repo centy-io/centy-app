@@ -3,7 +3,6 @@
 import { useRef, useEffect } from 'react'
 import '@/styles/components/WorkspaceModeModal.css'
 
-// Workspace mode for agent execution
 export enum WorkspaceMode {
   CURRENT = 'current',
   TEMP = 'temp',
@@ -15,15 +14,10 @@ interface WorkspaceModeModalProps {
   onSelect: (mode: WorkspaceMode) => void
 }
 
-// eslint-disable-next-line max-lines-per-function
-export function WorkspaceModeModal({
-  issueNumber,
-  onClose,
-  onSelect,
-}: WorkspaceModeModalProps) {
-  const modalRef = useRef<HTMLDivElement>(null)
-
-  // Close on click outside
+function useModalDismiss(
+  modalRef: React.RefObject<HTMLDivElement | null>,
+  onClose: () => void
+) {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -34,26 +28,26 @@ export function WorkspaceModeModal({
         onClose()
       }
     }
-
     document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [onClose])
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [modalRef, onClose])
 
-  // Close on Escape
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onClose()
-      }
+      if (event.key === 'Escape') onClose()
     }
-
     document.addEventListener('keydown', handleEscape)
-    return () => {
-      document.removeEventListener('keydown', handleEscape)
-    }
+    return () => document.removeEventListener('keydown', handleEscape)
   }, [onClose])
+}
+
+export function WorkspaceModeModal({
+  issueNumber,
+  onClose,
+  onSelect,
+}: WorkspaceModeModalProps) {
+  const modalRef = useRef<HTMLDivElement>(null)
+  useModalDismiss(modalRef, onClose)
 
   return (
     <div className="workspace-modal-overlay">
@@ -66,12 +60,10 @@ export function WorkspaceModeModal({
             Cancel
           </button>
         </div>
-
         <div className="workspace-modal-body">
           <p className="workspace-modal-description">
             Choose where to run the AI agent:
           </p>
-
           <div className="workspace-modal-options">
             <button
               onClick={() => onSelect(WorkspaceMode.CURRENT)}
@@ -82,7 +74,6 @@ export function WorkspaceModeModal({
                 Run the agent in the current project directory
               </div>
             </button>
-
             <button
               onClick={() => onSelect(WorkspaceMode.TEMP)}
               className="workspace-option"

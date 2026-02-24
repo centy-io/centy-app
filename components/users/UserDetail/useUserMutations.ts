@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 'use client'
 
 import { useCallback, useState } from 'react'
@@ -21,25 +20,21 @@ function formatError(err: unknown): string {
     : msg
 }
 
-// eslint-disable-next-line max-lines-per-function
-export function useUserMutations(
+interface EditState {
+  editName: string
+  editEmail: string
+  editGitUsernames: string[]
+}
+
+function useSaveUser(
   projectPath: string,
   userId: string,
-  usersListUrl: RouteLiteral,
-  editState: {
-    editName: string
-    editEmail: string
-    editGitUsernames: string[]
-  },
-  setUser: (user: User) => void,
+  editState: EditState,
+  setUser: (u: User) => void,
   setIsEditing: (v: boolean) => void,
   setError: (e: string | null) => void
 ) {
-  const router = useRouter()
   const [saving, setSaving] = useState(false)
-  const [deleting, setDeleting] = useState(false)
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
-
   const handleSave = useCallback(async () => {
     if (!projectPath || !userId) return
     setSaving(true)
@@ -56,11 +51,10 @@ export function useUserMutations(
       if (res.success && res.user) {
         setUser(res.user)
         setIsEditing(false)
-      } else {
+      } else
         setError(
           formatError(new OperationError(res.error || 'Failed to update'))
         )
-      }
     } catch (err) {
       setError(formatError(err))
     } finally {
@@ -76,17 +70,28 @@ export function useUserMutations(
     setIsEditing,
     setError,
   ])
+  return { saving, handleSave }
+}
 
+function useDeleteUser(
+  projectPath: string,
+  userId: string,
+  usersListUrl: RouteLiteral,
+  setError: (e: string | null) => void
+) {
+  const router = useRouter()
+  const [deleting, setDeleting] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const handleDelete = useCallback(async () => {
     if (!projectPath || !userId) return
     setDeleting(true)
     setError(null)
     try {
-      const req = create(DeleteUserRequestSchema, { projectPath, userId })
-      const res = await centyClient.deleteUser(req)
-      if (res.success) {
-        router.push(usersListUrl)
-      } else {
+      const res = await centyClient.deleteUser(
+        create(DeleteUserRequestSchema, { projectPath, userId })
+      )
+      if (res.success) router.push(usersListUrl)
+      else {
         setError(
           formatError(new OperationError(res.error || 'Failed to delete'))
         )
@@ -99,7 +104,28 @@ export function useUserMutations(
       setDeleting(false)
     }
   }, [projectPath, userId, router, usersListUrl, setError])
+  return { deleting, showDeleteConfirm, setShowDeleteConfirm, handleDelete }
+}
 
+export function useUserMutations(
+  projectPath: string,
+  userId: string,
+  usersListUrl: RouteLiteral,
+  editState: EditState,
+  setUser: (user: User) => void,
+  setIsEditing: (v: boolean) => void,
+  setError: (e: string | null) => void
+) {
+  const { saving, handleSave } = useSaveUser(
+    projectPath,
+    userId,
+    editState,
+    setUser,
+    setIsEditing,
+    setError
+  )
+  const { deleting, showDeleteConfirm, setShowDeleteConfirm, handleDelete } =
+    useDeleteUser(projectPath, userId, usersListUrl, setError)
   return {
     saving,
     deleting,

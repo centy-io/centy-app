@@ -8,22 +8,13 @@ import {
   type Config,
 } from '@/gen/centy_pb'
 
-// eslint-disable-next-line max-lines-per-function
-export function useStatusConfig(
+function useLoadConfig(
   projectPath: string,
-  onClose: () => void,
-  onConfigured: () => void
+  setConfig: React.Dispatch<React.SetStateAction<Config | null>>,
+  setSelectedOption: React.Dispatch<React.SetStateAction<boolean | null>>,
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+  setError: React.Dispatch<React.SetStateAction<string | null>>
 ) {
-  const modalRef = useRef<HTMLDivElement>(null)
-
-  const [config, setConfig] = useState<Config | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [selectedOption, setSelectedOption] = useState<boolean | null>(null)
-
-  useModalDismiss(modalRef, onClose)
-
   useEffect(() => {
     async function loadConfig() {
       try {
@@ -49,7 +40,24 @@ export function useStatusConfig(
       }
     }
     loadConfig()
-  }, [projectPath])
+  }, [projectPath, setConfig, setSelectedOption, setLoading, setError])
+}
+
+export function useStatusConfig(
+  projectPath: string,
+  onClose: () => void,
+  onConfigured: () => void
+) {
+  const modalRef = useRef<HTMLDivElement>(null)
+
+  const [config, setConfig] = useState<Config | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [selectedOption, setSelectedOption] = useState<boolean | null>(null)
+
+  useModalDismiss(modalRef, onClose)
+  useLoadConfig(projectPath, setConfig, setSelectedOption, setLoading, setError)
 
   const handleSave = useCallback(async () => {
     if (selectedOption === null || !config) return

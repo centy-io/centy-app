@@ -1,10 +1,54 @@
 'use client'
 
 import { FloatingPortal } from '@floating-ui/react'
-import type { MultiSelectProps } from './MultiSelect.types'
+import type { MultiSelectProps, MultiSelectOption } from './MultiSelect.types'
 import { useMultiSelect } from './useMultiSelect'
 
-// eslint-disable-next-line max-lines-per-function
+type MultiSelectState = ReturnType<typeof useMultiSelect>
+
+function MultiSelectDropdown({
+  state,
+  options,
+  value,
+}: {
+  state: MultiSelectState
+  options: MultiSelectOption[]
+  value: string[]
+}) {
+  return (
+    <FloatingPortal>
+      <div
+        ref={state.refs.setFloating}
+        style={state.floatingStyles}
+        className="multi-select-dropdown"
+        {...state.getFloatingProps()}
+      >
+        <label className="multi-select-option select-all">
+          <input
+            className="multi-select-checkbox"
+            type="checkbox"
+            checked={state.allSelected}
+            onChange={state.handleSelectAll}
+          />
+          <span className="multi-select-option-label">All</span>
+        </label>
+        <div className="multi-select-divider" />
+        {options.map(option => (
+          <label key={option.value} className="multi-select-option">
+            <input
+              className="multi-select-checkbox"
+              type="checkbox"
+              checked={value.includes(option.value)}
+              onChange={() => state.handleOptionToggle(option.value)}
+            />
+            <span className="multi-select-option-label">{option.label}</span>
+          </label>
+        ))}
+      </div>
+    </FloatingPortal>
+  )
+}
+
 export function MultiSelect({
   options,
   value,
@@ -15,67 +59,25 @@ export function MultiSelect({
   const resolvedPlaceholder =
     placeholder !== undefined ? placeholder : 'Select...'
   const resolvedClassName = className !== undefined ? className : ''
-  const {
-    isOpen,
-    refs,
-    floatingStyles,
-    getReferenceProps,
-    getFloatingProps,
-    handleOptionToggle,
-    handleSelectAll,
-    getDisplayText,
-    allSelected,
-  } = useMultiSelect(options, value, onChange)
+  const state = useMultiSelect(options, value, onChange)
 
   return (
     <div className={`multi-select ${resolvedClassName}`}>
       <button
-        ref={refs.setReference}
+        ref={state.refs.setReference}
         type="button"
-        className={`multi-select-trigger ${isOpen ? 'open' : ''} ${value.length > 0 ? 'has-value' : ''}`}
-        {...getReferenceProps()}
+        className={`multi-select-trigger ${state.isOpen ? 'open' : ''} ${value.length > 0 ? 'has-value' : ''}`}
+        {...state.getReferenceProps()}
       >
         <span className="multi-select-text">
-          {getDisplayText(resolvedPlaceholder)}
+          {state.getDisplayText(resolvedPlaceholder)}
         </span>
         <span className="multi-select-arrow">
-          {isOpen ? '\u25B2' : '\u25BC'}
+          {state.isOpen ? '\u25B2' : '\u25BC'}
         </span>
       </button>
-
-      {isOpen && (
-        <FloatingPortal>
-          <div
-            ref={refs.setFloating}
-            style={floatingStyles}
-            className="multi-select-dropdown"
-            {...getFloatingProps()}
-          >
-            <label className="multi-select-option select-all">
-              <input
-                className="multi-select-checkbox"
-                type="checkbox"
-                checked={allSelected}
-                onChange={handleSelectAll}
-              />
-              <span className="multi-select-option-label">All</span>
-            </label>
-            <div className="multi-select-divider" />
-            {options.map(option => (
-              <label key={option.value} className="multi-select-option">
-                <input
-                  className="multi-select-checkbox"
-                  type="checkbox"
-                  checked={value.includes(option.value)}
-                  onChange={() => handleOptionToggle(option.value)}
-                />
-                <span className="multi-select-option-label">
-                  {option.label}
-                </span>
-              </label>
-            ))}
-          </div>
-        </FloatingPortal>
+      {state.isOpen && (
+        <MultiSelectDropdown state={state} options={options} value={value} />
       )}
     </div>
   )

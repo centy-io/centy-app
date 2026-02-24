@@ -15,7 +15,39 @@ const formatFileSize = (bytes: bigint | number) => {
   return `${(size / (1024 * 1024)).toFixed(1)} MB`
 }
 
-// eslint-disable-next-line max-lines-per-function
+type SharedState = ReturnType<typeof useSharedAssets>
+
+function SharedAssetsContent({ shared }: { shared: SharedState }) {
+  if (shared.loading && shared.assets.length === 0)
+    return <div className="loading">Loading shared assets...</div>
+  if (shared.assets.length === 0) {
+    return (
+      <div className="empty-state">
+        <p className="empty-state-text">No shared assets found</p>
+        <p className="hint">
+          Shared assets are files that can be referenced across multiple issues
+        </p>
+      </div>
+    )
+  }
+  return (
+    <div className="assets-grid">
+      {shared.assets.map(asset => (
+        <SharedAssetCard
+          key={asset.filename}
+          asset={asset}
+          deleteConfirm={shared.deleteConfirm}
+          deleting={shared.deleting}
+          onPreview={shared.handlePreview}
+          onDeleteConfirm={shared.setDeleteConfirm}
+          onDelete={shared.handleDelete}
+          formatFileSize={formatFileSize}
+        />
+      ))}
+    </div>
+  )
+}
+
 export function SharedAssets() {
   const { projectPath, isInitialized, setIsInitialized } = useProject()
   const shared = useSharedAssets(projectPath, isInitialized, setIsInitialized)
@@ -36,7 +68,6 @@ export function SharedAssets() {
           )}
         </div>
       </div>
-
       {!projectPath && (
         <div className="no-project-message">
           <p className="no-project-text">
@@ -44,7 +75,6 @@ export function SharedAssets() {
           </p>
         </div>
       )}
-
       {projectPath && isInitialized === false && (
         <div className="not-initialized-message">
           <p className="not-initialized-text">
@@ -53,40 +83,12 @@ export function SharedAssets() {
           <Link href={route({ pathname: '/' })}>Initialize Project</Link>
         </div>
       )}
-
       {projectPath && isInitialized === true && (
         <>
           {shared.error && <DaemonErrorMessage error={shared.error} />}
-
-          {shared.loading && shared.assets.length === 0 ? (
-            <div className="loading">Loading shared assets...</div>
-          ) : shared.assets.length === 0 ? (
-            <div className="empty-state">
-              <p className="empty-state-text">No shared assets found</p>
-              <p className="hint">
-                Shared assets are files that can be referenced across multiple
-                issues
-              </p>
-            </div>
-          ) : (
-            <div className="assets-grid">
-              {shared.assets.map(asset => (
-                <SharedAssetCard
-                  key={asset.filename}
-                  asset={asset}
-                  deleteConfirm={shared.deleteConfirm}
-                  deleting={shared.deleting}
-                  onPreview={shared.handlePreview}
-                  onDeleteConfirm={shared.setDeleteConfirm}
-                  onDelete={shared.handleDelete}
-                  formatFileSize={formatFileSize}
-                />
-              ))}
-            </div>
-          )}
+          <SharedAssetsContent shared={shared} />
         </>
       )}
-
       {shared.previewAsset && (
         <PreviewModal
           asset={shared.previewAsset.asset}

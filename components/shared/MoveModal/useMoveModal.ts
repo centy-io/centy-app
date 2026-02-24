@@ -5,29 +5,37 @@ import { useMoveAction } from './useMoveAction'
 import { centyClient } from '@/lib/grpc/client'
 import { ListProjectsRequestSchema, type ProjectInfo } from '@/gen/centy_pb'
 
-// eslint-disable-next-line max-lines-per-function
-export function useMoveModal({
-  entityType,
-  entityId,
-  currentProjectPath,
-  onClose,
-  onMoved,
-}: MoveModalProps) {
-  const modalRef = useRef<HTMLDivElement>(null)
+function useModalDismiss(
+  modalRef: React.RefObject<HTMLDivElement | null>,
+  onClose: () => void
+) {
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        event.target instanceof Node &&
+        !modalRef.current.contains(event.target)
+      ) {
+        onClose()
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [modalRef, onClose])
 
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose()
+    }
+    document.addEventListener('keydown', handleEscape)
+    return () => document.removeEventListener('keydown', handleEscape)
+  }, [onClose])
+}
+
+function useOtherProjects(currentProjectPath: string) {
   const [projects, setProjects] = useState<ProjectInfo[]>([])
   const [selectedProject, setSelectedProject] = useState<string>('')
-  const [newSlug, setNewSlug] = useState('')
   const [loadingProjects, setLoadingProjects] = useState(true)
-
-  const { loading, error, handleMove } = useMoveAction(
-    entityType,
-    entityId,
-    currentProjectPath,
-    selectedProject,
-    newSlug,
-    onMoved
-  )
 
   useEffect(() => {
     async function loadProjects() {
@@ -54,31 +62,32 @@ export function useMoveModal({
     loadProjects()
   }, [currentProjectPath])
 
-  // Close on click outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        modalRef.current &&
-        event.target instanceof Node &&
-        !modalRef.current.contains(event.target)
-      ) {
-        onClose()
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [onClose])
+  return { projects, selectedProject, setSelectedProject, loadingProjects }
+}
 
-  // Close on escape
-  useEffect(() => {
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onClose()
-      }
-    }
-    document.addEventListener('keydown', handleEscape)
-    return () => document.removeEventListener('keydown', handleEscape)
-  }, [onClose])
+export function useMoveModal({
+  entityType,
+  entityId,
+  currentProjectPath,
+  onClose,
+  onMoved,
+}: MoveModalProps) {
+  const modalRef = useRef<HTMLDivElement>(null)
+  const [newSlug, setNewSlug] = useState('')
+
+  const { projects, selectedProject, setSelectedProject, loadingProjects } =
+    useOtherProjects(currentProjectPath)
+
+  const { loading, error, handleMove } = useMoveAction(
+    entityType,
+    entityId,
+    currentProjectPath,
+    selectedProject,
+    newSlug,
+    onMoved
+  )
+
+  useModalDismiss(modalRef, onClose)
 
   const selectedProjectInfo = projects.find(p => p.path === selectedProject)
 

@@ -18,18 +18,12 @@ function toRecordArray(v: unknown): Record<string, unknown>[] {
   return []
 }
 
-// eslint-disable-next-line max-lines-per-function
-export function MessageListFieldRenderer({
-  messageDesc,
-  label,
-  description,
-  value,
-  onChange,
-  ProtoFormRenderer,
-}: MessageListFieldProps) {
-  const items = toRecordArray(value)
-  const [expanded, setExpanded] = useState<Set<number>>(new Set())
-
+function useMessageListHandlers(
+  items: Record<string, unknown>[],
+  onChange: (v: unknown) => void,
+  setExpanded: React.Dispatch<React.SetStateAction<Set<number>>>,
+  messageDesc: MessageListFieldProps['messageDesc']
+) {
   const handleAdd = () => {
     const newItem: Record<string, unknown> = {}
     Object.assign(newItem, create(messageDesc))
@@ -37,7 +31,6 @@ export function MessageListFieldRenderer({
     onChange(next)
     setExpanded(prev => new Set([...prev, next.length - 1]))
   }
-
   const handleRemove = (index: number) => {
     onChange(items.filter((_, i) => i !== index))
     setExpanded(
@@ -49,24 +42,32 @@ export function MessageListFieldRenderer({
         )
     )
   }
-
-  const handleItemChange = (
-    index: number,
-    updates: Record<string, unknown>
-  ) => {
+  const handleItemChange = (index: number, updates: Record<string, unknown>) =>
     onChange(
       items.map((item, i) => (i === index ? { ...item, ...updates } : item))
     )
-  }
-
-  const toggleExpanded = (index: number) => {
+  const toggleExpanded = (index: number) =>
     setExpanded(prev => {
       const next = new Set(prev)
       if (next.has(index)) next.delete(index)
       else next.add(index)
       return next
     })
-  }
+  return { handleAdd, handleRemove, handleItemChange, toggleExpanded }
+}
+
+export function MessageListFieldRenderer({
+  messageDesc,
+  label,
+  description,
+  value,
+  onChange,
+  ProtoFormRenderer,
+}: MessageListFieldProps) {
+  const items = toRecordArray(value)
+  const [expanded, setExpanded] = useState<Set<number>>(new Set())
+  const { handleAdd, handleRemove, handleItemChange, toggleExpanded } =
+    useMessageListHandlers(items, onChange, setExpanded, messageDesc)
 
   return (
     <div className="proto-form-field">

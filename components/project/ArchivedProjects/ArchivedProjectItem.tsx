@@ -12,8 +12,7 @@ interface ArchivedProjectItemProps {
   onSetConfirmRemove: (v: string | null) => void
 }
 
-// eslint-disable-next-line max-lines-per-function
-export function ArchivedProjectItem({
+function ItemActions({
   project,
   confirmRemove,
   removingPath,
@@ -22,6 +21,55 @@ export function ArchivedProjectItem({
   onRemove,
   onSetConfirmRemove,
 }: ArchivedProjectItemProps) {
+  const isRemoving = removingPath === project.path
+  return (
+    <div className="archived-item-actions">
+      {confirmRemove === project.path ? (
+        <>
+          <span className="confirm-text">Remove permanently?</span>
+          <button
+            className="confirm-yes-btn"
+            onClick={() => onRemove(project.path)}
+            disabled={isRemoving}
+          >
+            {isRemoving ? 'Removing...' : 'Yes'}
+          </button>
+          <button
+            className="confirm-no-btn"
+            onClick={() => onSetConfirmRemove(null)}
+            disabled={isRemoving}
+          >
+            No
+          </button>
+        </>
+      ) : (
+        <>
+          <button
+            className="restore-btn"
+            onClick={() => onRestore(project.path)}
+          >
+            Restore
+          </button>
+          <button
+            className="restore-select-btn"
+            onClick={() => onRestoreAndSelect(project)}
+          >
+            Restore & Select
+          </button>
+          <button
+            className="remove-btn"
+            onClick={() => onSetConfirmRemove(project.path)}
+          >
+            Remove
+          </button>
+        </>
+      )}
+    </div>
+  )
+}
+
+export function ArchivedProjectItem(props: ArchivedProjectItemProps) {
+  const { project } = props
   return (
     <li className="archived-item">
       <div className="archived-item-info">
@@ -39,48 +87,7 @@ export function ArchivedProjectItem({
           )}
         </div>
       </div>
-      <div className="archived-item-actions">
-        {confirmRemove === project.path ? (
-          <>
-            <span className="confirm-text">Remove permanently?</span>
-            <button
-              className="confirm-yes-btn"
-              onClick={() => onRemove(project.path)}
-              disabled={removingPath === project.path}
-            >
-              {removingPath === project.path ? 'Removing...' : 'Yes'}
-            </button>
-            <button
-              className="confirm-no-btn"
-              onClick={() => onSetConfirmRemove(null)}
-              disabled={removingPath === project.path}
-            >
-              No
-            </button>
-          </>
-        ) : (
-          <>
-            <button
-              className="restore-btn"
-              onClick={() => onRestore(project.path)}
-            >
-              Restore
-            </button>
-            <button
-              className="restore-select-btn"
-              onClick={() => onRestoreAndSelect(project)}
-            >
-              Restore & Select
-            </button>
-            <button
-              className="remove-btn"
-              onClick={() => onSetConfirmRemove(project.path)}
-            >
-              Remove
-            </button>
-          </>
-        )}
-      </div>
+      <ItemActions {...props} />
     </li>
   )
 }

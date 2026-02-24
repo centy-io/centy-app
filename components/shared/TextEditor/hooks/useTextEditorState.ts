@@ -1,11 +1,48 @@
 import { useCallback, useState, useEffect } from 'react'
-import { useEditor } from '@tiptap/react'
+import { useEditor, type Editor } from '@tiptap/react'
 import type { TextEditorProps, EditorMode } from '../TextEditor.types'
 import { markdownToHtml, htmlToMarkdown } from '../utils/markdownParser'
 import { createEditorExtensions } from '../constants'
 import { useAsciidocConverter } from './useAsciidocConverter'
 
-// eslint-disable-next-line max-lines-per-function
+function useSyncEditorContent(
+  editor: Editor | null,
+  markdownContent: string,
+  rawValue: string,
+  setRawValue: React.Dispatch<React.SetStateAction<string>>
+) {
+  useEffect(() => {
+    if (!editor || markdownContent === rawValue) return
+    const html = markdownToHtml(markdownContent)
+    editor.commands.setContent(html)
+    setRawValue(markdownContent)
+  }, [editor, markdownContent, rawValue, setRawValue])
+}
+
+function useModeSync(
+  editor: Editor | null,
+  resolvedMode: EditorMode,
+  onModeChange: ((mode: EditorMode) => void) | undefined
+) {
+  const [currentMode, setCurrentMode] = useState<EditorMode>(resolvedMode)
+
+  useEffect(() => {
+    if (editor) editor.setEditable(currentMode === 'edit')
+  }, [editor, currentMode])
+
+  useEffect(() => {
+    setCurrentMode(resolvedMode)
+  }, [resolvedMode])
+
+  const handleModeToggle = useCallback(() => {
+    const newMode = currentMode === 'display' ? 'edit' : 'display'
+    setCurrentMode(newMode)
+    if (onModeChange) onModeChange(newMode)
+  }, [currentMode, onModeChange])
+
+  return { currentMode, handleModeToggle }
+}
+
 export function useTextEditorState({
   value,
   onChange,
@@ -18,13 +55,12 @@ export function useTextEditorState({
   const resolvedMode = mode !== undefined ? mode : 'edit'
   const resolvedPlaceholder =
     placeholder !== undefined ? placeholder : 'Write your content...'
-  const [currentMode, setCurrentMode] = useState<EditorMode>(resolvedMode)
   const [isRawMode, setIsRawMode] = useState(false)
 
   const markdownContent = useAsciidocConverter(value, resolvedFormat)
   const [rawValue, setRawValue] = useState(markdownContent)
 
-  const isEditable = currentMode === 'edit'
+  const isEditable = resolvedMode === 'edit'
 
   const editor = useEditor({
     extensions: createEditorExtensions(isEditable, resolvedPlaceholder),
@@ -40,22 +76,13 @@ export function useTextEditorState({
     },
   })
 
-  useEffect(() => {
-    if (editor) {
-      editor.setEditable(currentMode === 'edit')
-    }
-  }, [editor, currentMode])
+  const { currentMode, handleModeToggle } = useModeSync(
+    editor,
+    resolvedMode,
+    onModeChange
+  )
 
-  useEffect(() => {
-    setCurrentMode(resolvedMode)
-  }, [resolvedMode])
-
-  useEffect(() => {
-    if (!editor || markdownContent === rawValue) return
-    const html = markdownToHtml(markdownContent)
-    editor.commands.setContent(html)
-    setRawValue(markdownContent)
-  }, [editor, markdownContent, rawValue])
+  useSyncEditorContent(editor, markdownContent, rawValue, setRawValue)
 
   const handleRawChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -76,16 +103,10 @@ export function useTextEditorState({
     setIsRawMode(!isRawMode)
   }, [isRawMode, editor, rawValue])
 
-  const handleModeToggle = useCallback(() => {
-    const newMode = currentMode === 'display' ? 'edit' : 'display'
-    setCurrentMode(newMode)
-    if (onModeChange) onModeChange(newMode)
-  }, [currentMode, onModeChange])
-
   return {
     editor,
     currentMode,
-    isEditable,
+    isEditable: currentMode === 'edit',
     isRawMode,
     rawValue,
     handleRawChange,

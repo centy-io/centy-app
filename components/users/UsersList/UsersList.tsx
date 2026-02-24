@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import { type RouteLiteral } from 'nextjs-routes'
 import { SyncUsersModal } from '../SyncUsersModal'
 import { useUsersData } from './useUsersData'
 import { useUserRoutes } from './useProjectRoutes'
@@ -12,21 +13,47 @@ import {
 } from '@/components/shared/ContextMenu'
 import { type User } from '@/gen/centy_pb'
 
-// eslint-disable-next-line max-lines-per-function
+interface ContextMenuState {
+  x: number
+  y: number
+  user: User
+}
+
+function buildContextMenuItems(
+  contextMenu: ContextMenuState,
+  getUserRoute: (id: string) => RouteLiteral,
+  router: ReturnType<typeof useRouter>,
+  setShowDeleteConfirm: (id: string | null) => void,
+  setContextMenu: (v: ContextMenuState | null) => void
+): ContextMenuItem[] {
+  return [
+    {
+      label: 'View',
+      onClick: () => {
+        router.push(getUserRoute(contextMenu.user.id))
+        setContextMenu(null)
+      },
+    },
+    {
+      label: 'Delete',
+      onClick: () => {
+        setShowDeleteConfirm(contextMenu.user.id)
+        setContextMenu(null)
+      },
+      danger: true,
+    },
+  ]
+}
+
 export function UsersList() {
   const router = useRouter()
   const data = useUsersData()
   const { getUserRoute, newUserRoute } = useUserRoutes()
-
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(
     null
   )
   const [showSyncModal, setShowSyncModal] = useState(false)
-  const [contextMenu, setContextMenu] = useState<{
-    x: number
-    y: number
-    user: User
-  } | null>(null)
+  const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null)
 
   const handleContextMenu = useCallback((e: React.MouseEvent, user: User) => {
     e.preventDefault()
@@ -41,24 +68,14 @@ export function UsersList() {
     [data]
   )
 
-  const contextMenuItems: ContextMenuItem[] = contextMenu
-    ? [
-        {
-          label: 'View',
-          onClick: () => {
-            router.push(getUserRoute(contextMenu.user.id))
-            setContextMenu(null)
-          },
-        },
-        {
-          label: 'Delete',
-          onClick: () => {
-            setShowDeleteConfirm(contextMenu.user.id)
-            setContextMenu(null)
-          },
-          danger: true,
-        },
-      ]
+  const contextMenuItems = contextMenu
+    ? buildContextMenuItems(
+        contextMenu,
+        getUserRoute,
+        router,
+        setShowDeleteConfirm,
+        setContextMenu
+      )
     : []
 
   return (

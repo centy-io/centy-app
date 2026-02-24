@@ -9,48 +9,59 @@ interface DuplicateModalBodyProps {
   state: ReturnType<typeof useDuplicateModal>
 }
 
-// eslint-disable-next-line max-lines-per-function
+type BodyState = ReturnType<typeof useDuplicateModal>
+
+function ProjectSelector({
+  state,
+  currentProjectPath,
+}: {
+  state: BodyState
+  currentProjectPath: string
+}) {
+  return (
+    <div className="move-modal-field">
+      <label className="move-modal-label">Target Project</label>
+      {state.loadingProjects ? (
+        <div className="move-modal-loading">Loading projects...</div>
+      ) : state.projects.length === 0 ? (
+        <div className="move-modal-empty">No projects available</div>
+      ) : (
+        <select
+          value={state.selectedProject}
+          onChange={e => state.setSelectedProject(e.target.value)}
+          className="move-modal-select"
+        >
+          {state.projects.map(project => (
+            <option
+              className="move-modal-option"
+              key={project.path}
+              value={project.path}
+            >
+              {project.userTitle || project.projectTitle || project.name}
+              {project.path === currentProjectPath ? ' (current)' : ''} (
+              {project.displayPath})
+            </option>
+          ))}
+        </select>
+      )}
+    </div>
+  )
+}
+
 export function DuplicateModalBody({ props, state }: DuplicateModalBodyProps) {
   return (
     <div className="move-modal-body">
       {state.error && (
         <DaemonErrorMessage error={state.error} className="move-modal-error" />
       )}
-
       <div className="move-modal-info">
         <span className="move-modal-label">Duplicating:</span>
         <span className="move-modal-value">{props.entityTitle}</span>
       </div>
-
-      <div className="move-modal-field">
-        <label className="move-modal-label">Target Project</label>
-        {state.loadingProjects ? (
-          <div className="move-modal-loading">Loading projects...</div>
-        ) : state.projects.length === 0 ? (
-          <div className="move-modal-empty">No projects available</div>
-        ) : (
-          <select
-            value={state.selectedProject}
-            onChange={e => state.setSelectedProject(e.target.value)}
-            className="move-modal-select"
-          >
-            {state.projects.map(project => (
-              <option
-                className="move-modal-option"
-                key={project.path}
-                value={project.path}
-              >
-                {project.userTitle || project.projectTitle || project.name}
-                {project.path === props.currentProjectPath
-                  ? ' (current)'
-                  : ''}{' '}
-                ({project.displayPath})
-              </option>
-            ))}
-          </select>
-        )}
-      </div>
-
+      <ProjectSelector
+        state={state}
+        currentProjectPath={props.currentProjectPath}
+      />
       <div className="move-modal-field">
         <label className="move-modal-label">New Title</label>
         <input
@@ -61,7 +72,6 @@ export function DuplicateModalBody({ props, state }: DuplicateModalBodyProps) {
           className="move-modal-input"
         />
       </div>
-
       {props.entityType === 'doc' && (
         <div className="move-modal-field">
           <label className="move-modal-label">New Slug</label>
@@ -77,7 +87,6 @@ export function DuplicateModalBody({ props, state }: DuplicateModalBodyProps) {
           </span>
         </div>
       )}
-
       {state.selectedProjectInfo && (
         <div className="move-modal-preview">
           <span className="move-modal-preview-label">

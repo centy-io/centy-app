@@ -7,7 +7,43 @@ import { VscodeIcon, TerminalIcon } from './EditorIcons'
 import { EditorDropdown } from './EditorDropdown'
 import { EditorType } from '@/gen/centy_pb'
 
-// eslint-disable-next-line max-lines-per-function
+type EditorSelectorState = ReturnType<typeof useEditorSelector>
+
+interface PrimaryButtonProps {
+  state: EditorSelectorState
+  resolvedDisabled: boolean
+  resolvedLoading: boolean
+}
+
+function PrimaryButton({
+  state,
+  resolvedDisabled,
+  resolvedLoading,
+}: PrimaryButtonProps) {
+  const isTerminal = state.preferredEditor === EditorType.TERMINAL
+  const btnClass = `editor-primary-btn ${isTerminal ? 'terminal' : 'vscode'}`
+  const title = state.preferredEditorAvailable
+    ? state.preferredEditorInfo
+      ? state.preferredEditorInfo.description
+      : ''
+    : `${state.preferredEditorName} is not available`
+  return (
+    <button
+      className={btnClass}
+      onClick={state.handlePrimaryClick}
+      disabled={
+        resolvedDisabled || resolvedLoading || !state.preferredEditorAvailable
+      }
+      title={title}
+    >
+      <span className="editor-icon">
+        {isTerminal ? <TerminalIcon /> : <VscodeIcon />}
+      </span>
+      {resolvedLoading ? 'Opening...' : `Open in ${state.preferredEditorName}`}
+    </button>
+  )
+}
+
 export function EditorSelector({
   onOpenInVscode,
   onOpenInTerminal,
@@ -38,38 +74,17 @@ export function EditorSelector({
     return null
   }
 
+  const isTerminal = state.preferredEditor === EditorType.TERMINAL
   return (
     <div className="editor-selector" ref={state.dropdownRef}>
       <div className="editor-selector-button-group">
+        <PrimaryButton
+          state={state}
+          resolvedDisabled={resolvedDisabled}
+          resolvedLoading={resolvedLoading}
+        />
         <button
-          className={`editor-primary-btn ${state.preferredEditor === EditorType.TERMINAL ? 'terminal' : 'vscode'}`}
-          onClick={state.handlePrimaryClick}
-          disabled={
-            resolvedDisabled ||
-            resolvedLoading ||
-            !state.preferredEditorAvailable
-          }
-          title={
-            state.preferredEditorAvailable
-              ? state.preferredEditorInfo
-                ? state.preferredEditorInfo.description
-                : ''
-              : `${state.preferredEditorName} is not available`
-          }
-        >
-          <span className="editor-icon">
-            {state.preferredEditor === EditorType.TERMINAL ? (
-              <TerminalIcon />
-            ) : (
-              <VscodeIcon />
-            )}
-          </span>
-          {resolvedLoading
-            ? 'Opening...'
-            : `Open in ${state.preferredEditorName}`}
-        </button>
-        <button
-          className={`editor-dropdown-btn ${state.preferredEditor === EditorType.TERMINAL ? 'terminal' : 'vscode'}`}
+          className={`editor-dropdown-btn ${isTerminal ? 'terminal' : 'vscode'}`}
           onClick={() => state.setShowDropdown(!state.showDropdown)}
           disabled={resolvedDisabled || resolvedLoading}
           aria-label="Select editor"
@@ -83,7 +98,6 @@ export function EditorSelector({
           </span>
         </button>
       </div>
-
       {state.showDropdown && (
         <EditorDropdown
           editors={state.editors}

@@ -10,17 +10,19 @@ import {
 } from '@/gen/centy_pb'
 import { usePathContext } from '@/components/providers/PathContextProvider'
 
-// eslint-disable-next-line max-lines-per-function
-export function useLinkSection(entityId: string, entityType: 'issue' | 'doc') {
-  const { projectPath } = usePathContext()
-  const { buildLinkRoute } = useLinkRoutes()
-  const [links, setLinks] = useState<LinkType[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [showAddModal, setShowAddModal] = useState(false)
-  const [deletingLinkId, setDeletingLinkId] = useState<string | null>(null)
+function toProtoTargetType(entityType: 'issue' | 'doc') {
+  return entityType === 'issue' ? LinkTargetType.ISSUE : LinkTargetType.DOC
+}
 
-  const fetchLinks = useCallback(async () => {
+function useFetchLinks(
+  projectPath: string,
+  entityId: string,
+  entityType: 'issue' | 'doc',
+  setLinks: React.Dispatch<React.SetStateAction<LinkType[]>>,
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+  setError: React.Dispatch<React.SetStateAction<string | null>>
+) {
+  return useCallback(async () => {
     if (!projectPath || !entityId) return
     setLoading(true)
     setError(null)
@@ -28,8 +30,7 @@ export function useLinkSection(entityId: string, entityType: 'issue' | 'doc') {
       const request = create(ListLinksRequestSchema, {
         projectPath,
         entityId,
-        entityType:
-          entityType === 'issue' ? LinkTargetType.ISSUE : LinkTargetType.DOC,
+        entityType: toProtoTargetType(entityType),
       })
       const response = await centyClient.listLinks(request)
       setLinks(response.links)
@@ -38,24 +39,27 @@ export function useLinkSection(entityId: string, entityType: 'issue' | 'doc') {
     } finally {
       setLoading(false)
     }
-  }, [projectPath, entityId, entityType])
+  }, [projectPath, entityId, entityType, setLinks, setLoading, setError])
+}
 
-  useEffect(() => {
-    fetchLinks()
-  }, [fetchLinks])
-
-  const handleDeleteLink = useCallback(
+function useDeleteLink(
+  projectPath: string,
+  entityId: string,
+  entityType: 'issue' | 'doc',
+  setLinks: React.Dispatch<React.SetStateAction<LinkType[]>>,
+  setDeletingLinkId: React.Dispatch<React.SetStateAction<string | null>>,
+  setError: React.Dispatch<React.SetStateAction<string | null>>
+) {
+  return useCallback(
     async (link: LinkType) => {
       if (!projectPath || !entityId) return
-      const linkKey = `${link.targetId}-${link.linkType}`
-      setDeletingLinkId(linkKey)
+      setDeletingLinkId(`${link.targetId}-${link.linkType}`)
       setError(null)
       try {
         const request = create(DeleteLinkRequestSchema, {
           projectPath,
           sourceId: entityId,
-          sourceType:
-            entityType === 'issue' ? LinkTargetType.ISSUE : LinkTargetType.DOC,
+          sourceType: toProtoTargetType(entityType),
           targetId: link.targetId,
           targetType: link.targetType,
           linkType: link.linkType,
@@ -77,14 +81,41 @@ export function useLinkSection(entityId: string, entityType: 'issue' | 'doc') {
         setDeletingLinkId(null)
       }
     },
-    [projectPath, entityId, entityType]
+    [projectPath, entityId, entityType, setLinks, setDeletingLinkId, setError]
   )
+}
 
+export function useLinkSection(entityId: string, entityType: 'issue' | 'doc') {
+  const { projectPath } = usePathContext()
+  const { buildLinkRoute } = useLinkRoutes()
+  const [links, setLinks] = useState<LinkType[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [showAddModal, setShowAddModal] = useState(false)
+  const [deletingLinkId, setDeletingLinkId] = useState<string | null>(null)
+  const fetchLinks = useFetchLinks(
+    projectPath,
+    entityId,
+    entityType,
+    setLinks,
+    setLoading,
+    setError
+  )
+  const handleDeleteLink = useDeleteLink(
+    projectPath,
+    entityId,
+    entityType,
+    setLinks,
+    setDeletingLinkId,
+    setError
+  )
+  useEffect(() => {
+    fetchLinks()
+  }, [fetchLinks])
   const handleLinkCreated = useCallback(() => {
     fetchLinks()
     setShowAddModal(false)
   }, [fetchLinks])
-
   return {
     links,
     loading,

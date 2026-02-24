@@ -7,8 +7,11 @@ interface AddLinkModalBodyProps {
   state: ReturnType<typeof useAddLinkModal>
 }
 
-// eslint-disable-next-line max-lines-per-function
-export function AddLinkModalBody({ state }: AddLinkModalBodyProps) {
+type ModalState = ReturnType<typeof useAddLinkModal>
+
+function LinkTypeField({ state }: { state: ModalState }) {
+  const typeClass = `link-modal-tab ${state.targetTypeFilter === 'issue' ? 'active' : ''}`
+  const docClass = `link-modal-tab ${state.targetTypeFilter === 'doc' ? 'active' : ''}`
   return (
     <>
       <div className="link-modal-field">
@@ -33,25 +36,65 @@ export function AddLinkModalBody({ state }: AddLinkModalBodyProps) {
           </select>
         )}
       </div>
-
       <div className="link-modal-field">
         <label className="link-modal-label">Target Type</label>
         <div className="link-modal-tabs">
           <button
-            className={`link-modal-tab ${state.targetTypeFilter === 'issue' ? 'active' : ''}`}
+            className={typeClass}
             onClick={() => state.setTargetTypeFilter('issue')}
           >
             Issues
           </button>
           <button
-            className={`link-modal-tab ${state.targetTypeFilter === 'doc' ? 'active' : ''}`}
+            className={docClass}
             onClick={() => state.setTargetTypeFilter('doc')}
           >
             Docs
           </button>
         </div>
       </div>
+    </>
+  )
+}
 
+function SearchResultsField({ state }: { state: ModalState }) {
+  const isSelected = (id: string) =>
+    state.selectedTarget !== null && state.selectedTarget.id === id
+  return (
+    <div className="link-modal-field">
+      <label className="link-modal-label">Select Target</label>
+      <div className="link-modal-results">
+        {state.loadingSearch ? (
+          <div className="link-modal-loading">Searching...</div>
+        ) : state.searchResults.length === 0 ? (
+          <div className="link-modal-empty">No items found</div>
+        ) : (
+          <ul className="link-modal-list">
+            {state.searchResults.slice(0, 10).map(item => (
+              <li
+                key={item.id}
+                className={`link-modal-item ${isSelected(item.id) ? 'selected' : ''}`}
+                onClick={() => state.setSelectedTarget(item)}
+              >
+                <span className={`link-type-icon link-type-${item.type}`}>
+                  {item.type === 'issue' ? '!' : 'D'}
+                </span>
+                <span className="link-modal-item-label">
+                  {state.getEntityLabel(item)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  )
+}
+
+export function AddLinkModalBody({ state }: AddLinkModalBodyProps) {
+  return (
+    <>
+      <LinkTypeField state={state} />
       <div className="link-modal-field">
         <label className="link-modal-label">Search</label>
         <input
@@ -62,35 +105,7 @@ export function AddLinkModalBody({ state }: AddLinkModalBodyProps) {
           className="link-modal-input"
         />
       </div>
-
-      <div className="link-modal-field">
-        <label className="link-modal-label">Select Target</label>
-        <div className="link-modal-results">
-          {state.loadingSearch ? (
-            <div className="link-modal-loading">Searching...</div>
-          ) : state.searchResults.length === 0 ? (
-            <div className="link-modal-empty">No items found</div>
-          ) : (
-            <ul className="link-modal-list">
-              {state.searchResults.slice(0, 10).map(item => (
-                <li
-                  key={item.id}
-                  className={`link-modal-item ${state.selectedTarget && state.selectedTarget.id === item.id ? 'selected' : ''}`}
-                  onClick={() => state.setSelectedTarget(item)}
-                >
-                  <span className={`link-type-icon link-type-${item.type}`}>
-                    {item.type === 'issue' ? '!' : 'D'}
-                  </span>
-                  <span className="link-modal-item-label">
-                    {state.getEntityLabel(item)}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </div>
-
+      <SearchResultsField state={state} />
       {state.selectedTarget && state.selectedLinkType && (
         <LinkPreview
           entityType={state.entityType}
