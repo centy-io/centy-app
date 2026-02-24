@@ -6,7 +6,47 @@ import { ViewContent } from './ViewContent'
 import { Metadata } from './Metadata'
 import type { IssueDetailBodyProps } from './IssueDetailBody.types'
 
-// eslint-disable-next-line max-lines-per-function
+function IssueViewSection({
+  issue,
+  projectPath,
+  issueNumber,
+  editState,
+  stateManager,
+  stateOptions,
+  statusChange,
+  assets,
+  setAssets,
+}: Omit<IssueDetailBodyProps, 'copyToClipboard'>): ReactElement {
+  return (
+    <>
+      <h1 className="issue-title">{issue.title}</h1>
+      <Metadata
+        issue={issue}
+        projectPath={projectPath}
+        issueNumber={issueNumber}
+        stateManager={stateManager}
+        stateOptions={stateOptions}
+        showStatusDropdown={statusChange.showStatusDropdown}
+        updatingStatus={statusChange.updatingStatus}
+        statusDropdownRef={statusChange.statusDropdownRef}
+        assignees={editState.assignees}
+        setAssignees={editState.setAssignees}
+        onToggleDropdown={() =>
+          statusChange.setShowStatusDropdown(!statusChange.showStatusDropdown)
+        }
+        onStatusChange={statusChange.handleStatusChange}
+      />
+      <ViewContent
+        issue={issue}
+        projectPath={projectPath}
+        issueNumber={issueNumber}
+        assets={assets}
+        setAssets={setAssets}
+      />
+    </>
+  )
+}
+
 export function IssueDetailBody({
   issue,
   projectPath,
@@ -31,7 +71,6 @@ export function IssueDetailBody({
       >
         #{issue.displayNumber}
       </button>
-
       {editState.isEditing ? (
         <EditForm
           projectPath={projectPath}
@@ -49,34 +88,17 @@ export function IssueDetailBody({
           setAssets={setAssets}
         />
       ) : (
-        <>
-          <h1 className="issue-title">{issue.title}</h1>
-          <Metadata
-            issue={issue}
-            projectPath={projectPath}
-            issueNumber={issueNumber}
-            stateManager={stateManager}
-            stateOptions={stateOptions}
-            showStatusDropdown={statusChange.showStatusDropdown}
-            updatingStatus={statusChange.updatingStatus}
-            statusDropdownRef={statusChange.statusDropdownRef}
-            assignees={editState.assignees}
-            setAssignees={editState.setAssignees}
-            onToggleDropdown={() =>
-              statusChange.setShowStatusDropdown(
-                !statusChange.showStatusDropdown
-              )
-            }
-            onStatusChange={statusChange.handleStatusChange}
-          />
-          <ViewContent
-            issue={issue}
-            projectPath={projectPath}
-            issueNumber={issueNumber}
-            assets={assets}
-            setAssets={setAssets}
-          />
-        </>
+        <IssueViewSection
+          issue={issue}
+          projectPath={projectPath}
+          issueNumber={issueNumber}
+          editState={editState}
+          stateManager={stateManager}
+          stateOptions={stateOptions}
+          statusChange={statusChange}
+          assets={assets}
+          setAssets={setAssets}
+        />
       )}
     </div>
   )

@@ -1,34 +1,71 @@
 import Link from 'next/link'
 import { createColumnHelper } from '@tanstack/react-table'
+import type { CellContext } from '@tanstack/react-table'
 import type { RouteLiteral } from 'nextjs-routes'
 import type { AggregateIssue } from './AggregateIssuesList.types'
 import { getPriorityClass } from './utils'
 
 const columnHelper = createColumnHelper<AggregateIssue>()
 
-// eslint-disable-next-line max-lines-per-function
+type CreateProjectLink = (
+  orgSlug: string | null,
+  projectName: string,
+  path: string
+) => RouteLiteral
+
+function makeProjectNameCell(createProjectLink: CreateProjectLink) {
+  return (info: CellContext<AggregateIssue, string>) => {
+    const issue = info.row.original
+    return (
+      <Link
+        href={createProjectLink(issue.orgSlug, issue.projectName, 'issues')}
+        className="project-link"
+      >
+        {info.getValue()}
+      </Link>
+    )
+  }
+}
+
+function makeTitleCell(createProjectLink: CreateProjectLink) {
+  return (info: CellContext<AggregateIssue, string>) => {
+    const issue = info.row.original
+    return (
+      <Link
+        href={createProjectLink(
+          issue.orgSlug,
+          issue.projectName,
+          `issues/${issue.issueNumber}`
+        )}
+        className="issue-title-link"
+      >
+        {info.getValue()}
+      </Link>
+    )
+  }
+}
+
+function makeStatusCell(stateManager: {
+  getStateClass: (status: string) => string
+}) {
+  return (info: CellContext<AggregateIssue, string>) => {
+    const status = info.getValue()
+    return (
+      <span className={`status-badge ${stateManager.getStateClass(status)}`}>
+        {status}
+      </span>
+    )
+  }
+}
+
 export function createAggregateColumns(
   stateManager: { getStateClass: (status: string) => string },
-  createProjectLink: (
-    orgSlug: string | null,
-    projectName: string,
-    path: string
-  ) => RouteLiteral
+  createProjectLink: CreateProjectLink
 ) {
   return [
     columnHelper.accessor('projectName', {
       header: 'Project',
-      cell: info => {
-        const issue = info.row.original
-        return (
-          <Link
-            href={createProjectLink(issue.orgSlug, issue.projectName, 'issues')}
-            className="project-link"
-          >
-            {info.getValue()}
-          </Link>
-        )
-      },
+      cell: makeProjectNameCell(createProjectLink),
       enableColumnFilter: true,
       filterFn: 'includesString',
     }),
@@ -43,21 +80,7 @@ export function createAggregateColumns(
     }),
     columnHelper.accessor('title', {
       header: 'Title',
-      cell: info => {
-        const issue = info.row.original
-        return (
-          <Link
-            href={createProjectLink(
-              issue.orgSlug,
-              issue.projectName,
-              `issues/${issue.issueNumber}`
-            )}
-            className="issue-title-link"
-          >
-            {info.getValue()}
-          </Link>
-        )
-      },
+      cell: makeTitleCell(createProjectLink),
       enableColumnFilter: true,
       filterFn: 'includesString',
     }),
@@ -66,16 +89,7 @@ export function createAggregateColumns(
       {
         id: 'status',
         header: 'Status',
-        cell: info => {
-          const status = info.getValue()
-          return (
-            <span
-              className={`status-badge ${stateManager.getStateClass(status)}`}
-            >
-              {status}
-            </span>
-          )
-        },
+        cell: makeStatusCell(stateManager),
         enableColumnFilter: true,
         filterFn: (row, columnId, filterValue) => {
           const status = String(row.getValue(columnId))

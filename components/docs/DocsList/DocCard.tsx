@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { DocDeleteConfirm } from './DocDeleteConfirm'
 import type { Doc } from '@/gen/centy_pb'
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard'
 import { useAppLink } from '@/hooks/useAppLink'
@@ -13,7 +14,6 @@ interface DocCardProps {
   onDeleteConfirm: (slug: string) => void
 }
 
-// eslint-disable-next-line max-lines-per-function
 export function DocCard({
   doc,
   deleteConfirm,
@@ -69,23 +69,13 @@ export function DocCard({
         x
       </button>
       {deleteConfirm === doc.slug && (
-        <div className="delete-confirm-overlay">
-          <p className="delete-confirm-message">
-            Delete &ldquo;{doc.title}&rdquo;?
-          </p>
-          <div className="delete-confirm-actions">
-            <button onClick={onDeleteCancel} className="cancel-btn">
-              Cancel
-            </button>
-            <button
-              onClick={() => onDeleteConfirm(doc.slug)}
-              disabled={deleting}
-              className="confirm-delete-btn"
-            >
-              {deleting ? 'Deleting...' : 'Delete'}
-            </button>
-          </div>
-        </div>
+        <DocDeleteConfirm
+          docTitle={doc.title}
+          docSlug={doc.slug}
+          deleting={deleting}
+          onDeleteCancel={onDeleteCancel}
+          onDeleteConfirm={onDeleteConfirm}
+        />
       )}
     </div>
   )
