@@ -64,11 +64,15 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
   // Load organizations on mount
   useEffect(() => {
     refreshOrganizations()
-  }, [refreshOrganizations])
-
-  const setSelectedOrgSlug = useCallback((slug: string | null | undefined) => {
-    setSelectedOrgSlugState(slug)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const setSelectedOrgSlug = useCallback(
+    (slug: string | null | undefined) => {
+      setSelectedOrgSlugState(slug)
+    },
+    []
+  )
 
   return (
     <OrganizationContext.Provider
