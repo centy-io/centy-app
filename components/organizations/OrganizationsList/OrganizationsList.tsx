@@ -62,7 +62,7 @@ export function OrganizationsList() {
       {state.showDeleteConfirm && (
         <div className="delete-confirm">
           <p className="delete-confirm-message">
-            Are you sure you want to delete this organization?
+            Are you sure you want to untrack this organization?
           </p>
           {state.deleteError && (
             <p className="delete-error-message">{state.deleteError}</p>
@@ -82,7 +82,7 @@ export function OrganizationsList() {
               disabled={state.deleting}
               className="confirm-delete-btn"
             >
-              {state.deleting ? 'Deleting...' : 'Yes, Delete'}
+              {state.deleting ? 'Untracking...' : 'Yes, Untrack'}
             </button>
           </div>
         </div>
@@ -103,6 +103,7 @@ export function OrganizationsList() {
         <OrganizationsTable
           table={state.table}
           onContextMenu={state.handleContextMenu}
+          onUntrack={state.setShowDeleteConfirm}
         />
       )}
       {state.contextMenu && (

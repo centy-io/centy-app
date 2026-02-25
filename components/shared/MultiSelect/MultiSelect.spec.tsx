@@ -8,7 +8,7 @@ const mockOptions = [
   { value: 'option3', label: 'Option 3' },
 ]
 
-describe('MultiSelect', () => {
+describe('MultiSelect - Display', () => {
   it('should render with placeholder when no values selected', () => {
     render(
       <MultiSelect
@@ -68,7 +68,9 @@ describe('MultiSelect', () => {
     expect(screen.getByText('Option 2')).toBeInTheDocument()
     expect(screen.getByText('Option 3')).toBeInTheDocument()
   })
+})
 
+describe('MultiSelect - Interactions', () => {
   it('should call onChange when option is toggled', () => {
     const onChange = vi.fn()
     render(<MultiSelect options={mockOptions} value={[]} onChange={onChange} />)

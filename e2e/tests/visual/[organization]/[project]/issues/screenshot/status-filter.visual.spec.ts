@@ -4,7 +4,7 @@ import {
   navigateToDemoProject,
 } from '../../../../../../utils/test-helpers'
 
-test.describe('Status Filter Visual Tests @visual', () => {
+test.describe('Status Filter Visual Tests - Dropdown @visual', () => {
   test('status filter dropdown - all states visible', async ({ page }) => {
     await setupDemoMode(page)
     await navigateToDemoProject(page, '/issues')
@@ -87,7 +87,9 @@ test.describe('Status Filter Visual Tests @visual', () => {
       }
     )
   })
+})
 
+test.describe('Status Filter Visual Tests - Badge styling @visual', () => {
   test('issues list - for-validation status badge styling', async ({
     page,
   }) => {

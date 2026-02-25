@@ -24,7 +24,6 @@ export function GeneralSettings() {
           </div>
         </section>
       )}
-
     </div>
   )
 }
