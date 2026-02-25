@@ -97,8 +97,6 @@ export function Header() {
         navLinks={navLinks}
         pathname={pathname}
         isActive={isActive}
-        effectiveOrg={effectiveOrg}
-        effectiveProject={effectiveProject}
         itemTypes={itemTypes}
       />
     </header>
