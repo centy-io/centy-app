@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, type ReactNode } from 'react'
+import { useMemo, useEffect, type ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
 import { route } from 'nextjs-routes'
 import { PathContext } from './PathContextProvider.hooks'
@@ -13,6 +13,7 @@ import {
   useUrlParams,
   useProjectResolution,
 } from './PathContextProvider.useResolve'
+import { useProject } from './ProjectProvider'
 import { UNGROUPED_ORG_MARKER } from '@/lib/project-resolver'
 
 // Re-export hooks for consumers
@@ -30,6 +31,13 @@ export function PathContextProvider({ children }: { children: ReactNode }) {
     urlProject,
     isAggregateView
   )
+  const { setProjectPath, setIsInitialized } = useProject()
+
+  useEffect(() => {
+    if (!resolution) return
+    setProjectPath(resolution.projectPath)
+    setIsInitialized(resolution.initialized)
+  }, [resolution, setProjectPath, setIsInitialized])
 
   const navigateToProject = useMemo(() => {
     return (orgSlug: string | null, projectName: string, page?: string) => {
