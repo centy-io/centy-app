@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { useGenericItemFetch } from './useGenericItemFetch'
 import { useGenericItemSave } from './useGenericItemSave'
 import { useGenericItemDelete } from './useGenericItemDelete'
+import { GenericItemDetailHeader } from './GenericItemDetailHeader'
+import { GenericItemDeleteConfirm } from './GenericItemDeleteConfirm'
 import { GenericItemEditForm } from './GenericItemEditForm'
 import { GenericItemView } from './GenericItemView'
 import { useItemTypeConfig } from './useItemTypeConfig'
@@ -48,7 +50,6 @@ export function GenericItemDetail({
     listUrl,
     setError: fetch.setError,
   })
-
   const displayName = config
     ? config.name.charAt(0).toUpperCase() + config.name.slice(1)
     : itemType.charAt(0).toUpperCase() + itemType.slice(1)
@@ -75,61 +76,24 @@ export function GenericItemDetail({
 
   return (
     <div className="generic-item-detail">
-      <div className="doc-header">
-        <Link href={listUrl} className="back-link">
-          Back to {displayName}s
-        </Link>
-        <div className="header-actions">
-          {isEditing ? (
-            <>
-              <button onClick={() => setIsEditing(false)} className="secondary">
-                Cancel
-              </button>
-              <button
-                onClick={handleSave}
-                disabled={saving}
-                className="primary"
-              >
-                {saving ? 'Saving...' : 'Save'}
-              </button>
-            </>
-          ) : (
-            <>
-              <button onClick={() => setIsEditing(true)} className="secondary">
-                Edit
-              </button>
-              <button
-                onClick={() => setShowDeleteConfirm(true)}
-                className="delete-btn"
-              >
-                Delete
-              </button>
-            </>
-          )}
-        </div>
-      </div>
+      <GenericItemDetailHeader
+        displayName={displayName}
+        listUrl={listUrl}
+        isEditing={isEditing}
+        saving={saving}
+        onEdit={() => setIsEditing(true)}
+        onCancelEdit={() => setIsEditing(false)}
+        onSave={handleSave}
+        onDeleteRequest={() => setShowDeleteConfirm(true)}
+      />
       {fetch.error && <DaemonErrorMessage error={fetch.error} />}
       {showDeleteConfirm && (
-        <div className="delete-confirm-overlay">
-          <p className="delete-confirm-message">
-            Delete &ldquo;{fetch.item.title || fetch.item.id}&rdquo;?
-          </p>
-          <div className="delete-confirm-actions">
-            <button
-              onClick={() => setShowDeleteConfirm(false)}
-              className="cancel-btn"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleDelete}
-              disabled={deleting}
-              className="confirm-delete-btn"
-            >
-              {deleting ? 'Deleting...' : 'Delete'}
-            </button>
-          </div>
-        </div>
+        <GenericItemDeleteConfirm
+          itemLabel={fetch.item.title || fetch.item.id}
+          deleting={deleting}
+          onCancel={() => setShowDeleteConfirm(false)}
+          onConfirm={handleDelete}
+        />
       )}
       <div className="doc-content">
         {isEditing ? (

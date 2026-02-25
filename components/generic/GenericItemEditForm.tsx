@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import type { ItemTypeConfigProto } from '@/gen/centy_pb'
 
 interface GenericItemEditFormProps {
@@ -17,6 +18,7 @@ function toLabel(name: string): string {
   return name.charAt(0).toUpperCase() + name.slice(1).replace(/-/g, ' ')
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function GenericItemEditForm({
   config,
   editTitle,

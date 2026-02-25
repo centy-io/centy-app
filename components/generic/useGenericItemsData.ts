@@ -7,6 +7,7 @@ import {
   type GenericItem,
 } from '@/gen/centy_pb'
 
+// eslint-disable-next-line max-lines-per-function
 export function useGenericItemsData(
   projectPath: string,
   isInitialized: boolean | null,

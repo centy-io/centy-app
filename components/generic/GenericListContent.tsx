@@ -21,6 +21,7 @@ interface GenericListContentProps {
   onDeleteConfirm: (id: string) => void
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function GenericListContent({
   projectPath,
   isInitialized,

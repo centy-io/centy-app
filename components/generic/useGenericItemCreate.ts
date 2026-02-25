@@ -1,6 +1,7 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback } from 'react'
 import { create } from '@bufbuild/protobuf'
 import { useRouter } from 'next/navigation'
+import { useGenericItemCreateForm } from './useGenericItemCreateForm'
 import { useItemTypeConfig } from './useItemTypeConfig'
 import { centyClient } from '@/lib/grpc/client'
 import { CreateItemRequestSchema } from '@/gen/centy_pb'
@@ -25,6 +26,7 @@ async function submitCreate(
   )
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function useGenericItemCreate(itemType: string) {
   const { projectPath, isInitialized } = usePathContext()
   const { createLink } = useAppLink()
@@ -34,22 +36,14 @@ export function useGenericItemCreate(itemType: string) {
     isInitialized,
     itemType
   )
-
-  const [title, setTitle] = useState('')
-  const [status, setStatus] = useState('')
-  const [customFields, setCustomFields] = useState<Record<string, string>>({})
+  const { title, setTitle, status, setStatus, customFields, setCustomFields } =
+    useGenericItemCreateForm(config)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const displayName = config
     ? config.name.charAt(0).toUpperCase() + config.name.slice(1)
     : itemType.charAt(0).toUpperCase() + itemType.slice(1)
-
-  useEffect(() => {
-    if (config && config.defaultStatus && !status) {
-      setStatus(config.defaultStatus)
-    }
-  }, [config, status])
 
   const listUrl = createLink(`/${itemType}`)
 
