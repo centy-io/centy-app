@@ -46,7 +46,7 @@ export function useNavItemTypes(
         setItemTypes(
           res.itemTypes
             .map(t => ({
-              name: t.name,
+              name: t.plural.charAt(0).toUpperCase() + t.plural.slice(1),
               plural: t.plural,
               itemCount: t.itemCount,
               href: buildItemHref(effectiveOrg!, effectiveProject!, t.plural),
