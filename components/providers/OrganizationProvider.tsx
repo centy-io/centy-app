@@ -67,12 +67,9 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const setSelectedOrgSlug = useCallback(
-    (slug: string | null | undefined) => {
-      setSelectedOrgSlugState(slug)
-    },
-    []
-  )
+  const setSelectedOrgSlug = useCallback((slug: string | null | undefined) => {
+    setSelectedOrgSlugState(slug)
+  }, [])
 
   return (
     <OrganizationContext.Provider
