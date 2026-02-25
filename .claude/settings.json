@@ -167,7 +167,8 @@
       "Bash(tail:*)",
       "Bash(centy:*)",
       "Bash(bun run:*)",
-      "Bash(npm test:*)"
+      "Bash(npm test:*)",
+      "Bash(gh run:*)"
     ],
     "deny": ["Bash(npm install)", "Bash(gh issue create:*)"]
   },
