@@ -177,7 +177,7 @@ export function useOrganizationsList() {
           },
         },
         {
-          label: 'Delete',
+          label: 'Untrack',
           onClick: () => {
             setShowDeleteConfirm(contextMenu.org.slug)
             setContextMenu(null)

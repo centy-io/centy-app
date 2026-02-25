@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 'use client'
 
 import { flexRender, type Table } from '@tanstack/react-table'
@@ -6,12 +7,14 @@ import type { Organization } from '@/gen/centy_pb'
 interface OrganizationsTableProps {
   table: Table<Organization>
   onContextMenu: (e: React.MouseEvent, org: Organization) => void
+  onUntrack: (slug: string) => void
 }
 
 // eslint-disable-next-line max-lines-per-function
 export function OrganizationsTable({
   table,
   onContextMenu,
+  onUntrack,
 }: OrganizationsTableProps) {
   return (
     <div className="organizations-table">
@@ -59,6 +62,7 @@ export function OrganizationsTable({
                   </div>
                 </th>
               ))}
+              <th className="header-cell actions-header">Actions</th>
             </tr>
           ))}
         </thead>
@@ -87,6 +91,15 @@ export function OrganizationsTable({
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}
+              <td className="org-actions">
+                <button
+                  type="button"
+                  className="untrack-btn"
+                  onClick={() => onUntrack(row.original.slug)}
+                >
+                  Untrack
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
