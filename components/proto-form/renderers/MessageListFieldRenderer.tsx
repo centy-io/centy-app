@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 'use client'
 
 import { useState } from 'react'
@@ -18,7 +19,6 @@ function toRecordArray(v: unknown): Record<string, unknown>[] {
   return []
 }
 
-// eslint-disable-next-line max-lines-per-function
 export function MessageListFieldRenderer({
   messageDesc,
   label,

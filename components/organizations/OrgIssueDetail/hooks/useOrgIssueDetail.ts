@@ -67,7 +67,9 @@ export function useOrgIssueDetail(orgSlug: string, issueId: string) {
         const itemTypesRes = await centyClient.listItemTypes(
           create(ListItemTypesRequestSchema, { projectPath })
         )
-        const issueType = itemTypesRes.itemTypes.find(t => t.plural === 'issues')
+        const issueType = itemTypesRes.itemTypes.find(
+          t => t.plural === 'issues'
+        )
         if (issueType) {
           setItemTypeStatuses(issueType.statuses)
         }
