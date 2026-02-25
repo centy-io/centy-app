@@ -50,7 +50,7 @@ test.describe('Issue Detail', () => {
   })
 })
 
-test.describe('Editor Selector', () => {
+test.describe('Editor Selector - Basic behavior', () => {
   test('should display editor selector button', async ({ page }) => {
     await setupDemoMode(page)
     await navigateToDemoProject(page, `/issues/${DEMO_ISSUE.id}`)
@@ -73,10 +73,7 @@ test.describe('Editor Selector', () => {
     await setupDemoMode(page)
     await navigateToDemoProject(page, `/issues/${DEMO_ISSUE.id}`)
 
-    // Wait for demo mode to be fully initialized
     await expect(page.locator('.demo-mode-indicator')).toBeVisible()
-
-    // Wait for editor selector
     await expect(page.locator('.editor-selector')).toBeVisible()
 
     // Click dropdown button
@@ -98,10 +95,7 @@ test.describe('Editor Selector', () => {
     await setupDemoMode(page)
     await navigateToDemoProject(page, `/issues/${DEMO_ISSUE.id}`)
 
-    // Wait for demo mode to be fully initialized
     await expect(page.locator('.demo-mode-indicator')).toBeVisible()
-
-    // Wait for editor selector and open dropdown
     await expect(page.locator('.editor-selector')).toBeVisible()
     await page.locator('.editor-dropdown-btn').click()
     await expect(page.locator('.editor-dropdown')).toBeVisible()
@@ -117,10 +111,7 @@ test.describe('Editor Selector', () => {
     await setupDemoMode(page)
     await navigateToDemoProject(page, `/issues/${DEMO_ISSUE.id}`)
 
-    // Wait for demo mode to be fully initialized
     await expect(page.locator('.demo-mode-indicator')).toBeVisible()
-
-    // Wait for editor selector and open dropdown
     await expect(page.locator('.editor-selector')).toBeVisible()
     await page.locator('.editor-dropdown-btn').click()
 
@@ -129,7 +120,9 @@ test.describe('Editor Selector', () => {
       page.locator('.editor-option.selected').filter({ hasText: 'VS Code' })
     ).toBeVisible()
   })
+})
 
+test.describe('Editor Selector - Preferences and styling', () => {
   test('should show Terminal as selected when preference is set', async ({
     page,
   }) => {
@@ -141,10 +134,7 @@ test.describe('Editor Selector', () => {
     await setupDemoMode(page)
     await navigateToDemoProject(page, `/issues/${DEMO_ISSUE.id}`)
 
-    // Wait for demo mode to be fully initialized
     await expect(page.locator('.demo-mode-indicator')).toBeVisible()
-
-    // Wait for editor selector
     await expect(page.locator('.editor-selector')).toBeVisible()
 
     // Primary button should show Terminal
@@ -164,10 +154,7 @@ test.describe('Editor Selector', () => {
     await setupDemoMode(page)
     await navigateToDemoProject(page, `/issues/${DEMO_ISSUE.id}`)
 
-    // Wait for demo mode to be fully initialized
     await expect(page.locator('.demo-mode-indicator')).toBeVisible()
-
-    // Wait for editor selector
     await expect(page.locator('.editor-selector')).toBeVisible()
 
     // Verify VS Code styling (blue theme)
@@ -184,10 +171,7 @@ test.describe('Editor Selector', () => {
     await setupDemoMode(page)
     await navigateToDemoProject(page, `/issues/${DEMO_ISSUE.id}`)
 
-    // Wait for demo mode to be fully initialized
     await expect(page.locator('.demo-mode-indicator')).toBeVisible()
-
-    // Wait for editor selector
     await expect(page.locator('.editor-selector')).toBeVisible()
 
     // Verify Terminal styling (green theme)
