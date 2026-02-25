@@ -11,6 +11,9 @@ import { UserDetail } from '@/components/users/UserDetail'
 import { CreateUser } from '@/components/users/CreateUser'
 import { SharedAssets } from '@/components/assets/SharedAssets'
 import { ProjectConfig } from '@/components/settings/ProjectConfig'
+import { GenericItemsList } from '@/components/generic/GenericItemsList'
+import { GenericItemDetail } from '@/components/generic/GenericItemDetail'
+import { GenericItemCreate } from '@/components/generic/GenericItemCreate'
 
 // Routes that require project context (no longer accessible at root level)
 export const PROJECT_SCOPED_ROUTES = new Set(['issues', 'docs', 'users'])
@@ -55,7 +58,19 @@ function resolveSubRoute(pageType: string, rest: string[]): RouteResult | null {
     return { content: <SharedAssets />, ...NO_REDIRECT }
   if (pageType === 'config')
     return { content: <ProjectConfig />, ...NO_REDIRECT }
-  return null
+
+  // Generic fallback for dynamic page types (e.g. personas, stories)
+  if (rest[0] === 'new')
+    return {
+      content: <GenericItemCreate itemType={pageType} />,
+      ...NO_REDIRECT,
+    }
+  if (rest[0])
+    return {
+      content: <GenericItemDetail itemType={pageType} itemId={rest[0]} />,
+      ...NO_REDIRECT,
+    }
+  return { content: <GenericItemsList itemType={pageType} />, ...NO_REDIRECT }
 }
 
 export function resolveRoute(pathname: string): RouteResult {
