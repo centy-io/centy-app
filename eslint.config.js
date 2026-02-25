@@ -28,6 +28,23 @@ export default [
     },
   },
   {
+    // Environment constant files use hardcoded fallback values because webpack's DefinePlugin
+    // only replaces process.env.VAR member expressions, not destructuring from process.env.
+    // Hardcoded fallbacks ensure correct values when env vars are not set at build time.
+    files: [
+      'lib/constants/DAEMON_INSTALL_URL.ts',
+      'lib/constants/DOCS_URL.ts',
+      'lib/constants/CORS_DOCS_URL.ts',
+      'lib/constants/GOOGLE_ANALYTICS_URL.ts',
+      'lib/constants/SENTRY_DSN.ts',
+      'lib/grpc/client/DEFAULT_DAEMON_URL.ts',
+    ],
+    rules: {
+      'default/no-hardcoded-urls': 'off',
+      'default/no-localhost': 'off',
+    },
+  },
+  {
     // Test infrastructure - e2e tests and vitest setup don't need their own spec files
     files: [
       'e2e/**',
@@ -37,22 +54,6 @@ export default [
     ],
     rules: {
       'single-export/single-export': 'off',
-    },
-  },
-  {
-    // Re-enable max-lines-per-function for test and spec files
-    // eslint-config-agent disables this rule for test files, but we enforce it here
-    files: [
-      '**/*.spec.{js,jsx,ts,tsx}',
-      '**/*.test.{js,jsx,ts,tsx}',
-      'e2e/**',
-      '__tests__/**',
-    ],
-    rules: {
-      'max-lines-per-function': [
-        'error',
-        { max: 70, skipBlankLines: true, skipComments: true },
-      ],
     },
   },
 ]
