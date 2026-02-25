@@ -165,7 +165,9 @@
       "Bash(npx vitest run:*)",
       "Bash(head:*)",
       "Bash(tail:*)",
-      "Bash(centy:*)"
+      "Bash(centy:*)",
+      "Bash(bun run:*)",
+      "Bash(npm test:*)"
     ],
     "deny": ["Bash(npm install)", "Bash(gh issue create:*)"]
   },
