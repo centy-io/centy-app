@@ -129,7 +129,7 @@ export const mockHandlers: MockHandlers = {
   listUncompactedIssues,
   getInstruction,
   getCompact,
-  spawnAgent: spawnWorkspace,
+  spawnWorkspace,
   listItemTypes,
   openInTempVscode,
   openInTempTerminal,
