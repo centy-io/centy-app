@@ -29,10 +29,12 @@ const REQUIRED_ENV_VARS = [
 const definedEnvVarKeys = new Set(
   Object.entries(process.env)
     .filter(([, value]) => Boolean(value))
-    .map(([key]) => key),
+    .map(([key]) => key)
 )
 
-const missingEnvVars = REQUIRED_ENV_VARS.filter((key) => !definedEnvVarKeys.has(key))
+const missingEnvVars = REQUIRED_ENV_VARS.filter(
+  key => !definedEnvVarKeys.has(key)
+)
 
 if (missingEnvVars.length > 0) {
   throw new MissingEnvVarsError(missingEnvVars)
