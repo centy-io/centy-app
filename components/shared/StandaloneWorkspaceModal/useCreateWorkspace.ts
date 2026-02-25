@@ -27,7 +27,7 @@ export function useCreateWorkspace(
         projectPath,
         name: name.trim() || undefined,
         description: description.trim() || undefined,
-        agentName: '',
+        llmName: '',
         ttlHours,
       })
       const rpcMethod =

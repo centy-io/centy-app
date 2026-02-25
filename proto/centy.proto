@@ -189,8 +189,8 @@ service CentyDaemon {
   // Open a project in a temporary terminal workspace (deprecated: use OpenInTempWorkspace)
   rpc OpenInTempTerminal(OpenInTempWorkspaceRequest) returns (OpenInTempWorkspaceResponse);
 
-  // Open an agent in a terminal for working on an issue
-  rpc OpenAgentInTerminal(OpenAgentInTerminalRequest) returns (OpenAgentInTerminalResponse);
+  // Open a workspace in a terminal for working on an issue
+  rpc OpenWorkspaceInTerminal(OpenWorkspaceInTerminalRequest) returns (OpenWorkspaceInTerminalResponse);
 
   // Open a standalone workspace in VS Code (deprecated: use OpenStandaloneWorkspace)
   rpc OpenStandaloneWorkspaceVscode(OpenStandaloneWorkspaceRequest) returns (OpenStandaloneWorkspaceResponse);
@@ -1222,7 +1222,7 @@ enum LlmAction {
   LLM_ACTION_DEEPDIVE = 3;
 }
 
-// Workspace mode for agent operations
+// Workspace mode for workspace operations
 enum WorkspaceMode {
   WORKSPACE_MODE_UNSPECIFIED = 0;       // Use project default or prompt user
   WORKSPACE_MODE_TEMP = 1;              // Create temporary worktree
@@ -1259,7 +1259,7 @@ message OpenInTempWorkspaceWithEditorRequest {
   string project_path = 1;              // Source project path
   string issue_id = 2;                  // Issue UUID or display number
   LlmAction action = 3;                 // Plan or Implement
-  string agent_name = 4;                // Agent to use (empty = default)
+  string llm_name = 4;                  // LLM tool to use (empty = default)
   uint32 ttl_hours = 5;                 // Custom TTL in hours (0 = use default 12h)
   string editor_id = 6;                 // Editor ID (e.g., "vscode", "terminal", "zed"). Empty = use project/user default.
 }
@@ -1270,7 +1270,7 @@ message OpenStandaloneWorkspaceWithEditorRequest {
   string name = 2;                      // Optional custom name for the workspace
   string description = 3;               // Optional description/goals for this workspace
   uint32 ttl_hours = 4;                 // Custom TTL in hours (0 = use default 12h)
-  string agent_name = 5;                // Agent to use (empty = default)
+  string llm_name = 5;                  // LLM tool to use (empty = default)
   string editor_id = 6;                 // Editor ID (e.g., "vscode", "terminal", "zed"). Empty = use project/user default.
 }
 
@@ -1279,7 +1279,7 @@ message OpenInTempWorkspaceRequest {
   string project_path = 1;              // Source project path
   string issue_id = 2;                  // Issue UUID or display number
   LlmAction action = 3;                 // Plan or Implement
-  string agent_name = 4;                // Agent to use (empty = default)
+  string llm_name = 4;                  // LLM tool to use (empty = default)
   uint32 ttl_hours = 5;                 // Custom TTL in hours (0 = use default 12h)
 }
 
@@ -1297,22 +1297,22 @@ message OpenInTempWorkspaceResponse {
   string original_created_at = 10;      // Original creation timestamp (only set if workspace_reused is true)
 }
 
-// Request to open an agent in a terminal
-message OpenAgentInTerminalRequest {
+// Request to open a workspace in a terminal
+message OpenWorkspaceInTerminalRequest {
   string project_path = 1;              // Source project path
   string issue_id = 2;                  // Issue UUID or display number
-  string agent_name = 3;                // Agent to use (empty = default)
+  string llm_name = 3;                  // LLM tool to use (empty = default)
   WorkspaceMode workspace_mode = 4;     // Temp worktree or current project
   uint32 ttl_hours = 5;                 // Custom TTL in hours (0 = default, only for temp mode)
 }
 
-message OpenAgentInTerminalResponse {
+message OpenWorkspaceInTerminalResponse {
   bool success = 1;
   string error = 2;
-  string working_directory = 3;         // Path where agent was launched
+  string working_directory = 3;         // Path where workspace was launched
   string issue_id = 4;                  // Resolved issue UUID
   uint32 display_number = 5;            // Issue display number
-  string agent_command = 6;             // The agent command that was executed
+  string launch_command = 6;            // The launch command that was executed
   bool terminal_opened = 7;             // Whether terminal was successfully opened
   string expires_at = 8;                // ISO timestamp (only for temp mode)
   bool requires_status_config = 9;      // True if user must configure update_status_on_start setting
@@ -1324,7 +1324,7 @@ message OpenStandaloneWorkspaceRequest {
   string name = 2;                      // Optional custom name for the workspace
   string description = 3;               // Optional description/goals for this workspace
   uint32 ttl_hours = 4;                 // Custom TTL in hours (0 = use default 12h)
-  string agent_name = 5;                // Agent to use (empty = default)
+  string llm_name = 5;                  // LLM tool to use (empty = default)
 }
 
 // Response for opening a standalone workspace
@@ -1347,7 +1347,7 @@ message TempWorkspace {
   string issue_id = 3;                  // Issue UUID (empty for standalone workspaces)
   uint32 issue_display_number = 4;      // Issue display number (0 for standalone)
   string issue_title = 5;               // Issue title (empty for standalone)
-  string agent_name = 6;                // Agent being used
+  string llm_name = 6;                  // LLM tool being used
   LlmAction action = 7;                 // Plan or Implement
   string created_at = 8;                // ISO timestamp
   string expires_at = 9;                // ISO timestamp when workspace expires
