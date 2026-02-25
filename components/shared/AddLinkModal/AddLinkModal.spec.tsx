@@ -72,53 +72,54 @@ const makeListItemsResponse = (items: GenericItem[]) => ({
   error: '',
 })
 
-describe('AddLinkModal', () => {
-  const mockOnClose = vi.fn()
-  const mockOnLinkCreated = vi.fn()
-  const emptyLinks: LinkType[] = []
-  const defaultProps = {
-    entityId: 'entity-123',
-    entityType: 'issue' as const,
-    existingLinks: emptyLinks,
-    onClose: mockOnClose,
-    onLinkCreated: mockOnLinkCreated,
-  }
+const mockOnClose = vi.fn()
+const mockOnLinkCreated = vi.fn()
+const emptyLinks: LinkType[] = []
+const defaultProps = {
+  entityId: 'entity-123',
+  entityType: 'issue' as const,
+  existingLinks: emptyLinks,
+  onClose: mockOnClose,
+  onLinkCreated: mockOnLinkCreated,
+}
 
-  beforeEach(() => {
-    vi.clearAllMocks()
-    mockUsePathContext.mockReturnValue({
-      projectPath: '/test/project',
-    })
-
-    // Default mocks
-    vi.mocked(centyClient.getAvailableLinkTypes).mockResolvedValue({
-      linkTypes: [
-        createMockLinkTypeInfo(
-          'blocks',
-          'blocked-by',
-          'This issue blocks another'
-        ),
-        createMockLinkTypeInfo('related-to', 'related-to', 'Related items'),
-      ],
-      $typeName: 'centy.v1.GetAvailableLinkTypesResponse',
-      $unknown: undefined,
-    })
-
-    vi.mocked(centyClient.listItems).mockResolvedValue(
-      makeListItemsResponse([
-        createMockGenericItem({
-          id: 'issue-1',
-          displayNumber: 1,
-          title: 'First Issue',
-        }),
-        createMockGenericItem({
-          id: 'issue-2',
-          displayNumber: 2,
-          title: 'Second Issue',
-        }),
-      ])
-    )
+function setupAddLinkModalMocks() {
+  vi.clearAllMocks()
+  mockUsePathContext.mockReturnValue({
+    projectPath: '/test/project',
   })
+
+  vi.mocked(centyClient.getAvailableLinkTypes).mockResolvedValue({
+    linkTypes: [
+      createMockLinkTypeInfo(
+        'blocks',
+        'blocked-by',
+        'This issue blocks another'
+      ),
+      createMockLinkTypeInfo('related-to', 'related-to', 'Related items'),
+    ],
+    $typeName: 'centy.v1.GetAvailableLinkTypesResponse',
+    $unknown: undefined,
+  })
+
+  vi.mocked(centyClient.listItems).mockResolvedValue(
+    makeListItemsResponse([
+      createMockGenericItem({
+        id: 'issue-1',
+        displayNumber: 1,
+        title: 'First Issue',
+      }),
+      createMockGenericItem({
+        id: 'issue-2',
+        displayNumber: 2,
+        title: 'Second Issue',
+      }),
+    ])
+  )
+}
+
+describe('AddLinkModal - Display and loading', () => {
+  beforeEach(setupAddLinkModalMocks)
 
   it('should render modal with header and close button', async () => {
     render(<AddLinkModal {...defaultProps} />)
@@ -172,6 +173,10 @@ describe('AddLinkModal', () => {
       expect(centyClient.listItems).toHaveBeenCalled()
     })
   })
+})
+
+describe('AddLinkModal - Search and filtering', () => {
+  beforeEach(setupAddLinkModalMocks)
 
   it('should filter search results based on search query', async () => {
     render(<AddLinkModal {...defaultProps} />)
@@ -215,6 +220,10 @@ describe('AddLinkModal', () => {
       expect(screen.getByText('#2 - Other Issue')).toBeInTheDocument()
     })
   })
+})
+
+describe('AddLinkModal - Item selection', () => {
+  beforeEach(setupAddLinkModalMocks)
 
   it('should select a target item when clicked', async () => {
     render(<AddLinkModal {...defaultProps} />)
@@ -230,6 +239,24 @@ describe('AddLinkModal', () => {
       expect(screen.getByText('This will create:')).toBeInTheDocument()
     })
   })
+
+  it('should show link preview with inverse link type', async () => {
+    render(<AddLinkModal {...defaultProps} />)
+
+    await waitFor(() => {
+      expect(screen.getByText('#1 - First Issue')).toBeInTheDocument()
+    })
+
+    fireEvent.click(screen.getByText('#1 - First Issue'))
+
+    await waitFor(() => {
+      expect(screen.getByText('Inverse link:')).toBeInTheDocument()
+    })
+  })
+})
+
+describe('AddLinkModal - Close behavior', () => {
+  beforeEach(setupAddLinkModalMocks)
 
   it('should call onClose when close button is clicked', async () => {
     render(<AddLinkModal {...defaultProps} />)
@@ -266,6 +293,10 @@ describe('AddLinkModal', () => {
 
     expect(mockOnClose).toHaveBeenCalled()
   })
+})
+
+describe('AddLinkModal - Link creation', () => {
+  beforeEach(setupAddLinkModalMocks)
 
   it('should create link when clicking Create Link button', async () => {
     vi.mocked(centyClient.createLink).mockResolvedValue({
@@ -325,6 +356,10 @@ describe('AddLinkModal', () => {
       expect(createButton).toBeDisabled()
     })
   })
+})
+
+describe('AddLinkModal - Empty state and exclusions', () => {
+  beforeEach(setupAddLinkModalMocks)
 
   it('should show empty state when no search results', async () => {
     vi.mocked(centyClient.listItems).mockResolvedValue(
@@ -335,20 +370,6 @@ describe('AddLinkModal', () => {
 
     await waitFor(() => {
       expect(screen.getByText('No items found')).toBeInTheDocument()
-    })
-  })
-
-  it('should show link preview with inverse link type', async () => {
-    render(<AddLinkModal {...defaultProps} />)
-
-    await waitFor(() => {
-      expect(screen.getByText('#1 - First Issue')).toBeInTheDocument()
-    })
-
-    fireEvent.click(screen.getByText('#1 - First Issue'))
-
-    await waitFor(() => {
-      expect(screen.getByText('Inverse link:')).toBeInTheDocument()
     })
   })
 

@@ -18,139 +18,138 @@ import { setupDemoMode, navigateTo } from '../../../utils/test-helpers'
  * This test runs as part of the pre-push hook to catch header visual
  * regressions before code is pushed.
  */
-test.describe('Header Pre-push Visual Test @visual', () => {
-  // Get platform identifier for platform-specific snapshots
-  const platform = os.platform() // 'darwin', 'linux', 'win32'
 
-  test.describe('Desktop viewport', () => {
-    test('header with logo - light theme', async ({ page }) => {
-      await page.emulateMedia({ colorScheme: 'light' })
-      await setupDemoMode(page)
-      await navigateTo(page, '/')
+// Get platform identifier for platform-specific snapshots
+const platform = os.platform() // 'darwin', 'linux', 'win32'
 
-      // Wait for demo mode indicator to confirm app and mock data loaded
-      await expect(page.locator('.demo-mode-indicator')).toBeVisible()
+test.describe('Header Pre-push Visual Test - Desktop @visual', () => {
+  test('header with logo - light theme', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'light' })
+    await setupDemoMode(page)
+    await navigateTo(page, '/')
 
-      // Wait for content to stabilize (animations, lazy loading)
-      await page.waitForTimeout(500)
+    // Wait for demo mode indicator to confirm app and mock data loaded
+    await expect(page.locator('.demo-mode-indicator')).toBeVisible()
 
-      // Verify header elements are present
-      const header = page.locator('.app-header')
-      await expect(header).toBeVisible()
+    // Wait for content to stabilize (animations, lazy loading)
+    await page.waitForTimeout(500)
 
-      // Verify logo is loaded
-      const logo = header.locator('.header-logo-icon')
-      await expect(logo).toBeVisible()
+    // Verify header elements are present
+    const header = page.locator('.app-header')
+    await expect(header).toBeVisible()
 
-      // Verify Centy text is present
-      await expect(header.locator('h1')).toContainText('Centy')
+    // Verify logo is loaded
+    const logo = header.locator('.header-logo-icon')
+    await expect(logo).toBeVisible()
 
-      // Capture header screenshot with platform-specific baseline
-      // Using element screenshot for focused testing and reduced flakiness
-      await expect(header).toHaveScreenshot(`header-light-${platform}.png`, {
-        maxDiffPixelRatio: 0.05,
-        threshold: 0.3,
-      })
-    })
+    // Verify Centy text is present
+    await expect(header.locator('h1')).toContainText('Centy')
 
-    test('header with logo - dark theme', async ({ page }) => {
-      await page.emulateMedia({ colorScheme: 'dark' })
-      await setupDemoMode(page)
-      await navigateTo(page, '/')
-
-      // Wait for demo mode indicator to confirm app and mock data loaded
-      await expect(page.locator('.demo-mode-indicator')).toBeVisible()
-
-      // Wait for content to stabilize
-      await page.waitForTimeout(500)
-
-      const header = page.locator('.app-header')
-      await expect(header).toBeVisible()
-
-      // Capture header screenshot with platform-specific baseline
-      await expect(header).toHaveScreenshot(`header-dark-${platform}.png`, {
-        maxDiffPixelRatio: 0.05,
-        threshold: 0.3,
-      })
+    // Capture header screenshot with platform-specific baseline
+    // Using element screenshot for focused testing and reduced flakiness
+    await expect(header).toHaveScreenshot(`header-light-${platform}.png`, {
+      maxDiffPixelRatio: 0.05,
+      threshold: 0.3,
     })
   })
 
-  test.describe('Mobile viewport (375x667)', () => {
-    test.beforeEach(async ({ page }) => {
-      await page.setViewportSize({ width: 375, height: 667 })
-    })
+  test('header with logo - dark theme', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'dark' })
+    await setupDemoMode(page)
+    await navigateTo(page, '/')
 
-    test('header with logo - mobile light theme', async ({ page }) => {
-      await page.emulateMedia({ colorScheme: 'light' })
-      await setupDemoMode(page)
-      await navigateTo(page, '/')
+    // Wait for demo mode indicator to confirm app and mock data loaded
+    await expect(page.locator('.demo-mode-indicator')).toBeVisible()
 
-      // Wait for demo mode indicator
-      await expect(page.locator('.demo-mode-indicator')).toBeVisible()
-      await page.waitForTimeout(500)
+    // Wait for content to stabilize
+    await page.waitForTimeout(500)
 
-      const header = page.locator('.app-header')
-      await expect(header).toBeVisible()
+    const header = page.locator('.app-header')
+    await expect(header).toBeVisible()
 
-      // Verify mobile menu toggle is visible on mobile
-      await expect(header.locator('.mobile-menu-toggle')).toBeVisible()
-
-      // Capture mobile header screenshot
-      await expect(header).toHaveScreenshot(
-        `header-mobile-light-${platform}.png`,
-        {
-          maxDiffPixelRatio: 0.05,
-          threshold: 0.3,
-        }
-      )
-    })
-
-    test('header with logo - mobile dark theme', async ({ page }) => {
-      await page.emulateMedia({ colorScheme: 'dark' })
-      await setupDemoMode(page)
-      await navigateTo(page, '/')
-
-      // Wait for demo mode indicator
-      await expect(page.locator('.demo-mode-indicator')).toBeVisible()
-      await page.waitForTimeout(500)
-
-      const header = page.locator('.app-header')
-      await expect(header).toBeVisible()
-
-      // Capture mobile header screenshot
-      await expect(header).toHaveScreenshot(
-        `header-mobile-dark-${platform}.png`,
-        {
-          maxDiffPixelRatio: 0.05,
-          threshold: 0.3,
-        }
-      )
+    // Capture header screenshot with platform-specific baseline
+    await expect(header).toHaveScreenshot(`header-dark-${platform}.png`, {
+      maxDiffPixelRatio: 0.05,
+      threshold: 0.3,
     })
   })
+})
 
-  test.describe('Header logo validation', () => {
-    test('logo image loads correctly', async ({ page }) => {
-      await setupDemoMode(page)
-      await navigateTo(page, '/')
+test.describe('Header Pre-push Visual Test - Mobile @visual', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 667 })
+  })
 
-      // Wait for app to load
-      await expect(page.locator('.demo-mode-indicator')).toBeVisible()
+  test('header with logo - mobile light theme', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'light' })
+    await setupDemoMode(page)
+    await navigateTo(page, '/')
 
-      const logo = page.locator('.header-logo-icon')
-      await expect(logo).toBeVisible()
+    // Wait for demo mode indicator
+    await expect(page.locator('.demo-mode-indicator')).toBeVisible()
+    await page.waitForTimeout(500)
 
-      // Verify logo src attribute
-      await expect(logo).toHaveAttribute('src', '/logo.svg')
+    const header = page.locator('.app-header')
+    await expect(header).toBeVisible()
 
-      // Verify logo dimensions
-      await expect(logo).toHaveAttribute('width', '28')
-      await expect(logo).toHaveAttribute('height', '28')
+    // Verify mobile menu toggle is visible on mobile
+    await expect(header.locator('.mobile-menu-toggle')).toBeVisible()
 
-      // Verify logo loaded successfully (no broken image)
-      const logoNaturalWidth = await logo.evaluate(
-        (img: HTMLImageElement) => img.naturalWidth
-      )
-      expect(logoNaturalWidth).toBeGreaterThan(0)
-    })
+    // Capture mobile header screenshot
+    await expect(header).toHaveScreenshot(
+      `header-mobile-light-${platform}.png`,
+      {
+        maxDiffPixelRatio: 0.05,
+        threshold: 0.3,
+      }
+    )
+  })
+
+  test('header with logo - mobile dark theme', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'dark' })
+    await setupDemoMode(page)
+    await navigateTo(page, '/')
+
+    // Wait for demo mode indicator
+    await expect(page.locator('.demo-mode-indicator')).toBeVisible()
+    await page.waitForTimeout(500)
+
+    const header = page.locator('.app-header')
+    await expect(header).toBeVisible()
+
+    // Capture mobile header screenshot
+    await expect(header).toHaveScreenshot(
+      `header-mobile-dark-${platform}.png`,
+      {
+        maxDiffPixelRatio: 0.05,
+        threshold: 0.3,
+      }
+    )
+  })
+})
+
+test.describe('Header Pre-push Visual Test - Logo validation @visual', () => {
+  test('logo image loads correctly', async ({ page }) => {
+    await setupDemoMode(page)
+    await navigateTo(page, '/')
+
+    // Wait for app to load
+    await expect(page.locator('.demo-mode-indicator')).toBeVisible()
+
+    const logo = page.locator('.header-logo-icon')
+    await expect(logo).toBeVisible()
+
+    // Verify logo src attribute
+    await expect(logo).toHaveAttribute('src', '/logo.svg')
+
+    // Verify logo dimensions
+    await expect(logo).toHaveAttribute('width', '28')
+    await expect(logo).toHaveAttribute('height', '28')
+
+    // Verify logo loaded successfully (no broken image)
+    const logoNaturalWidth = await logo.evaluate(
+      (img: HTMLImageElement) => img.naturalWidth
+    )
+    expect(logoNaturalWidth).toBeGreaterThan(0)
   })
 })
