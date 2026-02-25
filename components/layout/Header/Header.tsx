@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 'use client'
 
 import Link from 'next/link'
@@ -88,8 +87,6 @@ export function Header() {
         navLinks={navLinks}
         pathname={pathname}
         isActive={isActive}
-        effectiveOrg={effectiveOrg}
-        effectiveProject={effectiveProject}
         itemTypes={itemTypes}
       />
       <MobileMenu
@@ -99,8 +96,6 @@ export function Header() {
         navLinks={navLinks}
         pathname={pathname}
         isActive={isActive}
-        effectiveOrg={effectiveOrg}
-        effectiveProject={effectiveProject}
         itemTypes={itemTypes}
       />
     </header>
