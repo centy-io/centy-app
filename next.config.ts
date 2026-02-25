@@ -1,13 +1,41 @@
 import { execSync } from 'node:child_process'
 import { withSentryConfig } from '@sentry/nextjs'
+import type { NextConfig } from 'next'
 import withRoutes from 'nextjs-routes/config'
+import { MissingEnvVarsError } from './lib/MissingEnvVarsError'
 
-function getCommitSha() {
+function getCommitSha(): string {
   try {
     return execSync('git rev-parse HEAD').toString().trim()
   } catch {
     return ''
   }
+}
+
+/**
+ * Canonical list of required environment variables.
+ * The build will fail with a descriptive error if any of these are missing.
+ * Copy .env.example to .env.local for local development.
+ */
+const REQUIRED_ENV_VARS = [
+  'NEXT_PUBLIC_DAEMON_URL',
+  'NEXT_PUBLIC_DOCS_URL',
+  'NEXT_PUBLIC_DAEMON_INSTALL_URL',
+  'NEXT_PUBLIC_CORS_DOCS_URL',
+  'NEXT_PUBLIC_GOOGLE_ANALYTICS_URL',
+  'NEXT_PUBLIC_SENTRY_DSN',
+]
+
+const definedEnvVarKeys = new Set(
+  Object.entries(process.env)
+    .filter(([, value]) => Boolean(value))
+    .map(([key]) => key),
+)
+
+const missingEnvVars = REQUIRED_ENV_VARS.filter((key) => !definedEnvVarKeys.has(key))
+
+if (missingEnvVars.length > 0) {
+  throw new MissingEnvVarsError(missingEnvVars)
 }
 
 const {
@@ -22,8 +50,7 @@ const {
   NEXT_PUBLIC_SENTRY_DSN,
 } = process.env
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig: NextConfig = {
   output: NODE_ENV === 'production' ? 'export' : undefined,
   trailingSlash: true,
   images: {
