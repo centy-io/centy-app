@@ -64,8 +64,7 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
   // Load organizations on mount
   useEffect(() => {
     refreshOrganizations()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [refreshOrganizations])
 
   const setSelectedOrgSlug = useCallback((slug: string | null | undefined) => {
     setSelectedOrgSlugState(slug)

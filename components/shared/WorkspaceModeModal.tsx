@@ -3,7 +3,7 @@
 import { useRef, useEffect } from 'react'
 import '@/styles/components/WorkspaceModeModal.css'
 
-// Workspace mode for agent execution
+// Workspace mode for workspace execution
 export enum WorkspaceMode {
   CURRENT = 'current',
   TEMP = 'temp',
@@ -60,7 +60,7 @@ export function WorkspaceModeModal({
       <div className="workspace-modal" ref={modalRef}>
         <div className="workspace-modal-header">
           <h3 className="workspace-modal-title">
-            Open Agent for Issue #{issueNumber}
+            Open Workspace for Issue #{issueNumber}
           </h3>
           <button onClick={onClose} className="workspace-modal-close">
             Cancel
@@ -69,7 +69,7 @@ export function WorkspaceModeModal({
 
         <div className="workspace-modal-body">
           <p className="workspace-modal-description">
-            Choose where to run the AI agent:
+            Choose where to open the workspace:
           </p>
 
           <div className="workspace-modal-options">
@@ -79,7 +79,7 @@ export function WorkspaceModeModal({
             >
               <div className="workspace-option-title">Current Project</div>
               <div className="workspace-option-description">
-                Run the agent in the current project directory
+                Open in the current project directory
               </div>
             </button>
 

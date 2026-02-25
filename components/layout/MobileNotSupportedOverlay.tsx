@@ -2,14 +2,47 @@
 
 import { useState, useEffect } from 'react'
 
-// eslint-disable-next-line max-lines-per-function
-export function MobileNotSupportedOverlay() {
+function MobileNotSupportedIcon() {
+  return (
+    <svg
+      className="mobile-not-supported-svg"
+      width="48"
+      height="48"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect
+        className="svg-rect"
+        x="5"
+        y="2"
+        width="14"
+        height="20"
+        rx="2"
+        ry="2"
+      />
+      <line className="svg-line" x1="12" y1="18" x2="12.01" y2="18" />
+      <line
+        className="svg-line"
+        x1="2"
+        y1="2"
+        x2="22"
+        y2="22"
+        stroke="#ef4444"
+        strokeWidth="2.5"
+      />
+    </svg>
+  )
+}
+
+function useMobileDetection() {
   const [isMobile, setIsMobile] = useState(false)
-  const [dismissed, setDismissed] = useState(false)
 
   useEffect(() => {
     const checkMobile = () => {
-      // Check for mobile device using screen width and touch capability
       const isMobileWidth = window.innerWidth <= 768
       const isTouchDevice =
         'ontouchstart' in window || navigator.maxTouchPoints > 0
@@ -22,6 +55,13 @@ export function MobileNotSupportedOverlay() {
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
+  return isMobile
+}
+
+export function MobileNotSupportedOverlay() {
+  const isMobile = useMobileDetection()
+  const [dismissed, setDismissed] = useState(false)
+
   if (!isMobile || dismissed) {
     return null
   }
@@ -30,40 +70,7 @@ export function MobileNotSupportedOverlay() {
     <div className="mobile-not-supported-overlay">
       <div className="mobile-not-supported-content">
         <div className="mobile-not-supported-icon">
-          {/* eslint-disable default/no-hardcoded-urls */}
-          <svg
-            className="mobile-not-supported-svg"
-            xmlns="http://www.w3.org/2000/svg"
-            width="48"
-            height="48"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <rect
-              className="svg-rect"
-              x="5"
-              y="2"
-              width="14"
-              height="20"
-              rx="2"
-              ry="2"
-            />
-            <line className="svg-line" x1="12" y1="18" x2="12.01" y2="18" />
-            <line
-              className="svg-line"
-              x1="2"
-              y1="2"
-              x2="22"
-              y2="22"
-              stroke="#ef4444"
-              strokeWidth="2.5"
-            />
-          </svg>
-          {/* eslint-enable default/no-hardcoded-urls */}
+          <MobileNotSupportedIcon />
         </div>
         <h2 className="mobile-not-supported-title">Mobile Not Supported</h2>
         <p className="mobile-not-supported-description">

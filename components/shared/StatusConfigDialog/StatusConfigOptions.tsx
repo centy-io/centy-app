@@ -12,8 +12,8 @@ export function StatusConfigOptions({
   return (
     <>
       <p className="status-config-dialog-description">
-        When an AI agent starts working on an issue, should the issue status be
-        automatically updated to &quot;in-progress&quot;?
+        When a coding tool starts working on an issue, should the issue status
+        be automatically updated to &quot;in-progress&quot;?
       </p>
 
       <div className="status-config-dialog-options">
@@ -32,8 +32,8 @@ export function StatusConfigOptions({
               Yes, update status automatically
             </span>
             <span className="status-config-option-description">
-              Issue status will change to &quot;in-progress&quot; when an agent
-              starts working
+              Issue status will change to &quot;in-progress&quot; when a coding
+              tool starts working
             </span>
           </div>
         </label>
@@ -53,7 +53,7 @@ export function StatusConfigOptions({
               No, keep status unchanged
             </span>
             <span className="status-config-option-description">
-              Issue status will remain as-is when an agent starts working
+              Issue status will remain as-is when a coding tool starts working
             </span>
           </div>
         </label>

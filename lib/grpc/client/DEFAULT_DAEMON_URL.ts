@@ -1,4 +1,5 @@
 'use client'
 
-// eslint-disable-next-line default/no-localhost, default/no-hardcoded-urls
-export const DEFAULT_DAEMON_URL = 'http://localhost:50051'
+const { NEXT_PUBLIC_DAEMON_URL } = process.env
+
+export const DEFAULT_DAEMON_URL = NEXT_PUBLIC_DAEMON_URL || ''
