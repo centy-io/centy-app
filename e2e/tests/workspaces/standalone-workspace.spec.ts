@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { setupDemoMode, navigateToDemoProject } from '../../utils/test-helpers'
 
-test.describe.serial('Standalone Workspace Modal', () => {
+test.describe.serial('Standalone Workspace Modal - Display', () => {
   test('should display New Workspace button on issues list page', async ({
     page,
   }) => {
@@ -22,7 +22,6 @@ test.describe.serial('Standalone Workspace Modal', () => {
     await setupDemoMode(page)
     await navigateToDemoProject(page, '/issues')
 
-    // Wait for page to load
     await expect(page.locator('.demo-mode-indicator')).toBeVisible()
 
     // Click New Workspace button
@@ -39,7 +38,6 @@ test.describe.serial('Standalone Workspace Modal', () => {
     await setupDemoMode(page)
     await navigateToDemoProject(page, '/issues')
 
-    // Wait for page to load and click New Workspace
     await expect(page.locator('.demo-mode-indicator')).toBeVisible()
     await page.getByRole('button', { name: '+ New Workspace' }).click()
 
@@ -57,7 +55,6 @@ test.describe.serial('Standalone Workspace Modal', () => {
     await setupDemoMode(page)
     await navigateToDemoProject(page, '/issues')
 
-    // Wait for page to load and open modal
     await expect(page.locator('.demo-mode-indicator')).toBeVisible()
     await page.getByRole('button', { name: '+ New Workspace' }).click()
 
@@ -72,12 +69,13 @@ test.describe.serial('Standalone Workspace Modal', () => {
     const options = ttlSelect.locator('option')
     await expect(options).toHaveCount(5)
   })
+})
 
+test.describe.serial('Standalone Workspace Modal - Close actions', () => {
   test('should close modal on Cancel button click', async ({ page }) => {
     await setupDemoMode(page)
     await navigateToDemoProject(page, '/issues')
 
-    // Wait for page to load and open modal
     await expect(page.locator('.demo-mode-indicator')).toBeVisible()
     await page.getByRole('button', { name: '+ New Workspace' }).click()
 
@@ -95,7 +93,6 @@ test.describe.serial('Standalone Workspace Modal', () => {
     await setupDemoMode(page)
     await navigateToDemoProject(page, '/issues')
 
-    // Wait for page to load and open modal
     await expect(page.locator('.demo-mode-indicator')).toBeVisible()
     await page.getByRole('button', { name: '+ New Workspace' }).click()
 
@@ -113,7 +110,6 @@ test.describe.serial('Standalone Workspace Modal', () => {
     await setupDemoMode(page)
     await navigateToDemoProject(page, '/issues')
 
-    // Wait for page to load and open modal
     await expect(page.locator('.demo-mode-indicator')).toBeVisible()
     await page.getByRole('button', { name: '+ New Workspace' }).click()
 
@@ -129,14 +125,15 @@ test.describe.serial('Standalone Workspace Modal', () => {
     // Modal should be hidden
     await expect(page.getByText('New Standalone Workspace')).not.toBeVisible()
   })
+})
 
+test.describe.serial('Standalone Workspace Modal - Form interaction', () => {
   test('should allow entering workspace name and description', async ({
     page,
   }) => {
     await setupDemoMode(page)
     await navigateToDemoProject(page, '/issues')
 
-    // Wait for page to load and open modal
     await expect(page.locator('.demo-mode-indicator')).toBeVisible()
     await page.getByRole('button', { name: '+ New Workspace' }).click()
 
@@ -159,7 +156,6 @@ test.describe.serial('Standalone Workspace Modal', () => {
     await setupDemoMode(page)
     await navigateToDemoProject(page, '/issues')
 
-    // Wait for page to load and open modal
     await expect(page.locator('.demo-mode-indicator')).toBeVisible()
     await page.getByRole('button', { name: '+ New Workspace' }).click()
 

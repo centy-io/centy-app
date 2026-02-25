@@ -39,4 +39,20 @@ export default [
       'single-export/single-export': 'off',
     },
   },
+  {
+    // Re-enable max-lines-per-function for test and spec files
+    // eslint-config-agent disables this rule for test files, but we enforce it here
+    files: [
+      '**/*.spec.{js,jsx,ts,tsx}',
+      '**/*.test.{js,jsx,ts,tsx}',
+      'e2e/**',
+      '__tests__/**',
+    ],
+    rules: {
+      'max-lines-per-function': [
+        'error',
+        { max: 70, skipBlankLines: true, skipComments: true },
+      ],
+    },
+  },
 ]
