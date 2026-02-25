@@ -170,7 +170,8 @@
       "Bash(npm test:*)",
       "Bash(gh run:*)",
       "Bash(head:*)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(pnpm e2e:visual:pre-push:*)"
     ],
     "deny": ["Bash(npm install)", "Bash(gh issue create:*)"]
   },
