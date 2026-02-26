@@ -1,5 +1,7 @@
 import { UserDetail } from '@/components/users/UserDetail'
 
+export const dynamic = 'force-static'
+
 export async function generateStaticParams() {
   return [
     {

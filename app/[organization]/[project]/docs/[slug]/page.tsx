@@ -1,5 +1,7 @@
 import { DocDetail } from '@/components/docs/DocDetail'
 
+export const dynamic = 'force-static'
+
 export async function generateStaticParams() {
   return [
     {
