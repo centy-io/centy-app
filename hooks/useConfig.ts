@@ -1,12 +1,12 @@
 /* eslint-disable max-lines */
 'use client'
 
-import { useEffect, useCallback, useSyncExternalStore } from 'react'
+import { useEffect, useCallback, useSyncExternalStore, useContext } from 'react'
 import { create } from '@bufbuild/protobuf'
 import type { ConfigSnapshot, CacheState } from './useConfig.types'
 import { centyClient } from '@/lib/grpc/client'
 import { GetConfigRequestSchema } from '@/gen/centy_pb'
-import { usePathContext } from '@/components/providers/PathContextProvider'
+import { PathContext } from '@/components/providers/PathContext'
 
 const configCache = new Map<string, CacheState>()
 
@@ -94,7 +94,9 @@ async function fetchConfig(
 }
 
 export function useConfig() {
-  const { projectPath, isInitialized } = usePathContext()
+  const pathContext = useContext(PathContext)
+  const projectPath = pathContext ? pathContext.projectPath : ''
+  const isInitialized = pathContext ? pathContext.isInitialized : false
 
   const snapshot = useSyncExternalStore(
     useCallback(listener => subscribe(projectPath, listener), [projectPath]),

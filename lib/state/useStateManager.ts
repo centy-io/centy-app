@@ -1,10 +1,10 @@
 'use client'
 
-import { useMemo, useState, useEffect } from 'react'
+import { useMemo, useState, useEffect, useContext } from 'react'
 import { create } from '@bufbuild/protobuf'
 import { StateManager } from './StateManager'
 import { useConfig } from '@/hooks/useConfig'
-import { usePathContext } from '@/components/providers/PathContextProvider'
+import { PathContext } from '@/components/providers/PathContext'
 import { centyClient } from '@/lib/grpc/client'
 import { ListItemTypesRequestSchema } from '@/gen/centy_pb'
 
@@ -14,7 +14,9 @@ import { ListItemTypesRequestSchema } from '@/gen/centy_pb'
  */
 export function useStateManager(): StateManager {
   const { config } = useConfig()
-  const { projectPath, isInitialized } = usePathContext()
+  const pathContext = useContext(PathContext)
+  const projectPath = pathContext ? pathContext.projectPath : ''
+  const isInitialized = pathContext ? pathContext.isInitialized : false
   const [itemTypeStatuses, setItemTypeStatuses] = useState<string[]>([])
 
   useEffect(() => {
