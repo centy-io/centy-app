@@ -1,5 +1,7 @@
 import { OrgIssuesList } from '@/components/organizations/OrgIssuesList'
 
+export const dynamic = 'force-static'
+
 export async function generateStaticParams() {
   return [{ orgSlug: '_placeholder' }]
 }

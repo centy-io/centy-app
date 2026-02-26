@@ -1,5 +1,7 @@
 import { OrganizationDetail } from '@/components/organizations/OrganizationDetail'
 
+export const dynamic = 'force-static'
+
 export async function generateStaticParams() {
   return [{ orgSlug: '_placeholder' }]
 }
