@@ -27,6 +27,8 @@ test.describe('Editor Selector Visual Tests - Default State @visual', () => {
     await setupDemoMode(page)
     await navigateToDemoProject(page, '/issues/demo-issue-1')
 
+    // Wait for demo mode to be fully active before checking editor selector
+    await expect(page.locator('.demo-mode-indicator')).toBeVisible()
     // Verify editor selector is visible
     await expect(page.locator('.editor-selector')).toBeVisible()
     // Verify primary button shows VS Code
@@ -43,6 +45,8 @@ test.describe('Editor Selector Visual Tests - Default State @visual', () => {
     await setupDemoMode(page)
     await navigateToDemoProject(page, '/issues/demo-issue-1')
 
+    // Wait for demo mode to be fully active before checking editor selector
+    await expect(page.locator('.demo-mode-indicator')).toBeVisible()
     await expect(page.locator('.editor-selector')).toBeVisible()
     await page.waitForTimeout(500)
 
@@ -58,6 +62,8 @@ test.describe('Editor Selector Visual Tests - Dropdown Open @visual', () => {
     await setupDemoMode(page)
     await navigateToDemoProject(page, '/issues/demo-issue-1')
 
+    // Wait for demo mode to be fully active before checking editor selector
+    await expect(page.locator('.demo-mode-indicator')).toBeVisible()
     // Wait for editor selector to be visible
     await expect(page.locator('.editor-selector')).toBeVisible()
 
@@ -81,6 +87,8 @@ test.describe('Editor Selector Visual Tests - Dropdown Open @visual', () => {
     await setupDemoMode(page)
     await navigateToDemoProject(page, '/issues/demo-issue-1')
 
+    // Wait for demo mode to be fully active before checking editor selector
+    await expect(page.locator('.demo-mode-indicator')).toBeVisible()
     await expect(page.locator('.editor-selector')).toBeVisible()
 
     // Click the dropdown button to open the menu
@@ -111,6 +119,8 @@ test.describe('Editor Selector Visual Tests - Terminal Selected @visual', () => 
     await setupDemoMode(page)
     await navigateToDemoProject(page, '/issues/demo-issue-1')
 
+    // Wait for demo mode to be fully active before checking editor selector
+    await expect(page.locator('.demo-mode-indicator')).toBeVisible()
     // Wait for editor selector with terminal theme
     await expect(page.locator('.editor-selector')).toBeVisible()
     // Verify primary button shows Terminal styling
@@ -133,6 +143,8 @@ test.describe('Editor Selector Visual Tests - Terminal Selected @visual', () => 
     await setupDemoMode(page)
     await navigateToDemoProject(page, '/issues/demo-issue-1')
 
+    // Wait for demo mode to be fully active before checking editor selector
+    await expect(page.locator('.demo-mode-indicator')).toBeVisible()
     await expect(page.locator('.editor-selector')).toBeVisible()
     await expect(page.locator('.editor-primary-btn.terminal')).toBeVisible()
     await page.waitForTimeout(500)
@@ -149,6 +161,8 @@ test.describe('Editor Selector Visual Tests - Selection Workflow @visual', () =>
     await setupDemoMode(page)
     await navigateToDemoProject(page, '/issues/demo-issue-1')
 
+    // Wait for demo mode to be fully active before checking editor selector
+    await expect(page.locator('.demo-mode-indicator')).toBeVisible()
     // Wait for editor selector
     await expect(page.locator('.editor-selector')).toBeVisible()
 

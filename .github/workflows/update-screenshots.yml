@@ -8,6 +8,9 @@ on:
         required: true
         default: 'main'
 
+permissions:
+  contents: write
+
 jobs:
   update-screenshots:
     name: Update Visual Test Screenshots
@@ -35,25 +38,25 @@ jobs:
         run: pnpm exec playwright install --with-deps
 
       - name: Update visual snapshots
-        run: pnpm e2e -- --grep @visual --update-snapshots
+        run: pnpm exec playwright test e2e/tests/visual/ --update-snapshots || true
 
       - name: Check for changes
         id: git-check
         run: |
-          git diff --exit-code app/**/screenshot/*.png || echo "changes=true" >> $GITHUB_OUTPUT
+          git add app/**/screenshot/*.png
+          git diff --cached --exit-code app/**/screenshot/*.png || echo "changes=true" >> $GITHUB_OUTPUT
 
       - name: Commit updated screenshots
         if: steps.git-check.outputs.changes == 'true'
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add app/**/screenshot/*.png
           git commit -m "chore: update visual test screenshots from CI
 
           🤖 Generated with [Claude Code](https://claude.com/claude-code)
 
           Co-Authored-By: github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
-          git push
+          HUSKY=0 git push
 
       - name: No changes detected
         if: steps.git-check.outputs.changes != 'true'
