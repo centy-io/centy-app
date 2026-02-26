@@ -1,5 +1,7 @@
 import { IssueDetail } from '@/components/issues/IssueDetail'
 
+export const dynamic = 'force-static'
+
 export async function generateStaticParams() {
   return [
     {
