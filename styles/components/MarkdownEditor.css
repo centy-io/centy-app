@@ -185,7 +185,7 @@
 /* Code Block Syntax Highlighting */
 .editor-content .tiptap .hljs-comment,
 .editor-content .tiptap .hljs-quote {
-  color: #6b7280;
+  color: var(--color-code-comment);
 }
 
 .editor-content .tiptap .hljs-variable,
@@ -197,7 +197,7 @@
 .editor-content .tiptap .hljs-link,
 .editor-content .tiptap .hljs-selector-id,
 .editor-content .tiptap .hljs-selector-class {
-  color: #f87171;
+  color: var(--color-code-variable);
 }
 
 .editor-content .tiptap .hljs-number,
@@ -207,23 +207,23 @@
 .editor-content .tiptap .hljs-literal,
 .editor-content .tiptap .hljs-type,
 .editor-content .tiptap .hljs-params {
-  color: #fbbf24;
+  color: var(--color-code-number);
 }
 
 .editor-content .tiptap .hljs-string,
 .editor-content .tiptap .hljs-symbol,
 .editor-content .tiptap .hljs-bullet {
-  color: #34d399;
+  color: var(--color-code-string);
 }
 
 .editor-content .tiptap .hljs-title,
 .editor-content .tiptap .hljs-section {
-  color: #60a5fa;
+  color: var(--color-code-title);
 }
 
 .editor-content .tiptap .hljs-keyword,
 .editor-content .tiptap .hljs-selector-tag {
-  color: #c084fc;
+  color: var(--color-code-keyword);
 }
 
 /* Raw Mode Textarea */

@@ -19,7 +19,7 @@
 
 .demo-mode-indicator-badge {
   background: rgba(255, 255, 255, 0.2);
-  color: #fff;
+  color: white;
   font-size: 12px;
   font-weight: 600;
   padding: 4px 8px;
@@ -35,7 +35,7 @@
 
 .demo-mode-exit-button {
   background: rgba(255, 255, 255, 0.15);
-  color: #fff;
+  color: white;
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 4px;
   padding: 4px 12px;
