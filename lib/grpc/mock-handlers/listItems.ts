@@ -35,15 +35,18 @@ function issueToGenericItem(issue: Issue): GenericItem {
   }
 }
 
+const EMPTY_ITEMS: GenericItem[] = []
+
 export async function listItems(
   request: ListItemsRequest
 ): Promise<ListItemsResponse> {
   if (request.projectPath !== DEMO_PROJECT_PATH) {
     return {
       $typeName: 'centy.v1.ListItemsResponse',
-      items: [],
+      items: EMPTY_ITEMS,
       success: true,
       error: '',
+      totalCount: 0,
     }
   }
 
@@ -54,13 +57,15 @@ export async function listItems(
       items,
       success: true,
       error: '',
+      totalCount: items.length,
     }
   }
 
   return {
     $typeName: 'centy.v1.ListItemsResponse',
-    items: [],
+    items: EMPTY_ITEMS,
     success: true,
     error: '',
+    totalCount: 0,
   }
 }
