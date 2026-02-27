@@ -101,6 +101,11 @@ test.describe('Status Filter Visual Tests - Badge styling @visual', () => {
       timeout: 10000,
     })
 
+    // Wait for issues table to load (status filter confirms table is rendered with data)
+    await expect(
+      page.locator('.column-filter-multi .multi-select-trigger').first()
+    ).toBeVisible({ timeout: 10000 })
+
     // Wait for content to stabilize
     await page.waitForTimeout(500)
 
