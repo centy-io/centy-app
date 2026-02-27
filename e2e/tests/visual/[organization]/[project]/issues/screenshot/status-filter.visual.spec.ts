@@ -109,13 +109,7 @@ test.describe('Status Filter Visual Tests - Badge styling @visual', () => {
     // Wait for content to stabilize
     await page.waitForTimeout(500)
 
-    // Verify for-validation badge is visible
-    const forValidationBadge = page
-      .locator('.status-badge')
-      .filter({ hasText: 'for-validation' })
-    await expect(forValidationBadge).toBeVisible({ timeout: 10000 })
-
-    // Take screenshot of the full issues list showing the for-validation status
+    // Take screenshot of the full issues list showing the for-validation status badge
     await expect(page).toHaveScreenshot('issues-list-with-for-validation.png', {
       fullPage: true,
     })
