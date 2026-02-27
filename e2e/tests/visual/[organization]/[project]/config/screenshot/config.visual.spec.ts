@@ -24,7 +24,8 @@ test.describe('Project Config Visual Tests @visual', () => {
     await setupDemoMode(page)
   })
 
-  test('project config - light theme', async ({ page }) => {
+  test('project config - light theme', async ({ page, isMobile }) => {
+    test.skip(isMobile, 'mobile-not-supported overlay prevents click interactions')
     await page.emulateMedia({ colorScheme: 'light' })
     await navigateToDemoProject(page, '/config')
     await expect(page.locator('.settings-page')).toBeVisible()
@@ -35,7 +36,8 @@ test.describe('Project Config Visual Tests @visual', () => {
     })
   })
 
-  test('project config - dark theme', async ({ page }) => {
+  test('project config - dark theme', async ({ page, isMobile }) => {
+    test.skip(isMobile, 'mobile-not-supported overlay prevents click interactions')
     await page.emulateMedia({ colorScheme: 'dark' })
     await navigateToDemoProject(page, '/config')
     await expect(page.locator('.settings-page')).toBeVisible()

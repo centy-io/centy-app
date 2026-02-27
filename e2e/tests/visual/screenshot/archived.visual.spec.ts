@@ -90,7 +90,8 @@ test.describe('Remove Confirmation State', () => {
     })
   })
 
-  test('archived page remove confirmation - light theme', async ({ page }) => {
+  test('archived page remove confirmation - light theme', async ({ page, isMobile }) => {
+    test.skip(isMobile, 'mobile-not-supported overlay prevents click interactions')
     await page.emulateMedia({ colorScheme: 'light' })
     await navigateTo(page, '/archived')
 
@@ -110,7 +111,8 @@ test.describe('Remove Confirmation State', () => {
     )
   })
 
-  test('archived page remove confirmation - dark theme', async ({ page }) => {
+  test('archived page remove confirmation - dark theme', async ({ page, isMobile }) => {
+    test.skip(isMobile, 'mobile-not-supported overlay prevents click interactions')
     await page.emulateMedia({ colorScheme: 'dark' })
     await navigateTo(page, '/archived')
 
@@ -148,7 +150,9 @@ test.describe('Remove All Confirmation State', () => {
 
   test('archived page remove all confirmation - light theme', async ({
     page,
+    isMobile,
   }) => {
+    test.skip(isMobile, 'mobile-not-supported overlay prevents click interactions')
     await page.emulateMedia({ colorScheme: 'light' })
     await navigateTo(page, '/archived')
 
@@ -170,7 +174,9 @@ test.describe('Remove All Confirmation State', () => {
 
   test('archived page remove all confirmation - dark theme', async ({
     page,
+    isMobile,
   }) => {
+    test.skip(isMobile, 'mobile-not-supported overlay prevents click interactions')
     await page.emulateMedia({ colorScheme: 'dark' })
     await navigateTo(page, '/archived')
 
