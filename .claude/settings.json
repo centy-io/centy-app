@@ -171,7 +171,9 @@
       "Bash(gh run:*)",
       "Bash(head:*)",
       "Bash(npm run:*)",
-      "Bash(pnpm e2e:visual:pre-push:*)"
+      "Bash(pnpm e2e:visual:pre-push:*)",
+      "mcp__playwright__browser_take_screenshot",
+      "mcp__playwright__browser_click"
     ],
     "deny": ["Bash(npm install)", "Bash(gh issue create:*)"]
   },
