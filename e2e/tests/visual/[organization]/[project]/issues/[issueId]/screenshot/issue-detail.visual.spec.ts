@@ -58,7 +58,10 @@ test.describe('Editor Selector Visual Tests - Default State @visual', () => {
 
 test.describe('Editor Selector Visual Tests - Dropdown Open @visual', () => {
   test('dropdown menu visible - light theme', async ({ page, isMobile }) => {
-    test.skip(isMobile, 'mobile-not-supported overlay prevents click interactions')
+    test.skip(
+      isMobile,
+      'mobile-not-supported overlay prevents click interactions'
+    )
     await page.emulateMedia({ colorScheme: 'light' })
     await setupDemoMode(page)
     await navigateToDemoProject(page, '/issues/demo-issue-1')
@@ -84,7 +87,10 @@ test.describe('Editor Selector Visual Tests - Dropdown Open @visual', () => {
   })
 
   test('dropdown menu visible - dark theme', async ({ page, isMobile }) => {
-    test.skip(isMobile, 'mobile-not-supported overlay prevents click interactions')
+    test.skip(
+      isMobile,
+      'mobile-not-supported overlay prevents click interactions'
+    )
     await page.emulateMedia({ colorScheme: 'dark' })
     await setupDemoMode(page)
     await navigateToDemoProject(page, '/issues/demo-issue-1')
@@ -159,7 +165,10 @@ test.describe('Editor Selector Visual Tests - Terminal Selected @visual', () => 
 
 test.describe('Editor Selector Visual Tests - Selection Workflow @visual', () => {
   test('selecting Terminal from dropdown', async ({ page, isMobile }) => {
-    test.skip(isMobile, 'mobile-not-supported overlay prevents click interactions')
+    test.skip(
+      isMobile,
+      'mobile-not-supported overlay prevents click interactions'
+    )
     await page.emulateMedia({ colorScheme: 'light' })
     await setupDemoMode(page)
     await navigateToDemoProject(page, '/issues/demo-issue-1')

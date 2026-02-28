@@ -5,8 +5,14 @@ import {
 } from '../../../../../../utils/test-helpers'
 
 test.describe('Status Filter Visual Tests - Dropdown @visual', () => {
-  test('status filter dropdown - all states visible', async ({ page, isMobile }) => {
-    test.skip(isMobile, 'mobile-not-supported overlay prevents click interactions')
+  test('status filter dropdown - all states visible', async ({
+    page,
+    isMobile,
+  }) => {
+    test.skip(
+      isMobile,
+      'mobile-not-supported overlay prevents click interactions'
+    )
     await setupDemoMode(page)
     await navigateToDemoProject(page, '/issues')
 
@@ -46,8 +52,14 @@ test.describe('Status Filter Visual Tests - Dropdown @visual', () => {
     })
   })
 
-  test('status filter - for-validation state selected', async ({ page, isMobile }) => {
-    test.skip(isMobile, 'mobile-not-supported overlay prevents click interactions')
+  test('status filter - for-validation state selected', async ({
+    page,
+    isMobile,
+  }) => {
+    test.skip(
+      isMobile,
+      'mobile-not-supported overlay prevents click interactions'
+    )
     await setupDemoMode(page)
     await navigateToDemoProject(page, '/issues')
 
@@ -119,8 +131,14 @@ test.describe('Status Filter Visual Tests - Badge styling @visual', () => {
 })
 
 test.describe('Status Filter Responsive Visual Tests @visual', () => {
-  test('status filter dropdown - mobile viewport', async ({ page, isMobile }) => {
-    test.skip(isMobile, 'mobile-not-supported overlay prevents click interactions')
+  test('status filter dropdown - mobile viewport', async ({
+    page,
+    isMobile,
+  }) => {
+    test.skip(
+      isMobile,
+      'mobile-not-supported overlay prevents click interactions'
+    )
     await page.setViewportSize({ width: 375, height: 667 })
     await setupDemoMode(page)
     await navigateToDemoProject(page, '/issues')
