@@ -19,7 +19,6 @@ import { UNGROUPED_ORG_MARKER } from '@/lib/project-resolver'
 // Re-export hooks for consumers
 export {
   usePathContext,
-  useLastProjectPath,
   useProjectPathToUrl,
 } from './PathContextProvider.hooks'
 
