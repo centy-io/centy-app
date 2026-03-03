@@ -7,8 +7,6 @@ import { setupDemoMode, navigateTo } from '../../../utils/test-helpers'
 async function setupDemoModeLocal(page: import('@playwright/test').Page) {
   await page.addInitScript(() => {
     sessionStorage.setItem('centy_demo_mode', 'true')
-    localStorage.setItem('centy-selected-org', 'demo-org')
-    localStorage.setItem('centy-project-path', '/demo/centy-showcase')
   })
 }
 
@@ -67,8 +65,6 @@ test.describe('Demo Mode Homepage Visual Tests @visual', () => {
     // Set up demo mode before navigating
     await page.addInitScript(() => {
       sessionStorage.setItem('centy_demo_mode', 'true')
-      localStorage.setItem('centy-selected-org', 'demo-org')
-      localStorage.setItem('centy-project-path', '/demo/centy-showcase')
     })
 
     // Navigate to demo mode URL
