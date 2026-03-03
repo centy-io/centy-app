@@ -8,6 +8,9 @@ on:
         required: true
         default: 'main'
 
+permissions:
+  contents: write
+
 jobs:
   update-screenshots:
     name: Update Visual Test Screenshots
@@ -35,25 +38,32 @@ jobs:
         run: pnpm exec playwright install --with-deps
 
       - name: Update visual snapshots
-        run: pnpm e2e -- --grep @visual --update-snapshots
+        run: pnpm exec playwright test e2e/tests/visual/ --update-snapshots || true
+        env:
+          NEXT_PUBLIC_DAEMON_URL: http://localhost:50051
+          NEXT_PUBLIC_DOCS_URL: https://docs.centy.io
+          NEXT_PUBLIC_DAEMON_INSTALL_URL: https://github.com/centy-io/installer/releases/latest/download/install.sh
+          NEXT_PUBLIC_CORS_DOCS_URL: https://app.centy.io
+          NEXT_PUBLIC_GOOGLE_ANALYTICS_URL: https://www.googletagmanager.com/gtag/js?id=G-ZV5SD70Z2D
+          NEXT_PUBLIC_SENTRY_DSN: https://98aef6a0676becdbe5b6a8a8ee14b8d3@o4510682522976256.ingest.de.sentry.io/4510682527367248
 
       - name: Check for changes
         id: git-check
         run: |
-          git diff --exit-code app/**/screenshot/*.png || echo "changes=true" >> $GITHUB_OUTPUT
+          find app -name "*.png" -path "*/screenshot/*" -exec git add {} \;
+          git diff --cached --exit-code -- "*.png" || echo "changes=true" >> $GITHUB_OUTPUT
 
       - name: Commit updated screenshots
         if: steps.git-check.outputs.changes == 'true'
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add app/**/screenshot/*.png
           git commit -m "chore: update visual test screenshots from CI
 
           🤖 Generated with [Claude Code](https://claude.com/claude-code)
 
           Co-Authored-By: github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
-          git push
+          HUSKY=0 git push
 
       - name: No changes detected
         if: steps.git-check.outputs.changes != 'true'

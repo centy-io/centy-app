@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { create } from '@bufbuild/protobuf'
-import type { RouteLiteral } from 'nextjs-routes'
+import { route, type RouteLiteral } from 'nextjs-routes'
 import type { NavItemType } from './NavItemType'
 import { ListItemTypesRequestSchema } from '@/gen/centy_pb'
 import { centyClient } from '@/lib/grpc/client'
@@ -13,8 +13,9 @@ function buildItemHref(
   project: string,
   plural: string
 ): RouteLiteral {
-  return Object.assign(`/${org}/${project}/${plural}`, {
-    __brand: 'RouteLiteral' as const,
+  return route({
+    pathname: '/[...path]',
+    query: { path: [org, project, plural] },
   })
 }
 
@@ -46,7 +47,7 @@ export function useNavItemTypes(
         setItemTypes(
           res.itemTypes
             .map(t => ({
-              name: t.name,
+              name: t.plural.charAt(0).toUpperCase() + t.plural.slice(1),
               plural: t.plural,
               itemCount: t.itemCount,
               href: buildItemHref(effectiveOrg!, effectiveProject!, t.plural),

@@ -3,4 +3,16 @@
 import { createContext } from 'react'
 import type { PathContextType } from './PathContextProvider.types'
 
-export const PathContext = createContext<PathContextType | null>(null)
+const DEFAULT_PATH_CONTEXT: PathContextType = {
+  orgSlug: null,
+  projectName: null,
+  projectPath: '',
+  isInitialized: false,
+  displayPath: '',
+  isAggregateView: false,
+  isLoading: false,
+  error: null,
+  navigateToProject: () => {},
+}
+
+export const PathContext = createContext<PathContextType>(DEFAULT_PATH_CONTEXT)

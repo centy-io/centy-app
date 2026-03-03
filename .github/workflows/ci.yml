@@ -7,6 +7,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   lint-and-test:
@@ -36,6 +37,46 @@ jobs:
       - name: Run tests
         run: pnpm test --run
 
+  e2e:
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps
+
+      - name: Run visual e2e tests
+        run: pnpm exec playwright test e2e/tests/visual/
+        env:
+          NEXT_PUBLIC_DAEMON_URL: http://localhost:50051
+          NEXT_PUBLIC_DOCS_URL: https://docs.centy.io
+          NEXT_PUBLIC_DAEMON_INSTALL_URL: https://github.com/centy-io/installer/releases/latest/download/install.sh
+          NEXT_PUBLIC_CORS_DOCS_URL: https://app.centy.io
+          NEXT_PUBLIC_GOOGLE_ANALYTICS_URL: https://www.googletagmanager.com/gtag/js?id=G-ZV5SD70Z2D
+          NEXT_PUBLIC_SENTRY_DSN: https://98aef6a0676becdbe5b6a8a8ee14b8d3@o4510682522976256.ingest.de.sentry.io/4510682527367248
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
   build:
     runs-on: ubuntu-latest
     needs: lint-and-test
@@ -57,4 +98,11 @@ jobs:
 
       - name: Build
         run: pnpm build
+        env:
+          NEXT_PUBLIC_DAEMON_URL: http://localhost:50051
+          NEXT_PUBLIC_DOCS_URL: https://docs.centy.io
+          NEXT_PUBLIC_DAEMON_INSTALL_URL: https://github.com/centy-io/installer/releases/latest/download/install.sh
+          NEXT_PUBLIC_CORS_DOCS_URL: https://app.centy.io
+          NEXT_PUBLIC_GOOGLE_ANALYTICS_URL: https://www.googletagmanager.com/gtag/js?id=G-ZV5SD70Z2D
+          NEXT_PUBLIC_SENTRY_DSN: https://98aef6a0676becdbe5b6a8a8ee14b8d3@o4510682522976256.ingest.de.sentry.io/4510682527367248
 
