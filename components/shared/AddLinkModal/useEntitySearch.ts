@@ -8,6 +8,7 @@ import { ListItemsRequestSchema, type Link as LinkType } from '@/gen/centy_pb'
 import { genericItemToIssue } from '@/lib/genericItemToIssue'
 import { genericItemToDoc } from '@/lib/genericItemToDoc'
 
+// eslint-disable-next-line max-lines-per-function
 export function useEntitySearch(
   projectPath: string,
   entityId: string,
