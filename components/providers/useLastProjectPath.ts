@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { LAST_PROJECT_STORAGE_KEY } from './PathContextProvider.types'
+import { LAST_PROJECT_STORAGE_KEY } from './LAST_PROJECT_STORAGE_KEY'
 
 /**
  * Hook to get last used project path (for redirect from root)

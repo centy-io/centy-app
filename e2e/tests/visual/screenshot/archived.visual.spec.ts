@@ -38,8 +38,7 @@ test.describe('With Archived Projects', () => {
     // Set up demo mode with an archived project
     await page.addInitScript(() => {
       sessionStorage.setItem('centy_demo_mode', 'true')
-      localStorage.setItem('centy-selected-org', 'demo-org')
-      localStorage.setItem('centy-project-path', '/demo/centy-showcase')
+
       // Add the demo project to archived list
       localStorage.setItem(
         'centy-archived-projects',
@@ -80,8 +79,7 @@ test.describe('Remove Confirmation State', () => {
     // Set up demo mode with an archived project
     await page.addInitScript(() => {
       sessionStorage.setItem('centy_demo_mode', 'true')
-      localStorage.setItem('centy-selected-org', 'demo-org')
-      localStorage.setItem('centy-project-path', '/demo/centy-showcase')
+
       // Add the demo project to archived list
       localStorage.setItem(
         'centy-archived-projects',
@@ -150,8 +148,7 @@ test.describe('Remove All Confirmation State', () => {
     // Set up demo mode with an archived project
     await page.addInitScript(() => {
       sessionStorage.setItem('centy_demo_mode', 'true')
-      localStorage.setItem('centy-selected-org', 'demo-org')
-      localStorage.setItem('centy-project-path', '/demo/centy-showcase')
+
       // Add the demo project to archived list
       localStorage.setItem(
         'centy-archived-projects',
@@ -237,8 +234,7 @@ test.describe('Responsive - Mobile Viewport', () => {
   test('archived page with project - mobile light', async ({ page }) => {
     await page.addInitScript(() => {
       sessionStorage.setItem('centy_demo_mode', 'true')
-      localStorage.setItem('centy-selected-org', 'demo-org')
-      localStorage.setItem('centy-project-path', '/demo/centy-showcase')
+
       localStorage.setItem(
         'centy-archived-projects',
         JSON.stringify(['/demo/centy-showcase'])
@@ -269,8 +265,7 @@ test.describe('Responsive - Tablet Viewport', () => {
   test('archived page with project - tablet light', async ({ page }) => {
     await page.addInitScript(() => {
       sessionStorage.setItem('centy_demo_mode', 'true')
-      localStorage.setItem('centy-selected-org', 'demo-org')
-      localStorage.setItem('centy-project-path', '/demo/centy-showcase')
+
       localStorage.setItem(
         'centy-archived-projects',
         JSON.stringify(['/demo/centy-showcase'])

@@ -63,7 +63,7 @@ docker run -p 3000:80 centy-app
 This project uses:
 
 - **TypeScript** with strict mode
-- **ESLint** with `eslint-config-agent` for linting
+- **ESLint** for linting
 - **Prettier** for code formatting
 - **cspell** for spell checking
 
