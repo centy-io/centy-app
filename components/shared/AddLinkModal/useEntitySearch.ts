@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react'
+import { useDebounce } from 'use-debounce'
 import { create } from '@bufbuild/protobuf'
 import type { EntityItem } from './AddLinkModal.types'
 import { filterAndMapIssues, filterAndMapDocs } from './entityFilters'
@@ -7,7 +8,6 @@ import { ListItemsRequestSchema, type Link as LinkType } from '@/gen/centy_pb'
 import { genericItemToIssue } from '@/lib/genericItemToIssue'
 import { genericItemToDoc } from '@/lib/genericItemToDoc'
 
-// eslint-disable-next-line max-lines-per-function
 export function useEntitySearch(
   projectPath: string,
   entityId: string,
@@ -18,14 +18,9 @@ export function useEntitySearch(
     'issue'
   )
   const [searchQuery, setSearchQuery] = useState('')
-  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('')
+  const [debouncedSearchQuery] = useDebounce(searchQuery, 400)
   const [searchResults, setSearchResults] = useState<EntityItem[]>([])
   const [loadingSearch, setLoadingSearch] = useState(false)
-
-  useEffect(() => {
-    const timer = setTimeout(() => setDebouncedSearchQuery(searchQuery), 400)
-    return () => clearTimeout(timer)
-  }, [searchQuery])
 
   const searchEntities = useCallback(async () => {
     if (!projectPath) return
