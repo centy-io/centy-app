@@ -39,7 +39,9 @@ export function GenericItemCard({
         >
           <h3 className="generic-item-title">{item.title || item.id}</h3>
         </Link>
-        <span className="generic-item-id">{item.id}</span>
+        <span className="generic-item-id" title={item.id}>
+          {item.id}
+        </span>
         {config &&
           config.features &&
           config.features.status &&
@@ -55,7 +57,9 @@ export function GenericItemCard({
               return (
                 <span key={field.name} className="generic-item-field">
                   <span className="field-label">{field.name}:</span>{' '}
-                  <span className="field-value">{value}</span>
+                  <span className="field-value" title={value}>
+                    {value}
+                  </span>
                 </span>
               )
             })}

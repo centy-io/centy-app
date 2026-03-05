@@ -44,6 +44,7 @@
 @import './pages/OrganizationDetail.css';
 @import './pages/ProjectDashboard.css';
 @import './pages/CreateOrganization.css';
+@import './pages/GenericItems.css';
 
 /* Design System */
 :root {
