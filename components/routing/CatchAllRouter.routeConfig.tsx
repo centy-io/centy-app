@@ -3,9 +3,6 @@ import { route, type RouteLiteral } from 'nextjs-routes'
 import { IssuesList } from '@/components/issues/IssuesList'
 import { IssueDetail } from '@/components/issues/IssueDetail'
 import { CreateIssue } from '@/components/issues/CreateIssue'
-import { DocsList } from '@/components/docs/DocsList'
-import { DocDetail } from '@/components/docs/DocDetail'
-import { CreateDoc } from '@/components/docs/CreateDoc'
 import { UsersList } from '@/components/users/UsersList'
 import { UserDetail } from '@/components/users/UserDetail'
 import { CreateUser } from '@/components/users/CreateUser'
@@ -16,7 +13,7 @@ import { GenericItemDetail } from '@/components/generic/GenericItemDetail'
 import { GenericItemCreate } from '@/components/generic/GenericItemCreate'
 
 // Routes that require project context (no longer accessible at root level)
-export const PROJECT_SCOPED_ROUTES = new Set(['issues', 'docs', 'users'])
+export const PROJECT_SCOPED_ROUTES = new Set(['issues', 'users'])
 
 export interface RouteResult {
   content: ReactNode
@@ -38,12 +35,6 @@ function resolveSubRoute(pageType: string, rest: string[]): RouteResult | null {
         ...NO_REDIRECT,
       }
     return { content: <IssuesList />, ...NO_REDIRECT }
-  }
-  if (pageType === 'docs') {
-    if (rest[0] === 'new') return { content: <CreateDoc />, ...NO_REDIRECT }
-    if (rest[0])
-      return { content: <DocDetail slug={rest[0]} />, ...NO_REDIRECT }
-    return { content: <DocsList />, ...NO_REDIRECT }
   }
   if (pageType === 'users') {
     if (rest[0] === 'new') return { content: <CreateUser />, ...NO_REDIRECT }

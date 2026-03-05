@@ -7,6 +7,7 @@ import { useMobileMenu } from './useMobileMenu'
 import { DesktopNav } from './DesktopNav'
 import { MobileMenu } from './MobileMenu'
 import { DaemonStatusIndicator } from '@/components/shared/DaemonStatusIndicator'
+import { DaemonUpdateBadge } from '@/components/shared/DaemonUpdateBadge'
 import { ThemeToggle } from '@/components/shared/ThemeToggle'
 import { OrgSwitcher } from '@/components/organizations/OrgSwitcher'
 import { ProjectSelector } from '@/components/project/ProjectSelector'
@@ -65,6 +66,7 @@ export function Header() {
         </h1>
         <div className="header-controls">
           <ThemeToggle />
+          <DaemonUpdateBadge />
           <DaemonStatusIndicator />
           <OrgSwitcher />
           {selectedOrgSlug !== undefined && <ProjectSelector />}

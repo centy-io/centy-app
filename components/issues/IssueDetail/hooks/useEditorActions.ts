@@ -26,7 +26,6 @@ export function useEditorActions(
         projectPath,
         issueId: issue.id,
         action: LlmAction.PLAN,
-        agentName: '',
         ttlHours: 0,
       })
       const response = await centyClient.openInTempVscode(request)
@@ -64,7 +63,6 @@ export function useEditorActions(
         projectPath,
         issueId: issue.id,
         action: LlmAction.PLAN,
-        agentName: '',
         ttlHours: 0,
       })
       const response = await centyClient.openInTempTerminal(request)

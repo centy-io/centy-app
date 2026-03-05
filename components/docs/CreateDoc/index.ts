@@ -1,1 +1,0 @@
-export { CreateDoc } from './CreateDoc'

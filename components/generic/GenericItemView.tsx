@@ -1,4 +1,5 @@
 import type { GenericItem, ItemTypeConfigProto } from '@/gen/centy_pb'
+import { TextEditor } from '@/components/shared/TextEditor'
 
 interface GenericItemViewProps {
   item: GenericItem
@@ -45,7 +46,7 @@ export function GenericItemView({ item, config }: GenericItemViewProps) {
 
       {item.body && (
         <div className="generic-item-body">
-          <pre className="generic-item-body-text">{item.body}</pre>
+          <TextEditor value={item.body} format="md" mode="display" />
         </div>
       )}
 

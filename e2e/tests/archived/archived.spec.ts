@@ -50,8 +50,7 @@ test.describe('With Archived Projects', () => {
     // Set up demo mode with an archived project
     await page.addInitScript(() => {
       sessionStorage.setItem('centy_demo_mode', 'true')
-      localStorage.setItem('centy-selected-org', 'demo-org')
-      localStorage.setItem('centy-project-path', '/demo/centy-showcase')
+
       // Add the demo project to archived list
       localStorage.setItem(
         'centy-archived-projects',
@@ -156,8 +155,7 @@ test.describe('Remove All Confirmation', () => {
     // Set up demo mode with an archived project
     await page.addInitScript(() => {
       sessionStorage.setItem('centy_demo_mode', 'true')
-      localStorage.setItem('centy-selected-org', 'demo-org')
-      localStorage.setItem('centy-project-path', '/demo/centy-showcase')
+
       // Add the demo project to archived list
       localStorage.setItem(
         'centy-archived-projects',
