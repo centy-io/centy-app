@@ -22,14 +22,6 @@ export function createMockConfig(overrides?: Partial<Config>): Config {
       resolvedOverrides.priorityLevels !== undefined
         ? resolvedOverrides.priorityLevels
         : 3,
-    allowedStates:
-      resolvedOverrides.allowedStates !== undefined
-        ? resolvedOverrides.allowedStates
-        : ['open', 'in-progress', 'for-validation', 'closed'],
-    defaultState:
-      resolvedOverrides.defaultState !== undefined
-        ? resolvedOverrides.defaultState
-        : 'open',
     version:
       resolvedOverrides.version !== undefined
         ? resolvedOverrides.version
@@ -134,6 +126,14 @@ export function createMockProjectInfo(
       resolvedOverrides.projectTitle !== undefined
         ? resolvedOverrides.projectTitle
         : '',
+    projectVersion:
+      resolvedOverrides.projectVersion !== undefined
+        ? resolvedOverrides.projectVersion
+        : '',
+    projectBehind:
+      resolvedOverrides.projectBehind !== undefined
+        ? resolvedOverrides.projectBehind
+        : false,
     $typeName: 'centy.v1.ProjectInfo',
   }
 }
