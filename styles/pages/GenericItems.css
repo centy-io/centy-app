@@ -148,6 +148,64 @@
   color: white;
 }
 
+/* Archive Button */
+.archive-btn {
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-bg-surface);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.archive-btn:hover:not(:disabled) {
+  background: var(--color-gray-100);
+}
+
+.archive-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Deleted Item Banner */
+.deleted-item-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  background: var(--color-warning-light, #fef3c7);
+  border: 1px solid var(--color-warning, #f59e0b);
+  border-radius: var(--radius-xl);
+  padding: var(--space-4) var(--space-5);
+  margin-bottom: var(--space-5);
+  color: var(--color-warning-dark, #92400e);
+  font-weight: 500;
+}
+
+.restore-btn {
+  padding: var(--space-1) var(--space-3);
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.restore-btn:hover:not(:disabled) {
+  background: var(--color-gray-100);
+}
+
+.restore-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .generic-items-list {
