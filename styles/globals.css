@@ -45,6 +45,7 @@
 @import './pages/OrganizationDetail.css';
 @import './pages/ProjectDashboard.css';
 @import './pages/CreateOrganization.css';
+@import './pages/GenericItemCreate.css';
 @import './pages/GenericItemDetail.css';
 @import './pages/GenericItems.css';
 
