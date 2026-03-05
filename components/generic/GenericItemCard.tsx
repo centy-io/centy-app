@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import Link from 'next/link'
 import type { GenericItem, ItemTypeConfigProto } from '@/gen/centy_pb'
 import { useAppLink } from '@/hooks/useAppLink'
