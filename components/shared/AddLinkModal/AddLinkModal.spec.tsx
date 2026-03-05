@@ -106,18 +106,4 @@ describe('AddLinkModal - Display and loading', () => {
       expect(screen.getByText('Docs')).toBeInTheDocument()
     })
   })
-
-  it('should switch to docs tab and load docs', async () => {
-    render(<AddLinkModal {...defaultProps} />)
-
-    await waitFor(() => {
-      expect(screen.getByText('Docs')).toBeInTheDocument()
-    })
-
-    fireEvent.click(screen.getByText('Docs'))
-
-    await waitFor(() => {
-      expect(centyClient.listItems).toHaveBeenCalled()
-    })
-  })
 })

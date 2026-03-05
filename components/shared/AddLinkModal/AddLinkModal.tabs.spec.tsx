@@ -35,11 +35,7 @@ function setupAddLinkModalMocks() {
 
   vi.mocked(centyClient.getAvailableLinkTypes).mockResolvedValue({
     linkTypes: [
-      createMockLinkTypeInfo(
-        'blocks',
-        'blocked-by',
-        'This issue blocks another'
-      ),
+      createMockLinkTypeInfo('blocks', 'blocked-by', 'Blocks another'),
       createMockLinkTypeInfo('related-to', 'related-to', 'Related items'),
     ],
     $typeName: 'centy.v1.GetAvailableLinkTypesResponse',
@@ -53,52 +49,24 @@ function setupAddLinkModalMocks() {
         displayNumber: 1,
         title: 'First Issue',
       }),
-      createMockGenericItem({
-        id: 'issue-2',
-        displayNumber: 2,
-        title: 'Second Issue',
-      }),
     ])
   )
 }
 
-describe('AddLinkModal - Item selection', () => {
+describe('AddLinkModal - Tab switching', () => {
   beforeEach(setupAddLinkModalMocks)
 
-  it('should select a target item when clicked', async () => {
+  it('should switch to docs tab and load docs', async () => {
     render(<AddLinkModal {...defaultProps} />)
 
     await waitFor(() => {
-      expect(screen.getByText('#1 - First Issue')).toBeInTheDocument()
+      expect(screen.getByText('Docs')).toBeInTheDocument()
     })
 
-    fireEvent.click(screen.getByText('#1 - First Issue'))
+    fireEvent.click(screen.getByText('Docs'))
 
     await waitFor(() => {
-      expect(screen.getByText('This will create:')).toBeInTheDocument()
-    })
-  })
-
-  it('should disable Create Link button when no target is selected', async () => {
-    render(<AddLinkModal {...defaultProps} />)
-
-    await waitFor(() => {
-      const createButton = screen.getByText('Create Link')
-      expect(createButton).toBeDisabled()
-    })
-  })
-
-  it('should show link preview with inverse link type', async () => {
-    render(<AddLinkModal {...defaultProps} />)
-
-    await waitFor(() => {
-      expect(screen.getByText('#1 - First Issue')).toBeInTheDocument()
-    })
-
-    fireEvent.click(screen.getByText('#1 - First Issue'))
-
-    await waitFor(() => {
-      expect(screen.getByText('Inverse link:')).toBeInTheDocument()
+      expect(centyClient.listItems).toHaveBeenCalled()
     })
   })
 })

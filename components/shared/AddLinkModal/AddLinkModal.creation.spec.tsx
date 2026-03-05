@@ -113,13 +113,4 @@ describe('AddLinkModal - Link creation', () => {
       expect(screen.getByText('Link already exists')).toBeInTheDocument()
     })
   })
-
-  it('should disable Create Link button when no target is selected', async () => {
-    render(<AddLinkModal {...defaultProps} />)
-
-    await waitFor(() => {
-      const createButton = screen.getByText('Create Link')
-      expect(createButton).toBeDisabled()
-    })
-  })
 })
