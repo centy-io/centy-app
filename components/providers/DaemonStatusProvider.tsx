@@ -17,6 +17,8 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
     exitDemoMode,
     vscodeAvailable,
     editors,
+    daemonVersion,
+    latestDaemonVersion,
   } = useDaemonStatusState()
 
   return (
@@ -30,6 +32,8 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
         demoProjectPath: DEMO_PROJECT_PATH,
         vscodeAvailable,
         editors,
+        daemonVersion,
+        latestDaemonVersion,
       }}
     >
       {children}
