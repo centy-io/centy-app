@@ -33,6 +33,7 @@ export default [
     // Hardcoded fallbacks ensure correct values when env vars are not set at build time.
     files: [
       'lib/constants/DAEMON_INSTALL_URL.ts',
+      'lib/constants/DAEMON_VERSION_URL.ts',
       'lib/constants/DOCS_URL.ts',
       'lib/constants/CORS_DOCS_URL.ts',
       'lib/constants/GOOGLE_ANALYTICS_URL.ts',
