@@ -4040,7 +4040,7 @@ export type DeleteOrganizationRequest = Message<"centy.v1.DeleteOrganizationRequ
   slug: string;
 
   /**
-   * If true, also untracks all projects belonging to this organization
+   * If true, also removes tracking for all projects in this organization
    *
    * @generated from field: bool cascade = 2;
    */
