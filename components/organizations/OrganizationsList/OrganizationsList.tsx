@@ -18,6 +18,11 @@ const SORT_OPTIONS: { value: string; label: string }[] = [
 // eslint-disable-next-line max-lines-per-function
 export function OrganizationsList() {
   const state = useOrganizationsList()
+  const cascadeOrg = state.showCascadeConfirm
+    ? state.organizations.find(o => o.slug === state.showCascadeConfirm)
+    : undefined
+  const cascadeProjectCount =
+    cascadeOrg !== undefined ? cascadeOrg.projectCount : 0
 
   return (
     <div className="organizations-list">
@@ -83,6 +88,38 @@ export function OrganizationsList() {
               className="confirm-delete-btn"
             >
               {state.deleting ? 'Untracking...' : 'Yes, Untrack'}
+            </button>
+          </div>
+        </div>
+      )}
+      {state.showCascadeConfirm && (
+        <div className="delete-confirm">
+          <p className="delete-confirm-message">
+            This organization has {cascadeProjectCount} project
+            {cascadeProjectCount !== 1 ? 's' : ''}. Untracking it will also
+            untrack all of its projects. Do you want to continue?
+          </p>
+          {state.deleteError && (
+            <p className="delete-error-message">{state.deleteError}</p>
+          )}
+          <div className="delete-confirm-actions">
+            <button
+              onClick={() => {
+                state.setShowCascadeConfirm(null)
+                state.setDeleteError(null)
+              }}
+              className="cancel-btn"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() =>
+                state.handleDeleteCascade(state.showCascadeConfirm!)
+              }
+              disabled={state.deleting}
+              className="confirm-delete-btn"
+            >
+              {state.deleting ? 'Untracking...' : 'Yes, Untrack All'}
             </button>
           </div>
         </div>
