@@ -64,6 +64,9 @@ export function useOrganizationsList() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(
     null
   )
+  const [showCascadeConfirm, setShowCascadeConfirm] = useState<string | null>(
+    null
+  )
   const [deleteError, setDeleteError] = useState<string | null>(null)
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null)
   const initialPreset = useMemo(getInitialSortPreset, [])
@@ -130,6 +133,33 @@ export function useOrganizationsList() {
       if (response.success) {
         setOrganizations(prev => prev.filter(o => o.slug !== slug))
         setShowDeleteConfirm(null)
+      } else if (response.error === 'ORG_HAS_PROJECTS') {
+        setShowDeleteConfirm(null)
+        setShowCascadeConfirm(slug)
+      } else {
+        setDeleteError(response.error || 'Failed to delete organization')
+      }
+    } catch (err) {
+      setDeleteError(
+        err instanceof Error ? err.message : 'Failed to connect to daemon'
+      )
+    } finally {
+      setDeleting(false)
+    }
+  }, [])
+
+  const handleDeleteCascade = useCallback(async (slug: string) => {
+    setDeleting(true)
+    setDeleteError(null)
+    try {
+      const request = create(DeleteOrganizationRequestSchema, {
+        slug,
+        cascade: true,
+      })
+      const response = await centyClient.deleteOrganization(request)
+      if (response.success) {
+        setOrganizations(prev => prev.filter(o => o.slug !== slug))
+        setShowCascadeConfirm(null)
       } else {
         setDeleteError(response.error || 'Failed to delete organization')
       }
@@ -193,6 +223,7 @@ export function useOrganizationsList() {
     error,
     deleting,
     showDeleteConfirm,
+    showCascadeConfirm,
     deleteError,
     contextMenu,
     contextMenuItems,
@@ -201,8 +232,10 @@ export function useOrganizationsList() {
     setSortPreset,
     fetchOrganizations,
     handleDelete,
+    handleDeleteCascade,
     handleContextMenu,
     setShowDeleteConfirm,
+    setShowCascadeConfirm,
     setDeleteError,
     setContextMenu,
   }

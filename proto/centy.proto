@@ -1171,6 +1171,7 @@ message UpdateOrganizationResponse {
 
 message DeleteOrganizationRequest {
   string slug = 1;
+  bool cascade = 2; // If true, also untracks all projects belonging to this organization
 }
 
 message DeleteOrganizationResponse {
