@@ -39,4 +39,42 @@ export default [
       'single-export/single-export': 'off',
     },
   },
+  {
+    // Re-enable max-lines-per-function for test and spec files
+    files: [
+      '**/*.spec.{js,jsx,ts,tsx}',
+      '**/*.test.{js,jsx,ts,tsx}',
+      'e2e/**',
+      '__tests__/**',
+    ],
+    rules: {
+      'max-lines-per-function': [
+        'error',
+        { max: 70, skipBlankLines: true, skipComments: true },
+      ],
+    },
+  },
+  {
+    // Re-enable max-lines for test and spec files
+    files: [
+      '**/*.spec.{js,jsx,ts,tsx}',
+      '**/*.test.{js,jsx,ts,tsx}',
+      'e2e/**',
+      '__tests__/**',
+    ],
+    rules: {
+      'max-lines': [
+        'error',
+        { max: 100, skipBlankLines: true, skipComments: true },
+      ],
+    },
+  },
+  {
+    // Shared spec utilities - test helper modules that provide factories and helpers to spec files
+    files: ['**/*.spec-utils.{ts,tsx}'],
+    rules: {
+      'ddd/require-spec-file': 'off',
+      'single-export/single-export': 'off',
+    },
+  },
 ]
