@@ -1,11 +1,12 @@
 'use client'
 
-import { DEMO_PROJECT_PATH, DEMO_ISSUES } from '../demo-data'
+import { DEMO_PROJECT_PATH, DEMO_ISSUES, DEMO_DOCS } from '../demo-data'
 import type {
   ListItemsRequest,
   ListItemsResponse,
   GenericItem,
   Issue,
+  Doc,
 } from '@/gen/centy_pb'
 
 function issueToGenericItem(issue: Issue): GenericItem {
@@ -35,6 +36,30 @@ function issueToGenericItem(issue: Issue): GenericItem {
   }
 }
 
+function docToGenericItem(doc: Doc): GenericItem {
+  const meta = doc.metadata
+  return {
+    $typeName: 'centy.v1.GenericItem',
+    id: doc.slug,
+    itemType: 'docs',
+    title: doc.title,
+    body: doc.content,
+    metadata: {
+      $typeName: 'centy.v1.GenericItemMetadata',
+      displayNumber: 0,
+      status: '',
+      priority: 0,
+      createdAt: (meta && meta.createdAt) || '',
+      updatedAt: (meta && meta.updatedAt) || '',
+      deletedAt: (meta && meta.deletedAt) || '',
+      customFields: {
+        is_org_doc: String((meta && meta.isOrgDoc) || false),
+        org_slug: (meta && meta.orgSlug) || '',
+      },
+    },
+  }
+}
+
 const EMPTY_ITEMS: GenericItem[] = []
 
 export async function listItems(
@@ -52,6 +77,17 @@ export async function listItems(
 
   if (request.itemType === 'issues') {
     const items = DEMO_ISSUES.map(issueToGenericItem)
+    return {
+      $typeName: 'centy.v1.ListItemsResponse',
+      items,
+      success: true,
+      error: '',
+      totalCount: items.length,
+    }
+  }
+
+  if (request.itemType === 'docs') {
+    const items = DEMO_DOCS.map(docToGenericItem)
     return {
       $typeName: 'centy.v1.ListItemsResponse',
       items,
