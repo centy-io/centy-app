@@ -1,4 +1,5 @@
 /* eslint-disable max-lines */
+import { useState } from 'react'
 import Link from 'next/link'
 import type { GenericItem, ItemTypeConfigProto } from '@/gen/centy_pb'
 import { useAppLink } from '@/hooks/useAppLink'
@@ -12,7 +13,8 @@ interface GenericItemCardProps {
   deleting: boolean
   onDeleteRequest: (id: string) => void
   onDeleteCancel: () => void
-  onDeleteConfirm: (id: string) => void
+  onSoftDeleteConfirm: (id: string) => void
+  onHardDeleteConfirm: (id: string) => void
 }
 
 // eslint-disable-next-line max-lines-per-function
@@ -25,11 +27,18 @@ export function GenericItemCard({
   deleting,
   onDeleteRequest,
   onDeleteCancel,
-  onDeleteConfirm,
+  onSoftDeleteConfirm,
+  onHardDeleteConfirm,
 }: GenericItemCardProps) {
   const { createLink } = useAppLink()
+  const [permanentStep, setPermanentStep] = useState(false)
   const meta = item.metadata
   const customFields = meta && meta.customFields ? meta.customFields : {}
+
+  const handleCancel = () => {
+    setPermanentStep(false)
+    onDeleteCancel()
+  }
 
   return (
     <div className="generic-item-card context-menu-row">
@@ -86,21 +95,53 @@ export function GenericItemCard({
       </button>
       {deleteConfirm === item.id && (
         <div className="delete-confirm-overlay">
-          <p className="delete-confirm-message">
-            Delete &ldquo;{item.title || item.id}&rdquo;?
-          </p>
-          <div className="delete-confirm-actions">
-            <button onClick={onDeleteCancel} className="cancel-btn">
-              Cancel
-            </button>
-            <button
-              onClick={() => onDeleteConfirm(item.id)}
-              disabled={deleting}
-              className="confirm-delete-btn"
-            >
-              {deleting ? 'Deleting...' : 'Delete'}
-            </button>
-          </div>
+          {permanentStep ? (
+            <>
+              <p className="delete-confirm-message">
+                Permanently delete &ldquo;{item.title || item.id}&rdquo;? This
+                cannot be undone.
+              </p>
+              <div className="delete-confirm-actions">
+                <button
+                  onClick={() => setPermanentStep(false)}
+                  className="cancel-btn"
+                >
+                  Go back
+                </button>
+                <button
+                  onClick={() => onHardDeleteConfirm(item.id)}
+                  disabled={deleting}
+                  className="confirm-delete-btn"
+                >
+                  {deleting ? 'Deleting...' : 'Delete permanently'}
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <p className="delete-confirm-message">
+                Delete &ldquo;{item.title || item.id}&rdquo;?
+              </p>
+              <div className="delete-confirm-actions">
+                <button onClick={handleCancel} className="cancel-btn">
+                  Cancel
+                </button>
+                <button
+                  onClick={() => onSoftDeleteConfirm(item.id)}
+                  disabled={deleting}
+                  className="archive-btn"
+                >
+                  {deleting ? 'Archiving...' : 'Archive'}
+                </button>
+                <button
+                  onClick={() => setPermanentStep(true)}
+                  className="confirm-delete-btn"
+                >
+                  Delete permanently
+                </button>
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>
