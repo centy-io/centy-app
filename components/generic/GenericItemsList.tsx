@@ -46,7 +46,8 @@ export function GenericItemsList({ itemType }: GenericItemsListProps) {
         deleting={data.deleting}
         onDeleteRequest={id => data.setDeleteConfirm(id)}
         onDeleteCancel={() => data.setDeleteConfirm(null)}
-        onDeleteConfirm={data.handleDelete}
+        onSoftDeleteConfirm={data.handleSoftDelete}
+        onHardDeleteConfirm={data.handleDelete}
       />
     </div>
   )

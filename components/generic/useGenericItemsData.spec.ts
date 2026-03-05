@@ -7,11 +7,13 @@ vi.mock('@/lib/grpc/client', () => ({
   centyClient: {
     listItems: vi.fn(),
     deleteItem: vi.fn(),
+    softDeleteItem: vi.fn(),
   },
 }))
 
 const mockListItems = vi.mocked(centyClient.listItems)
 const mockDeleteItem = vi.mocked(centyClient.deleteItem)
+const mockSoftDeleteItem = vi.mocked(centyClient.softDeleteItem)
 
 const mockItem = {
   $typeName: 'centy.v1.GenericItem' as const,
@@ -125,6 +127,41 @@ describe('useGenericItemsData', () => {
       await result.current.handleDelete('getting-started')
     })
 
+    expect(result.current.items).toHaveLength(0)
+  })
+
+  it('soft deletes an item and removes it from state', async () => {
+    mockListItems.mockResolvedValueOnce({
+      $typeName: 'centy.v1.ListItemsResponse',
+      items: [mockItem],
+      totalCount: 1,
+      success: true,
+      error: '',
+    })
+    mockSoftDeleteItem.mockResolvedValueOnce({
+      $typeName: 'centy.v1.SoftDeleteItemResponse',
+      success: true,
+      error: '',
+      item: undefined,
+    })
+
+    const { result } = renderHook(() =>
+      useGenericItemsData('/test/project', true, 'docs')
+    )
+
+    await act(async () => {
+      await Promise.resolve()
+    })
+
+    expect(result.current.items).toHaveLength(1)
+
+    await act(async () => {
+      await result.current.handleSoftDelete('getting-started')
+    })
+
+    expect(mockSoftDeleteItem).toHaveBeenCalledWith(
+      expect.objectContaining({ itemId: 'getting-started' })
+    )
     expect(result.current.items).toHaveLength(0)
   })
 })
