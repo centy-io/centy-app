@@ -52,7 +52,10 @@ export function useNavItemTypes(
               itemCount: t.itemCount,
               href: buildItemHref(effectiveOrg!, effectiveProject!, t.plural),
             }))
-            .sort((a, b) => b.itemCount - a.itemCount)
+            .sort(
+              (a, b) =>
+                b.itemCount - a.itemCount || a.name.localeCompare(b.name)
+            )
         )
       } catch {
         // silently fall back to empty
