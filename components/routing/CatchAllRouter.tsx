@@ -17,11 +17,9 @@ function ProjectContextRequired({ requestedPage }: { requestedPage: string }) {
   const pageLabel =
     requestedPage === 'issues'
       ? 'Issues'
-      : requestedPage === 'docs'
-        ? 'Docs'
-        : requestedPage === 'users'
-          ? 'Users'
-          : requestedPage
+      : requestedPage === 'users'
+        ? 'Users'
+        : requestedPage
 
   return (
     <div className="project-context-required">
