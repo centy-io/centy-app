@@ -1,6 +1,7 @@
 'use client'
 
 import { DEMO_ISSUES, DEMO_DOCS } from '../demo-data'
+import { findIssueByFlexibleId } from './resolve-issue'
 import type {
   GetItemRequest,
   GetItemResponse,
@@ -64,7 +65,7 @@ export async function getItem(
   request: GetItemRequest
 ): Promise<GetItemResponse> {
   if (request.itemType === 'issues') {
-    const issue = DEMO_ISSUES.find(i => i.id === request.itemId)
+    const issue = findIssueByFlexibleId(DEMO_ISSUES, request.itemId)
     if (issue) {
       return {
         $typeName: 'centy.v1.GetItemResponse',

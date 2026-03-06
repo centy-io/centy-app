@@ -2300,7 +2300,7 @@ export type OpenInTempWorkspaceWithEditorRequest = Message<"centy.v1.OpenInTempW
   projectPath: string;
 
   /**
-   * Issue UUID or display number
+   * Issue UUID, display number, or slug ID
    *
    * @generated from field: string issue_id = 2;
    */
@@ -2391,7 +2391,7 @@ export type OpenInTempWorkspaceRequest = Message<"centy.v1.OpenInTempWorkspaceRe
   projectPath: string;
 
   /**
-   * Issue UUID or display number
+   * Issue UUID, display number, or slug ID
    *
    * @generated from field: string issue_id = 2;
    */
