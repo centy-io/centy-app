@@ -4,7 +4,7 @@ rules:
   # Protect centy configuration
   - path: '.centy/**'
     access: read
-    reason: 'use centy cli to edit this folder'
+    reason: 'use centy cli'
 
   # Block key files
   - path: "^.*\\.key$"

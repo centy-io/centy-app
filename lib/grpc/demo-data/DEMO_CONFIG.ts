@@ -28,8 +28,6 @@ export const DEMO_CONFIG: Config = {
     priority: '2',
   },
   priorityLevels: 3,
-  allowedStates: ['open', 'in-progress', 'for-validation', 'closed'],
-  defaultState: 'open',
   version: '0.1.5',
   stateColors: {
     open: '#22c55e',

@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback } from 'react'
 import type { DaemonStatus } from './DaemonStatusProvider.types'
 import {
   CHECK_INTERVAL_MS,
-  createFallbackEditors,
   applyDemoState,
   buildDemoUrl,
   buildDemoRedirectUrl,
@@ -19,13 +18,19 @@ import {
 import { DEMO_ORG_SLUG, DEMO_PROJECT_PATH } from '@/lib/grpc/demo-data'
 import type { EditorInfo } from '@/gen/centy_pb'
 import { trackDaemonConnection } from '@/lib/metrics'
+import { fetchLatestDaemonVersion } from '@/lib/fetchLatestDaemonVersion'
 
+// eslint-disable-next-line max-lines-per-function
 export function useDaemonStatusState() {
   const [status, setStatus] = useState<DaemonStatus>('checking')
   const [lastChecked, setLastChecked] = useState<Date | null>(null)
   const [hasMounted, setHasMounted] = useState(false)
   const [vscodeAvailable, setVscodeAvailable] = useState<boolean | null>(null)
   const [editors, setEditors] = useState<EditorInfo[]>([])
+  const [daemonVersion, setDaemonVersion] = useState<string | null>(null)
+  const [latestDaemonVersion, setLatestDaemonVersion] = useState<string | null>(
+    null
+  )
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -45,15 +50,17 @@ export function useDaemonStatusState() {
       const daemonInfo = await centyClient.getDaemonInfo({})
       setStatus('connected')
       setVscodeAvailable(daemonInfo.vscodeAvailable)
+      setDaemonVersion(daemonInfo.version || null)
       trackDaemonConnection(true, false)
-      const resp = await centyClient.getSupportedEditors({}).catch(() => null)
-      setEditors(
-        resp ? resp.editors : createFallbackEditors(daemonInfo.vscodeAvailable)
-      )
+      const resp = await centyClient.getSupportedEditors({})
+      setEditors(resp.editors)
+      const latest = await fetchLatestDaemonVersion()
+      setLatestDaemonVersion(latest)
     } catch {
       setStatus('disconnected')
       setVscodeAvailable(null)
       setEditors([])
+      setDaemonVersion(null)
       trackDaemonConnection(false, false)
     }
     setLastChecked(new Date())
@@ -93,5 +100,7 @@ export function useDaemonStatusState() {
     exitDemoMode,
     vscodeAvailable,
     editors,
+    daemonVersion,
+    latestDaemonVersion,
   }
 }

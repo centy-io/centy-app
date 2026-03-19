@@ -44,13 +44,15 @@ export function GenericItemDetail({
     setIsEditing,
     setError: fetch.setError,
   })
-  const { deleting, handleDelete } = useGenericItemDelete({
-    projectPath,
-    itemType,
-    item: fetch.item,
-    listUrl,
-    setError: fetch.setError,
-  })
+  const { deleting, restoring, handleDelete, handleSoftDelete, handleRestore } =
+    useGenericItemDelete({
+      projectPath,
+      itemType,
+      item: fetch.item,
+      listUrl,
+      setError: fetch.setError,
+      setItem: fetch.setItem,
+    })
   const displayName = config
     ? config.name.charAt(0).toUpperCase() + config.name.slice(1)
     : itemType.charAt(0).toUpperCase() + itemType.slice(1)
@@ -75,6 +77,10 @@ export function GenericItemDetail({
 
   if (!fetch.item) return null
 
+  const isArchived = Boolean(
+    fetch.item.metadata && fetch.item.metadata.deletedAt
+  )
+
   return (
     <div className="generic-item-detail">
       <GenericItemDetailHeader
@@ -88,12 +94,27 @@ export function GenericItemDetail({
         onDeleteRequest={() => setShowDeleteConfirm(true)}
       />
       {fetch.error && <DaemonErrorMessage error={fetch.error} />}
+      {isArchived && (
+        <div className="deleted-item-banner">
+          <span className="deleted-item-banner-text">
+            This item has been archived.
+          </span>
+          <button
+            onClick={handleRestore}
+            disabled={restoring}
+            className="restore-btn"
+          >
+            {restoring ? 'Restoring...' : 'Restore'}
+          </button>
+        </div>
+      )}
       {showDeleteConfirm && (
         <GenericItemDeleteConfirm
           itemLabel={fetch.item.title || fetch.item.id}
           deleting={deleting}
           onCancel={() => setShowDeleteConfirm(false)}
-          onConfirm={handleDelete}
+          onSoftDelete={handleSoftDelete}
+          onHardDelete={handleDelete}
         />
       )}
       <div className="doc-content">

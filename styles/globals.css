@@ -8,6 +8,7 @@
 @import './components/CustomFieldsEditor.css';
 @import './components/DaemonDisconnectedOverlay.css';
 @import './components/DaemonStatusIndicator.css';
+@import './components/DaemonUpdateBadge.css';
 @import './components/DemoModeIndicator.css';
 @import './components/MobileNotSupportedOverlay.css';
 @import './components/DefaultsEditor.css';
@@ -44,6 +45,9 @@
 @import './pages/OrganizationDetail.css';
 @import './pages/ProjectDashboard.css';
 @import './pages/CreateOrganization.css';
+@import './pages/GenericItemCreate.css';
+@import './pages/GenericItemDetail.css';
+@import './pages/GenericItems.css';
 
 /* Design System */
 :root {

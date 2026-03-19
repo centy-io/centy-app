@@ -5,8 +5,6 @@ async function setupDemoWithProject(page: import('@playwright/test').Page) {
   // Set up demo mode before navigating
   await page.addInitScript(() => {
     sessionStorage.setItem('centy_demo_mode', 'true')
-    localStorage.setItem('centy-selected-org', 'demo-org')
-    localStorage.setItem('centy-project-path', '/demo/centy-showcase')
   })
 
   // Navigate to issues page with project context via query params
@@ -112,8 +110,6 @@ test.describe('Standalone Workspace Modal Dark Theme Visual Tests @visual', () =
     // Set up demo mode before navigating
     await page.addInitScript(() => {
       sessionStorage.setItem('centy_demo_mode', 'true')
-      localStorage.setItem('centy-selected-org', 'demo-org')
-      localStorage.setItem('centy-project-path', '/demo/centy-showcase')
     })
 
     await page.goto('/issues?org=demo-org&project=%2Fdemo%2Fcenty-showcase')
@@ -154,8 +150,6 @@ test.describe('Standalone Workspace Modal Responsive Visual Tests @visual', () =
     // Set up demo mode before navigating
     await page.addInitScript(() => {
       sessionStorage.setItem('centy_demo_mode', 'true')
-      localStorage.setItem('centy-selected-org', 'demo-org')
-      localStorage.setItem('centy-project-path', '/demo/centy-showcase')
     })
 
     await page.goto('/issues?org=demo-org&project=%2Fdemo%2Fcenty-showcase')
@@ -197,8 +191,6 @@ test.describe('Standalone Workspace Modal Responsive Visual Tests @visual', () =
     // Set up demo mode before navigating
     await page.addInitScript(() => {
       sessionStorage.setItem('centy_demo_mode', 'true')
-      localStorage.setItem('centy-selected-org', 'demo-org')
-      localStorage.setItem('centy-project-path', '/demo/centy-showcase')
     })
 
     await page.goto('/issues?org=demo-org&project=%2Fdemo%2Fcenty-showcase')

@@ -1,11 +1,7 @@
 import { useState, useCallback } from 'react'
 import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
-import {
-  OpenInTempWorkspaceRequestSchema,
-  LlmAction,
-  type Issue,
-} from '@/gen/centy_pb'
+import { OpenInTempWorkspaceRequestSchema, type Issue } from '@/gen/centy_pb'
 
 // eslint-disable-next-line max-lines-per-function
 export function useEditorActions(
@@ -25,7 +21,6 @@ export function useEditorActions(
       const request = create(OpenInTempWorkspaceRequestSchema, {
         projectPath,
         issueId: issue.id,
-        action: LlmAction.PLAN,
         ttlHours: 0,
       })
       const response = await centyClient.openInTempVscode(request)
@@ -36,13 +31,13 @@ export function useEditorActions(
             ? 'Reopened workspace'
             : 'Workspace created'
           setError(
-            `${actionWord} at ${response.workspacePath} but VS Code could not be opened automatically`
+            `${actionWord} at ${response.workspacePath} but the editor could not be opened automatically`
           )
         }
       } else if (response.requiresStatusConfig) {
         setShowStatusConfigDialog(true)
       } else {
-        setError(response.error || 'Failed to open in VS Code')
+        setError(response.error || 'Failed to open in editor')
       }
     } catch (err) {
       setError(
@@ -62,7 +57,6 @@ export function useEditorActions(
       const request = create(OpenInTempWorkspaceRequestSchema, {
         projectPath,
         issueId: issue.id,
-        action: LlmAction.PLAN,
         ttlHours: 0,
       })
       const response = await centyClient.openInTempTerminal(request)

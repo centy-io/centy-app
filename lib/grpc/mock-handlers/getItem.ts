@@ -1,11 +1,13 @@
 'use client'
 
-import { DEMO_ISSUES } from '../demo-data'
+import { DEMO_ISSUES, DEMO_DOCS } from '../demo-data'
+import { findIssueByFlexibleId } from './resolve-issue'
 import type {
   GetItemRequest,
   GetItemResponse,
   GenericItem,
   Issue,
+  Doc,
 } from '@/gen/centy_pb'
 
 function issueToGenericItem(issue: Issue): GenericItem {
@@ -35,11 +37,35 @@ function issueToGenericItem(issue: Issue): GenericItem {
   }
 }
 
+function docToGenericItem(doc: Doc): GenericItem {
+  const meta = doc.metadata
+  return {
+    $typeName: 'centy.v1.GenericItem',
+    id: doc.slug,
+    itemType: 'docs',
+    title: doc.title,
+    body: doc.content,
+    metadata: {
+      $typeName: 'centy.v1.GenericItemMetadata',
+      displayNumber: 0,
+      status: '',
+      priority: 0,
+      createdAt: (meta && meta.createdAt) || '',
+      updatedAt: (meta && meta.updatedAt) || '',
+      deletedAt: (meta && meta.deletedAt) || '',
+      customFields: {
+        is_org_doc: String((meta && meta.isOrgDoc) || false),
+        org_slug: (meta && meta.orgSlug) || '',
+      },
+    },
+  }
+}
+
 export async function getItem(
   request: GetItemRequest
 ): Promise<GetItemResponse> {
   if (request.itemType === 'issues') {
-    const issue = DEMO_ISSUES.find(i => i.id === request.itemId)
+    const issue = findIssueByFlexibleId(DEMO_ISSUES, request.itemId)
     if (issue) {
       return {
         $typeName: 'centy.v1.GetItemResponse',
@@ -54,6 +80,24 @@ export async function getItem(
       error: `Issue ${request.itemId} not found`,
     }
   }
+
+  if (request.itemType === 'docs') {
+    const doc = DEMO_DOCS.find(d => d.slug === request.itemId)
+    if (doc) {
+      return {
+        $typeName: 'centy.v1.GetItemResponse',
+        success: true,
+        error: '',
+        item: docToGenericItem(doc),
+      }
+    }
+    return {
+      $typeName: 'centy.v1.GetItemResponse',
+      success: false,
+      error: `Doc ${request.itemId} not found`,
+    }
+  }
+
   return {
     $typeName: 'centy.v1.GetItemResponse',
     success: false,

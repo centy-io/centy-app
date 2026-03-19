@@ -8,7 +8,7 @@ export function useEditorPreference() {
   const { editors } = useDaemonStatus()
   const [showDropdown, setShowDropdown] = useState(false)
   const [preferredEditor, setPreferredEditor] = useState<EditorType>(
-    EditorType.VSCODE
+    EditorType.TERMINAL
   )
   const dropdownRef = useRef<HTMLDivElement>(null)
 
@@ -66,7 +66,7 @@ export function useEditorPreference() {
 
   const preferredEditorInfo = getEditorInfo(preferredEditor)
   const preferredEditorName =
-    (preferredEditorInfo ? preferredEditorInfo.name : '') || 'VS Code'
+    (preferredEditorInfo ? preferredEditorInfo.name : '') || 'Terminal'
   const preferredEditorAvailable = isEditorAvailable(preferredEditor)
   const hasAnyAvailable = editors.some(e => e.available)
 

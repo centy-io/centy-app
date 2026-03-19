@@ -10,4 +10,6 @@ export interface DaemonStatusContextType {
   demoProjectPath: string
   vscodeAvailable: boolean | null // null = not yet checked
   editors: EditorInfo[] // List of supported editors with availability
+  daemonVersion: string | null // current running daemon version
+  latestDaemonVersion: string | null // latest available daemon version
 }

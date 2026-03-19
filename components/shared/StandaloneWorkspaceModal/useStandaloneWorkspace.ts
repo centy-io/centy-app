@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import type { StandaloneWorkspaceModalProps } from './StandaloneWorkspaceModal.types'
 import { useModalDismiss } from './useModalDismiss'
 import { useCreateWorkspace } from './useCreateWorkspace'
@@ -17,7 +17,7 @@ export function useStandaloneWorkspace({
   const [description, setDescription] = useState('')
   const [ttlHours, setTtlHours] = useState(12)
   const [selectedEditor, setSelectedEditor] = useState<EditorType>(
-    EditorType.VSCODE
+    EditorType.TERMINAL
   )
 
   const isEditorAvailable = useCallback(
@@ -27,18 +27,6 @@ export function useStandaloneWorkspace({
     },
     [editors]
   )
-
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (
-        !isEditorAvailable(EditorType.VSCODE) &&
-        isEditorAvailable(EditorType.TERMINAL)
-      ) {
-        setSelectedEditor(EditorType.TERMINAL)
-      }
-    }, 0)
-    return () => clearTimeout(timeoutId)
-  }, [isEditorAvailable])
 
   useModalDismiss(modalRef, onClose)
 
@@ -52,9 +40,7 @@ export function useStandaloneWorkspace({
     onClose
   )
 
-  const hasAvailableEditor =
-    isEditorAvailable(EditorType.VSCODE) ||
-    isEditorAvailable(EditorType.TERMINAL)
+  const hasAvailableEditor = isEditorAvailable(EditorType.TERMINAL)
 
   return {
     modalRef,

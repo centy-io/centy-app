@@ -18,7 +18,8 @@ interface GenericListContentProps {
   deleting: boolean
   onDeleteRequest: (id: string) => void
   onDeleteCancel: () => void
-  onDeleteConfirm: (id: string) => void
+  onSoftDeleteConfirm: (id: string) => void
+  onHardDeleteConfirm: (id: string) => void
 }
 
 // eslint-disable-next-line max-lines-per-function
@@ -36,7 +37,8 @@ export function GenericListContent({
   deleting,
   onDeleteRequest,
   onDeleteCancel,
-  onDeleteConfirm,
+  onSoftDeleteConfirm,
+  onHardDeleteConfirm,
 }: GenericListContentProps) {
   const { createLink } = useAppLink()
   const capSingular =
@@ -90,7 +92,8 @@ export function GenericListContent({
             deleting={deleting}
             onDeleteRequest={onDeleteRequest}
             onDeleteCancel={onDeleteCancel}
-            onDeleteConfirm={onDeleteConfirm}
+            onSoftDeleteConfirm={onSoftDeleteConfirm}
+            onHardDeleteConfirm={onHardDeleteConfirm}
           />
         ))}
       </div>

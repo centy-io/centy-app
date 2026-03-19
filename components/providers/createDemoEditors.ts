@@ -7,15 +7,6 @@ export function createDemoEditors(): EditorInfo[] {
   return [
     {
       $typeName: 'centy.v1.EditorInfo',
-      editorType: EditorType.VSCODE,
-      name: 'VS Code',
-      description: 'Open in temporary VS Code workspace',
-      available: true,
-      editorId: 'vscode',
-      terminalWrapper: false,
-    },
-    {
-      $typeName: 'centy.v1.EditorInfo',
       editorType: EditorType.TERMINAL,
       name: 'Terminal',
       description: 'Open in terminal',

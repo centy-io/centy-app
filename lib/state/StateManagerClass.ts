@@ -36,12 +36,11 @@ export class StateManager {
    * Returns config states if available, otherwise defaults.
    */
   getAllowedStates(): string[] {
-    if (
-      this.config &&
-      this.config.allowedStates &&
-      this.config.allowedStates.length > 0
-    ) {
-      return [...this.config.allowedStates]
+    if (this.config && this.config.stateColors) {
+      const states = Object.keys(this.config.stateColors)
+      if (states.length > 0) {
+        return states
+      }
     }
     if (this.itemTypeStatuses.length > 0) {
       return [...this.itemTypeStatuses]
@@ -55,7 +54,8 @@ export class StateManager {
    */
   getDefaultState(): string {
     return (
-      (this.config && this.config.defaultState) || StateManager.DEFAULT_STATE
+      (this.config && this.config.defaults && this.config.defaults['status']) ||
+      StateManager.DEFAULT_STATE
     )
   }
 
