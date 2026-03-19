@@ -3,7 +3,6 @@
 import '@/styles/components/EditorSelector.css'
 import type { EditorSelectorProps } from './EditorSelector.types'
 import { useEditorSelector } from './useEditorSelector'
-import { VscodeIcon, TerminalIcon } from './EditorIcons'
 import { EditorDropdown } from './EditorDropdown'
 import { EditorType } from '@/gen/centy_pb'
 
@@ -57,13 +56,6 @@ export function EditorSelector({
               : `${state.preferredEditorName} is not available`
           }
         >
-          <span className="editor-icon">
-            {state.preferredEditor === EditorType.TERMINAL ? (
-              <TerminalIcon />
-            ) : (
-              <VscodeIcon />
-            )}
-          </span>
           {resolvedLoading
             ? 'Opening...'
             : `Open in ${state.preferredEditorName}`}

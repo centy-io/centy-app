@@ -1,6 +1,5 @@
 'use client'
 
-import { TerminalIcon } from './EditorIcons'
 import { EditorType } from '@/gen/centy_pb'
 
 interface EditorPickerProps {
@@ -27,7 +26,6 @@ export function EditorPicker({
           }
           disabled={!isEditorAvailable(EditorType.TERMINAL)}
         >
-          <TerminalIcon />
           <span className="editor-option-name">Terminal</span>
           {!isEditorAvailable(EditorType.TERMINAL) && (
             <span className="unavailable-badge">Not available</span>

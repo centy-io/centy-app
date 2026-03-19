@@ -31,13 +31,13 @@ export function useEditorActions(
             ? 'Reopened workspace'
             : 'Workspace created'
           setError(
-            `${actionWord} at ${response.workspacePath} but VS Code could not be opened automatically`
+            `${actionWord} at ${response.workspacePath} but the editor could not be opened automatically`
           )
         }
       } else if (response.requiresStatusConfig) {
         setShowStatusConfigDialog(true)
       } else {
-        setError(response.error || 'Failed to open in VS Code')
+        setError(response.error || 'Failed to open in editor')
       }
     } catch (err) {
       setError(
