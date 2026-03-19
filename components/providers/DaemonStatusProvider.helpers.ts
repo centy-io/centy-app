@@ -1,7 +1,7 @@
 export { CHECK_INTERVAL_MS } from './CHECK_INTERVAL_MS'
 export { createDemoEditors } from './createDemoEditors'
-export { createFallbackEditors } from './createFallbackEditors'
 export { resolveVscodeAvailable } from './resolveVscodeAvailable'
 export { buildDemoUrl } from './buildDemoUrl'
 export { buildDemoRedirectUrl } from './buildDemoRedirectUrl'
 export { applyDemoState } from './applyDemoState'
+export { initializeDemoFromUrl } from './initializeDemoFromUrl'

@@ -35,8 +35,27 @@ export function markdownToHtml(markdown: string): string {
 
   // Unordered lists
   html = html.replace(/^- (.+)$/gm, '<li>$1</li>')
-  // eslint-disable-next-line security/detect-unsafe-regex
-  html = html.replace(/<li>[^<]*<\/li>(?:\n<li>[^<]*<\/li>)*/g, '<ul>$&</ul>')
+  // Wrap consecutive <li> elements in <ul> by splitting lines and grouping
+  html = html
+    .split('\n')
+    .reduce<string[]>((acc, line) => {
+      if (line.startsWith('<li>') && line.endsWith('</li>')) {
+        const last = acc[acc.length - 1]
+        if (
+          last !== undefined &&
+          last.startsWith('<ul>') &&
+          last.endsWith('</ul>')
+        ) {
+          acc[acc.length - 1] = last.slice(0, -5) + '\n' + line + '</ul>'
+        } else {
+          acc.push('<ul>' + line + '</ul>')
+        }
+      } else {
+        acc.push(line)
+      }
+      return acc
+    }, [])
+    .join('\n')
 
   // Ordered lists
   html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>')

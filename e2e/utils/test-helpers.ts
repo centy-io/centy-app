@@ -1,11 +1,7 @@
 import type { Page } from '@playwright/test'
 import { addProjectHandlers } from '../mocks/handlers/project'
-import { addIssueHandlers } from '../mocks/handlers/issues'
-import { addDocHandlers } from '../mocks/handlers/docs'
 import { addDaemonHandlers } from '../mocks/handlers/daemon'
 import { GrpcMocker } from './mock-grpc'
-import type { Issue } from '@/gen/centy_pb'
-import type { Doc } from '@/gen/centy_pb'
 import type { ProjectInfo } from '@/gen/centy_pb'
 
 const TEST_PROJECT_PATH = '/test/project'
@@ -15,8 +11,6 @@ const DEMO_ORG_SLUG = 'demo-org'
 const DEMO_PROJECT_NAME = 'centy-showcase'
 
 export interface SetupOptions {
-  issues?: Issue[]
-  docs?: Doc[]
   projects?: ProjectInfo[]
   isInitialized?: boolean
   vscodeAvailable?: boolean
@@ -30,8 +24,6 @@ export async function setupDemoMode(page: Page): Promise<void> {
   // Set demo mode in sessionStorage before navigation
   await page.addInitScript(() => {
     sessionStorage.setItem('centy_demo_mode', 'true')
-    localStorage.setItem('centy-selected-org', 'demo-org')
-    localStorage.setItem('centy-project-path', '/demo/centy-showcase')
   })
 }
 
@@ -54,8 +46,6 @@ export async function setupMockedPage(
         ? resolvedOptions.isInitialized
         : true,
   })
-  addIssueHandlers(mocker, { issues: resolvedOptions.issues })
-  addDocHandlers(mocker, { docs: resolvedOptions.docs })
   addDaemonHandlers(mocker, {
     vscodeAvailable:
       resolvedOptions.vscodeAvailable !== undefined

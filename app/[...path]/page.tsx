@@ -1,5 +1,7 @@
 import { CatchAllRouter } from '@/components/routing/CatchAllRouter'
 
+export const dynamic = 'force-static'
+
 export async function generateStaticParams() {
   // Return a placeholder to satisfy Next.js static export requirement
   // Actual routing is handled client-side by parsing the pathname

@@ -63,21 +63,20 @@ export function useOrgIssues(orgSlug: string) {
     try {
       const { issues: fetched, firstProjectPath } =
         await fetchOrgIssuesFromProjects(orgSlug)
-      if (firstProjectPath && !orgProjectPath) {
-        setOrgProjectPath(firstProjectPath)
-      }
+      setOrgProjectPath(prev =>
+        firstProjectPath && !prev ? firstProjectPath : prev
+      )
       setIssues(fetched)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch issues')
     } finally {
       setLoading(false)
     }
-  }, [orgSlug, orgProjectPath])
+  }, [orgSlug])
 
   useEffect(() => {
     fetchIssues()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orgSlug])
+  }, [orgSlug, fetchIssues])
 
   return { issues, loading, error, orgProjectPath, fetchIssues }
 }

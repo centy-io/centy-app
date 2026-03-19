@@ -1,27 +1,23 @@
 import { renderHook } from '@testing-library/react'
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { useSaveShortcut } from './useSaveShortcut'
 
-describe('useSaveShortcut', () => {
-  const mockOnSave = vi.fn()
+const mockOnSave = vi.fn()
 
+const fireKeyboardEvent = (options: Partial<KeyboardEvent>) => {
+  const event = new KeyboardEvent('keydown', {
+    bubbles: true,
+    cancelable: true,
+    ...options,
+  })
+  window.dispatchEvent(event)
+  return event
+}
+
+describe('useSaveShortcut - key combinations', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
-
-  afterEach(() => {
-    // Clean up any listeners
-  })
-
-  const fireKeyboardEvent = (options: Partial<KeyboardEvent>) => {
-    const event = new KeyboardEvent('keydown', {
-      bubbles: true,
-      cancelable: true,
-      ...options,
-    })
-    window.dispatchEvent(event)
-    return event
-  }
 
   it('should call onSave when Ctrl+S is pressed', () => {
     renderHook(() => useSaveShortcut({ onSave: mockOnSave }))
@@ -46,13 +42,11 @@ describe('useSaveShortcut', () => {
 
     expect(mockOnSave).toHaveBeenCalledTimes(1)
   })
+})
 
-  it('should not call onSave when disabled', () => {
-    renderHook(() => useSaveShortcut({ onSave: mockOnSave, enabled: false }))
-
-    fireKeyboardEvent({ key: 's', ctrlKey: true })
-
-    expect(mockOnSave).not.toHaveBeenCalled()
+describe('useSaveShortcut - non-save shortcuts', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
   })
 
   it('should not call onSave when Alt+S is pressed (not save shortcut)', () => {
@@ -93,6 +87,41 @@ describe('useSaveShortcut', () => {
     fireKeyboardEvent({ key: 'a', ctrlKey: true })
 
     expect(mockOnSave).not.toHaveBeenCalled()
+  })
+})
+
+describe('useSaveShortcut - disabled state', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('should not call onSave when disabled', () => {
+    renderHook(() => useSaveShortcut({ onSave: mockOnSave, enabled: false }))
+
+    fireKeyboardEvent({ key: 's', ctrlKey: true })
+
+    expect(mockOnSave).not.toHaveBeenCalled()
+  })
+
+  it('should re-enable when enabled changes from false to true', () => {
+    const { rerender } = renderHook(
+      ({ enabled }) => useSaveShortcut({ onSave: mockOnSave, enabled }),
+      { initialProps: { enabled: false } }
+    )
+
+    fireKeyboardEvent({ key: 's', ctrlKey: true })
+    expect(mockOnSave).not.toHaveBeenCalled()
+
+    rerender({ enabled: true })
+
+    fireKeyboardEvent({ key: 's', ctrlKey: true })
+    expect(mockOnSave).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('useSaveShortcut - preventDefault behavior', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
   })
 
   it('should prevent default browser behavior', () => {
@@ -143,20 +172,5 @@ describe('useSaveShortcut', () => {
 
     expect(firstCallback).not.toHaveBeenCalled()
     expect(secondCallback).toHaveBeenCalledTimes(1)
-  })
-
-  it('should re-enable when enabled changes from false to true', () => {
-    const { rerender } = renderHook(
-      ({ enabled }) => useSaveShortcut({ onSave: mockOnSave, enabled }),
-      { initialProps: { enabled: false } }
-    )
-
-    fireKeyboardEvent({ key: 's', ctrlKey: true })
-    expect(mockOnSave).not.toHaveBeenCalled()
-
-    rerender({ enabled: true })
-
-    fireKeyboardEvent({ key: 's', ctrlKey: true })
-    expect(mockOnSave).toHaveBeenCalledTimes(1)
   })
 })

@@ -1,1 +1,1 @@
-export type CreateItemKind = 'doc' | 'issue'
+export type CreateItemKind = 'issue'

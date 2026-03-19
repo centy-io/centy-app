@@ -39,7 +39,7 @@ const createMockLink = (overrides: Partial<LinkType> = {}): LinkType =>
     $unknown: undefined,
   }) as LinkType
 
-describe('LinkSection', () => {
+describe('LinkSection - Initial state', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mockUsePathContext.mockReturnValue({
@@ -100,10 +100,18 @@ describe('LinkSection', () => {
       expect(screen.getByText('Related To')).toBeInTheDocument()
     })
   })
+})
+
+describe('LinkSection - Add link button', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockUsePathContext.mockReturnValue({
+      projectPath: '/test/project',
+    })
+  })
 
   it('should show Add Link button when editable', async () => {
-    const mockListLinks = vi.mocked(centyClient.listLinks)
-    mockListLinks.mockResolvedValue({
+    vi.mocked(centyClient.listLinks).mockResolvedValue({
       links: [],
       totalCount: 0,
       $typeName: 'centy.v1.ListLinksResponse',
@@ -122,8 +130,7 @@ describe('LinkSection', () => {
   })
 
   it('should hide Add Link button when not editable', async () => {
-    const mockListLinks = vi.mocked(centyClient.listLinks)
-    mockListLinks.mockResolvedValue({
+    vi.mocked(centyClient.listLinks).mockResolvedValue({
       links: [],
       totalCount: 0,
       $typeName: 'centy.v1.ListLinksResponse',
@@ -142,8 +149,7 @@ describe('LinkSection', () => {
   })
 
   it('should open AddLinkModal when clicking Add Link button', async () => {
-    const mockListLinks = vi.mocked(centyClient.listLinks)
-    mockListLinks.mockResolvedValue({
+    vi.mocked(centyClient.listLinks).mockResolvedValue({
       links: [],
       totalCount: 0,
       $typeName: 'centy.v1.ListLinksResponse',
@@ -161,6 +167,15 @@ describe('LinkSection', () => {
     fireEvent.click(screen.getByText('+ Add Link'))
 
     expect(screen.getByTestId('add-link-modal')).toBeInTheDocument()
+  })
+})
+
+describe('LinkSection - Modal refresh', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockUsePathContext.mockReturnValue({
+      projectPath: '/test/project',
+    })
   })
 
   it('should close modal and refresh when link is created', async () => {
@@ -189,6 +204,15 @@ describe('LinkSection', () => {
     await waitFor(() => {
       expect(screen.queryByTestId('add-link-modal')).not.toBeInTheDocument()
       expect(mockListLinks).toHaveBeenCalled()
+    })
+  })
+})
+
+describe('LinkSection - Link operations', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockUsePathContext.mockReturnValue({
+      projectPath: '/test/project',
     })
   })
 
@@ -224,6 +248,15 @@ describe('LinkSection', () => {
 
     await waitFor(() => {
       expect(mockDeleteLink).toHaveBeenCalled()
+    })
+  })
+})
+
+describe('LinkSection - Error display and icons', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockUsePathContext.mockReturnValue({
+      projectPath: '/test/project',
     })
   })
 
@@ -273,10 +306,18 @@ describe('LinkSection', () => {
       expect(screen.getByText('Cannot delete link')).toBeInTheDocument()
     })
   })
+})
+
+describe('LinkSection - Target type icons', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockUsePathContext.mockReturnValue({
+      projectPath: '/test/project',
+    })
+  })
 
   it('should display correct icons for different target types', async () => {
-    const mockListLinks = vi.mocked(centyClient.listLinks)
-    mockListLinks.mockResolvedValue({
+    vi.mocked(centyClient.listLinks).mockResolvedValue({
       links: [
         createMockLink({
           targetId: 'issue-1',
@@ -301,6 +342,15 @@ describe('LinkSection', () => {
     await waitFor(() => {
       expect(screen.getByText('!')).toBeInTheDocument() // Issue icon
       expect(screen.getByText('D')).toBeInTheDocument() // Doc icon
+    })
+  })
+})
+
+describe('LinkSection - Edge cases', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockUsePathContext.mockReturnValue({
+      projectPath: '/test/project',
     })
   })
 
@@ -329,8 +379,7 @@ describe('LinkSection', () => {
   })
 
   it('should hide delete buttons when not editable', async () => {
-    const mockListLinks = vi.mocked(centyClient.listLinks)
-    mockListLinks.mockResolvedValue({
+    vi.mocked(centyClient.listLinks).mockResolvedValue({
       links: [createMockLink({ targetId: 'issue-1', linkType: 'blocks' })],
       totalCount: 1,
       $typeName: 'centy.v1.ListLinksResponse',

@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react'
+import { useDebounce } from 'use-debounce'
 import { create } from '@bufbuild/protobuf'
 import type { EntityItem } from './AddLinkModal.types'
 import { filterAndMapIssues, filterAndMapDocs } from './entityFilters'
@@ -7,6 +8,7 @@ import { ListItemsRequestSchema, type Link as LinkType } from '@/gen/centy_pb'
 import { genericItemToIssue } from '@/lib/genericItemToIssue'
 import { genericItemToDoc } from '@/lib/genericItemToDoc'
 
+// eslint-disable-next-line max-lines-per-function
 export function useEntitySearch(
   projectPath: string,
   entityId: string,
@@ -17,6 +19,7 @@ export function useEntitySearch(
     'issue'
   )
   const [searchQuery, setSearchQuery] = useState('')
+  const [debouncedSearchQuery] = useDebounce(searchQuery, 400)
   const [searchResults, setSearchResults] = useState<EntityItem[]>([])
   const [loadingSearch, setLoadingSearch] = useState(false)
 
@@ -36,7 +39,7 @@ export function useEntitySearch(
           entityId,
           existingLinks,
           selectedLinkType,
-          searchQuery
+          debouncedSearchQuery
         )
       } else if (targetTypeFilter === 'doc') {
         const request = create(ListItemsRequestSchema, {
@@ -49,7 +52,7 @@ export function useEntitySearch(
           entityId,
           existingLinks,
           selectedLinkType,
-          searchQuery
+          debouncedSearchQuery
         )
       }
       setSearchResults(results)
@@ -61,7 +64,7 @@ export function useEntitySearch(
   }, [
     projectPath,
     targetTypeFilter,
-    searchQuery,
+    debouncedSearchQuery,
     entityId,
     existingLinks,
     selectedLinkType,

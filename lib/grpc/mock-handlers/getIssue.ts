@@ -1,6 +1,7 @@
 'use client'
 
 import { DEMO_ISSUES } from '../demo-data'
+import { findIssueByFlexibleId } from './resolve-issue'
 import type { GetIssueRequest, Issue } from '@/gen/centy_pb'
 
 export async function getIssue(request: GetIssueRequest): Promise<{
@@ -8,7 +9,7 @@ export async function getIssue(request: GetIssueRequest): Promise<{
   error: string
   issue?: Issue
 }> {
-  const issue = DEMO_ISSUES.find(i => i.id === request.issueId)
+  const issue = findIssueByFlexibleId(DEMO_ISSUES, request.issueId)
   if (issue) {
     return { success: true, error: '', issue }
   }

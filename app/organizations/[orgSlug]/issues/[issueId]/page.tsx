@@ -1,5 +1,7 @@
 import { OrgIssueDetail } from '@/components/organizations/OrgIssueDetail'
 
+export const dynamic = 'force-static'
+
 export async function generateStaticParams() {
   return [{ orgSlug: '_placeholder', issueId: '_placeholder' }]
 }

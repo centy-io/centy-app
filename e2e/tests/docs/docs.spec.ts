@@ -7,9 +7,7 @@ test.describe('Docs List', () => {
     await navigateToDemoProject(page, '/docs')
 
     // Wait for the docs list to load by checking for the heading
-    await expect(
-      page.getByRole('heading', { name: /documentation/i })
-    ).toBeVisible()
+    await expect(page.getByRole('heading', { name: /docs/i })).toBeVisible()
 
     // Should display demo doc titles (use heading role for specificity)
     await expect(
@@ -47,9 +45,9 @@ test.describe('Doc Detail', () => {
     await setupDemoMode(page)
     await navigateToDemoProject(page, '/docs/getting-started')
 
-    // Doc title is in the .doc-title class
-    await expect(page.locator('.doc-title')).toBeVisible()
-    await expect(page.locator('.doc-title')).toHaveText('Getting Started')
+    await expect(
+      page.getByRole('heading', { name: 'Getting Started', level: 1 })
+    ).toBeVisible()
   })
 
   test('should display doc content', async ({ page }) => {

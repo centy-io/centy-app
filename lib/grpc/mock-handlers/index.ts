@@ -3,6 +3,8 @@
 
 import { listProjects, getProjectInfo, isInitialized } from './project'
 import { listIssues, getIssue, getIssueByDisplayNumber } from './issue'
+import { getItem } from './getItem'
+import { listItems } from './listItems'
 import { listDocs, getDoc } from './doc'
 import { listUsers, getUser } from './user'
 import { listOrganizations, getOrganization } from './org'
@@ -52,7 +54,7 @@ import {
   listUncompactedIssues,
   getInstruction,
   getCompact,
-  spawnAgent,
+  spawnWorkspace,
   listItemTypes,
 } from './stub'
 import {
@@ -81,6 +83,8 @@ export const mockHandlers: MockHandlers = {
   listIssues,
   getIssue,
   getIssueByDisplayNumber,
+  getItem,
+  listItems,
   listDocs,
   getDoc,
   listUsers,
@@ -129,7 +133,7 @@ export const mockHandlers: MockHandlers = {
   listUncompactedIssues,
   getInstruction,
   getCompact,
-  spawnAgent,
+  spawnWorkspace,
   listItemTypes,
   openInTempVscode,
   openInTempTerminal,

@@ -7,8 +7,6 @@ import { setupDemoMode, navigateTo } from '../../../utils/test-helpers'
 async function setupDemoModeLocal(page: import('@playwright/test').Page) {
   await page.addInitScript(() => {
     sessionStorage.setItem('centy_demo_mode', 'true')
-    localStorage.setItem('centy-selected-org', 'demo-org')
-    localStorage.setItem('centy-project-path', '/demo/centy-showcase')
   })
 }
 
@@ -67,8 +65,6 @@ test.describe('Demo Mode Homepage Visual Tests @visual', () => {
     // Set up demo mode before navigating
     await page.addInitScript(() => {
       sessionStorage.setItem('centy_demo_mode', 'true')
-      localStorage.setItem('centy-selected-org', 'demo-org')
-      localStorage.setItem('centy-project-path', '/demo/centy-showcase')
     })
 
     // Navigate to demo mode URL
@@ -99,154 +95,152 @@ test.describe('Demo Mode Homepage Visual Tests @visual', () => {
   })
 })
 
-test.describe('Mobile Navbar Visual Tests @visual', () => {
-  test.describe('Mobile viewport (375x667)', () => {
-    test.beforeEach(async ({ page }) => {
-      await page.setViewportSize({ width: 375, height: 667 })
-      await setupDemoModeLocal(page)
-    })
+test.describe('Mobile Navbar Visual Tests - Mobile viewport (375x667) @visual', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 667 })
+    await setupDemoModeLocal(page)
+  })
 
-    test('navbar - hamburger menu closed - light theme', async ({ page }) => {
-      await page.emulateMedia({ colorScheme: 'light' })
-      await navigateDemoMode(page, '/')
-      await page.waitForTimeout(500)
+  test('navbar - hamburger menu closed - light theme', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'light' })
+    await navigateDemoMode(page, '/')
+    await page.waitForTimeout(500)
 
-      // Verify hamburger button is visible
-      await expect(page.locator('.mobile-menu-toggle')).toBeVisible()
+    // Verify hamburger button is visible
+    await expect(page.locator('.mobile-menu-toggle')).toBeVisible()
 
-      // Verify desktop nav is hidden
-      await expect(page.locator('.app-nav')).not.toBeVisible()
+    // Verify desktop nav is hidden
+    await expect(page.locator('.app-nav')).not.toBeVisible()
 
-      await expect(page).toHaveScreenshot('mobile-navbar-closed-light.png', {
-        fullPage: true,
-      })
-    })
-
-    test('navbar - hamburger menu closed - dark theme', async ({ page }) => {
-      await page.emulateMedia({ colorScheme: 'dark' })
-      await navigateDemoMode(page, '/')
-      await page.waitForTimeout(500)
-
-      await expect(page.locator('.mobile-menu-toggle')).toBeVisible()
-
-      await expect(page).toHaveScreenshot('mobile-navbar-closed-dark.png', {
-        fullPage: true,
-      })
-    })
-
-    test('navbar - hamburger menu open - light theme', async ({ page }) => {
-      await page.emulateMedia({ colorScheme: 'light' })
-      await navigateDemoMode(page, '/')
-      await page.waitForTimeout(500)
-
-      // Click hamburger to open menu
-      await page.locator('.mobile-menu-toggle').click()
-      await page.waitForTimeout(400) // Wait for animation
-
-      // Verify mobile menu is open
-      await expect(page.locator('.mobile-menu.open')).toBeVisible()
-      await expect(page.locator('.mobile-menu-nav')).toBeVisible()
-
-      await expect(page).toHaveScreenshot('mobile-navbar-open-light.png', {
-        fullPage: true,
-      })
-    })
-
-    test('navbar - hamburger menu open - dark theme', async ({ page }) => {
-      await page.emulateMedia({ colorScheme: 'dark' })
-      await navigateDemoMode(page, '/')
-      await page.waitForTimeout(500)
-
-      // Click hamburger to open menu
-      await page.locator('.mobile-menu-toggle').click()
-      await page.waitForTimeout(400)
-
-      await expect(page.locator('.mobile-menu.open')).toBeVisible()
-
-      await expect(page).toHaveScreenshot('mobile-navbar-open-dark.png', {
-        fullPage: true,
-      })
+    await expect(page).toHaveScreenshot('mobile-navbar-closed-light.png', {
+      fullPage: true,
     })
   })
 
-  test.describe('Tablet viewport (768x1024)', () => {
-    test.beforeEach(async ({ page }) => {
-      await page.setViewportSize({ width: 768, height: 1024 })
-      await setupDemoModeLocal(page)
-    })
+  test('navbar - hamburger menu closed - dark theme', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'dark' })
+    await navigateDemoMode(page, '/')
+    await page.waitForTimeout(500)
 
-    test('navbar - desktop layout visible on tablet', async ({ page }) => {
-      await navigateDemoMode(page, '/')
-      await page.waitForTimeout(500)
+    await expect(page.locator('.mobile-menu-toggle')).toBeVisible()
 
-      // On tablet (768px), desktop nav should be visible
-      await expect(page.locator('.app-nav')).toBeVisible()
-
-      // Hamburger should be hidden
-      await expect(page.locator('.mobile-menu-toggle')).not.toBeVisible()
-
-      await expect(page).toHaveScreenshot('tablet-navbar-desktop-layout.png', {
-        fullPage: true,
-      })
+    await expect(page).toHaveScreenshot('mobile-navbar-closed-dark.png', {
+      fullPage: true,
     })
   })
 
-  test.describe('Menu interactions', () => {
-    test.beforeEach(async ({ page }) => {
-      await page.setViewportSize({ width: 375, height: 667 })
-      await setupDemoModeLocal(page)
+  test('navbar - hamburger menu open - light theme', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'light' })
+    await navigateDemoMode(page, '/')
+    await page.waitForTimeout(500)
+
+    // Click hamburger to open menu
+    await page.locator('.mobile-menu-toggle').click()
+    await page.waitForTimeout(400) // Wait for animation
+
+    // Verify mobile menu is open
+    await expect(page.locator('.mobile-menu.open')).toBeVisible()
+    await expect(page.locator('.mobile-menu-nav')).toBeVisible()
+
+    await expect(page).toHaveScreenshot('mobile-navbar-open-light.png', {
+      fullPage: true,
     })
+  })
 
-    test('menu closes on overlay click', async ({ page }) => {
-      await navigateDemoMode(page, '/')
-      await page.waitForTimeout(500)
+  test('navbar - hamburger menu open - dark theme', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'dark' })
+    await navigateDemoMode(page, '/')
+    await page.waitForTimeout(500)
 
-      // Open menu
-      await page.locator('.mobile-menu-toggle').click()
-      await page.waitForTimeout(400)
+    // Click hamburger to open menu
+    await page.locator('.mobile-menu-toggle').click()
+    await page.waitForTimeout(400)
 
-      await expect(page.locator('.mobile-menu.open')).toBeVisible()
+    await expect(page.locator('.mobile-menu.open')).toBeVisible()
 
-      // Click overlay to close
-      await page.locator('.mobile-menu-overlay').click({ force: true })
-      await page.waitForTimeout(400)
-
-      await expect(page.locator('.mobile-menu.open')).not.toBeVisible()
+    await expect(page).toHaveScreenshot('mobile-navbar-open-dark.png', {
+      fullPage: true,
     })
+  })
+})
 
-    test('menu closes on escape key', async ({ page }) => {
-      await navigateDemoMode(page, '/')
-      await page.waitForTimeout(500)
+test.describe('Mobile Navbar Visual Tests - Tablet viewport (768x1024) @visual', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.setViewportSize({ width: 768, height: 1024 })
+    await setupDemoModeLocal(page)
+  })
 
-      // Open menu
-      await page.locator('.mobile-menu-toggle').click()
-      await page.waitForTimeout(400)
+  test('navbar - desktop layout visible on tablet', async ({ page }) => {
+    await navigateDemoMode(page, '/')
+    await page.waitForTimeout(500)
 
-      await expect(page.locator('.mobile-menu.open')).toBeVisible()
+    // On tablet (768px), desktop nav should be visible
+    await expect(page.locator('.app-nav')).toBeVisible()
 
-      // Press Escape
-      await page.keyboard.press('Escape')
-      await page.waitForTimeout(400)
+    // Hamburger should be hidden
+    await expect(page.locator('.mobile-menu-toggle')).not.toBeVisible()
 
-      await expect(page.locator('.mobile-menu.open')).not.toBeVisible()
+    await expect(page).toHaveScreenshot('tablet-navbar-desktop-layout.png', {
+      fullPage: true,
     })
+  })
+})
 
-    test('hamburger icon animates to X when open', async ({ page }) => {
-      await navigateDemoMode(page, '/')
-      await page.waitForTimeout(500)
+test.describe('Mobile Navbar Visual Tests - Menu interactions @visual', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 667 })
+    await setupDemoModeLocal(page)
+  })
 
-      // Verify initial state
-      await expect(page.locator('.mobile-menu-toggle')).not.toHaveClass(/open/)
+  test('menu closes on overlay click', async ({ page }) => {
+    await navigateDemoMode(page, '/')
+    await page.waitForTimeout(500)
 
-      // Open menu
-      await page.locator('.mobile-menu-toggle').click()
-      await page.waitForTimeout(400)
+    // Open menu
+    await page.locator('.mobile-menu-toggle').click()
+    await page.waitForTimeout(400)
 
-      // Verify open state
-      await expect(page.locator('.mobile-menu-toggle.open')).toBeVisible()
+    await expect(page.locator('.mobile-menu.open')).toBeVisible()
 
-      await expect(page).toHaveScreenshot('mobile-hamburger-to-x.png')
-    })
+    // Click overlay to close
+    await page.locator('.mobile-menu-overlay').click({ force: true })
+    await page.waitForTimeout(400)
+
+    await expect(page.locator('.mobile-menu.open')).not.toBeVisible()
+  })
+
+  test('menu closes on escape key', async ({ page }) => {
+    await navigateDemoMode(page, '/')
+    await page.waitForTimeout(500)
+
+    // Open menu
+    await page.locator('.mobile-menu-toggle').click()
+    await page.waitForTimeout(400)
+
+    await expect(page.locator('.mobile-menu.open')).toBeVisible()
+
+    // Press Escape
+    await page.keyboard.press('Escape')
+    await page.waitForTimeout(400)
+
+    await expect(page.locator('.mobile-menu.open')).not.toBeVisible()
+  })
+
+  test('hamburger icon animates to X when open', async ({ page }) => {
+    await navigateDemoMode(page, '/')
+    await page.waitForTimeout(500)
+
+    // Verify initial state
+    await expect(page.locator('.mobile-menu-toggle')).not.toHaveClass(/open/)
+
+    // Open menu
+    await page.locator('.mobile-menu-toggle').click()
+    await page.waitForTimeout(400)
+
+    // Verify open state
+    await expect(page.locator('.mobile-menu-toggle.open')).toBeVisible()
+
+    await expect(page).toHaveScreenshot('mobile-hamburger-to-x.png')
   })
 })
 

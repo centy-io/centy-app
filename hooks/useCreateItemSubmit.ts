@@ -15,12 +15,6 @@ interface ProjectContext {
 function buildCancelPath(kind: CreateItemKind, ctx: ProjectContext | null) {
   if (!ctx) return route({ pathname: '/' })
   const { organization, project } = ctx
-  if (kind === 'doc') {
-    return route({
-      pathname: '/[organization]/[project]/docs',
-      query: { organization, project },
-    })
-  }
   return route({
     pathname: '/[organization]/[project]/issues',
     query: { organization, project },
@@ -34,12 +28,6 @@ function buildSuccessPath(
 ) {
   if (!ctx) return route({ pathname: '/' })
   const { organization, project } = ctx
-  if (kind === 'doc') {
-    return route({
-      pathname: '/[organization]/[project]/docs/[slug]',
-      query: { organization, project, slug: result.slug || '' },
-    })
-  }
   return route({
     pathname: '/[organization]/[project]/issues/[issueId]',
     query: { organization, project, issueId: result.issueNumber || '' },

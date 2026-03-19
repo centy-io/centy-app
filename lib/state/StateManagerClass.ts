@@ -36,12 +36,11 @@ export class StateManager {
    * Returns config states if available, otherwise defaults.
    */
   getAllowedStates(): string[] {
-    if (
-      this.config &&
-      this.config.allowedStates &&
-      this.config.allowedStates.length > 0
-    ) {
-      return [...this.config.allowedStates]
+    if (this.config && this.config.stateColors) {
+      const states = Object.keys(this.config.stateColors)
+      if (states.length > 0) {
+        return states
+      }
     }
     if (this.itemTypeStatuses.length > 0) {
       return [...this.itemTypeStatuses]
@@ -55,7 +54,8 @@ export class StateManager {
    */
   getDefaultState(): string {
     return (
-      (this.config && this.config.defaultState) || StateManager.DEFAULT_STATE
+      (this.config && this.config.defaults && this.config.defaults['status']) ||
+      StateManager.DEFAULT_STATE
     )
   }
 
@@ -64,14 +64,15 @@ export class StateManager {
    * Returns config color if available, otherwise default color, or fallback.
    */
   getStateColor(state: string): string {
-    const configColor =
-      this.config && this.config.stateColors
-        ? // eslint-disable-next-line security/detect-object-injection
-          this.config.stateColors[state]
-        : undefined
+    const stateColors = this.config && this.config.stateColors
+    const configColor = stateColors
+      ? new Map(Object.entries(stateColors)).get(state)
+      : undefined
     if (configColor) return configColor
-    // eslint-disable-next-line security/detect-object-injection
-    return StateManager.DEFAULT_COLORS[state] || '#888888'
+    return (
+      new Map(Object.entries(StateManager.DEFAULT_COLORS)).get(state) ||
+      '#888888'
+    )
   }
 
   /**
@@ -102,12 +103,8 @@ export class StateManager {
    * Returns 'status-custom' if config has custom color, otherwise status-{state}.
    */
   getStateClass(state: string): string {
-    if (
-      this.config &&
-      this.config.stateColors &&
-      // eslint-disable-next-line security/detect-object-injection
-      this.config.stateColors[state]
-    ) {
+    const stateColors = this.config && this.config.stateColors
+    if (stateColors && new Map(Object.entries(stateColors)).has(state)) {
       return 'status-custom'
     }
     switch (state) {

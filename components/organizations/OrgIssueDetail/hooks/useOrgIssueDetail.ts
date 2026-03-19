@@ -1,18 +1,19 @@
 /* eslint-disable max-lines */
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { route } from 'nextjs-routes'
 import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
 import {
   ListProjectsRequestSchema,
+  ListItemTypesRequestSchema,
   GetItemRequestSchema,
   UpdateItemRequestSchema,
   DeleteItemRequestSchema,
   type Issue,
 } from '@/gen/centy_pb'
 import { genericItemToIssue } from '@/lib/genericItemToIssue'
-import { useStateManager } from '@/lib/state'
+import { StateManager } from '@/lib/state'
 
 function formatErr(err: unknown): string {
   return err instanceof Error ? err.message : 'Failed to connect to daemon'
@@ -21,8 +22,12 @@ function formatErr(err: unknown): string {
 // eslint-disable-next-line max-lines-per-function
 export function useOrgIssueDetail(orgSlug: string, issueId: string) {
   const router = useRouter()
-  const stateManager = useStateManager()
-  const stateOptions = stateManager.getStateOptions()
+
+  const [itemTypeStatuses, setItemTypeStatuses] = useState<string[]>([])
+  const stateOptions = useMemo(
+    () => new StateManager(null, itemTypeStatuses).getStateOptions(),
+    [itemTypeStatuses]
+  )
 
   const [orgProjectPath, setOrgProjectPath] = useState<string | null>(null)
   const [issue, setIssue] = useState<Issue | null>(null)
@@ -57,6 +62,20 @@ export function useOrgIssueDetail(orgSlug: string, issueId: string) {
 
       const projectPath = orgProjects[0].path
       setOrgProjectPath(projectPath)
+
+      try {
+        const itemTypesRes = await centyClient.listItemTypes(
+          create(ListItemTypesRequestSchema, { projectPath })
+        )
+        const issueType = itemTypesRes.itemTypes.find(
+          t => t.plural === 'issues'
+        )
+        if (issueType) {
+          setItemTypeStatuses(issueType.statuses)
+        }
+      } catch {
+        // fall back to defaults
+      }
 
       const res = await centyClient.getItem(
         create(GetItemRequestSchema, {

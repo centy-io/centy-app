@@ -1,7 +1,5 @@
 'use client'
 
-import { AgentConfigEditor } from '@/components/settings/AgentConfigEditor'
-
 const { NEXT_PUBLIC_COMMIT_SHA } = process.env
 
 export function GeneralSettings() {
@@ -26,13 +24,6 @@ export function GeneralSettings() {
           </div>
         </section>
       )}
-
-      <section className="settings-section">
-        <h3 className="settings-section-title">Agent Configuration</h3>
-        <div className="settings-card">
-          <AgentConfigEditor />
-        </div>
-      </section>
     </div>
   )
 }

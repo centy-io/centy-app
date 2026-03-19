@@ -5,8 +5,6 @@ async function setupDemoWithProject(page: import('@playwright/test').Page) {
   // Set up demo mode before navigating
   await page.addInitScript(() => {
     sessionStorage.setItem('centy_demo_mode', 'true')
-    localStorage.setItem('centy-selected-org', 'demo-org')
-    localStorage.setItem('centy-project-path', '/demo/centy-showcase')
   })
 
   // Navigate to issues page with project context via query params
@@ -35,7 +33,14 @@ test.describe('Standalone Workspace Modal Visual Tests @visual', () => {
     )
   })
 
-  test('standalone workspace modal - open state', async ({ page }) => {
+  test('standalone workspace modal - open state', async ({
+    page,
+    isMobile,
+  }) => {
+    test.skip(
+      isMobile,
+      'mobile-not-supported overlay prevents click interactions'
+    )
     await setupDemoWithProject(page)
 
     // Open the modal
@@ -52,7 +57,14 @@ test.describe('Standalone Workspace Modal Visual Tests @visual', () => {
     })
   })
 
-  test('standalone workspace modal - with filled form', async ({ page }) => {
+  test('standalone workspace modal - with filled form', async ({
+    page,
+    isMobile,
+  }) => {
+    test.skip(
+      isMobile,
+      'mobile-not-supported overlay prevents click interactions'
+    )
     await setupDemoWithProject(page)
 
     // Open the modal
@@ -85,14 +97,19 @@ test.describe('Standalone Workspace Modal Visual Tests @visual', () => {
 })
 
 test.describe('Standalone Workspace Modal Dark Theme Visual Tests @visual', () => {
-  test('standalone workspace modal - dark theme', async ({ page }) => {
+  test('standalone workspace modal - dark theme', async ({
+    page,
+    isMobile,
+  }) => {
+    test.skip(
+      isMobile,
+      'mobile-not-supported overlay prevents click interactions'
+    )
     await page.emulateMedia({ colorScheme: 'dark' })
 
     // Set up demo mode before navigating
     await page.addInitScript(() => {
       sessionStorage.setItem('centy_demo_mode', 'true')
-      localStorage.setItem('centy-selected-org', 'demo-org')
-      localStorage.setItem('centy-project-path', '/demo/centy-showcase')
     })
 
     await page.goto('/issues?org=demo-org&project=%2Fdemo%2Fcenty-showcase')
@@ -120,14 +137,19 @@ test.describe('Standalone Workspace Modal Dark Theme Visual Tests @visual', () =
 })
 
 test.describe('Standalone Workspace Modal Responsive Visual Tests @visual', () => {
-  test('standalone workspace modal - mobile viewport', async ({ page }) => {
+  test('standalone workspace modal - mobile viewport', async ({
+    page,
+    isMobile,
+  }) => {
+    test.skip(
+      isMobile,
+      'mobile-not-supported overlay prevents click interactions'
+    )
     await page.setViewportSize({ width: 375, height: 667 })
 
     // Set up demo mode before navigating
     await page.addInitScript(() => {
       sessionStorage.setItem('centy_demo_mode', 'true')
-      localStorage.setItem('centy-selected-org', 'demo-org')
-      localStorage.setItem('centy-project-path', '/demo/centy-showcase')
     })
 
     await page.goto('/issues?org=demo-org&project=%2Fdemo%2Fcenty-showcase')
@@ -156,14 +178,19 @@ test.describe('Standalone Workspace Modal Responsive Visual Tests @visual', () =
     )
   })
 
-  test('standalone workspace modal - tablet viewport', async ({ page }) => {
+  test('standalone workspace modal - tablet viewport', async ({
+    page,
+    isMobile,
+  }) => {
+    test.skip(
+      isMobile,
+      'mobile-not-supported overlay prevents click interactions'
+    )
     await page.setViewportSize({ width: 768, height: 1024 })
 
     // Set up demo mode before navigating
     await page.addInitScript(() => {
       sessionStorage.setItem('centy_demo_mode', 'true')
-      localStorage.setItem('centy-selected-org', 'demo-org')
-      localStorage.setItem('centy-project-path', '/demo/centy-showcase')
     })
 
     await page.goto('/issues?org=demo-org&project=%2Fdemo%2Fcenty-showcase')

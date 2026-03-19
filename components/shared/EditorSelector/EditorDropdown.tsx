@@ -1,6 +1,5 @@
 'use client'
 
-import { VscodeIcon, TerminalIcon } from './EditorIcons'
 import { EditorType, type EditorInfo } from '@/gen/centy_pb'
 
 interface EditorDropdownProps {
@@ -30,13 +29,6 @@ export function EditorDropdown({
               : `${editor.name} is not available`
           }
         >
-          <span className="editor-option-icon">
-            {editor.editorType === EditorType.TERMINAL ? (
-              <TerminalIcon />
-            ) : (
-              <VscodeIcon />
-            )}
-          </span>
           <div className="editor-option-content">
             <span className="editor-option-name">{editor.name}</span>
             {!editor.available && (
