@@ -2,7 +2,7 @@ echo "Running pre-push checks..."
 
 echo "Checking proto submodule is up to date with main..."
 PROTO_PATH="proto"
-PROTO_CURRENT=$(git submodule status "$PROTO_PATH" | awk '{print $1}' | tr -d '-+')
+PROTO_CURRENT=$(git submodule status "$PROTO_PATH" | awk '{print $1}' | tr -d '+-')
 PROTO_REMOTE=$(git ls-remote git@github.com:centy-io/proto.git refs/heads/main | awk '{print $1}')
 if [ "$PROTO_CURRENT" != "$PROTO_REMOTE" ]; then
   echo "Proto submodule is not up to date with main."
