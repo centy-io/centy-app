@@ -27,7 +27,7 @@ export function EditorSelector({
     return (
       <span
         className="editor-unavailable-hint"
-        title="No editors are available. Install VS Code or use Terminal."
+        title="No editors are available."
       >
         No editors available
       </span>

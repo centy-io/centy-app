@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback } from 'react'
 import type { DaemonStatus } from './DaemonStatusProvider.types'
 import {
   CHECK_INTERVAL_MS,
-  createFallbackEditors,
   applyDemoState,
   buildDemoUrl,
   buildDemoRedirectUrl,
@@ -53,10 +52,8 @@ export function useDaemonStatusState() {
       setVscodeAvailable(daemonInfo.vscodeAvailable)
       setDaemonVersion(daemonInfo.version || null)
       trackDaemonConnection(true, false)
-      const resp = await centyClient.getSupportedEditors({}).catch(() => null)
-      setEditors(
-        resp ? resp.editors : createFallbackEditors(daemonInfo.vscodeAvailable)
-      )
+      const resp = await centyClient.getSupportedEditors({})
+      setEditors(resp.editors)
       const latest = await fetchLatestDaemonVersion()
       setLatestDaemonVersion(latest)
     } catch {
