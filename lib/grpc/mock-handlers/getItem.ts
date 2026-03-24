@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 'use client'
 
 import { DEMO_ISSUES, DEMO_DOCS } from '../demo-data'
@@ -82,7 +83,6 @@ export async function getItem(
       error: `Issue ${request.itemId} not found`,
     }
   }
-
   if (request.itemType === 'docs') {
     const doc = DEMO_DOCS.find(d => d.slug === request.itemId)
     if (doc) {
@@ -99,7 +99,6 @@ export async function getItem(
       error: `Doc ${request.itemId} not found`,
     }
   }
-
   return {
     $typeName: 'centy.v1.GetItemResponse',
     success: false,

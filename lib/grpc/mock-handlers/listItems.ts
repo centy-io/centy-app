@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 'use client'
 
 import { DEMO_PROJECT_PATH, DEMO_ISSUES, DEMO_DOCS } from '../demo-data'
@@ -63,7 +64,6 @@ function docToGenericItem(doc: Doc): GenericItem {
 }
 
 const EMPTY_ITEMS: GenericItem[] = []
-
 export async function listItems(
   request: ListItemsRequest
 ): Promise<ListItemsResponse> {
