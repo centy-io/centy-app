@@ -1,7 +1,10 @@
 import { useState, useCallback } from 'react'
 import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
-import { OpenInTempWorkspaceRequestSchema, type Issue } from '@/gen/centy_pb'
+import {
+  OpenInTempWorkspaceWithEditorRequestSchema,
+  type Issue,
+} from '@/gen/centy_pb'
 
 // eslint-disable-next-line max-lines-per-function
 export function useEditorActions(
@@ -18,12 +21,13 @@ export function useEditorActions(
     setError(null)
 
     try {
-      const request = create(OpenInTempWorkspaceRequestSchema, {
+      const request = create(OpenInTempWorkspaceWithEditorRequestSchema, {
         projectPath,
         issueId: issue.id,
         ttlHours: 0,
+        editorId: 'vscode',
       })
-      const response = await centyClient.openInTempVscode(request)
+      const response = await centyClient.openInTempWorkspace(request)
 
       if (response.success) {
         if (!response.editorOpened) {
@@ -54,12 +58,13 @@ export function useEditorActions(
     setError(null)
 
     try {
-      const request = create(OpenInTempWorkspaceRequestSchema, {
+      const request = create(OpenInTempWorkspaceWithEditorRequestSchema, {
         projectPath,
         issueId: issue.id,
         ttlHours: 0,
+        editorId: 'terminal',
       })
-      const response = await centyClient.openInTempTerminal(request)
+      const response = await centyClient.openInTempWorkspace(request)
 
       if (response.success) {
         if (!response.editorOpened) {

@@ -4,7 +4,6 @@ import '@/styles/components/EditorSelector.css'
 import type { EditorSelectorProps } from './EditorSelector.types'
 import { useEditorSelector } from './useEditorSelector'
 import { EditorDropdown } from './EditorDropdown'
-import { EditorType } from '@/gen/centy_pb'
 
 // eslint-disable-next-line max-lines-per-function
 export function EditorSelector({
@@ -41,7 +40,7 @@ export function EditorSelector({
     <div className="editor-selector" ref={state.dropdownRef}>
       <div className="editor-selector-button-group">
         <button
-          className={`editor-primary-btn ${state.preferredEditor === EditorType.TERMINAL ? 'terminal' : 'vscode'}`}
+          className={`editor-primary-btn ${state.preferredEditor === 'terminal' ? 'terminal' : 'vscode'}`}
           onClick={state.handlePrimaryClick}
           disabled={
             resolvedDisabled ||
@@ -61,7 +60,7 @@ export function EditorSelector({
             : `Open in ${state.preferredEditorName}`}
         </button>
         <button
-          className={`editor-dropdown-btn ${state.preferredEditor === EditorType.TERMINAL ? 'terminal' : 'vscode'}`}
+          className={`editor-dropdown-btn ${state.preferredEditor === 'terminal' ? 'terminal' : 'vscode'}`}
           onClick={() => state.setShowDropdown(!state.showDropdown)}
           disabled={resolvedDisabled || resolvedLoading}
           aria-label="Select editor"

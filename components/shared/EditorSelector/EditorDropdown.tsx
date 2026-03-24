@@ -1,11 +1,11 @@
 'use client'
 
-import { EditorType, type EditorInfo } from '@/gen/centy_pb'
+import type { EditorInfo } from '@/gen/centy_pb'
 
 interface EditorDropdownProps {
   editors: EditorInfo[]
-  preferredEditor: EditorType
-  onSelectEditor: (editorType: EditorType) => void
+  preferredEditor: string
+  onSelectEditor: (editorId: string) => void
 }
 
 export function EditorDropdown({
@@ -17,12 +17,12 @@ export function EditorDropdown({
     <ul className="editor-dropdown" role="listbox" aria-label="Editors">
       {editors.map(editor => (
         <li
-          key={editor.editorType}
+          key={editor.editorId}
           role="option"
-          aria-selected={editor.editorType === preferredEditor}
+          aria-selected={editor.editorId === preferredEditor}
           aria-disabled={!editor.available}
-          className={`editor-option ${editor.editorType === preferredEditor ? 'selected' : ''} ${!editor.available ? 'disabled' : ''}`}
-          onClick={() => editor.available && onSelectEditor(editor.editorType)}
+          className={`editor-option ${editor.editorId === preferredEditor ? 'selected' : ''} ${!editor.available ? 'disabled' : ''}`}
+          onClick={() => editor.available && onSelectEditor(editor.editorId)}
           title={
             editor.available
               ? editor.description
@@ -35,7 +35,7 @@ export function EditorDropdown({
               <span className="editor-option-unavailable">Not available</span>
             )}
           </div>
-          {editor.editorType === preferredEditor && editor.available && (
+          {editor.editorId === preferredEditor && editor.available && (
             <span className="editor-option-check">&#10003;</span>
           )}
         </li>

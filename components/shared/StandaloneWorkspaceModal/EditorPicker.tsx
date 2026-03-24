@@ -1,11 +1,9 @@
 'use client'
 
-import { EditorType } from '@/gen/centy_pb'
-
 interface EditorPickerProps {
-  selectedEditor: EditorType
-  setSelectedEditor: (editor: EditorType) => void
-  isEditorAvailable: (type: EditorType) => boolean
+  selectedEditor: string
+  setSelectedEditor: (editorId: string) => void
+  isEditorAvailable: (editorId: string) => boolean
 }
 
 export function EditorPicker({
@@ -19,15 +17,14 @@ export function EditorPicker({
       <div className="standalone-modal-editor-options">
         <button
           type="button"
-          className={`standalone-editor-option ${selectedEditor === EditorType.TERMINAL ? 'selected' : ''} ${!isEditorAvailable(EditorType.TERMINAL) ? 'disabled' : ''}`}
+          className={`standalone-editor-option ${selectedEditor === 'terminal' ? 'selected' : ''} ${!isEditorAvailable('terminal') ? 'disabled' : ''}`}
           onClick={() =>
-            isEditorAvailable(EditorType.TERMINAL) &&
-            setSelectedEditor(EditorType.TERMINAL)
+            isEditorAvailable('terminal') && setSelectedEditor('terminal')
           }
-          disabled={!isEditorAvailable(EditorType.TERMINAL)}
+          disabled={!isEditorAvailable('terminal')}
         >
           <span className="editor-option-name">Terminal</span>
-          {!isEditorAvailable(EditorType.TERMINAL) && (
+          {!isEditorAvailable('terminal') && (
             <span className="unavailable-badge">Not available</span>
           )}
         </button>

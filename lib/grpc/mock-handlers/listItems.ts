@@ -32,6 +32,7 @@ function issueToGenericItem(issue: Issue): GenericItem {
         org_slug: (meta && meta.orgSlug) || '',
         org_display_number: String((meta && meta.orgDisplayNumber) || 0),
       },
+      tags: [],
     },
   }
 }
@@ -56,6 +57,7 @@ function docToGenericItem(doc: Doc): GenericItem {
         is_org_doc: String((meta && meta.isOrgDoc) || false),
         org_slug: (meta && meta.orgSlug) || '',
       },
+      tags: [],
     },
   }
 }

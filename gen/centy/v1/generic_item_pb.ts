@@ -10,7 +10,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file centy/v1/generic_item.proto.
  */
 export const file_centy_v1_generic_item: GenFile = /*@__PURE__*/
-  fileDesc("ChtjZW50eS92MS9nZW5lcmljX2l0ZW0ucHJvdG8SCGNlbnR5LnYxImEKCE1hbmlmZXN0EhYKDnNjaGVtYV92ZXJzaW9uGAEgASgFEhUKDWNlbnR5X3ZlcnNpb24YAiABKAkSEgoKY3JlYXRlZF9hdBgDIAEoCRISCgp1cGRhdGVkX2F0GAQgASgJInoKC0dlbmVyaWNJdGVtEgoKAmlkGAEgASgJEhEKCWl0ZW1fdHlwZRgCIAEoCRINCgV0aXRsZRgDIAEoCRIMCgRib2R5GAQgASgJEi8KCG1ldGFkYXRhGAUgASgLMh0uY2VudHkudjEuR2VuZXJpY0l0ZW1NZXRhZGF0YSKIAgoTR2VuZXJpY0l0ZW1NZXRhZGF0YRIWCg5kaXNwbGF5X251bWJlchgBIAEoDRIOCgZzdGF0dXMYAiABKAkSEAoIcHJpb3JpdHkYAyABKA0SEgoKY3JlYXRlZF9hdBgEIAEoCRISCgp1cGRhdGVkX2F0GAUgASgJEhIKCmRlbGV0ZWRfYXQYBiABKAkSRgoNY3VzdG9tX2ZpZWxkcxgHIAMoCzIvLmNlbnR5LnYxLkdlbmVyaWNJdGVtTWV0YWRhdGEuQ3VzdG9tRmllbGRzRW50cnkaMwoRQ3VzdG9tRmllbGRzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASL2AQoRQ3JlYXRlSXRlbVJlcXVlc3QSFAoMcHJvamVjdF9wYXRoGAEgASgJEhEKCWl0ZW1fdHlwZRgCIAEoCRINCgV0aXRsZRgDIAEoCRIMCgRib2R5GAQgASgJEg4KBnN0YXR1cxgFIAEoCRIQCghwcmlvcml0eRgGIAEoBRJECg1jdXN0b21fZmllbGRzGAcgAygLMi0uY2VudHkudjEuQ3JlYXRlSXRlbVJlcXVlc3QuQ3VzdG9tRmllbGRzRW50cnkaMwoRQ3VzdG9tRmllbGRzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASJZChJDcmVhdGVJdGVtUmVzcG9uc2USDwoHc3VjY2VzcxgBIAEoCBINCgVlcnJvchgCIAEoCRIjCgRpdGVtGAMgASgLMhUuY2VudHkudjEuR2VuZXJpY0l0ZW0iegoOR2V0SXRlbVJlcXVlc3QSFAoMcHJvamVjdF9wYXRoGAEgASgJEhEKCWl0ZW1fdHlwZRgCIAEoCRIPCgdpdGVtX2lkGAMgASgJEhsKDmRpc3BsYXlfbnVtYmVyGAQgASgNSACIAQFCEQoPX2Rpc3BsYXlfbnVtYmVyIlYKD0dldEl0ZW1SZXNwb25zZRIPCgdzdWNjZXNzGAEgASgIEg0KBWVycm9yGAIgASgJEiMKBGl0ZW0YAyABKAsyFS5jZW50eS52MS5HZW5lcmljSXRlbSJqChBMaXN0SXRlbXNSZXF1ZXN0EhQKDHByb2plY3RfcGF0aBgBIAEoCRIRCglpdGVtX3R5cGUYAiABKAkSDQoFbGltaXQYBiABKA0SDgoGb2Zmc2V0GAcgASgNEg4KBmZpbHRlchgIIAEoCSJuChFMaXN0SXRlbXNSZXNwb25zZRIPCgdzdWNjZXNzGAEgASgIEg0KBWVycm9yGAIgASgJEiQKBWl0ZW1zGAMgAygLMhUuY2VudHkudjEuR2VuZXJpY0l0ZW0SEwoLdG90YWxfY291bnQYBCABKAUihwIKEVVwZGF0ZUl0ZW1SZXF1ZXN0EhQKDHByb2plY3RfcGF0aBgBIAEoCRIRCglpdGVtX3R5cGUYAiABKAkSDwoHaXRlbV9pZBgDIAEoCRINCgV0aXRsZRgEIAEoCRIMCgRib2R5GAUgASgJEg4KBnN0YXR1cxgGIAEoCRIQCghwcmlvcml0eRgHIAEoBRJECg1jdXN0b21fZmllbGRzGAggAygLMi0uY2VudHkudjEuVXBkYXRlSXRlbVJlcXVlc3QuQ3VzdG9tRmllbGRzRW50cnkaMwoRQ3VzdG9tRmllbGRzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASJZChJVcGRhdGVJdGVtUmVzcG9uc2USDwoHc3VjY2VzcxgBIAEoCBINCgVlcnJvchgCIAEoCRIjCgRpdGVtGAMgASgLMhUuY2VudHkudjEuR2VuZXJpY0l0ZW0iXAoRRGVsZXRlSXRlbVJlcXVlc3QSFAoMcHJvamVjdF9wYXRoGAEgASgJEhEKCWl0ZW1fdHlwZRgCIAEoCRIPCgdpdGVtX2lkGAMgASgJEg0KBWZvcmNlGAQgASgIIjQKEkRlbGV0ZUl0ZW1SZXNwb25zZRIPCgdzdWNjZXNzGAEgASgIEg0KBWVycm9yGAIgASgJIlEKFVNvZnREZWxldGVJdGVtUmVxdWVzdBIUCgxwcm9qZWN0X3BhdGgYASABKAkSEQoJaXRlbV90eXBlGAIgASgJEg8KB2l0ZW1faWQYAyABKAkiXQoWU29mdERlbGV0ZUl0ZW1SZXNwb25zZRIPCgdzdWNjZXNzGAEgASgIEg0KBWVycm9yGAIgASgJEiMKBGl0ZW0YAyABKAsyFS5jZW50eS52MS5HZW5lcmljSXRlbSJOChJSZXN0b3JlSXRlbVJlcXVlc3QSFAoMcHJvamVjdF9wYXRoGAEgASgJEhEKCWl0ZW1fdHlwZRgCIAEoCRIPCgdpdGVtX2lkGAMgASgJIloKE1Jlc3RvcmVJdGVtUmVzcG9uc2USDwoHc3VjY2VzcxgBIAEoCBINCgVlcnJvchgCIAEoCRIjCgRpdGVtGAMgASgLMhUuY2VudHkudjEuR2VuZXJpY0l0ZW0ilwEKFER1cGxpY2F0ZUl0ZW1SZXF1ZXN0EhsKE3NvdXJjZV9wcm9qZWN0X3BhdGgYASABKAkSEQoJaXRlbV90eXBlGAIgASgJEg8KB2l0ZW1faWQYAyABKAkSGwoTdGFyZ2V0X3Byb2plY3RfcGF0aBgEIAEoCRIOCgZuZXdfaWQYBSABKAkSEQoJbmV3X3RpdGxlGAYgASgJIpcBChVEdXBsaWNhdGVJdGVtUmVzcG9uc2USDwoHc3VjY2VzcxgBIAEoCBINCgVlcnJvchgCIAEoCRIjCgRpdGVtGAMgASgLMhUuY2VudHkudjEuR2VuZXJpY0l0ZW0SEwoLb3JpZ2luYWxfaWQYBCABKAkSJAoIbWFuaWZlc3QYBSABKAsyEi5jZW50eS52MS5NYW5pZmVzdCI4ChJTZWFyY2hJdGVtc1JlcXVlc3QSEQoJaXRlbV90eXBlGAEgASgJEg8KB2l0ZW1faWQYAiABKAkieAoPSXRlbVdpdGhQcm9qZWN0EiMKBGl0ZW0YASABKAsyFS5jZW50eS52MS5HZW5lcmljSXRlbRIUCgxwcm9qZWN0X3BhdGgYAiABKAkSFAoMcHJvamVjdF9uYW1lGAMgASgJEhQKDGRpc3BsYXlfcGF0aBgEIAEoCSKEAQoTU2VhcmNoSXRlbXNSZXNwb25zZRIoCgVpdGVtcxgBIAMoCzIZLmNlbnR5LnYxLkl0ZW1XaXRoUHJvamVjdBITCgt0b3RhbF9jb3VudBgCIAEoBRIOCgZlcnJvcnMYAyADKAkSDwoHc3VjY2VzcxgEIAEoCBINCgVlcnJvchgFIAEoCWIGcHJvdG8z");
+  fileDesc("ChtjZW50eS92MS9nZW5lcmljX2l0ZW0ucHJvdG8SCGNlbnR5LnYxIl8KCE1hbmlmZXN0EhYKDnNjaGVtYV92ZXJzaW9uGAEgASgFEhUKDWNlbnR5X3ZlcnNpb24YAiABKAkSEgoKY3JlYXRlZF9hdBgDIAEoCUoECAQQBVIKdXBkYXRlZF9hdCJ6CgtHZW5lcmljSXRlbRIKCgJpZBgBIAEoCRIRCglpdGVtX3R5cGUYAiABKAkSDQoFdGl0bGUYAyABKAkSDAoEYm9keRgEIAEoCRIvCghtZXRhZGF0YRgFIAEoCzIdLmNlbnR5LnYxLkdlbmVyaWNJdGVtTWV0YWRhdGEilgIKE0dlbmVyaWNJdGVtTWV0YWRhdGESFgoOZGlzcGxheV9udW1iZXIYASABKA0SDgoGc3RhdHVzGAIgASgJEhAKCHByaW9yaXR5GAMgASgNEhIKCmNyZWF0ZWRfYXQYBCABKAkSEgoKdXBkYXRlZF9hdBgFIAEoCRISCgpkZWxldGVkX2F0GAYgASgJEkYKDWN1c3RvbV9maWVsZHMYByADKAsyLy5jZW50eS52MS5HZW5lcmljSXRlbU1ldGFkYXRhLkN1c3RvbUZpZWxkc0VudHJ5EgwKBHRhZ3MYCCADKAkaMwoRQ3VzdG9tRmllbGRzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASKEAgoRQ3JlYXRlSXRlbVJlcXVlc3QSFAoMcHJvamVjdF9wYXRoGAEgASgJEhEKCWl0ZW1fdHlwZRgCIAEoCRINCgV0aXRsZRgDIAEoCRIMCgRib2R5GAQgASgJEg4KBnN0YXR1cxgFIAEoCRIQCghwcmlvcml0eRgGIAEoBRJECg1jdXN0b21fZmllbGRzGAcgAygLMi0uY2VudHkudjEuQ3JlYXRlSXRlbVJlcXVlc3QuQ3VzdG9tRmllbGRzRW50cnkSDAoEdGFncxgIIAMoCRozChFDdXN0b21GaWVsZHNFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBIlkKEkNyZWF0ZUl0ZW1SZXNwb25zZRIPCgdzdWNjZXNzGAEgASgIEg0KBWVycm9yGAIgASgJEiMKBGl0ZW0YAyABKAsyFS5jZW50eS52MS5HZW5lcmljSXRlbSJ6Cg5HZXRJdGVtUmVxdWVzdBIUCgxwcm9qZWN0X3BhdGgYASABKAkSEQoJaXRlbV90eXBlGAIgASgJEg8KB2l0ZW1faWQYAyABKAkSGwoOZGlzcGxheV9udW1iZXIYBCABKA1IAIgBAUIRCg9fZGlzcGxheV9udW1iZXIiVgoPR2V0SXRlbVJlc3BvbnNlEg8KB3N1Y2Nlc3MYASABKAgSDQoFZXJyb3IYAiABKAkSIwoEaXRlbRgDIAEoCzIVLmNlbnR5LnYxLkdlbmVyaWNJdGVtImoKEExpc3RJdGVtc1JlcXVlc3QSFAoMcHJvamVjdF9wYXRoGAEgASgJEhEKCWl0ZW1fdHlwZRgCIAEoCRINCgVsaW1pdBgGIAEoDRIOCgZvZmZzZXQYByABKA0SDgoGZmlsdGVyGAggASgJIm4KEUxpc3RJdGVtc1Jlc3BvbnNlEg8KB3N1Y2Nlc3MYASABKAgSDQoFZXJyb3IYAiABKAkSJAoFaXRlbXMYAyADKAsyFS5jZW50eS52MS5HZW5lcmljSXRlbRITCgt0b3RhbF9jb3VudBgEIAEoBSKpAgoRVXBkYXRlSXRlbVJlcXVlc3QSFAoMcHJvamVjdF9wYXRoGAEgASgJEhEKCWl0ZW1fdHlwZRgCIAEoCRIPCgdpdGVtX2lkGAMgASgJEg0KBXRpdGxlGAQgASgJEgwKBGJvZHkYBSABKAkSDgoGc3RhdHVzGAYgASgJEhAKCHByaW9yaXR5GAcgASgFEkQKDWN1c3RvbV9maWVsZHMYCCADKAsyLS5jZW50eS52MS5VcGRhdGVJdGVtUmVxdWVzdC5DdXN0b21GaWVsZHNFbnRyeRIMCgR0YWdzGAkgAygJEhIKCmNsZWFyX3RhZ3MYCiABKAgaMwoRQ3VzdG9tRmllbGRzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASJZChJVcGRhdGVJdGVtUmVzcG9uc2USDwoHc3VjY2VzcxgBIAEoCBINCgVlcnJvchgCIAEoCRIjCgRpdGVtGAMgASgLMhUuY2VudHkudjEuR2VuZXJpY0l0ZW0iXAoRRGVsZXRlSXRlbVJlcXVlc3QSFAoMcHJvamVjdF9wYXRoGAEgASgJEhEKCWl0ZW1fdHlwZRgCIAEoCRIPCgdpdGVtX2lkGAMgASgJEg0KBWZvcmNlGAQgASgIIjQKEkRlbGV0ZUl0ZW1SZXNwb25zZRIPCgdzdWNjZXNzGAEgASgIEg0KBWVycm9yGAIgASgJIlEKFVNvZnREZWxldGVJdGVtUmVxdWVzdBIUCgxwcm9qZWN0X3BhdGgYASABKAkSEQoJaXRlbV90eXBlGAIgASgJEg8KB2l0ZW1faWQYAyABKAkiXQoWU29mdERlbGV0ZUl0ZW1SZXNwb25zZRIPCgdzdWNjZXNzGAEgASgIEg0KBWVycm9yGAIgASgJEiMKBGl0ZW0YAyABKAsyFS5jZW50eS52MS5HZW5lcmljSXRlbSJOChJSZXN0b3JlSXRlbVJlcXVlc3QSFAoMcHJvamVjdF9wYXRoGAEgASgJEhEKCWl0ZW1fdHlwZRgCIAEoCRIPCgdpdGVtX2lkGAMgASgJIloKE1Jlc3RvcmVJdGVtUmVzcG9uc2USDwoHc3VjY2VzcxgBIAEoCBINCgVlcnJvchgCIAEoCRIjCgRpdGVtGAMgASgLMhUuY2VudHkudjEuR2VuZXJpY0l0ZW0ilwEKFER1cGxpY2F0ZUl0ZW1SZXF1ZXN0EhsKE3NvdXJjZV9wcm9qZWN0X3BhdGgYASABKAkSEQoJaXRlbV90eXBlGAIgASgJEg8KB2l0ZW1faWQYAyABKAkSGwoTdGFyZ2V0X3Byb2plY3RfcGF0aBgEIAEoCRIOCgZuZXdfaWQYBSABKAkSEQoJbmV3X3RpdGxlGAYgASgJIpcBChVEdXBsaWNhdGVJdGVtUmVzcG9uc2USDwoHc3VjY2VzcxgBIAEoCBINCgVlcnJvchgCIAEoCRIjCgRpdGVtGAMgASgLMhUuY2VudHkudjEuR2VuZXJpY0l0ZW0SEwoLb3JpZ2luYWxfaWQYBCABKAkSJAoIbWFuaWZlc3QYBSABKAsyEi5jZW50eS52MS5NYW5pZmVzdCI4ChJTZWFyY2hJdGVtc1JlcXVlc3QSEQoJaXRlbV90eXBlGAEgASgJEg8KB2l0ZW1faWQYAiABKAkieAoPSXRlbVdpdGhQcm9qZWN0EiMKBGl0ZW0YASABKAsyFS5jZW50eS52MS5HZW5lcmljSXRlbRIUCgxwcm9qZWN0X3BhdGgYAiABKAkSFAoMcHJvamVjdF9uYW1lGAMgASgJEhQKDGRpc3BsYXlfcGF0aBgEIAEoCSKEAQoTU2VhcmNoSXRlbXNSZXNwb25zZRIoCgVpdGVtcxgBIAMoCzIZLmNlbnR5LnYxLkl0ZW1XaXRoUHJvamVjdBITCgt0b3RhbF9jb3VudBgCIAEoBRIOCgZlcnJvcnMYAyADKAkSDwoHc3VjY2VzcxgEIAEoCBINCgVlcnJvchgFIAEoCSJiCh5MaXN0SXRlbXNBY3Jvc3NQcm9qZWN0c1JlcXVlc3QSEQoJaXRlbV90eXBlGAEgASgJEg0KBWxpbWl0GAIgASgNEg4KBm9mZnNldBgDIAEoDRIOCgZmaWx0ZXIYBCABKAkikAEKH0xpc3RJdGVtc0Fjcm9zc1Byb2plY3RzUmVzcG9uc2USKAoFaXRlbXMYASADKAsyGS5jZW50eS52MS5JdGVtV2l0aFByb2plY3QSEwoLdG90YWxfY291bnQYAiABKAUSDgoGZXJyb3JzGAMgAygJEg8KB3N1Y2Nlc3MYBCABKAgSDQoFZXJyb3IYBSABKAliBnByb3RvMw");
 
 /**
  * Manifest is defined here so it can be shared by both generic_item.proto and centy.proto
@@ -32,11 +32,6 @@ export type Manifest = Message<"centy.v1.Manifest"> & {
    * @generated from field: string created_at = 3;
    */
   createdAt: string;
-
-  /**
-   * @generated from field: string updated_at = 4;
-   */
-  updatedAt: string;
 };
 
 /**
@@ -145,6 +140,13 @@ export type GenericItemMetadata = Message<"centy.v1.GenericItemMetadata"> & {
    * @generated from field: map<string, string> custom_fields = 7;
    */
   customFields: { [key: string]: string };
+
+  /**
+   * Free-form tags (e.g. ["bug", "frontend"])
+   *
+   * @generated from field: repeated string tags = 8;
+   */
+  tags: string[];
 };
 
 /**
@@ -200,6 +202,13 @@ export type CreateItemRequest = Message<"centy.v1.CreateItemRequest"> & {
    * @generated from field: map<string, string> custom_fields = 7;
    */
   customFields: { [key: string]: string };
+
+  /**
+   * Tags to set on create (empty = no tags)
+   *
+   * @generated from field: repeated string tags = 8;
+   */
+  tags: string[];
 };
 
 /**
@@ -427,6 +436,20 @@ export type UpdateItemRequest = Message<"centy.v1.UpdateItemRequest"> & {
    * @generated from field: map<string, string> custom_fields = 8;
    */
   customFields: { [key: string]: string };
+
+  /**
+   * Non-empty = replace tags; empty = don't change
+   *
+   * @generated from field: repeated string tags = 9;
+   */
+  tags: string[];
+
+  /**
+   * If true, clear all tags (takes precedence over tags field)
+   *
+   * @generated from field: bool clear_tags = 10;
+   */
+  clearTags: boolean;
 };
 
 /**
@@ -832,4 +855,85 @@ export type SearchItemsResponse = Message<"centy.v1.SearchItemsResponse"> & {
  */
 export const SearchItemsResponseSchema: GenMessage<SearchItemsResponse> = /*@__PURE__*/
   messageDesc(file_centy_v1_generic_item, 21);
+
+/**
+ * @generated from message centy.v1.ListItemsAcrossProjectsRequest
+ */
+export type ListItemsAcrossProjectsRequest = Message<"centy.v1.ListItemsAcrossProjectsRequest"> & {
+  /**
+   * Plural type name (e.g., "issues", "docs")
+   *
+   * @generated from field: string item_type = 1;
+   */
+  itemType: string;
+
+  /**
+   * Limit results (0 = no limit)
+   *
+   * @generated from field: uint32 limit = 2;
+   */
+  limit: number;
+
+  /**
+   * Offset for pagination (0 = no offset)
+   *
+   * @generated from field: uint32 offset = 3;
+   */
+  offset: number;
+
+  /**
+   * JSON-encoded MQL query (same as ListItemsRequest)
+   *
+   * @generated from field: string filter = 4;
+   */
+  filter: string;
+};
+
+/**
+ * Describes the message centy.v1.ListItemsAcrossProjectsRequest.
+ * Use `create(ListItemsAcrossProjectsRequestSchema)` to create a new message.
+ */
+export const ListItemsAcrossProjectsRequestSchema: GenMessage<ListItemsAcrossProjectsRequest> = /*@__PURE__*/
+  messageDesc(file_centy_v1_generic_item, 22);
+
+/**
+ * @generated from message centy.v1.ListItemsAcrossProjectsResponse
+ */
+export type ListItemsAcrossProjectsResponse = Message<"centy.v1.ListItemsAcrossProjectsResponse"> & {
+  /**
+   * @generated from field: repeated centy.v1.ItemWithProject items = 1;
+   */
+  items: ItemWithProject[];
+
+  /**
+   * Total count across all projects (before limit/offset)
+   *
+   * @generated from field: int32 total_count = 2;
+   */
+  totalCount: number;
+
+  /**
+   * Non-fatal errors (e.g., projects that couldn't be accessed)
+   *
+   * @generated from field: repeated string errors = 3;
+   */
+  errors: string[];
+
+  /**
+   * @generated from field: bool success = 4;
+   */
+  success: boolean;
+
+  /**
+   * @generated from field: string error = 5;
+   */
+  error: string;
+};
+
+/**
+ * Describes the message centy.v1.ListItemsAcrossProjectsResponse.
+ * Use `create(ListItemsAcrossProjectsResponseSchema)` to create a new message.
+ */
+export const ListItemsAcrossProjectsResponseSchema: GenMessage<ListItemsAcrossProjectsResponse> = /*@__PURE__*/
+  messageDesc(file_centy_v1_generic_item, 23);
 

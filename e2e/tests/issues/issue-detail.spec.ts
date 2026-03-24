@@ -128,7 +128,7 @@ test.describe('Editor Selector - Preferences and styling', () => {
   }) => {
     // Set Terminal as preferred editor before navigation
     await page.addInitScript(() => {
-      localStorage.setItem('centy-preferred-editor', '2') // EditorType.TERMINAL = 2
+      localStorage.setItem('centy-preferred-editor', 'terminal')
     })
 
     await setupDemoMode(page)
@@ -165,7 +165,7 @@ test.describe('Editor Selector - Preferences and styling', () => {
   test('should have correct button styling for Terminal', async ({ page }) => {
     // Set Terminal as preferred editor
     await page.addInitScript(() => {
-      localStorage.setItem('centy-preferred-editor', '2')
+      localStorage.setItem('centy-preferred-editor', 'terminal')
     })
 
     await setupDemoMode(page)

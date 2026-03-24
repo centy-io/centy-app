@@ -1,11 +1,10 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import type { DaemonStatus } from './DaemonStatusProvider.types'
 import {
   CHECK_INTERVAL_MS,
   applyDemoState,
-  buildDemoUrl,
   buildDemoRedirectUrl,
   initializeDemoFromUrl,
 } from './DaemonStatusProvider.helpers'
@@ -25,16 +24,21 @@ export function useDaemonStatusState() {
   const [status, setStatus] = useState<DaemonStatus>('checking')
   const [lastChecked, setLastChecked] = useState<Date | null>(null)
   const [hasMounted, setHasMounted] = useState(false)
-  const [vscodeAvailable, setVscodeAvailable] = useState<boolean | null>(null)
   const [editors, setEditors] = useState<EditorInfo[]>([])
+  const [editorsLoaded, setEditorsLoaded] = useState(false)
   const [daemonVersion, setDaemonVersion] = useState<string | null>(null)
   const [latestDaemonVersion, setLatestDaemonVersion] = useState<string | null>(
     null
   )
 
+  const vscodeAvailable = useMemo<boolean | null>(() => {
+    if (!editorsLoaded) return null
+    return editors.some(e => e.editorId === 'vscode' && e.available)
+  }, [editors, editorsLoaded])
+
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      initializeDemoFromUrl(setStatus, setVscodeAvailable, setEditors)
+      initializeDemoFromUrl(setStatus, setEditors, setEditorsLoaded)
       setHasMounted(true)
     }, 0)
     return () => clearTimeout(timeoutId)
@@ -42,24 +46,24 @@ export function useDaemonStatusState() {
 
   const checkDaemonStatus = useCallback(async () => {
     if (isDemoMode()) {
-      applyDemoState(setStatus, setVscodeAvailable, setEditors)
+      applyDemoState(setStatus, setEditors, setEditorsLoaded)
       return
     }
     setStatus('checking')
     try {
       const daemonInfo = await centyClient.getDaemonInfo({})
       setStatus('connected')
-      setVscodeAvailable(daemonInfo.vscodeAvailable)
       setDaemonVersion(daemonInfo.version || null)
       trackDaemonConnection(true, false)
       const resp = await centyClient.getSupportedEditors({})
       setEditors(resp.editors)
+      setEditorsLoaded(true)
       const latest = await fetchLatestDaemonVersion()
       setLatestDaemonVersion(latest)
     } catch {
       setStatus('disconnected')
-      setVscodeAvailable(null)
       setEditors([])
+      setEditorsLoaded(false)
       setDaemonVersion(null)
       trackDaemonConnection(false, false)
     }

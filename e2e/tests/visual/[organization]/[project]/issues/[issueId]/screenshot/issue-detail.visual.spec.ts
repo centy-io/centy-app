@@ -121,7 +121,7 @@ test.describe('Editor Selector Visual Tests - Terminal Selected @visual', () => 
 
     // Set Terminal as the preferred editor before navigating
     await page.addInitScript(() => {
-      localStorage.setItem('centy-preferred-editor', '2') // EditorType.TERMINAL = 2
+      localStorage.setItem('centy-preferred-editor', 'terminal')
     })
 
     await setupDemoMode(page)
@@ -145,7 +145,7 @@ test.describe('Editor Selector Visual Tests - Terminal Selected @visual', () => 
 
     // Set Terminal as the preferred editor before navigating
     await page.addInitScript(() => {
-      localStorage.setItem('centy-preferred-editor', '2') // EditorType.TERMINAL = 2
+      localStorage.setItem('centy-preferred-editor', 'terminal')
     })
 
     await setupDemoMode(page)
