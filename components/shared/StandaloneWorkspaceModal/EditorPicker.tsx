@@ -1,12 +1,9 @@
 'use client'
 
-import { VscodeIcon, TerminalIcon } from './EditorIcons'
-import { EditorType } from '@/gen/centy_pb'
-
 interface EditorPickerProps {
-  selectedEditor: EditorType
-  setSelectedEditor: (editor: EditorType) => void
-  isEditorAvailable: (type: EditorType) => boolean
+  selectedEditor: string
+  setSelectedEditor: (editorId: string) => void
+  isEditorAvailable: (editorId: string) => boolean
 }
 
 export function EditorPicker({
@@ -20,31 +17,14 @@ export function EditorPicker({
       <div className="standalone-modal-editor-options">
         <button
           type="button"
-          className={`standalone-editor-option ${selectedEditor === EditorType.VSCODE ? 'selected' : ''} ${!isEditorAvailable(EditorType.VSCODE) ? 'disabled' : ''}`}
+          className={`standalone-editor-option ${selectedEditor === 'terminal' ? 'selected' : ''} ${!isEditorAvailable('terminal') ? 'disabled' : ''}`}
           onClick={() =>
-            isEditorAvailable(EditorType.VSCODE) &&
-            setSelectedEditor(EditorType.VSCODE)
+            isEditorAvailable('terminal') && setSelectedEditor('terminal')
           }
-          disabled={!isEditorAvailable(EditorType.VSCODE)}
+          disabled={!isEditorAvailable('terminal')}
         >
-          <VscodeIcon />
-          <span className="editor-option-name">VS Code</span>
-          {!isEditorAvailable(EditorType.VSCODE) && (
-            <span className="unavailable-badge">Not available</span>
-          )}
-        </button>
-        <button
-          type="button"
-          className={`standalone-editor-option ${selectedEditor === EditorType.TERMINAL ? 'selected' : ''} ${!isEditorAvailable(EditorType.TERMINAL) ? 'disabled' : ''}`}
-          onClick={() =>
-            isEditorAvailable(EditorType.TERMINAL) &&
-            setSelectedEditor(EditorType.TERMINAL)
-          }
-          disabled={!isEditorAvailable(EditorType.TERMINAL)}
-        >
-          <TerminalIcon />
           <span className="editor-option-name">Terminal</span>
-          {!isEditorAvailable(EditorType.TERMINAL) && (
+          {!isEditorAvailable('terminal') && (
             <span className="unavailable-badge">Not available</span>
           )}
         </button>

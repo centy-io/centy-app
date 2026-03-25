@@ -3,9 +3,7 @@
 import '@/styles/components/EditorSelector.css'
 import type { EditorSelectorProps } from './EditorSelector.types'
 import { useEditorSelector } from './useEditorSelector'
-import { VscodeIcon, TerminalIcon } from './EditorIcons'
 import { EditorDropdown } from './EditorDropdown'
-import { EditorType } from '@/gen/centy_pb'
 
 // eslint-disable-next-line max-lines-per-function
 export function EditorSelector({
@@ -27,7 +25,7 @@ export function EditorSelector({
     return (
       <span
         className="editor-unavailable-hint"
-        title="No editors are available. Install VS Code or use Terminal."
+        title="No editors are available."
       >
         No editors available
       </span>
@@ -42,7 +40,7 @@ export function EditorSelector({
     <div className="editor-selector" ref={state.dropdownRef}>
       <div className="editor-selector-button-group">
         <button
-          className={`editor-primary-btn ${state.preferredEditor === EditorType.TERMINAL ? 'terminal' : 'vscode'}`}
+          className={`editor-primary-btn ${state.preferredEditor === 'terminal' ? 'terminal' : 'vscode'}`}
           onClick={state.handlePrimaryClick}
           disabled={
             resolvedDisabled ||
@@ -57,19 +55,12 @@ export function EditorSelector({
               : `${state.preferredEditorName} is not available`
           }
         >
-          <span className="editor-icon">
-            {state.preferredEditor === EditorType.TERMINAL ? (
-              <TerminalIcon />
-            ) : (
-              <VscodeIcon />
-            )}
-          </span>
           {resolvedLoading
             ? 'Opening...'
             : `Open in ${state.preferredEditorName}`}
         </button>
         <button
-          className={`editor-dropdown-btn ${state.preferredEditor === EditorType.TERMINAL ? 'terminal' : 'vscode'}`}
+          className={`editor-dropdown-btn ${state.preferredEditor === 'terminal' ? 'terminal' : 'vscode'}`}
           onClick={() => state.setShowDropdown(!state.showDropdown)}
           disabled={resolvedDisabled || resolvedLoading}
           aria-label="Select editor"

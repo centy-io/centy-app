@@ -20,4 +20,6 @@ export const DEMO_PROJECT: ProjectInfo = {
   organizationName: 'Demo Organization',
   userTitle: '',
   projectTitle: 'Centy Showcase Project',
+  projectVersion: '',
+  projectBehind: false,
 }

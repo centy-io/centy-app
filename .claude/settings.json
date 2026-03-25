@@ -178,7 +178,8 @@
       "mcp__playwright__browser_snapshot",
       "Bash(pnpm e2e:visual:pre-push:update:*)",
       "Skill(ralph-loop:ralph-loop)",
-      "Bash(npx centy:*)"
+      "Bash(npx centy:*)",
+      "Bash(git submodule:*)"
     ],
     "deny": ["Bash(npm install)", "Bash(gh issue create:*)"]
   },

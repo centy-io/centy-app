@@ -1,6 +1,4 @@
-import { create } from '@bufbuild/protobuf'
 import type { GenericItem } from '@/gen/centy_pb'
-import { IssueSchema, IssueMetadataSchema } from '@/gen/centy_pb'
 import type { Issue } from '@/gen/centy_pb'
 
 /**
@@ -11,13 +9,15 @@ export function genericItemToIssue(item: GenericItem): Issue {
   const meta = item.metadata
   const cf = (meta && meta.customFields) || {}
 
-  return create(IssueSchema, {
+  return {
+    $typeName: 'centy.v1.Issue',
     id: item.id,
     displayNumber: (meta && meta.displayNumber) || 0,
     issueNumber: item.id,
     title: item.title,
     description: item.body,
-    metadata: create(IssueMetadataSchema, {
+    metadata: {
+      $typeName: 'centy.v1.IssueMetadata',
       displayNumber: (meta && meta.displayNumber) || 0,
       status: (meta && meta.status) || '',
       priority: (meta && meta.priority) || 0,
@@ -32,6 +32,6 @@ export function genericItemToIssue(item: GenericItem): Issue {
       orgDisplayNumber: cf['org_display_number']
         ? parseInt(cf['org_display_number'], 10)
         : 0,
-    }),
-  })
+    },
+  }
 }

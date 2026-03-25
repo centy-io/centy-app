@@ -1,17 +1,14 @@
 import { useState, useCallback } from 'react'
 import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
-import {
-  OpenStandaloneWorkspaceRequestSchema,
-  EditorType,
-} from '@/gen/centy_pb'
+import { OpenStandaloneWorkspaceWithEditorRequestSchema } from '@/gen/centy_pb'
 
 export function useCreateWorkspace(
   projectPath: string,
   name: string,
   description: string,
   ttlHours: number,
-  selectedEditor: EditorType,
+  selectedEditor: string,
   onCreated: ((workspacePath: string) => void) | undefined,
   onClose: () => void
 ) {
@@ -23,17 +20,14 @@ export function useCreateWorkspace(
     setLoading(true)
     setError(null)
     try {
-      const request = create(OpenStandaloneWorkspaceRequestSchema, {
+      const request = create(OpenStandaloneWorkspaceWithEditorRequestSchema, {
         projectPath,
         name: name.trim() || undefined,
         description: description.trim() || undefined,
         ttlHours,
+        editorId: selectedEditor,
       })
-      const rpcMethod =
-        selectedEditor === EditorType.VSCODE
-          ? centyClient.openStandaloneWorkspaceVscode
-          : centyClient.openStandaloneWorkspaceTerminal
-      const response = await rpcMethod(request)
+      const response = await centyClient.openStandaloneWorkspace(request)
       if (response.success) {
         if (onCreated) onCreated(response.workspacePath)
         onClose()

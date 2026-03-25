@@ -49,10 +49,13 @@ export function useNavItemTypes(
             .map(t => ({
               name: t.plural.charAt(0).toUpperCase() + t.plural.slice(1),
               plural: t.plural,
-              itemCount: t.itemCount,
+              itemCount: 0,
               href: buildItemHref(effectiveOrg!, effectiveProject!, t.plural),
             }))
-            .sort((a, b) => b.itemCount - a.itemCount)
+            .sort(
+              (a, b) =>
+                b.itemCount - a.itemCount || a.name.localeCompare(b.name)
+            )
         )
       } catch {
         // silently fall back to empty
