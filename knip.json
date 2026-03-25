@@ -29,7 +29,9 @@
     "@bufbuild/protoc-gen-es",
     "@centy-io/assets",
     "@cspell/dict-he",
-    "msw"
+    "import-in-the-middle",
+    "msw",
+    "require-in-the-middle"
   ],
   "ignoreExportsUsedInFile": true,
   "ignoreWorkspaces": []
