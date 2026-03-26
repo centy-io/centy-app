@@ -14,6 +14,7 @@ import { useItemTypeConfig } from './useItemTypeConfig'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import { usePathContext } from '@/components/providers/PathContextProvider'
 import { useAppLink } from '@/hooks/useAppLink'
+import { CommentThread } from '@/components/comments/CommentThread'
 
 interface GenericItemDetailProps {
   itemType: string
@@ -135,6 +136,14 @@ export function GenericItemDetail({
           <GenericItemView item={fetch.item} config={config} />
         )}
       </div>
+
+      {itemType !== 'comments' && (
+        <CommentThread
+          projectPath={projectPath}
+          parentItemId={fetch.item.id}
+          parentItemType={itemType}
+        />
+      )}
     </div>
   )
 }

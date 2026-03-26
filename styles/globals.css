@@ -13,6 +13,7 @@
 @import './components/MobileNotSupportedOverlay.css';
 @import './components/DefaultsEditor.css';
 @import './components/InitProject.css';
+@import './components/CommentThread.css';
 @import './components/LinkSection.css';
 @import './components/WorkspaceSettingsEditor.css';
 @import './components/MarkdownEditor.css';
