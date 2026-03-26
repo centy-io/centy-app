@@ -5,6 +5,7 @@ import type { Issue, Asset } from '@/gen/centy_pb'
 import { TextEditor } from '@/components/shared/TextEditor'
 import { AssetUploader } from '@/components/assets/AssetUploader'
 import { LinkSection } from '@/components/shared/LinkSection'
+import { CommentThread } from '@/components/comments/CommentThread'
 
 interface ViewContentProps {
   issue: Issue
@@ -48,6 +49,12 @@ export function ViewContent({
       </div>
 
       <LinkSection entityId={issue.id} entityType="issue" editable={true} />
+
+      <CommentThread
+        projectPath={projectPath}
+        parentItemId={issue.id}
+        parentItemType="issues"
+      />
     </>
   )
 }
