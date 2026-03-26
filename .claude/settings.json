@@ -179,7 +179,10 @@
       "Bash(pnpm e2e:visual:pre-push:update:*)",
       "Skill(ralph-loop:ralph-loop)",
       "Bash(npx centy:*)",
-      "Bash(git submodule:*)"
+      "Bash(git submodule:*)",
+      "Bash(pnpm start:*)",
+      "Bash(pnpm list:*)",
+      "Bash(gh issue:*)"
     ],
     "deny": ["Bash(npm install)", "Bash(gh issue create:*)"]
   },
