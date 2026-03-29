@@ -15,31 +15,25 @@ export function EditorDropdown({
 }: EditorDropdownProps) {
   return (
     <ul className="editor-dropdown" role="listbox" aria-label="Editors">
-      {editors.map(editor => (
-        <li
-          key={editor.editorId}
-          role="option"
-          aria-selected={editor.editorId === preferredEditor}
-          aria-disabled={!editor.available}
-          className={`editor-option ${editor.editorId === preferredEditor ? 'selected' : ''} ${!editor.available ? 'disabled' : ''}`}
-          onClick={() => editor.available && onSelectEditor(editor.editorId)}
-          title={
-            editor.available
-              ? editor.description
-              : `${editor.name} is not available`
-          }
-        >
-          <div className="editor-option-content">
-            <span className="editor-option-name">{editor.name}</span>
-            {!editor.available && (
-              <span className="editor-option-unavailable">Not available</span>
+      {editors
+        .filter(editor => editor.available)
+        .map(editor => (
+          <li
+            key={editor.editorId}
+            role="option"
+            aria-selected={editor.editorId === preferredEditor}
+            className={`editor-option ${editor.editorId === preferredEditor ? 'selected' : ''}`}
+            onClick={() => onSelectEditor(editor.editorId)}
+            title={editor.description}
+          >
+            <div className="editor-option-content">
+              <span className="editor-option-name">{editor.name}</span>
+            </div>
+            {editor.editorId === preferredEditor && (
+              <span className="editor-option-check">&#10003;</span>
             )}
-          </div>
-          {editor.editorId === preferredEditor && editor.available && (
-            <span className="editor-option-check">&#10003;</span>
-          )}
-        </li>
-      ))}
+          </li>
+        ))}
     </ul>
   )
 }
