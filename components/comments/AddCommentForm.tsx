@@ -15,7 +15,6 @@ export function AddCommentForm({
   const [body, setBody] = useState('')
   const [author, setAuthor] = useState('')
   const [expanded, setExpanded] = useState(false)
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!body.trim()) return
@@ -42,7 +41,6 @@ export function AddCommentForm({
     <form className="comment-add-form" onSubmit={handleSubmit}>
       <div className="comment-add-author">
         <input
-          type="text"
           className="comment-author-input"
           placeholder="Your name (optional)"
           value={author}
