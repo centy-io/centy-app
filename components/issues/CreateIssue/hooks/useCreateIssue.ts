@@ -3,6 +3,7 @@ import { useProjectContext } from './useProjectContext'
 import { useIssueDraft } from './useIssueDraft'
 import { buildHandleSubmit } from './buildHandleSubmit'
 import { useCreateIssueState } from './useCreateIssueState'
+import { buildCreateIssueReturn } from './buildCreateIssueReturn'
 import { useCreateItemSubmit } from '@/hooks/useCreateItemSubmit'
 import { usePathContext } from '@/components/providers/PathContextProvider'
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
@@ -10,17 +11,7 @@ import { useSaveShortcut } from '@/hooks/useSaveShortcut'
 export function useCreateIssue() {
   const { projectPath, isInitialized } = usePathContext()
   const s = useCreateIssueState()
-
-  const {
-    title,
-    setTitle,
-    description,
-    setDescription,
-    priority,
-    setPriority,
-    clearDraft,
-  } = useIssueDraft(projectPath)
-
+  const draft = useIssueDraft(projectPath)
   const { getProjectContext } = useProjectContext(projectPath)
   const { submitItem, handleCancel } = useCreateItemSubmit({
     kind: 'issue',
@@ -28,15 +19,15 @@ export function useCreateIssue() {
     getProjectContext,
     setLoading: s.setLoading,
     setError: s.setError,
-    clearDraft,
+    clearDraft: draft.clearDraft,
   })
 
   const handleSubmit = useCallback(
     (e?: React.FormEvent) =>
       buildHandleSubmit({
-        title,
-        description,
-        priority,
+        title: draft.title,
+        description: draft.description,
+        priority: draft.priority,
         status: s.status,
         pendingAssets: s.pendingAssets,
         assetUploaderRef: s.assetUploaderRef,
@@ -44,9 +35,9 @@ export function useCreateIssue() {
         submitItem,
       })(e),
     [
-      title,
-      description,
-      priority,
+      draft.title,
+      draft.description,
+      draft.priority,
       s.status,
       s.pendingAssets,
       projectPath,
@@ -55,33 +46,21 @@ export function useCreateIssue() {
   )
 
   const handleKeyboardSave = useCallback(() => {
-    if (!projectPath.trim() || !title.trim() || s.loading) return
+    if (!projectPath.trim() || !draft.title.trim() || s.loading) return
     void handleSubmit()
-  }, [projectPath, title, s.loading, handleSubmit])
+  }, [projectPath, draft.title, s.loading, handleSubmit])
 
   useSaveShortcut({
     onSave: handleKeyboardSave,
-    enabled: !!projectPath.trim() && !!title.trim() && !s.loading,
+    enabled: !!projectPath.trim() && !!draft.title.trim() && !s.loading,
   })
 
-  return {
+  return buildCreateIssueReturn({
     projectPath,
     isInitialized,
-    title,
-    setTitle,
-    description,
-    setDescription,
-    priority,
-    setPriority,
-    status: s.status,
-    setStatus: s.setStatus,
-    loading: s.loading,
-    error: s.error,
-    pendingAssets: s.pendingAssets,
-    setPendingAssets: s.setPendingAssets,
-    assetUploaderRef: s.assetUploaderRef,
-    stateOptions: s.stateOptions,
+    draft,
+    s,
     handleSubmit,
     handleCancel,
-  }
+  })
 }
