@@ -52,8 +52,8 @@ export function useComments(
   }, [projectPath, parentItemId])
 
   const addComment = useCallback(
-    async (body: string, author: string) => {
-      if (!projectPath || !body.trim()) return
+    async (body: string, author: string): Promise<boolean> => {
+      if (!projectPath || !body.trim()) return false
       const res = await callItemApi(
         () =>
           centyClient.createItem(
@@ -73,9 +73,11 @@ export function useComments(
       )
       if (res && res.success && res.item) {
         setComments(prev => [...prev, res.item!])
+        return true
       } else if (res) {
         setError(res.error || 'Failed to add comment')
       }
+      return false
     },
     [projectPath, parentItemId, parentItemType]
   )
