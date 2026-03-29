@@ -11,12 +11,12 @@ interface BuildHandleSubmitParams {
   priority: number
   status: string
   pendingAssets: PendingAsset[]
-  assetUploaderRef: RefObject<AssetUploaderHandle>
+  assetUploaderRef: RefObject<AssetUploaderHandle | null>
   projectPath: string
   submitItem: (
     build: () => ReturnType<typeof buildCreateItemResult>,
     e?: React.FormEvent
-  ) => Promise<void> | undefined
+  ) => Promise<void>
 }
 
 export function buildHandleSubmit(params: BuildHandleSubmitParams) {

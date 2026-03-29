@@ -15,7 +15,7 @@ function buildToggleDropdown(
 function buildNumberBadgeHandler(
   copyToClipboard: IssueDetailBodyProps['copyToClipboard'],
   issueNumber: string,
-  displayNumber: string
+  displayNumber: number
 ): () => void {
   return () => copyToClipboard(issueNumber, `issue #${displayNumber}`)
 }
