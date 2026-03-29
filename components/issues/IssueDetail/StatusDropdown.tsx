@@ -42,7 +42,7 @@ export function StatusDropdown({
         aria-expanded={showStatusDropdown}
         aria-haspopup="listbox"
       >
-        {updatingStatus ? 'Updating...' : currentStatus || 'unknown'}
+        {updatingStatus ? 'Updating...' : currentStatus || 'No status'}
         <span className="status-dropdown-arrow" aria-hidden="true">
           &#9660;
         </span>

@@ -50,7 +50,7 @@ export function Metadata({
           onStatusChange={onStatusChange}
         />
         <span className={`priority-badge ${getPriorityClass(priorityLabel)}`}>
-          {priorityLabel || 'unknown'}
+          {priorityLabel || 'No priority'}
         </span>
         <span className="issue-date">
           Created:{' '}
