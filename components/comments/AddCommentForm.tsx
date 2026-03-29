@@ -5,7 +5,7 @@ import { TextEditor } from '@/components/shared/TextEditor'
 
 interface AddCommentFormProps {
   adding: boolean
-  onAdd: (body: string, author: string) => void
+  onAdd: (body: string, author: string) => Promise<boolean>
 }
 
 export function AddCommentForm({
@@ -16,10 +16,11 @@ export function AddCommentForm({
   const [author, setAuthor] = useState('')
   const [expanded, setExpanded] = useState(false)
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!body.trim()) return
-    onAdd(body, author)
+    const success = await onAdd(body, author)
+    if (!success) return
     setBody('')
     setAuthor('')
     setExpanded(false)
