@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { GenericItemCard } from './GenericItemCard'
+import { ItemsGrid } from './ItemsGrid'
 import type { GenericItem, ItemTypeConfigProto } from '@/gen/centy_pb'
 import { useAppLink } from '@/hooks/useAppLink'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
@@ -22,7 +22,6 @@ interface GenericListContentProps {
   onHardDeleteConfirm: (id: string) => void
 }
 
-// eslint-disable-next-line max-lines-per-function
 export function GenericListContent({
   projectPath,
   isInitialized,
@@ -39,7 +38,7 @@ export function GenericListContent({
   onDeleteCancel,
   onSoftDeleteConfirm,
   onHardDeleteConfirm,
-}: GenericListContentProps) {
+}: GenericListContentProps): React.JSX.Element | null {
   const { createLink } = useAppLink()
   const capSingular =
     singularName.charAt(0).toUpperCase() + singularName.slice(1)
@@ -78,25 +77,18 @@ export function GenericListContent({
     )
   }
   return (
-    <>
-      {error && <DaemonErrorMessage error={error} />}
-      <div className="generic-items-grid">
-        {items.map(item => (
-          <GenericItemCard
-            key={item.id}
-            item={item}
-            config={config}
-            itemType={itemType}
-            singularName={singularName}
-            deleteConfirm={deleteConfirm}
-            deleting={deleting}
-            onDeleteRequest={onDeleteRequest}
-            onDeleteCancel={onDeleteCancel}
-            onSoftDeleteConfirm={onSoftDeleteConfirm}
-            onHardDeleteConfirm={onHardDeleteConfirm}
-          />
-        ))}
-      </div>
-    </>
+    <ItemsGrid
+      items={items}
+      config={config}
+      itemType={itemType}
+      singularName={singularName}
+      error={error}
+      deleteConfirm={deleteConfirm}
+      deleting={deleting}
+      onDeleteRequest={onDeleteRequest}
+      onDeleteCancel={onDeleteCancel}
+      onSoftDeleteConfirm={onSoftDeleteConfirm}
+      onHardDeleteConfirm={onHardDeleteConfirm}
+    />
   )
 }

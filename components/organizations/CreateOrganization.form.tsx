@@ -2,6 +2,11 @@
 
 import Link from 'next/link'
 import { route } from 'nextjs-routes'
+import {
+  NameField,
+  SlugField,
+  DescriptionField,
+} from './CreateOrganizationFields'
 
 interface CreateOrganizationFormProps {
   name: string
@@ -14,7 +19,6 @@ interface CreateOrganizationFormProps {
   onSubmit: () => void
 }
 
-// eslint-disable-next-line max-lines-per-function
 export function CreateOrganizationForm({
   name,
   setName,
@@ -24,7 +28,7 @@ export function CreateOrganizationForm({
   setDescription,
   saving,
   onSubmit,
-}: CreateOrganizationFormProps) {
+}: CreateOrganizationFormProps): React.JSX.Element {
   return (
     <form
       onSubmit={e => {
@@ -33,51 +37,12 @@ export function CreateOrganizationForm({
       }}
       className="create-organization-form"
     >
-      <div className="form-group">
-        <label className="form-label" htmlFor="name">
-          Name <span className="required">*</span>
-        </label>
-        <input
-          className="form-input"
-          id="name"
-          type="text"
-          value={name}
-          onChange={e => setName(e.target.value)}
-          placeholder="Organization name"
-          required
-        />
-      </div>
-
-      <div className="form-group">
-        <label className="form-label" htmlFor="slug">
-          Slug
-        </label>
-        <input
-          className="form-input"
-          id="slug"
-          type="text"
-          value={slug}
-          onChange={e => onSlugChange(e.target.value)}
-          placeholder="Auto-generated from name"
-        />
-        <span className="form-hint">
-          Unique identifier (kebab-case). Leave empty to auto-generate.
-        </span>
-      </div>
-
-      <div className="form-group">
-        <label className="form-label" htmlFor="description">
-          Description
-        </label>
-        <textarea
-          className="form-textarea"
-          id="description"
-          value={description}
-          onChange={e => setDescription(e.target.value)}
-          placeholder="Description (optional)"
-          rows={3}
-        />
-      </div>
+      <NameField name={name} setName={setName} />
+      <SlugField slug={slug} onSlugChange={onSlugChange} />
+      <DescriptionField
+        description={description}
+        setDescription={setDescription}
+      />
 
       <div className="form-actions">
         <Link

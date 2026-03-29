@@ -1,4 +1,6 @@
-/* eslint-disable max-lines */
+import { BodyField } from './BodyField'
+import { CustomFieldEditor } from './CustomFieldEditor'
+import { StatusField } from './StatusField'
 import type { ItemTypeConfigProto } from '@/gen/centy_pb'
 
 interface GenericItemEditFormProps {
@@ -14,11 +16,6 @@ interface GenericItemEditFormProps {
   hasBody: boolean
 }
 
-function toLabel(name: string): string {
-  return name.charAt(0).toUpperCase() + name.slice(1).replace(/-/g, ' ')
-}
-
-// eslint-disable-next-line max-lines-per-function
 export function GenericItemEditForm({
   config,
   editTitle,
@@ -30,7 +27,7 @@ export function GenericItemEditForm({
   editCustomFields,
   setEditCustomFields,
   hasBody,
-}: GenericItemEditFormProps) {
+}: GenericItemEditFormProps): React.JSX.Element {
   return (
     <div className="generic-item-edit-form">
       <div className="form-group">
@@ -49,59 +46,25 @@ export function GenericItemEditForm({
         config.features &&
         config.features.status &&
         config.statuses.length > 0 && (
-          <div className="form-group">
-            <label className="form-label" htmlFor="edit-status">
-              Status:
-            </label>
-            <select
-              className="form-input"
-              id="edit-status"
-              value={editStatus}
-              onChange={e => setEditStatus(e.target.value)}
-            >
-              {config.statuses.map(s => (
-                <option key={s} value={s} className="form-option">
-                  {s}
-                </option>
-              ))}
-            </select>
-          </div>
+          <StatusField
+            config={config}
+            editStatus={editStatus}
+            setEditStatus={setEditStatus}
+          />
         )}
       {config &&
         config.customFields &&
         config.customFields.map(field => (
-          <div key={field.name} className="form-group">
-            <label className="form-label" htmlFor={`edit-field-${field.name}`}>
-              {toLabel(field.name)}:
-            </label>
-            <textarea
-              className="form-input"
-              id={`edit-field-${field.name}`}
-              value={editCustomFields[field.name] || ''}
-              rows={3}
-              onChange={e =>
-                setEditCustomFields({
-                  ...editCustomFields,
-                  [field.name]: e.target.value,
-                })
-              }
-            />
-          </div>
-        ))}
-      {hasBody && (
-        <div className="form-group">
-          <label className="form-label" htmlFor="edit-body">
-            Body:
-          </label>
-          <textarea
-            className="form-input"
-            id="edit-body"
-            rows={6}
-            value={editBody}
-            onChange={e => setEditBody(e.target.value)}
+          <CustomFieldEditor
+            key={field.name}
+            fieldName={field.name}
+            value={editCustomFields[field.name] || ''}
+            onChange={value =>
+              setEditCustomFields({ ...editCustomFields, [field.name]: value })
+            }
           />
-        </div>
-      )}
+        ))}
+      {hasBody && <BodyField editBody={editBody} setEditBody={setEditBody} />}
     </div>
   )
 }

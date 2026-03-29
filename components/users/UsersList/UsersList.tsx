@@ -12,7 +12,23 @@ import {
 } from '@/components/shared/ContextMenu'
 import { type User } from '@/gen/centy_pb'
 
-// eslint-disable-next-line max-lines-per-function
+interface ContextMenuState {
+  x: number
+  y: number
+  user: User
+}
+
+function buildContextMenuItems(
+  menu: ContextMenuState,
+  onView: () => void,
+  onDelete: () => void
+): ContextMenuItem[] {
+  return [
+    { label: 'View', onClick: onView },
+    { label: 'Delete', onClick: onDelete, danger: true },
+  ]
+}
+
 export function UsersList() {
   const router = useRouter()
   const data = useUsersData()
@@ -22,11 +38,7 @@ export function UsersList() {
     null
   )
   const [showSyncModal, setShowSyncModal] = useState(false)
-  const [contextMenu, setContextMenu] = useState<{
-    x: number
-    y: number
-    user: User
-  } | null>(null)
+  const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null)
 
   const handleContextMenu = useCallback((e: React.MouseEvent, user: User) => {
     e.preventDefault()
@@ -42,23 +54,17 @@ export function UsersList() {
   )
 
   const contextMenuItems: ContextMenuItem[] = contextMenu
-    ? [
-        {
-          label: 'View',
-          onClick: () => {
-            router.push(getUserRoute(contextMenu.user.id))
-            setContextMenu(null)
-          },
+    ? buildContextMenuItems(
+        contextMenu,
+        () => {
+          router.push(getUserRoute(contextMenu.user.id))
+          setContextMenu(null)
         },
-        {
-          label: 'Delete',
-          onClick: () => {
-            setShowDeleteConfirm(contextMenu.user.id)
-            setContextMenu(null)
-          },
-          danger: true,
-        },
-      ]
+        () => {
+          setShowDeleteConfirm(contextMenu.user.id)
+          setContextMenu(null)
+        }
+      )
     : []
 
   return (

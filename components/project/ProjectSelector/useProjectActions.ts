@@ -1,22 +1,20 @@
-/* eslint-disable max-lines */
 'use client'
 
-import { useCallback } from 'react'
 import { useRouter, useParams, usePathname } from 'next/navigation'
 import { route } from 'nextjs-routes'
-import { create } from '@bufbuild/protobuf'
-import { ROOT_ROUTES } from './ProjectSelector.types'
-import { centyClient } from '@/lib/grpc/client'
-import {
-  RegisterProjectRequestSchema,
-  SetProjectFavoriteRequestSchema,
-  type ProjectInfo,
-} from '@/gen/centy_pb'
+import { projectSelectorApi } from './projectSelectorApi'
+import type { ProjectInfo } from '@/gen/centy_pb'
 import {
   useProject,
   useArchivedProjects,
 } from '@/components/providers/ProjectProvider'
 import { UNGROUPED_ORG_MARKER } from '@/lib/project-resolver'
+
+const {
+  getCurrentPageFromRoute,
+  toggleFavoriteRequest,
+  handleManualSubmitAction,
+} = projectSelectorApi
 
 interface UseProjectActionsParams {
   projects: ProjectInfo[]
@@ -27,7 +25,6 @@ interface UseProjectActionsParams {
   manualPath: string
 }
 
-// eslint-disable-next-line max-lines-per-function
 export function useProjectActions(params: UseProjectActionsParams) {
   const router = useRouter()
   const routeParams = useParams()
@@ -35,21 +32,9 @@ export function useProjectActions(params: UseProjectActionsParams) {
   const { projectPath, setProjectPath, setIsInitialized } = useProject()
   const { archiveProject } = useArchivedProjects()
 
-  const getCurrentPage = useCallback(() => {
-    const orgP = routeParams ? routeParams.organization : undefined
-    const org = typeof orgP === 'string' ? orgP : undefined
-    const projP = routeParams ? routeParams.project : undefined
-    const proj = typeof projP === 'string' ? projP : undefined
-    const segments = pathname.split('/').filter(Boolean)
-    if (org && proj) return segments[2] || 'issues'
-    if (segments.length >= 2 && !ROOT_ROUTES.has(segments[0]))
-      return segments[2] || 'issues'
-    return segments[0] || 'issues'
-  }, [routeParams, pathname])
-
-  const handleSelectProject = (project: ProjectInfo) => {
+  const handleSelectProject = (project: ProjectInfo): void => {
     const orgSlug = project.organizationSlug || UNGROUPED_ORG_MARKER
-    const page = getCurrentPage()
+    const page = getCurrentPageFromRoute(routeParams, pathname)
     setProjectPath(project.path)
     setIsInitialized(project.initialized)
     router.push(
@@ -62,33 +47,22 @@ export function useProjectActions(params: UseProjectActionsParams) {
     params.setSearchQuery('')
   }
 
-  const handleManualSubmit = async (e: React.FormEvent) => {
+  const handleManualSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault()
     if (!params.manualPath.trim()) return
     const path = params.manualPath.trim()
-    try {
-      const req = create(RegisterProjectRequestSchema, { projectPath: path })
-      const res = await centyClient.registerProject(req)
-      if (res.success && res.project) {
-        setProjectPath(path)
-        setIsInitialized(res.project.initialized)
-        params.setProjects(prev =>
-          prev.some(p => p.path === path) ? prev : [...prev, res.project!]
-        )
-      } else {
-        setProjectPath(path)
-        setIsInitialized(null)
-      }
-    } catch {
-      setProjectPath(path)
-      setIsInitialized(null)
-    }
+    await handleManualSubmitAction(
+      path,
+      setProjectPath,
+      setIsInitialized,
+      params.setProjects
+    )
     params.setManualPath('')
     params.setSearchQuery('')
     params.setIsOpen(false)
   }
 
-  const getCurrentProjectName = () => {
+  const getCurrentProjectName = (): string => {
     if (!projectPath) return 'Select Project'
     const p = params.projects.find(p => p.path === projectPath)
     if (p && p.name) return p.name
@@ -96,7 +70,10 @@ export function useProjectActions(params: UseProjectActionsParams) {
     return parts[parts.length - 1] || projectPath
   }
 
-  const handleArchiveProject = (e: React.MouseEvent, proj: ProjectInfo) => {
+  const handleArchiveProject = (
+    e: React.MouseEvent,
+    proj: ProjectInfo
+  ): void => {
     e.stopPropagation()
     archiveProject(proj.path)
     if (proj.path !== projectPath) return
@@ -107,18 +84,15 @@ export function useProjectActions(params: UseProjectActionsParams) {
   const handleToggleFavorite = async (
     e: React.MouseEvent,
     project: ProjectInfo
-  ) => {
+  ): Promise<void> => {
     e.stopPropagation()
     try {
-      const req = create(SetProjectFavoriteRequestSchema, {
-        projectPath: project.path,
-        isFavorite: !project.isFavorite,
-      })
-      const res = await centyClient.setProjectFavorite(req)
-      if (res.success && res.project)
+      const updated = await toggleFavoriteRequest(project)
+      if (updated) {
         params.setProjects(prev =>
-          prev.map(p => (p.path === project.path ? res.project! : p))
+          prev.map(p => (p.path === project.path ? updated : p))
         )
+      }
     } catch (err) {
       console.error('Failed to toggle favorite:', err)
     }

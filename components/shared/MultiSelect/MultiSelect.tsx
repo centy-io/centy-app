@@ -1,10 +1,9 @@
 'use client'
 
-import { FloatingPortal } from '@floating-ui/react'
 import type { MultiSelectProps } from './MultiSelect.types'
 import { useMultiSelect } from './useMultiSelect'
+import { MultiSelectDropdown } from './MultiSelectDropdown'
 
-// eslint-disable-next-line max-lines-per-function
 export function MultiSelect({
   options,
   value,
@@ -44,38 +43,16 @@ export function MultiSelect({
       </button>
 
       {isOpen && (
-        <FloatingPortal>
-          <div
-            ref={refs.setFloating}
-            style={floatingStyles}
-            className="multi-select-dropdown"
-            {...getFloatingProps()}
-          >
-            <label className="multi-select-option select-all">
-              <input
-                className="multi-select-checkbox"
-                type="checkbox"
-                checked={allSelected}
-                onChange={handleSelectAll}
-              />
-              <span className="multi-select-option-label">All</span>
-            </label>
-            <div className="multi-select-divider" />
-            {options.map(option => (
-              <label key={option.value} className="multi-select-option">
-                <input
-                  className="multi-select-checkbox"
-                  type="checkbox"
-                  checked={value.includes(option.value)}
-                  onChange={() => handleOptionToggle(option.value)}
-                />
-                <span className="multi-select-option-label">
-                  {option.label}
-                </span>
-              </label>
-            ))}
-          </div>
-        </FloatingPortal>
+        <MultiSelectDropdown
+          options={options}
+          value={value}
+          floatingRef={refs.setFloating}
+          floatingStyles={floatingStyles}
+          getFloatingProps={getFloatingProps}
+          allSelected={allSelected}
+          handleSelectAll={handleSelectAll}
+          handleOptionToggle={handleOptionToggle}
+        />
       )}
     </div>
   )

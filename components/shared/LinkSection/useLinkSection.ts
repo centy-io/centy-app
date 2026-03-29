@@ -1,16 +1,13 @@
 import { useState, useCallback, useEffect } from 'react'
 import { create } from '@bufbuild/protobuf'
 import { useLinkRoutes } from './useLinkRoutes'
+import { deleteLinkRequest } from './deleteLinkRequest'
+import { removeLinkFromList } from './removeLinkFromList'
+import { toLinkTargetType } from './toLinkTargetType'
 import { centyClient } from '@/lib/grpc/client'
-import {
-  ListLinksRequestSchema,
-  DeleteLinkRequestSchema,
-  LinkTargetType,
-  type Link as LinkType,
-} from '@/gen/centy_pb'
+import { ListLinksRequestSchema, type Link as LinkType } from '@/gen/centy_pb'
 import { usePathContext } from '@/components/providers/PathContextProvider'
 
-// eslint-disable-next-line max-lines-per-function
 export function useLinkSection(entityId: string, entityType: 'issue' | 'doc') {
   const { projectPath } = usePathContext()
   const { buildLinkRoute } = useLinkRoutes()
@@ -28,8 +25,7 @@ export function useLinkSection(entityId: string, entityType: 'issue' | 'doc') {
       const request = create(ListLinksRequestSchema, {
         projectPath,
         entityId,
-        entityType:
-          entityType === 'issue' ? LinkTargetType.ISSUE : LinkTargetType.DOC,
+        entityType: toLinkTargetType(entityType),
       })
       const response = await centyClient.listLinks(request)
       setLinks(response.links)
@@ -47,29 +43,19 @@ export function useLinkSection(entityId: string, entityType: 'issue' | 'doc') {
   const handleDeleteLink = useCallback(
     async (link: LinkType) => {
       if (!projectPath || !entityId) return
-      const linkKey = `${link.targetId}-${link.linkType}`
-      setDeletingLinkId(linkKey)
+      setDeletingLinkId(`${link.targetId}-${link.linkType}`)
       setError(null)
       try {
-        const request = create(DeleteLinkRequestSchema, {
+        const result = await deleteLinkRequest(
           projectPath,
-          sourceId: entityId,
-          sourceType:
-            entityType === 'issue' ? LinkTargetType.ISSUE : LinkTargetType.DOC,
-          targetId: link.targetId,
-          targetType: link.targetType,
-          linkType: link.linkType,
-        })
-        const response = await centyClient.deleteLink(request)
-        if (response.success) {
-          setLinks(prev =>
-            prev.filter(
-              l =>
-                !(l.targetId === link.targetId && l.linkType === link.linkType)
-            )
-          )
+          entityId,
+          entityType,
+          link
+        )
+        if (result.success) {
+          setLinks(prev => removeLinkFromList(prev, link))
         } else {
-          setError(response.error || 'Failed to delete link')
+          setError(result.error || 'Failed to delete link')
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to delete link')

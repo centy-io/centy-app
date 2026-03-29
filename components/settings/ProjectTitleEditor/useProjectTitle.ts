@@ -10,7 +10,15 @@ import { ListProjectsRequestSchema, type ProjectInfo } from '@/gen/centy_pb'
 
 export type { TitleScope } from './TitleScope'
 
-// eslint-disable-next-line max-lines-per-function
+async function fetchProjectByPath(
+  projectPath: string
+): Promise<ProjectInfo | null> {
+  const request = create(ListProjectsRequestSchema, {})
+  const response = await centyClient.listProjects(request)
+  const project = response.projects.find(p => p.path === projectPath)
+  return project || null
+}
+
 export function useProjectTitle(projectPath: string) {
   const [projectInfo, setProjectInfo] = useState<ProjectInfo | null>(null)
   const [userTitle, setUserTitle] = useState('')
@@ -20,28 +28,20 @@ export function useProjectTitle(projectPath: string) {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
 
-  useEffect(() => {
-    if (!projectPath) return
-    const fetchProjectInfo = async () => {
-      try {
-        const request = create(ListProjectsRequestSchema, {})
-        const response = await centyClient.listProjects(request)
-        const project = response.projects.find(p => p.path === projectPath)
-        if (project) {
-          updateFromResponse(project)
-        }
-      } catch (err) {
-        console.error('Failed to fetch project info:', err)
-      }
-    }
-    fetchProjectInfo()
-  }, [projectPath])
-
-  const updateFromResponse = (project: ProjectInfo) => {
+  const updateFromResponse = useCallback((project: ProjectInfo) => {
     setProjectInfo(project)
     setUserTitle(project.userTitle || '')
     setProjectTitle(project.projectTitle || '')
-  }
+  }, [])
+
+  useEffect(() => {
+    if (!projectPath) return
+    fetchProjectByPath(projectPath)
+      .then(project => {
+        if (project) updateFromResponse(project)
+      })
+      .catch(err => console.error('Failed to fetch project info:', err))
+  }, [projectPath, updateFromResponse])
 
   const runAction = useCallback(
     async (action: () => Promise<TitleActionResult>) => {
@@ -54,9 +54,7 @@ export function useProjectTitle(projectPath: string) {
           setError(result.error || 'Operation failed')
           return
         }
-        if (result.project) {
-          updateFromResponse(result.project)
-        }
+        if (result.project) updateFromResponse(result.project)
         setSuccess(result.message || 'Done')
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Operation failed')
@@ -64,7 +62,7 @@ export function useProjectTitle(projectPath: string) {
         setSaving(false)
       }
     },
-    []
+    [updateFromResponse]
   )
 
   const handleSave = useCallback(
@@ -80,10 +78,12 @@ export function useProjectTitle(projectPath: string) {
 
   const currentTitle = scope === 'user' ? userTitle : projectTitle
   const setCurrentTitle = scope === 'user' ? setUserTitle : setProjectTitle
+  const infoUserTitle = projectInfo ? projectInfo.userTitle : ''
+  const infoProjectTitle = projectInfo ? projectInfo.projectTitle : ''
   const hasChanges =
     scope === 'user'
-      ? userTitle !== ((projectInfo ? projectInfo.userTitle : '') || '')
-      : projectTitle !== ((projectInfo ? projectInfo.projectTitle : '') || '')
+      ? userTitle !== (infoUserTitle || '')
+      : projectTitle !== (infoProjectTitle || '')
 
   return {
     projectInfo,

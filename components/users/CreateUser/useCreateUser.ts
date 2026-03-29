@@ -1,12 +1,11 @@
-/* eslint-disable max-lines */
 'use client'
 
-import { useState, useCallback, useEffect, useMemo } from 'react'
-import { useRouter, useParams } from 'next/navigation'
-import { route, type RouteLiteral } from 'nextjs-routes'
+import { useState, useCallback, useEffect } from 'react'
 import { create } from '@bufbuild/protobuf'
+import { useProjectRouting } from './useProjectRouting'
+import { useGitUsernames } from './useGitUsernames'
 import { centyClient } from '@/lib/grpc/client'
-import { CreateUserRequestSchema } from '@/gen/centy_pb'
+import { CreateUserRequestSchema, type User } from '@/gen/centy_pb'
 import { usePathContext } from '@/components/providers/PathContextProvider'
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
 import { isDaemonUnimplemented } from '@/lib/daemon-error'
@@ -20,34 +19,33 @@ function formatError(err: unknown): string {
     : msg
 }
 
-// eslint-disable-next-line max-lines-per-function
+async function createUserRequest(
+  projectPath: string,
+  name: string,
+  userId: string,
+  email: string,
+  gitUsernames: string[]
+): Promise<{ success: boolean; user?: User; error?: string }> {
+  const req = create(CreateUserRequestSchema, {
+    projectPath,
+    id: userId.trim() || undefined,
+    name: name.trim(),
+    email: email.trim() || undefined,
+    gitUsernames: gitUsernames.filter(u => u.trim() !== ''),
+  })
+  const res = await centyClient.createUser(req)
+  return { success: res.success, user: res.user, error: res.error }
+}
+
 export function useCreateUser() {
-  const router = useRouter()
-  const params = useParams()
   const { projectPath, isInitialized } = usePathContext()
-
-  const projectContext = useMemo(() => {
-    const orgP = params ? params.organization : undefined
-    const org = typeof orgP === 'string' ? orgP : undefined
-    const projP = params ? params.project : undefined
-    const proj = typeof projP === 'string' ? projP : undefined
-    if (org && proj) return { organization: org, project: proj }
-    return null
-  }, [params])
-
-  const usersListUrl: RouteLiteral = useMemo(() => {
-    if (!projectContext) return route({ pathname: '/' })
-    return route({
-      pathname: '/[organization]/[project]/users',
-      query: projectContext,
-    })
-  }, [projectContext])
+  const { usersListUrl, navigateAfterCreate } = useProjectRouting()
+  const gitState = useGitUsernames()
 
   const [name, setName] = useState('')
   const [userId, setUserId] = useState('')
   const [userIdManuallySet, setUserIdManuallySet] = useState(false)
   const [email, setEmail] = useState('')
-  const [gitUsernames, setGitUsernames] = useState<string[]>([])
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -60,25 +58,15 @@ export function useCreateUser() {
     setSaving(true)
     setError(null)
     try {
-      const req = create(CreateUserRequestSchema, {
+      const res = await createUserRequest(
         projectPath,
-        id: userId.trim() || undefined,
-        name: name.trim(),
-        email: email.trim() || undefined,
-        gitUsernames: gitUsernames.filter(u => u.trim() !== ''),
-      })
-      const res = await centyClient.createUser(req)
+        name,
+        userId,
+        email,
+        gitState.gitUsernames
+      )
       if (res.success && res.user) {
-        if (projectContext) {
-          router.push(
-            route({
-              pathname: '/[organization]/[project]/users/[userId]',
-              query: { ...projectContext, userId: res.user.id },
-            })
-          )
-        } else {
-          router.push(route({ pathname: '/' }))
-        }
+        navigateAfterCreate(res.user)
       } else {
         setError(
           formatError(new OperationError(res.error || 'Failed to create user'))
@@ -89,7 +77,14 @@ export function useCreateUser() {
     } finally {
       setSaving(false)
     }
-  }, [projectPath, name, userId, email, gitUsernames, router, projectContext])
+  }, [
+    projectPath,
+    name,
+    userId,
+    email,
+    gitState.gitUsernames,
+    navigateAfterCreate,
+  ])
 
   useSaveShortcut({
     onSave: handleSubmit,
@@ -99,14 +94,6 @@ export function useCreateUser() {
   const onUserIdChange = (v: string) => {
     setUserId(v)
     setUserIdManuallySet(true)
-  }
-  const onAddGitUsername = () => setGitUsernames([...gitUsernames, ''])
-  const onRemoveGitUsername = (i: number) =>
-    setGitUsernames(gitUsernames.filter((_, idx) => idx !== i))
-  const onGitUsernameChange = (i: number, v: string) => {
-    const u = [...gitUsernames]
-    u.splice(i, 1, v)
-    setGitUsernames(u)
   }
 
   return {
@@ -119,10 +106,7 @@ export function useCreateUser() {
     onUserIdChange,
     email,
     setEmail,
-    gitUsernames,
-    onAddGitUsername,
-    onRemoveGitUsername,
-    onGitUsernameChange,
+    ...gitState,
     saving,
     error,
     handleSubmit,

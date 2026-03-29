@@ -1,19 +1,15 @@
-/* eslint-disable max-lines */
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
-import { useGenericItemFetch } from './useGenericItemFetch'
-import { useGenericItemSave } from './useGenericItemSave'
-import { useGenericItemDelete } from './useGenericItemDelete'
+import { ArchivedBanner } from './ArchivedBanner'
+import { DetailBody } from './DetailBody'
+import { useGenericItemDetailState } from './useGenericItemDetailState'
 import { GenericItemDetailHeader } from './GenericItemDetailHeader'
 import { GenericItemDeleteConfirm } from './GenericItemDeleteConfirm'
-import { GenericItemEditForm } from './GenericItemEditForm'
-import { GenericItemView } from './GenericItemView'
-import { useItemTypeConfig } from './useItemTypeConfig'
+import { buildItemDisplayName } from './buildItemDisplayName'
+import type { GenericItem } from '@/gen/centy_pb'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import { usePathContext } from '@/components/providers/PathContextProvider'
-import { useAppLink } from '@/hooks/useAppLink'
 import { CommentThread } from '@/components/comments/CommentThread'
 
 interface GenericItemDetailProps {
@@ -21,71 +17,36 @@ interface GenericItemDetailProps {
   itemId: string
 }
 
-// eslint-disable-next-line max-lines-per-function
-export function GenericItemDetail({
+interface ContentProps {
+  state: ReturnType<typeof useGenericItemDetailState>
+  item: GenericItem
+  itemType: string
+  projectPath: string
+}
+
+function GenericItemContent({
+  state,
+  item,
   itemType,
-  itemId,
-}: GenericItemDetailProps) {
-  const { projectPath } = usePathContext()
-  const { createLink } = useAppLink()
-  const { config } = useItemTypeConfig(projectPath, true, itemType)
-  const [isEditing, setIsEditing] = useState(false)
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
-  const listUrl = createLink(`/${itemType}`)
-  const fetch = useGenericItemFetch(projectPath, itemType, itemId)
-  const { saving, handleSave } = useGenericItemSave({
-    projectPath,
-    itemType,
-    item: fetch.item,
-    editTitle: fetch.editTitle,
-    editBody: fetch.editBody,
-    editStatus: fetch.editStatus,
-    editCustomFields: fetch.editCustomFields,
-    setItem: fetch.setItem,
-    setIsEditing,
-    setError: fetch.setError,
-  })
-  const { deleting, restoring, handleDelete, handleSoftDelete, handleRestore } =
-    useGenericItemDelete({
-      projectPath,
-      itemType,
-      item: fetch.item,
-      listUrl,
-      setError: fetch.setError,
-      setItem: fetch.setItem,
-    })
-  const displayName = config
-    ? config.name.charAt(0).toUpperCase() + config.name.slice(1)
-    : itemType.charAt(0).toUpperCase() + itemType.slice(1)
-
-  if (!projectPath)
-    return (
-      <div className="generic-item-detail">
-        <p className="no-project-text">Select a project to view this item</p>
-      </div>
-    )
-
-  if (fetch.loading && !fetch.item)
-    return <div className="loading">Loading...</div>
-
-  if (fetch.error && !fetch.item)
-    return (
-      <div className="generic-item-detail">
-        <DaemonErrorMessage error={fetch.error} />
-        <Link href={listUrl}>Back to list</Link>
-      </div>
-    )
-
-  if (!fetch.item) return null
-
-  const isArchived = Boolean(
-    fetch.item.metadata && fetch.item.metadata.deletedAt
-  )
-
+  projectPath,
+}: ContentProps): React.JSX.Element {
+  const { isEditing, setIsEditing, showDeleteConfirm, setShowDeleteConfirm } =
+    state
+  const {
+    listUrl,
+    fetch,
+    saving,
+    handleSave,
+    deleting,
+    restoring,
+    handleDelete,
+  } = state
+  const { handleSoftDelete, handleRestore } = state
+  const isArchived = Boolean(item.metadata && item.metadata.deletedAt)
   return (
     <div className="generic-item-detail">
       <GenericItemDetailHeader
-        displayName={displayName}
+        displayName={buildItemDisplayName(state.config, itemType)}
         listUrl={listUrl}
         isEditing={isEditing}
         saving={saving}
@@ -96,22 +57,11 @@ export function GenericItemDetail({
       />
       {fetch.error && <DaemonErrorMessage error={fetch.error} />}
       {isArchived && (
-        <div className="deleted-item-banner">
-          <span className="deleted-item-banner-text">
-            This item has been archived.
-          </span>
-          <button
-            onClick={handleRestore}
-            disabled={restoring}
-            className="restore-btn"
-          >
-            {restoring ? 'Restoring...' : 'Restore'}
-          </button>
-        </div>
+        <ArchivedBanner restoring={restoring} onRestore={handleRestore} />
       )}
       {showDeleteConfirm && (
         <GenericItemDeleteConfirm
-          itemLabel={fetch.item.title || fetch.item.id}
+          itemLabel={item.title || item.id}
           deleting={deleting}
           onCancel={() => setShowDeleteConfirm(false)}
           onSoftDelete={handleSoftDelete}
@@ -119,31 +69,55 @@ export function GenericItemDetail({
         />
       )}
       <div className="doc-content">
-        {isEditing ? (
-          <GenericItemEditForm
-            config={config}
-            editTitle={fetch.editTitle}
-            setEditTitle={fetch.setEditTitle}
-            editBody={fetch.editBody}
-            setEditBody={fetch.setEditBody}
-            editStatus={fetch.editStatus}
-            setEditStatus={fetch.setEditStatus}
-            editCustomFields={fetch.editCustomFields}
-            setEditCustomFields={fetch.setEditCustomFields}
-            hasBody={Boolean(fetch.item.body)}
-          />
-        ) : (
-          <GenericItemView item={fetch.item} config={config} />
-        )}
+        <DetailBody
+          item={item}
+          config={state.config}
+          isEditing={isEditing}
+          fetch={fetch}
+        />
       </div>
-
       {itemType !== 'comments' && (
         <CommentThread
           projectPath={projectPath}
-          parentItemId={fetch.item.id}
+          parentItemId={item.id}
           parentItemType={itemType}
         />
       )}
     </div>
+  )
+}
+
+export function GenericItemDetail({
+  itemType,
+  itemId,
+}: GenericItemDetailProps): React.JSX.Element | null {
+  const { projectPath } = usePathContext()
+  const state = useGenericItemDetailState(projectPath, itemType, itemId)
+  const { fetch } = state
+
+  if (!projectPath)
+    return (
+      <div className="generic-item-detail">
+        <p className="no-project-text">Select a project to view this item</p>
+      </div>
+    )
+  if (fetch.loading && !fetch.item)
+    return <div className="loading">Loading...</div>
+  if (fetch.error && !fetch.item)
+    return (
+      <div className="generic-item-detail">
+        <DaemonErrorMessage error={fetch.error} />
+        <Link href={state.listUrl}>Back to list</Link>
+      </div>
+    )
+  if (!fetch.item) return null
+
+  return (
+    <GenericItemContent
+      state={state}
+      item={fetch.item}
+      itemType={itemType}
+      projectPath={projectPath}
+    />
   )
 }

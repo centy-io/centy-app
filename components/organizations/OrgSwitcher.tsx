@@ -9,10 +9,11 @@ import {
   offset,
 } from '@floating-ui/react'
 import { OrgSwitcherDropdown } from './OrgSwitcher.dropdown'
+import { getOrgLabel } from './getOrgLabel'
+import { useClickOutside } from './useClickOutside'
 import { useOrganization } from '@/components/providers/OrganizationProvider'
 
-// eslint-disable-next-line max-lines-per-function
-export function OrgSwitcher() {
+export function OrgSwitcher(): React.JSX.Element {
   const {
     selectedOrgSlug,
     setSelectedOrgSlug,
@@ -33,39 +34,16 @@ export function OrgSwitcher() {
     if (isOpen) {
       refreshOrganizations()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen])
 
-  // Close on click outside
-  useEffect(() => {
-    if (!isOpen) return
+  useClickOutside(isOpen, () => setIsOpen(false), '.org-switcher-container')
 
-    const handleClickOutside = (e: MouseEvent) => {
-      const target = e.target
-      if (
-        !(target instanceof HTMLElement) ||
-        !target.closest('.org-switcher-container')
-      ) {
-        setIsOpen(false)
-      }
-    }
-
-    document.addEventListener('click', handleClickOutside)
-    return () => document.removeEventListener('click', handleClickOutside)
-  }, [isOpen])
-
-  const getCurrentLabel = () => {
-    if (selectedOrgSlug === undefined) return 'Select Org'
-    if (selectedOrgSlug === null) return 'All Orgs'
-    if (selectedOrgSlug === '') return 'Ungrouped'
-    const org = organizations.find(o => o.slug === selectedOrgSlug)
-    return (org ? org.name : '') || selectedOrgSlug
-  }
-
-  const handleSelect = (slug: string | null | undefined) => {
+  const handleSelect = (slug: string | null | undefined): void => {
     setSelectedOrgSlug(slug)
     setIsOpen(false)
   }
+
+  const currentLabel = getOrgLabel(selectedOrgSlug, organizations)
 
   return (
     <div className="org-switcher-container">
@@ -78,7 +56,7 @@ export function OrgSwitcher() {
         title="Filter by organization"
       >
         <span className="org-icon">🏢</span>
-        <span className="org-label">{getCurrentLabel()}</span>
+        <span className="org-label">{currentLabel}</span>
         <span className="dropdown-arrow">{isOpen ? '▲' : '▼'}</span>
       </button>
 

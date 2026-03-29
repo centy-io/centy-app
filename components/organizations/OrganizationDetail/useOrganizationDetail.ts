@@ -1,77 +1,43 @@
-/* eslint-disable max-lines */
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { route } from 'nextjs-routes'
 import { create } from '@bufbuild/protobuf'
+import { useOrgDetailState } from './useOrgDetailState'
+import { fetchOrgAndProjects } from './fetchOrgAndProjects'
+import { performUpdateOrg } from './performUpdateOrg'
+import { formatOrgErr } from './formatOrgErr'
 import { centyClient } from '@/lib/grpc/client'
-import {
-  GetOrganizationRequestSchema,
-  UpdateOrganizationRequestSchema,
-  DeleteOrganizationRequestSchema,
-  ListProjectsRequestSchema,
-  type Organization,
-  type ProjectInfo,
-} from '@/gen/centy_pb'
-import { isDaemonUnimplemented } from '@/lib/daemon-error'
+import { DeleteOrganizationRequestSchema } from '@/gen/centy_pb'
 
-function formatErr(err: unknown): string {
-  const m = err instanceof Error ? err.message : 'Failed to connect to daemon'
-  return isDaemonUnimplemented(m)
-    ? 'Organizations feature is not available. Please update your daemon.'
-    : m
-}
-
-// eslint-disable-next-line max-lines-per-function
 export function useOrganizationDetail(orgSlug: string) {
   const router = useRouter()
-  const [organization, setOrganization] = useState<Organization | null>(null)
-  const [projects, setProjects] = useState<ProjectInfo[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [isEditing, setIsEditing] = useState(false)
-  const [editName, setEditName] = useState('')
-  const [editDescription, setEditDescription] = useState('')
-  const [editSlug, setEditSlug] = useState('')
-  const [saving, setSaving] = useState(false)
-  const [deleting, setDeleting] = useState(false)
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
-  const [deleteError, setDeleteError] = useState<string | null>(null)
+  const st = useOrgDetailState()
 
   const fetchOrganization = useCallback(async () => {
     if (!orgSlug) {
-      setError('Missing organization slug')
-      setLoading(false)
+      st.setError('Missing organization slug')
+      st.setLoading(false)
       return
     }
-    setLoading(true)
-    setError(null)
+    st.setLoading(true)
+    st.setError(null)
     try {
-      const res = await centyClient.getOrganization(
-        create(GetOrganizationRequestSchema, { slug: orgSlug })
-      )
-      if (!res.found || !res.organization) {
-        setError('Organization not found')
-        setLoading(false)
+      const result = await fetchOrgAndProjects(orgSlug)
+      if (typeof result === 'string') {
+        st.setError(result)
         return
       }
-      const org = res.organization
-      setOrganization(org)
-      setEditName(org.name)
-      setEditDescription(org.description || '')
-      setEditSlug(org.slug)
-      setProjects(
-        (
-          await centyClient.listProjects(
-            create(ListProjectsRequestSchema, { organizationSlug: orgSlug })
-          )
-        ).projects
-      )
+      st.setOrganization(result.org)
+      st.setEditName(result.org.name)
+      st.setEditDescription(result.org.description || '')
+      st.setEditSlug(result.org.slug)
+      st.setProjects(result.projects)
     } catch (err) {
-      setError(formatErr(err))
+      st.setError(formatOrgErr(err))
     } finally {
-      setLoading(false)
+      st.setLoading(false)
     }
   }, [orgSlug])
 
@@ -81,85 +47,67 @@ export function useOrganizationDetail(orgSlug: string) {
 
   const handleSave = useCallback(async () => {
     if (!orgSlug) return
-    setSaving(true)
-    setError(null)
+    st.setSaving(true)
+    st.setError(null)
     try {
-      const res = await centyClient.updateOrganization(
-        create(UpdateOrganizationRequestSchema, {
-          slug: orgSlug,
-          name: editName,
-          description: editDescription,
-          newSlug: editSlug !== orgSlug ? editSlug : undefined,
-        })
+      const result = await performUpdateOrg(
+        orgSlug,
+        st.editName,
+        st.editDescription,
+        st.editSlug
       )
-      if (res.success && res.organization) {
-        setOrganization(res.organization)
-        setIsEditing(false)
-        if (res.organization.slug !== orgSlug)
+      if ('error' in result) {
+        st.setError(result.error)
+      } else {
+        st.setOrganization(result.org)
+        st.setIsEditing(false)
+        if (result.org.slug !== orgSlug)
           router.push(
             route({
               pathname: '/organizations/[orgSlug]',
-              query: { orgSlug: res.organization.slug },
+              query: { orgSlug: result.org.slug },
             })
           )
-      } else {
-        setError(res.error || 'Failed to update organization')
       }
     } catch (err) {
-      setError(formatErr(err))
+      st.setError(formatOrgErr(err))
     } finally {
-      setSaving(false)
+      st.setSaving(false)
     }
-  }, [orgSlug, editName, editDescription, editSlug, router])
+  }, [orgSlug, st.editName, st.editDescription, st.editSlug, router])
 
   const handleDelete = useCallback(async () => {
     if (!orgSlug) return
-    setDeleting(true)
-    setDeleteError(null)
+    st.setDeleting(true)
+    st.setDeleteError(null)
     try {
       const res = await centyClient.deleteOrganization(
         create(DeleteOrganizationRequestSchema, { slug: orgSlug })
       )
       if (res.success) router.push(route({ pathname: '/organizations' }))
-      else setDeleteError(res.error || 'Failed to delete organization')
+      else st.setDeleteError(res.error || 'Failed to delete organization')
     } catch (err) {
-      setDeleteError(
+      st.setDeleteError(
         err instanceof Error ? err.message : 'Failed to connect to daemon'
       )
     } finally {
-      setDeleting(false)
+      st.setDeleting(false)
     }
   }, [orgSlug, router])
 
-  const handleCancelEdit = () => {
-    setIsEditing(false)
-    if (!organization) return
-    setEditName(organization.name)
-    setEditDescription(organization.description || '')
-    setEditSlug(organization.slug)
+  const handleCancelEdit = (): void => {
+    st.setIsEditing(false)
+    if (!st.organization) return
+    st.setEditName(st.organization.name)
+    st.setEditDescription(st.organization.description || '')
+    st.setEditSlug(st.organization.slug)
   }
 
   return {
-    organization,
-    projects,
-    loading,
-    error,
-    isEditing,
-    editName,
-    editDescription,
-    editSlug,
-    saving,
-    deleting,
-    showDeleteConfirm,
-    deleteError,
-    setIsEditing,
-    setEditName,
-    setEditDescription,
-    setEditSlug,
-    setShowDeleteConfirm,
-    setDeleteError,
+    ...st,
     handleSave,
     handleDelete,
     handleCancelEdit,
+    fetchOrganization,
   }
 }

@@ -1,14 +1,10 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useDebounce } from 'use-debounce'
-import { create } from '@bufbuild/protobuf'
 import type { EntityItem } from './AddLinkModal.types'
-import { filterAndMapIssues, filterAndMapDocs } from './entityFilters'
-import { centyClient } from '@/lib/grpc/client'
-import { ListItemsRequestSchema, type Link as LinkType } from '@/gen/centy_pb'
-import { genericItemToIssue } from '@/lib/genericItemToIssue'
-import { genericItemToDoc } from '@/lib/genericItemToDoc'
+import { fetchIssueEntities } from './fetchIssueEntities'
+import { fetchDocEntities } from './fetchDocEntities'
+import type { Link as LinkType } from '@/gen/centy_pb'
 
-// eslint-disable-next-line max-lines-per-function
 export function useEntitySearch(
   projectPath: string,
   entityId: string,
@@ -29,26 +25,16 @@ export function useEntitySearch(
     try {
       let results: EntityItem[] = []
       if (targetTypeFilter === 'issue') {
-        const request = create(ListItemsRequestSchema, {
+        results = await fetchIssueEntities(
           projectPath,
-          itemType: 'issues',
-        })
-        const response = await centyClient.listItems(request)
-        results = filterAndMapIssues(
-          response.items.map(genericItemToIssue),
           entityId,
           existingLinks,
           selectedLinkType,
           debouncedSearchQuery
         )
       } else if (targetTypeFilter === 'doc') {
-        const request = create(ListItemsRequestSchema, {
+        results = await fetchDocEntities(
           projectPath,
-          itemType: 'docs',
-        })
-        const response = await centyClient.listItems(request)
-        results = filterAndMapDocs(
-          response.items.map(genericItemToDoc),
           entityId,
           existingLinks,
           selectedLinkType,

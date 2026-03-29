@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { route } from 'nextjs-routes'
+import { OrgOption, OrgList } from './OrgSwitcherOptions'
 import type { Organization } from '@/gen/centy_pb'
 
 interface OrgSwitcherDropdownProps {
@@ -17,7 +18,6 @@ interface OrgSwitcherDropdownProps {
   onClose: () => void
 }
 
-// eslint-disable-next-line max-lines-per-function
 export function OrgSwitcherDropdown({
   refs,
   floatingStyles,
@@ -27,7 +27,7 @@ export function OrgSwitcherDropdown({
   onRefresh,
   onSelect,
   onClose,
-}: OrgSwitcherDropdownProps) {
+}: OrgSwitcherDropdownProps): React.JSX.Element {
   return (
     <div
       ref={refs.setFloating}
@@ -47,41 +47,27 @@ export function OrgSwitcherDropdown({
       </div>
 
       <ul className="org-options" role="listbox">
-        <li
-          role="option"
-          aria-selected={selectedOrgSlug === null}
-          className={`org-option ${selectedOrgSlug === null ? 'selected' : ''}`}
-          onClick={() => onSelect(null)}
-        >
-          <span className="org-option-name">All Organizations</span>
-        </li>
-        <li
-          role="option"
-          aria-selected={selectedOrgSlug === ''}
-          className={`org-option ${selectedOrgSlug === '' ? 'selected' : ''}`}
-          onClick={() => onSelect('')}
-        >
-          <span className="org-option-name">Ungrouped Projects</span>
-        </li>
+        <OrgOption
+          slug={null}
+          label="All Organizations"
+          selectedOrgSlug={selectedOrgSlug}
+          onSelect={onSelect}
+        />
+        <OrgOption
+          slug=""
+          label="Ungrouped Projects"
+          selectedOrgSlug={selectedOrgSlug}
+          onSelect={onSelect}
+        />
 
         {organizations.length > 0 && <li className="org-divider" />}
 
-        {loading && organizations.length === 0 ? (
-          <li className="org-loading">Loading...</li>
-        ) : (
-          organizations.map(org => (
-            <li
-              key={org.slug}
-              role="option"
-              aria-selected={selectedOrgSlug === org.slug}
-              className={`org-option ${selectedOrgSlug === org.slug ? 'selected' : ''}`}
-              onClick={() => onSelect(org.slug)}
-            >
-              <span className="org-option-name">{org.name}</span>
-              <span className="org-project-count">{org.projectCount}</span>
-            </li>
-          ))
-        )}
+        <OrgList
+          organizations={organizations}
+          loading={loading}
+          selectedOrgSlug={selectedOrgSlug}
+          onSelect={onSelect}
+        />
       </ul>
 
       <div className="org-switcher-footer">

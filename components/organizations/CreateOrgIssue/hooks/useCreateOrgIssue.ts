@@ -7,7 +7,10 @@ import { centyClient } from '@/lib/grpc/client'
 import { CreateItemRequestSchema } from '@/gen/centy_pb'
 import { useStateManager } from '@/lib/state'
 
-// eslint-disable-next-line max-lines-per-function
+function formatSubmitErr(err: unknown): string {
+  return err instanceof Error ? err.message : 'Failed to connect to daemon'
+}
+
 export function useCreateOrgIssue(orgSlug: string) {
   const router = useRouter()
   const stateManager = useStateManager()
@@ -21,11 +24,15 @@ export function useCreateOrgIssue(orgSlug: string) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  const issuesRoute = route({
+    pathname: '/organizations/[orgSlug]/issues',
+    query: { orgSlug },
+  })
+
   const handleSubmit = useCallback(
     async (e?: React.FormEvent) => {
       if (e) e.preventDefault()
       if (!orgProjectPath || !title.trim()) return
-
       setLoading(true)
       setError(null)
       try {
@@ -41,34 +48,22 @@ export function useCreateOrgIssue(orgSlug: string) {
           })
         )
         if (res.success) {
-          router.push(
-            route({
-              pathname: '/organizations/[orgSlug]/issues',
-              query: { orgSlug },
-            })
-          )
+          router.push(issuesRoute)
         } else {
           setError(res.error || 'Failed to create org issue')
         }
       } catch (err) {
-        setError(
-          err instanceof Error ? err.message : 'Failed to connect to daemon'
-        )
+        setError(formatSubmitErr(err))
       } finally {
         setLoading(false)
       }
     },
-    [orgProjectPath, orgSlug, title, description, priority, status, router]
+    [orgProjectPath, title, description, priority, status, router, issuesRoute]
   )
 
   const handleCancel = useCallback(() => {
-    router.push(
-      route({
-        pathname: '/organizations/[orgSlug]/issues',
-        query: { orgSlug },
-      })
-    )
-  }, [orgSlug, router])
+    router.push(issuesRoute)
+  }, [router, issuesRoute])
 
   return {
     orgProjectPath,

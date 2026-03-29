@@ -5,7 +5,18 @@ import type { Config, Manifest } from '@/gen/centy_pb'
 import { fetchProjectData } from '@/components/settings/Settings/settingsApi'
 import { useConfigMutations } from '@/components/settings/Settings/useConfigMutations'
 
-// eslint-disable-next-line max-lines-per-function
+function useUnsavedWarning(isDirty: boolean): void {
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (!isDirty) return
+      e.preventDefault()
+      e.returnValue = ''
+    }
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
+  }, [isDirty])
+}
+
 export function useProjectConfigData(
   projectPath: string,
   isInitialized: boolean | null
@@ -23,15 +34,7 @@ export function useProjectConfigData(
       ? JSON.stringify(config) !== JSON.stringify(originalConfig)
       : false
 
-  useEffect(() => {
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (!isDirty) return
-      e.preventDefault()
-      e.returnValue = ''
-    }
-    window.addEventListener('beforeunload', handleBeforeUnload)
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
-  }, [isDirty])
+  useUnsavedWarning(isDirty)
 
   const doFetchProjectData = useCallback(async () => {
     if (!projectPath.trim() || isInitialized !== true) return

@@ -1,74 +1,40 @@
 'use client'
 
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import type { DaemonStatus } from './DaemonStatusProvider.types'
 import {
   CHECK_INTERVAL_MS,
-  applyDemoState,
   buildDemoRedirectUrl,
   initializeDemoFromUrl,
 } from './DaemonStatusProvider.helpers'
 import {
-  centyClient,
-  enableDemoMode,
-  disableDemoMode,
-  isDemoMode,
-} from '@/lib/grpc/client'
+  useEditorState,
+  useCheckDaemonStatus,
+} from './DaemonStatusProvider.hooks.helpers'
+import { enableDemoMode, disableDemoMode, isDemoMode } from '@/lib/grpc/client'
 import { DEMO_ORG_SLUG, DEMO_PROJECT_PATH } from '@/lib/grpc/demo-data'
-import type { EditorInfo } from '@/gen/centy_pb'
 import { trackDaemonConnection } from '@/lib/metrics'
-import { fetchLatestDaemonVersion } from '@/lib/fetchLatestDaemonVersion'
 
-// eslint-disable-next-line max-lines-per-function
 export function useDaemonStatusState() {
   const [status, setStatus] = useState<DaemonStatus>('checking')
   const [lastChecked, setLastChecked] = useState<Date | null>(null)
   const [hasMounted, setHasMounted] = useState(false)
-  const [editors, setEditors] = useState<EditorInfo[]>([])
-  const [editorsLoaded, setEditorsLoaded] = useState(false)
   const [daemonVersion, setDaemonVersion] = useState<string | null>(null)
   const [latestDaemonVersion, setLatestDaemonVersion] = useState<string | null>(
     null
   )
 
-  const vscodeAvailable = useMemo<boolean | null>(() => {
-    if (!editorsLoaded) return null
-    return editors.some(e => e.editorId === 'vscode' && e.available)
-  }, [editors, editorsLoaded])
+  const { editors, vscodeAvailable, setEditors, setEditorsLoaded } =
+    useEditorState()
 
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      initializeDemoFromUrl(setStatus, setEditors, setEditorsLoaded)
-      setHasMounted(true)
-    }, 0)
-    return () => clearTimeout(timeoutId)
-  }, [])
-
-  const checkDaemonStatus = useCallback(async () => {
-    if (isDemoMode()) {
-      applyDemoState(setStatus, setEditors, setEditorsLoaded)
-      return
-    }
-    setStatus('checking')
-    try {
-      const daemonInfo = await centyClient.getDaemonInfo({})
-      setStatus('connected')
-      setDaemonVersion(daemonInfo.version || null)
-      trackDaemonConnection(true, false)
-      const resp = await centyClient.getSupportedEditors({})
-      setEditors(resp.editors)
-      setEditorsLoaded(true)
-      const latest = await fetchLatestDaemonVersion()
-      setLatestDaemonVersion(latest)
-    } catch {
-      setStatus('disconnected')
-      setEditors([])
-      setEditorsLoaded(false)
-      setDaemonVersion(null)
-      trackDaemonConnection(false, false)
-    }
-    setLastChecked(new Date())
-  }, [])
+  const checkDaemonStatus = useCheckDaemonStatus({
+    setStatus,
+    setDaemonVersion,
+    setLatestDaemonVersion,
+    setLastChecked,
+    setEditors,
+    setEditorsLoaded,
+  })
 
   const enterDemoMode = useCallback(() => {
     enableDemoMode()
@@ -85,6 +51,14 @@ export function useDaemonStatusState() {
     setStatus('checking')
     setTimeout(() => checkDaemonStatus(), 100)
   }, [checkDaemonStatus])
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      initializeDemoFromUrl(setStatus, setEditors, setEditorsLoaded)
+      setHasMounted(true)
+    }, 0)
+    return () => clearTimeout(timeoutId)
+  }, [setEditors, setEditorsLoaded])
 
   useEffect(() => {
     if (!hasMounted || isDemoMode()) return

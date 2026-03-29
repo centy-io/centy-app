@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, type ReactElement } from 'react'
+import { CommentEditForm } from './CommentEditForm'
 import { TextEditor } from '@/components/shared/TextEditor'
 import type { GenericItem } from '@/gen/centy_pb'
 
@@ -12,7 +13,6 @@ interface CommentItemProps {
   onDelete: (id: string) => void
 }
 
-// eslint-disable-next-line max-lines-per-function
 export function CommentItem({
   comment,
   savingId,
@@ -30,12 +30,12 @@ export function CommentItem({
   const isSaving = savingId === comment.id
   const isDeleting = deletingId === comment.id
 
-  function handleSave() {
+  function handleSave(): void {
     onUpdate(comment.id, editBody)
     setIsEditing(false)
   }
 
-  function handleCancel() {
+  function handleCancel(): void {
     setEditBody(comment.body)
     setIsEditing(false)
   }
@@ -66,34 +66,13 @@ export function CommentItem({
       </div>
 
       {isEditing ? (
-        <div className="comment-edit-form">
-          <TextEditor
-            value={editBody}
-            onChange={setEditBody}
-            format="md"
-            mode="edit"
-            placeholder="Edit your comment..."
-            minHeight={80}
-          />
-          <div className="comment-edit-actions">
-            <button
-              type="button"
-              className="comment-save-btn"
-              onClick={handleSave}
-              disabled={isSaving || !editBody.trim()}
-            >
-              {isSaving ? 'Saving...' : 'Save'}
-            </button>
-            <button
-              type="button"
-              className="comment-cancel-btn"
-              onClick={handleCancel}
-              disabled={isSaving}
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
+        <CommentEditForm
+          editBody={editBody}
+          isSaving={isSaving}
+          onChange={setEditBody}
+          onSave={handleSave}
+          onCancel={handleCancel}
+        />
       ) : (
         <div className="comment-body">
           {comment.body ? (

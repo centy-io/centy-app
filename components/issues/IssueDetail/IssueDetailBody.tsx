@@ -6,32 +6,53 @@ import { ViewContent } from './ViewContent'
 import { Metadata } from './Metadata'
 import type { IssueDetailBodyProps } from './IssueDetailBody.types'
 
-// eslint-disable-next-line max-lines-per-function
-export function IssueDetailBody({
-  issue,
-  projectPath,
-  issueNumber,
-  editState,
-  stateManager,
-  stateOptions,
-  statusChange,
-  assets,
-  setAssets,
-  copyToClipboard,
-}: IssueDetailBodyProps): ReactElement {
+function buildToggleDropdown(
+  setShowStatusDropdown: (show: boolean) => void,
+  showStatusDropdown: boolean
+): () => void {
+  return () => setShowStatusDropdown(!showStatusDropdown)
+}
+
+function buildNumberBadgeHandler(
+  copyToClipboard: IssueDetailBodyProps['copyToClipboard'],
+  issueNumber: string,
+  displayNumber: string
+): () => void {
+  return () => copyToClipboard(issueNumber, `issue #${displayNumber}`)
+}
+
+export function IssueDetailBody(props: IssueDetailBodyProps): ReactElement {
+  const {
+    issue,
+    projectPath,
+    issueNumber,
+    editState,
+    stateManager,
+    stateOptions,
+    statusChange,
+    assets,
+    setAssets,
+    copyToClipboard,
+  } = props
+  const onToggleDropdown = buildToggleDropdown(
+    statusChange.setShowStatusDropdown,
+    statusChange.showStatusDropdown
+  )
+  const onBadgeClick = buildNumberBadgeHandler(
+    copyToClipboard,
+    issueNumber,
+    issue.displayNumber
+  )
   return (
     <div className="issue-content">
       <button
         type="button"
         className="issue-number-badge"
-        onClick={() =>
-          copyToClipboard(issueNumber, `issue #${issue.displayNumber}`)
-        }
+        onClick={onBadgeClick}
         title="Click to copy UUID"
       >
         #{issue.displayNumber}
       </button>
-
       {editState.isEditing ? (
         <EditForm
           projectPath={projectPath}
@@ -62,11 +83,7 @@ export function IssueDetailBody({
             statusDropdownRef={statusChange.statusDropdownRef}
             assignees={editState.assignees}
             setAssignees={editState.setAssignees}
-            onToggleDropdown={() =>
-              statusChange.setShowStatusDropdown(
-                !statusChange.showStatusDropdown
-              )
-            }
+            onToggleDropdown={onToggleDropdown}
             onStatusChange={statusChange.handleStatusChange}
           />
           <ViewContent

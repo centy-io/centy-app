@@ -1,15 +1,9 @@
 import { useState, useCallback, useEffect } from 'react'
-import { create } from '@bufbuild/protobuf'
-import { callItemApi } from './callItemApi'
-import { centyClient } from '@/lib/grpc/client'
-import {
-  ListItemsRequestSchema,
-  DeleteItemRequestSchema,
-  SoftDeleteItemRequestSchema,
-  type GenericItem,
-} from '@/gen/centy_pb'
+import { deleteListItem } from './deleteListItem'
+import { fetchItemList } from './fetchItemList'
+import { softDeleteListItem } from './softDeleteListItem'
+import type { GenericItem } from '@/gen/centy_pb'
 
-// eslint-disable-next-line max-lines-per-function
 export function useGenericItemsData(
   projectPath: string,
   isInitialized: boolean | null,
@@ -25,38 +19,25 @@ export function useGenericItemsData(
     if (!projectPath.trim() || isInitialized !== true) return
     setLoading(true)
     setError(null)
-    try {
-      const response = await centyClient.listItems(
-        create(ListItemsRequestSchema, {
-          projectPath: projectPath.trim(),
-          itemType,
-        })
-      )
-      setItems(response.items)
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to connect to daemon'
-      )
-    } finally {
-      setLoading(false)
-    }
+    const result = await fetchItemList(projectPath, itemType)
+    setItems(result.items)
+    if (result.error) setError(result.error)
+    setLoading(false)
   }, [projectPath, isInitialized, itemType])
 
   const handleDelete = useCallback(
     async (itemId: string) => {
       if (!projectPath) return
-      const res = await callItemApi(
-        () =>
-          centyClient.deleteItem(
-            create(DeleteItemRequestSchema, { projectPath, itemType, itemId })
-          ),
+      const ok = await deleteListItem(
+        projectPath,
+        itemType,
+        itemId,
         setDeleting,
         setError
       )
-      if (res && res.success) {
-        setItems(prev => prev.filter(i => i.id !== itemId))
-        setDeleteConfirm(null)
-      } else if (res) setError(res.error || 'Failed to delete item')
+      if (!ok) return
+      setItems(prev => prev.filter(i => i.id !== itemId))
+      setDeleteConfirm(null)
     },
     [projectPath, itemType]
   )
@@ -64,30 +45,23 @@ export function useGenericItemsData(
   const handleSoftDelete = useCallback(
     async (itemId: string) => {
       if (!projectPath) return
-      const res = await callItemApi(
-        () =>
-          centyClient.softDeleteItem(
-            create(SoftDeleteItemRequestSchema, {
-              projectPath,
-              itemType,
-              itemId,
-            })
-          ),
+      const ok = await softDeleteListItem(
+        projectPath,
+        itemType,
+        itemId,
         setDeleting,
         setError
       )
-      if (res && res.success) {
-        setItems(prev => prev.filter(i => i.id !== itemId))
-        setDeleteConfirm(null)
-      } else if (res) setError(res.error || 'Failed to archive item')
+      if (!ok) return
+      setItems(prev => prev.filter(i => i.id !== itemId))
+      setDeleteConfirm(null)
     },
     [projectPath, itemType]
   )
 
   useEffect(() => {
-    if (isInitialized === true) {
-      fetchItems()
-    }
+    if (isInitialized !== true) return
+    fetchItems()
   }, [isInitialized, fetchItems])
 
   return {

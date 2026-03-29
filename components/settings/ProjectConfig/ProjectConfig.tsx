@@ -1,20 +1,17 @@
 'use client'
 
 import { useEffect } from 'react'
+import type { ReactElement } from 'react'
 import Link from 'next/link'
 import { route } from 'nextjs-routes'
 import { useProjectConfigData } from './useProjectConfigData'
 import { useProjectOrg } from './useProjectOrg'
-import { OrgSection } from './OrgSection'
+import { ProjectConfigContent } from './ProjectConfigContent'
 import { usePathContext } from '@/components/providers/PathContextProvider'
 import { useOrganization } from '@/components/providers/OrganizationProvider'
-import { ProjectTitleEditor } from '@/components/settings/ProjectTitleEditor'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
-import { ConfigSections } from '@/components/settings/Settings/ConfigSections'
-import { ManifestSection } from '@/components/settings/Settings/ManifestSection'
 
-// eslint-disable-next-line max-lines-per-function
-export function ProjectConfig() {
+export function ProjectConfig(): ReactElement {
   const { projectPath, isInitialized } = usePathContext()
   const { organizations, refreshOrganizations } = useOrganization()
 
@@ -66,40 +63,12 @@ export function ProjectConfig() {
       )}
 
       {projectPath && isInitialized === true && (
-        <>
-          {data.loading ? (
-            <div className="loading">Loading project configuration...</div>
-          ) : (
-            <>
-              <OrgSection
-                organizations={organizations}
-                projectOrgSlug={org.projectOrgSlug}
-                savingOrg={org.savingOrg}
-                onOrgChange={org.handleOrgChange}
-              />
-
-              <section className="settings-section">
-                <h3 className="settings-section-title">Project Title</h3>
-                <div className="settings-card">
-                  <ProjectTitleEditor projectPath={projectPath} />
-                </div>
-              </section>
-
-              {data.config && (
-                <ConfigSections
-                  config={data.config}
-                  saving={data.saving}
-                  isDirty={data.isDirty}
-                  updateConfig={data.updateConfig}
-                  onSave={data.handleSaveConfig}
-                  onReset={data.handleResetConfig}
-                />
-              )}
-
-              <ManifestSection manifest={data.manifest} />
-            </>
-          )}
-        </>
+        <ProjectConfigContent
+          projectPath={projectPath}
+          data={data}
+          org={org}
+          organizations={organizations}
+        />
       )}
     </div>
   )

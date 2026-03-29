@@ -1,11 +1,32 @@
 import { useCallback, useState, useEffect } from 'react'
 import { useEditor } from '@tiptap/react'
+import type { Editor } from '@tiptap/react'
 import type { TextEditorProps, EditorMode } from '../TextEditor.types'
 import { markdownToHtml, htmlToMarkdown } from '../utils/markdownParser'
 import { createEditorExtensions } from '../constants'
 import { useAsciidocConverter } from './useAsciidocConverter'
 
-// eslint-disable-next-line max-lines-per-function
+function useEditorSync(
+  editor: Editor | null,
+  currentMode: EditorMode,
+  markdownContent: string,
+  rawValue: string,
+  setRawValue: (v: string) => void
+): void {
+  useEffect(() => {
+    if (editor) {
+      editor.setEditable(currentMode === 'edit')
+    }
+  }, [editor, currentMode])
+
+  useEffect(() => {
+    if (!editor || markdownContent === rawValue) return
+    const html = markdownToHtml(markdownContent)
+    editor.commands.setContent(html)
+    setRawValue(markdownContent)
+  }, [editor, markdownContent, rawValue, setRawValue])
+}
+
 export function useTextEditorState({
   value,
   onChange,
@@ -41,22 +62,11 @@ export function useTextEditorState({
   })
 
   useEffect(() => {
-    if (editor) {
-      editor.setEditable(currentMode === 'edit')
-    }
-  }, [editor, currentMode])
-
-  useEffect(() => {
     setCurrentMode(resolvedMode)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode])
 
-  useEffect(() => {
-    if (!editor || markdownContent === rawValue) return
-    const html = markdownToHtml(markdownContent)
-    editor.commands.setContent(html)
-    setRawValue(markdownContent)
-  }, [editor, markdownContent, rawValue])
+  useEditorSync(editor, currentMode, markdownContent, rawValue, setRawValue)
 
   const handleRawChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
