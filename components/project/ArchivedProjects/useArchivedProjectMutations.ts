@@ -2,9 +2,10 @@
 
 import { useState } from 'react'
 import { untrackProjectHelpers } from './untrackProjectHelpers'
+import { performRemoveAll } from './performRemoveAll'
 import type { ProjectInfo } from '@/gen/centy_pb'
 
-const { removeAllFromDaemon, removeProjectFromDaemon } = untrackProjectHelpers
+const { removeProjectFromDaemon } = untrackProjectHelpers
 
 interface UseArchivedProjectMutationsParams {
   archivedPaths: string[]
@@ -56,31 +57,17 @@ export function useArchivedProjectMutations({
     setConfirmRemove(null)
   }
 
-  const handleRemoveAll = async (): Promise<void> => {
-    setRemovingAll(true)
-    setMutationError(null)
-    try {
-      const err = await removeAllFromDaemon(
-        archivedProjects,
-        archivedPathsNotInDaemon,
-        removeArchivedProject
-      )
-      if (err) {
-        setMutationError(err)
-      } else {
-        setAllProjects(prev =>
-          prev.filter(p => !archivedPaths.includes(p.path))
-        )
-      }
-    } catch (err) {
-      setMutationError(
-        err instanceof Error ? err.message : 'Failed to remove all projects'
-      )
-    } finally {
-      setRemovingAll(false)
-      setConfirmRemoveAll(false)
-    }
-  }
+  const handleRemoveAll = (): Promise<void> =>
+    performRemoveAll({
+      archivedProjects,
+      archivedPathsNotInDaemon,
+      archivedPaths,
+      removeArchivedProject,
+      setAllProjects,
+      setRemovingAll,
+      setMutationError,
+      setConfirmRemoveAll,
+    })
 
   return {
     error,

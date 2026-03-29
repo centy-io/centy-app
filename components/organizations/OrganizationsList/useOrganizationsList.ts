@@ -6,11 +6,10 @@ import { create } from '@bufbuild/protobuf'
 import { useOrgListState } from './useOrgListState'
 import { buildContextMenuItems } from './buildContextMenuItems'
 import { formatListErr } from './formatListErr'
-import { formatDeleteErr } from './formatDeleteErr'
+import { performDeleteOrg } from './performDeleteOrg'
 import { centyClient } from '@/lib/grpc/client'
 import {
   ListOrganizationsRequestSchema,
-  DeleteOrganizationRequestSchema,
   type Organization,
 } from '@/gen/centy_pb'
 import type { ContextMenuItem } from '@/components/shared/ContextMenu'
@@ -39,44 +38,26 @@ export function useOrganizationsList() {
   }, [fetchOrganizations])
 
   const handleDelete = useCallback(async (slug: string) => {
-    st.setDeleting(true)
-    st.setDeleteError(null)
-    try {
-      const response = await centyClient.deleteOrganization(
-        create(DeleteOrganizationRequestSchema, { slug })
-      )
-      if (response.success) {
-        st.setOrganizations(prev => prev.filter(o => o.slug !== slug))
-        st.setShowDeleteConfirm(null)
-      } else if (response.error === 'ORG_HAS_PROJECTS') {
-        st.setShowDeleteConfirm(null)
-        st.setShowCascadeConfirm(slug)
-      } else
-        st.setDeleteError(response.error || 'Failed to delete organization')
-    } catch (err) {
-      st.setDeleteError(formatDeleteErr(err))
-    } finally {
-      st.setDeleting(false)
-    }
+    await performDeleteOrg({
+      slug,
+      setDeleting: st.setDeleting,
+      setDeleteError: st.setDeleteError,
+      setOrganizations: st.setOrganizations,
+      setShowDeleteConfirm: st.setShowDeleteConfirm,
+      setShowCascadeConfirm: st.setShowCascadeConfirm,
+    })
   }, [])
 
   const handleDeleteCascade = useCallback(async (slug: string) => {
-    st.setDeleting(true)
-    st.setDeleteError(null)
-    try {
-      const response = await centyClient.deleteOrganization(
-        create(DeleteOrganizationRequestSchema, { slug, cascade: true })
-      )
-      if (response.success) {
-        st.setOrganizations(prev => prev.filter(o => o.slug !== slug))
-        st.setShowCascadeConfirm(null)
-      } else
-        st.setDeleteError(response.error || 'Failed to delete organization')
-    } catch (err) {
-      st.setDeleteError(formatDeleteErr(err))
-    } finally {
-      st.setDeleting(false)
-    }
+    await performDeleteOrg({
+      slug,
+      cascade: true,
+      setDeleting: st.setDeleting,
+      setDeleteError: st.setDeleteError,
+      setOrganizations: st.setOrganizations,
+      setShowDeleteConfirm: st.setShowDeleteConfirm,
+      setShowCascadeConfirm: st.setShowCascadeConfirm,
+    })
   }, [])
 
   const handleContextMenu = useCallback(

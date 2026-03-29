@@ -1,11 +1,11 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { initProjectApi } from './initProjectApi'
+import { runQuickInitStep } from './runQuickInitStep'
+import { runGetPlanStep } from './runGetPlanStep'
+import { runExecutePlanStep } from './runExecutePlanStep'
 import type { InitStep } from './InitProject.types'
 import type { ReconciliationPlan, InitResponse } from '@/gen/centy_pb'
-
-const { runQuickInit, runGetPlan, runExecutePlan } = initProjectApi
 
 interface UseInitStepsParams {
   projectPath: string
@@ -32,89 +32,52 @@ export function useInitSteps({
 }: UseInitStepsParams) {
   const [loading, setLoading] = useState(false)
 
-  const handleQuickInit = useCallback(async () => {
-    if (!projectPath.trim()) return
-    setLoading(true)
-    setError(null)
-    try {
-      const outcome = await runQuickInit(projectPath)
-      if (outcome.success && outcome.result) {
-        setResult(outcome.result)
-        setStep('success')
-      } else {
-        setError(outcome.error || 'Initialization failed')
-        setStep('error')
-      }
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to connect to daemon'
-      )
-      setStep('error')
-    } finally {
-      setLoading(false)
-    }
-  }, [projectPath, setError, setResult, setStep])
+  const handleQuickInit = useCallback(
+    () =>
+      runQuickInitStep({
+        projectPath,
+        setLoading,
+        setError,
+        setResult,
+        setStep,
+      }),
+    [projectPath, setError, setResult, setStep]
+  )
 
-  const handleGetPlan = useCallback(async () => {
-    if (!projectPath.trim()) return
-    setLoading(true)
-    setError(null)
-    try {
-      const { plan: fetchedPlan, restore } = await runGetPlan(projectPath)
-      setPlan(fetchedPlan)
-      setStep('plan')
-      setSelectedRestore(new Set(restore))
-      setSelectedReset(new Set())
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to connect to daemon'
-      )
-      setStep('error')
-    } finally {
-      setLoading(false)
-    }
-  }, [
-    projectPath,
-    setError,
-    setPlan,
-    setSelectedRestore,
-    setSelectedReset,
-    setStep,
-  ])
+  const handleGetPlan = useCallback(
+    () =>
+      runGetPlanStep({
+        projectPath,
+        setLoading,
+        setError,
+        setPlan,
+        setStep,
+        setSelectedRestore,
+        setSelectedReset,
+      }),
+    [
+      projectPath,
+      setError,
+      setPlan,
+      setSelectedRestore,
+      setSelectedReset,
+      setStep,
+    ]
+  )
 
-  const handleExecutePlan = useCallback(async () => {
-    if (!projectPath.trim()) return
-    setLoading(true)
-    setStep('executing')
-    try {
-      const outcome = await runExecutePlan(
+  const handleExecutePlan = useCallback(
+    () =>
+      runExecutePlanStep({
         projectPath,
         selectedRestore,
-        selectedReset
-      )
-      if (outcome.success && outcome.result) {
-        setResult(outcome.result)
-        setStep('success')
-      } else {
-        setError(outcome.error || 'Initialization failed')
-        setStep('error')
-      }
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to connect to daemon'
-      )
-      setStep('error')
-    } finally {
-      setLoading(false)
-    }
-  }, [
-    projectPath,
-    selectedRestore,
-    selectedReset,
-    setError,
-    setResult,
-    setStep,
-  ])
+        selectedReset,
+        setLoading,
+        setError,
+        setResult,
+        setStep,
+      }),
+    [projectPath, selectedRestore, selectedReset, setError, setResult, setStep]
+  )
 
   return { loading, handleQuickInit, handleGetPlan, handleExecutePlan }
 }

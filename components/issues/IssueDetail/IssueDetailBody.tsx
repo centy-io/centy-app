@@ -2,8 +2,7 @@
 
 import type { ReactElement } from 'react'
 import { EditForm } from './EditForm'
-import { ViewContent } from './ViewContent'
-import { Metadata } from './Metadata'
+import { IssueDetailViewMode } from './IssueDetailViewMode'
 import type { IssueDetailBodyProps } from './IssueDetailBody.types'
 
 function buildToggleDropdown(
@@ -70,30 +69,18 @@ export function IssueDetailBody(props: IssueDetailBodyProps): ReactElement {
           setAssets={setAssets}
         />
       ) : (
-        <>
-          <h1 className="issue-title">{issue.title}</h1>
-          <Metadata
-            issue={issue}
-            projectPath={projectPath}
-            issueNumber={issueNumber}
-            stateManager={stateManager}
-            stateOptions={stateOptions}
-            showStatusDropdown={statusChange.showStatusDropdown}
-            updatingStatus={statusChange.updatingStatus}
-            statusDropdownRef={statusChange.statusDropdownRef}
-            assignees={editState.assignees}
-            setAssignees={editState.setAssignees}
-            onToggleDropdown={onToggleDropdown}
-            onStatusChange={statusChange.handleStatusChange}
-          />
-          <ViewContent
-            issue={issue}
-            projectPath={projectPath}
-            issueNumber={issueNumber}
-            assets={assets}
-            setAssets={setAssets}
-          />
-        </>
+        <IssueDetailViewMode
+          issue={issue}
+          projectPath={projectPath}
+          issueNumber={issueNumber}
+          stateManager={stateManager}
+          stateOptions={stateOptions}
+          statusChange={statusChange}
+          editState={editState}
+          assets={assets}
+          setAssets={setAssets}
+          onToggleDropdown={onToggleDropdown}
+        />
       )}
     </div>
   )

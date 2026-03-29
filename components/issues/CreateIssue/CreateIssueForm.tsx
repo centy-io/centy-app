@@ -5,6 +5,7 @@ import type { CreateIssueFormProps } from './CreateIssue.types'
 import { PrioritySelect } from './PrioritySelect'
 import { StatusSelect } from './StatusSelect'
 import { CreateIssueFormActions } from './CreateIssueFormActions'
+import { CreateIssueTitleField } from './CreateIssueTitleField'
 import { AssetUploader } from '@/components/assets/AssetUploader'
 import { TextEditor } from '@/components/shared/TextEditor'
 
@@ -29,20 +30,7 @@ export function CreateIssueForm(props: CreateIssueFormProps): ReactElement {
   } = props
   return (
     <form className="create-issue-form" onSubmit={onSubmit}>
-      <div className="form-group">
-        <label className="form-label" htmlFor="title">
-          Title:
-        </label>
-        <input
-          className="form-input"
-          id="title"
-          type="text"
-          value={title}
-          onChange={e => setTitle(e.target.value)}
-          placeholder="Issue title"
-          required
-        />
-      </div>
+      <CreateIssueTitleField title={title} setTitle={setTitle} />
       <div className="form-group">
         <label className="form-label" htmlFor="description">
           Description:

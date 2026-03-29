@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef } from 'react'
 import { useProjectContext } from './useProjectContext'
 import { useIssueDraft } from './useIssueDraft'
-import { buildCreateItemResult } from './buildCreateItemResult'
+import { buildHandleSubmit } from './buildHandleSubmit'
 import { useCreateItemSubmit } from '@/hooks/useCreateItemSubmit'
 import { usePathContext } from '@/components/providers/PathContextProvider'
 import { useStateManager } from '@/lib/state'
@@ -42,29 +42,23 @@ export function useCreateIssue() {
   })
 
   const handleSubmit = useCallback(
-    async (e?: React.FormEvent) => {
-      if (!title.trim()) return
-      return submitItem(
-        () =>
-          buildCreateItemResult({
-            projectPath,
-            title,
-            description,
-            priority,
-            status,
-            pendingAssets,
-            assetUploaderRef,
-          }),
-        e
-      )
-    },
+    (e?: React.FormEvent) =>
+      buildHandleSubmit({
+        title,
+        description,
+        priority,
+        status,
+        pendingAssets,
+        assetUploaderRef,
+        projectPath,
+        submitItem,
+      })(e),
     [
       title,
       description,
       priority,
       status,
       pendingAssets,
-      assetUploaderRef,
       projectPath,
       submitItem,
     ]

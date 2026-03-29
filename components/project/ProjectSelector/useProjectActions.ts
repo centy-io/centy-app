@@ -3,6 +3,7 @@
 import { useRouter, useParams, usePathname } from 'next/navigation'
 import { route } from 'nextjs-routes'
 import { projectSelectorApi } from './projectSelectorApi'
+import { toggleFavorite } from './toggleFavorite'
 import type { ProjectInfo } from '@/gen/centy_pb'
 import {
   useProject,
@@ -10,11 +11,7 @@ import {
 } from '@/components/providers/ProjectProvider'
 import { UNGROUPED_ORG_MARKER } from '@/lib/project-resolver'
 
-const {
-  getCurrentPageFromRoute,
-  toggleFavoriteRequest,
-  handleManualSubmitAction,
-} = projectSelectorApi
+const { getCurrentPageFromRoute, handleManualSubmitAction } = projectSelectorApi
 
 interface UseProjectActionsParams {
   projects: ProjectInfo[]
@@ -81,22 +78,11 @@ export function useProjectActions(params: UseProjectActionsParams) {
     setIsInitialized(null)
   }
 
-  const handleToggleFavorite = async (
+  const handleToggleFavorite = (
     e: React.MouseEvent,
     project: ProjectInfo
-  ): Promise<void> => {
-    e.stopPropagation()
-    try {
-      const updated = await toggleFavoriteRequest(project)
-      if (updated) {
-        params.setProjects(prev =>
-          prev.map(p => (p.path === project.path ? updated : p))
-        )
-      }
-    } catch (err) {
-      console.error('Failed to toggle favorite:', err)
-    }
-  }
+  ): Promise<void> =>
+    toggleFavorite({ e, project, setProjects: params.setProjects })
 
   return {
     projectPath,

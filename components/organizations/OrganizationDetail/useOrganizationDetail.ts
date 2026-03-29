@@ -3,13 +3,23 @@
 import { useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { route } from 'nextjs-routes'
-import { create } from '@bufbuild/protobuf'
 import { useOrgDetailState } from './useOrgDetailState'
 import { fetchOrgAndProjects } from './fetchOrgAndProjects'
-import { performUpdateOrg } from './performUpdateOrg'
+import { performSaveOrganization } from './performSaveOrganization'
+import { performDeleteOrganization } from './performDeleteOrganization'
 import { formatOrgErr } from './formatOrgErr'
-import { centyClient } from '@/lib/grpc/client'
-import { DeleteOrganizationRequestSchema } from '@/gen/centy_pb'
+
+type OrgDetailState = ReturnType<typeof useOrgDetailState>
+
+function buildCancelEdit(st: OrgDetailState): () => void {
+  return () => {
+    st.setIsEditing(false)
+    if (!st.organization) return
+    st.setEditName(st.organization.name)
+    st.setEditDescription(st.organization.description || '')
+    st.setEditSlug(st.organization.slug)
+  }
+}
 
 export function useOrganizationDetail(orgSlug: string) {
   const router = useRouter()
@@ -45,69 +55,38 @@ export function useOrganizationDetail(orgSlug: string) {
     fetchOrganization()
   }, [fetchOrganization])
 
-  const handleSave = useCallback(async () => {
-    if (!orgSlug) return
-    st.setSaving(true)
-    st.setError(null)
-    try {
-      const result = await performUpdateOrg(
+  const handleSave = useCallback(
+    () =>
+      performSaveOrganization({
         orgSlug,
-        st.editName,
-        st.editDescription,
-        st.editSlug
-      )
-      if ('error' in result) {
-        st.setError(result.error)
-      } else {
-        st.setOrganization(result.org)
-        st.setIsEditing(false)
-        if (result.org.slug !== orgSlug)
-          router.push(
-            route({
-              pathname: '/organizations/[orgSlug]',
-              query: { orgSlug: result.org.slug },
-            })
-          )
-      }
-    } catch (err) {
-      st.setError(formatOrgErr(err))
-    } finally {
-      st.setSaving(false)
-    }
-  }, [orgSlug, st.editName, st.editDescription, st.editSlug, router])
+        editName: st.editName,
+        editDescription: st.editDescription,
+        editSlug: st.editSlug,
+        setSaving: st.setSaving,
+        setError: st.setError,
+        setOrganization: st.setOrganization,
+        setIsEditing: st.setIsEditing,
+        router,
+      }),
+    [orgSlug, st.editName, st.editDescription, st.editSlug, router]
+  )
 
-  const handleDelete = useCallback(async () => {
-    if (!orgSlug) return
-    st.setDeleting(true)
-    st.setDeleteError(null)
-    try {
-      const res = await centyClient.deleteOrganization(
-        create(DeleteOrganizationRequestSchema, { slug: orgSlug })
-      )
-      if (res.success) router.push(route({ pathname: '/organizations' }))
-      else st.setDeleteError(res.error || 'Failed to delete organization')
-    } catch (err) {
-      st.setDeleteError(
-        err instanceof Error ? err.message : 'Failed to connect to daemon'
-      )
-    } finally {
-      st.setDeleting(false)
-    }
-  }, [orgSlug, router])
-
-  const handleCancelEdit = (): void => {
-    st.setIsEditing(false)
-    if (!st.organization) return
-    st.setEditName(st.organization.name)
-    st.setEditDescription(st.organization.description || '')
-    st.setEditSlug(st.organization.slug)
-  }
+  const handleDelete = useCallback(
+    () =>
+      performDeleteOrganization({
+        orgSlug,
+        setDeleting: st.setDeleting,
+        setDeleteError: st.setDeleteError,
+        onSuccess: () => router.push(route({ pathname: '/organizations' })),
+      }),
+    [orgSlug, router]
+  )
 
   return {
     ...st,
     handleSave,
     handleDelete,
-    handleCancelEdit,
+    handleCancelEdit: buildCancelEdit(st),
     fetchOrganization,
   }
 }

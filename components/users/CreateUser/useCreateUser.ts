@@ -1,40 +1,23 @@
 'use client'
 
 import { useState, useCallback, useEffect } from 'react'
-import { create } from '@bufbuild/protobuf'
 import { useProjectRouting } from './useProjectRouting'
 import { useGitUsernames } from './useGitUsernames'
-import { centyClient } from '@/lib/grpc/client'
-import { CreateUserRequestSchema, type User } from '@/gen/centy_pb'
+import { formatCreateUserError } from './formatCreateUserError'
+import { sendCreateUserRequest } from './sendCreateUserRequest'
 import { usePathContext } from '@/components/providers/PathContextProvider'
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
-import { isDaemonUnimplemented } from '@/lib/daemon-error'
 import { OperationError } from '@/lib/errors'
 import { generateSlug } from '@/lib/generate-slug'
 
-function formatError(err: unknown): string {
-  const msg = err instanceof Error ? err.message : 'Failed to connect to daemon'
-  return isDaemonUnimplemented(msg)
-    ? 'User management is not yet available. Please update your daemon to the latest version.'
-    : msg
-}
-
-async function createUserRequest(
-  projectPath: string,
-  name: string,
-  userId: string,
-  email: string,
-  gitUsernames: string[]
-): Promise<{ success: boolean; user?: User; error?: string }> {
-  const req = create(CreateUserRequestSchema, {
-    projectPath,
-    id: userId.trim() || undefined,
-    name: name.trim(),
-    email: email.trim() || undefined,
-    gitUsernames: gitUsernames.filter(u => u.trim() !== ''),
-  })
-  const res = await centyClient.createUser(req)
-  return { success: res.success, user: res.user, error: res.error }
+function buildOnUserIdChange(
+  setUserId: (v: string) => void,
+  setUserIdManuallySet: (v: boolean) => void
+): (v: string) => void {
+  return (v: string) => {
+    setUserId(v)
+    setUserIdManuallySet(true)
+  }
 }
 
 export function useCreateUser() {
@@ -58,7 +41,7 @@ export function useCreateUser() {
     setSaving(true)
     setError(null)
     try {
-      const res = await createUserRequest(
+      const res = await sendCreateUserRequest(
         projectPath,
         name,
         userId,
@@ -69,11 +52,13 @@ export function useCreateUser() {
         navigateAfterCreate(res.user)
       } else {
         setError(
-          formatError(new OperationError(res.error || 'Failed to create user'))
+          formatCreateUserError(
+            new OperationError(res.error || 'Failed to create user')
+          )
         )
       }
     } catch (err) {
-      setError(formatError(err))
+      setError(formatCreateUserError(err))
     } finally {
       setSaving(false)
     }
@@ -91,10 +76,7 @@ export function useCreateUser() {
     enabled: !saving && !!name.trim() && !!projectPath,
   })
 
-  const onUserIdChange = (v: string) => {
-    setUserId(v)
-    setUserIdManuallySet(true)
-  }
+  const onUserIdChange = buildOnUserIdChange(setUserId, setUserIdManuallySet)
 
   return {
     projectPath,

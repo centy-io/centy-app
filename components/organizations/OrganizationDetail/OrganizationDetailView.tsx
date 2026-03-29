@@ -1,11 +1,8 @@
 'use client'
 
-import Link from 'next/link'
-import { route } from 'nextjs-routes'
-import { OrganizationReadView } from './OrganizationReadView'
-import { OrgEditForm } from './OrgEditForm'
 import { OrgDeleteConfirm } from './OrgDeleteConfirm'
-import { OrgActionsBar } from './OrgActionsBar'
+import { OrgDetailContent } from './OrgDetailContent'
+import { OrgDetailHeader } from './OrgDetailHeader'
 import type { OrganizationDetailViewProps } from './OrganizationDetailViewProps'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
@@ -37,25 +34,15 @@ export function OrganizationDetailView(
 
   return (
     <div className="organization-detail">
-      <div className="organization-header">
-        <Link
-          href={route({ pathname: '/organizations' })}
-          className="back-link"
-        >
-          Back to Organizations
-        </Link>
-        <div className="organization-actions">
-          <OrgActionsBar
-            isEditing={isEditing}
-            saving={saving}
-            editName={editName}
-            setIsEditing={setIsEditing}
-            setShowDeleteConfirm={setShowDeleteConfirm}
-            handleSave={handleSave}
-            handleCancelEdit={handleCancelEdit}
-          />
-        </div>
-      </div>
+      <OrgDetailHeader
+        isEditing={isEditing}
+        saving={saving}
+        editName={editName}
+        setIsEditing={setIsEditing}
+        setShowDeleteConfirm={setShowDeleteConfirm}
+        handleSave={handleSave}
+        handleCancelEdit={handleCancelEdit}
+      />
       {error && <DaemonErrorMessage error={error} />}
       {showDeleteConfirm && (
         <OrgDeleteConfirm
@@ -67,27 +54,17 @@ export function OrganizationDetailView(
           setDeleteError={setDeleteError}
         />
       )}
-      <div className="organization-content">
-        <div className="org-slug-badge">
-          <code className="org-slug-code">{organization.slug}</code>
-        </div>
-        {isEditing ? (
-          <OrgEditForm
-            editName={editName}
-            editDescription={editDescription}
-            editSlug={editSlug}
-            currentSlug={organization.slug}
-            setEditName={setEditName}
-            setEditDescription={setEditDescription}
-            setEditSlug={setEditSlug}
-          />
-        ) : (
-          <OrganizationReadView
-            organization={organization}
-            projects={projects}
-          />
-        )}
-      </div>
+      <OrgDetailContent
+        organization={organization}
+        projects={projects}
+        isEditing={isEditing}
+        editName={editName}
+        editDescription={editDescription}
+        editSlug={editSlug}
+        setEditName={setEditName}
+        setEditDescription={setEditDescription}
+        setEditSlug={setEditSlug}
+      />
     </div>
   )
 }

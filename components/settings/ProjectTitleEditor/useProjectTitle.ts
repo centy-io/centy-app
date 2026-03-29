@@ -1,23 +1,14 @@
 'use client'
 
 import { useState, useCallback, useEffect } from 'react'
-import { create } from '@bufbuild/protobuf'
 import { saveTitle, clearTitle } from './titleActions'
+import { fetchProjectByPath } from './fetchProjectByPath'
+import { buildTitleDerivedValues } from './buildTitleDerivedValues'
 import type { TitleActionResult } from './TitleActionResult'
 import type { TitleScope } from './TitleScope'
-import { centyClient } from '@/lib/grpc/client'
-import { ListProjectsRequestSchema, type ProjectInfo } from '@/gen/centy_pb'
+import type { ProjectInfo } from '@/gen/centy_pb'
 
 export type { TitleScope } from './TitleScope'
-
-async function fetchProjectByPath(
-  projectPath: string
-): Promise<ProjectInfo | null> {
-  const request = create(ListProjectsRequestSchema, {})
-  const response = await centyClient.listProjects(request)
-  const project = response.projects.find(p => p.path === projectPath)
-  return project || null
-}
 
 export function useProjectTitle(projectPath: string) {
   const [projectInfo, setProjectInfo] = useState<ProjectInfo | null>(null)
@@ -76,14 +67,14 @@ export function useProjectTitle(projectPath: string) {
     [runAction, scope, projectPath]
   )
 
-  const currentTitle = scope === 'user' ? userTitle : projectTitle
-  const setCurrentTitle = scope === 'user' ? setUserTitle : setProjectTitle
-  const infoUserTitle = projectInfo ? projectInfo.userTitle : ''
-  const infoProjectTitle = projectInfo ? projectInfo.projectTitle : ''
-  const hasChanges =
-    scope === 'user'
-      ? userTitle !== (infoUserTitle || '')
-      : projectTitle !== (infoProjectTitle || '')
+  const derived = buildTitleDerivedValues(
+    scope,
+    userTitle,
+    projectTitle,
+    setUserTitle,
+    setProjectTitle,
+    projectInfo
+  )
 
   return {
     projectInfo,
@@ -92,9 +83,7 @@ export function useProjectTitle(projectPath: string) {
     saving,
     error,
     success,
-    currentTitle,
-    setCurrentTitle,
-    hasChanges,
+    ...derived,
     handleSave,
     handleClear,
   }
