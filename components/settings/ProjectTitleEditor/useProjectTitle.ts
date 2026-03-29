@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect } from 'react'
 import { saveTitle, clearTitle } from './titleActions'
 import { fetchProjectByPath } from './fetchProjectByPath'
 import { buildTitleDerivedValues } from './buildTitleDerivedValues'
-import type { TitleActionResult } from './TitleActionResult'
+import { runTitleAction } from './runTitleAction'
 import type { TitleScope } from './TitleScope'
 import type { ProjectInfo } from '@/gen/centy_pb'
 
@@ -35,24 +35,14 @@ export function useProjectTitle(projectPath: string) {
   }, [projectPath, updateFromResponse])
 
   const runAction = useCallback(
-    async (action: () => Promise<TitleActionResult>) => {
-      setError(null)
-      setSuccess(null)
-      setSaving(true)
-      try {
-        const result = await action()
-        if (!result.success) {
-          setError(result.error || 'Operation failed')
-          return
-        }
-        if (result.project) updateFromResponse(result.project)
-        setSuccess(result.message || 'Done')
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Operation failed')
-      } finally {
-        setSaving(false)
-      }
-    },
+    (action: Parameters<typeof runTitleAction>[0]['action']) =>
+      runTitleAction({
+        action,
+        setError,
+        setSuccess,
+        setSaving,
+        updateFromResponse,
+      }),
     [updateFromResponse]
   )
 

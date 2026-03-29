@@ -1,20 +1,15 @@
-import { useState, useCallback, useRef } from 'react'
+import { useCallback } from 'react'
 import { useProjectContext } from './useProjectContext'
 import { useIssueDraft } from './useIssueDraft'
 import { buildHandleSubmit } from './buildHandleSubmit'
+import { useCreateIssueState } from './useCreateIssueState'
 import { useCreateItemSubmit } from '@/hooks/useCreateItemSubmit'
 import { usePathContext } from '@/components/providers/PathContextProvider'
-import { useStateManager } from '@/lib/state'
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
-import type {
-  AssetUploaderHandle,
-  PendingAsset,
-} from '@/components/assets/AssetUploader'
 
 export function useCreateIssue() {
   const { projectPath, isInitialized } = usePathContext()
-  const stateManager = useStateManager()
-  const stateOptions = stateManager.getStateOptions()
+  const s = useCreateIssueState()
 
   const {
     title,
@@ -25,19 +20,14 @@ export function useCreateIssue() {
     setPriority,
     clearDraft,
   } = useIssueDraft(projectPath)
-  const [status, setStatus] = useState(() => stateManager.getDefaultState())
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [pendingAssets, setPendingAssets] = useState<PendingAsset[]>([])
-  const assetUploaderRef = useRef<AssetUploaderHandle>(null)
 
   const { getProjectContext } = useProjectContext(projectPath)
   const { submitItem, handleCancel } = useCreateItemSubmit({
     kind: 'issue',
     projectPath,
     getProjectContext,
-    setLoading,
-    setError,
+    setLoading: s.setLoading,
+    setError: s.setError,
     clearDraft,
   })
 
@@ -47,9 +37,9 @@ export function useCreateIssue() {
         title,
         description,
         priority,
-        status,
-        pendingAssets,
-        assetUploaderRef,
+        status: s.status,
+        pendingAssets: s.pendingAssets,
+        assetUploaderRef: s.assetUploaderRef,
         projectPath,
         submitItem,
       })(e),
@@ -57,21 +47,21 @@ export function useCreateIssue() {
       title,
       description,
       priority,
-      status,
-      pendingAssets,
+      s.status,
+      s.pendingAssets,
       projectPath,
       submitItem,
     ]
   )
 
   const handleKeyboardSave = useCallback(() => {
-    if (!projectPath.trim() || !title.trim() || loading) return
+    if (!projectPath.trim() || !title.trim() || s.loading) return
     void handleSubmit()
-  }, [projectPath, title, loading, handleSubmit])
+  }, [projectPath, title, s.loading, handleSubmit])
 
   useSaveShortcut({
     onSave: handleKeyboardSave,
-    enabled: !!projectPath.trim() && !!title.trim() && !loading,
+    enabled: !!projectPath.trim() && !!title.trim() && !s.loading,
   })
 
   return {
@@ -83,14 +73,14 @@ export function useCreateIssue() {
     setDescription,
     priority,
     setPriority,
-    status,
-    setStatus,
-    loading,
-    error,
-    pendingAssets,
-    setPendingAssets,
-    assetUploaderRef,
-    stateOptions,
+    status: s.status,
+    setStatus: s.setStatus,
+    loading: s.loading,
+    error: s.error,
+    pendingAssets: s.pendingAssets,
+    setPendingAssets: s.setPendingAssets,
+    assetUploaderRef: s.assetUploaderRef,
+    stateOptions: s.stateOptions,
     handleSubmit,
     handleCancel,
   }
