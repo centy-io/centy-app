@@ -25,13 +25,15 @@
     "types/**/*.d.ts",
     "__tests__/**"
   ],
+  "ignoreBinaries": ["serve"],
   "ignoreDependencies": [
     "@bufbuild/protoc-gen-es",
     "@centy-io/assets",
     "@cspell/dict-he",
     "import-in-the-middle",
     "msw",
-    "require-in-the-middle"
+    "require-in-the-middle",
+    "serve"
   ],
   "ignoreExportsUsedInFile": true,
   "ignoreWorkspaces": []
