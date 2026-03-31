@@ -21,16 +21,42 @@ function formatError(err: unknown): string {
     : msg
 }
 
-// eslint-disable-next-line max-lines-per-function
+interface EditState {
+  editName: string
+  editEmail: string
+  editGitUsernames: string[]
+}
+
+async function performUpdateUser(
+  projectPath: string,
+  userId: string,
+  editState: EditState
+): Promise<{ success: boolean; user?: User; error?: string }> {
+  const req = create(UpdateUserRequestSchema, {
+    projectPath,
+    userId,
+    name: editState.editName,
+    email: editState.editEmail,
+    gitUsernames: editState.editGitUsernames.filter(u => u.trim() !== ''),
+  })
+  const res = await centyClient.updateUser(req)
+  return { success: res.success, user: res.user, error: res.error }
+}
+
+async function performDeleteUser(
+  projectPath: string,
+  userId: string
+): Promise<{ success: boolean; error?: string }> {
+  const req = create(DeleteUserRequestSchema, { projectPath, userId })
+  const res = await centyClient.deleteUser(req)
+  return { success: res.success, error: res.error }
+}
+
 export function useUserMutations(
   projectPath: string,
   userId: string,
   usersListUrl: RouteLiteral,
-  editState: {
-    editName: string
-    editEmail: string
-    editGitUsernames: string[]
-  },
+  editState: EditState,
   setUser: (user: User) => void,
   setIsEditing: (v: boolean) => void,
   setError: (e: string | null) => void
@@ -45,14 +71,7 @@ export function useUserMutations(
     setSaving(true)
     setError(null)
     try {
-      const req = create(UpdateUserRequestSchema, {
-        projectPath,
-        userId,
-        name: editState.editName,
-        email: editState.editEmail,
-        gitUsernames: editState.editGitUsernames.filter(u => u.trim() !== ''),
-      })
-      const res = await centyClient.updateUser(req)
+      const res = await performUpdateUser(projectPath, userId, editState)
       if (res.success && res.user) {
         setUser(res.user)
         setIsEditing(false)
@@ -66,24 +85,14 @@ export function useUserMutations(
     } finally {
       setSaving(false)
     }
-  }, [
-    projectPath,
-    userId,
-    editState.editName,
-    editState.editEmail,
-    editState.editGitUsernames,
-    setUser,
-    setIsEditing,
-    setError,
-  ])
+  }, [projectPath, userId, editState, setUser, setIsEditing, setError])
 
   const handleDelete = useCallback(async () => {
     if (!projectPath || !userId) return
     setDeleting(true)
     setError(null)
     try {
-      const req = create(DeleteUserRequestSchema, { projectPath, userId })
-      const res = await centyClient.deleteUser(req)
+      const res = await performDeleteUser(projectPath, userId)
       if (res.success) {
         router.push(usersListUrl)
       } else {

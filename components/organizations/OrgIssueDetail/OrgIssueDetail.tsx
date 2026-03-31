@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 'use client'
 
 import Link from 'next/link'
@@ -7,11 +6,14 @@ import type { OrgIssueDetailProps } from './OrgIssueDetail.types'
 import { useOrgIssueDetail } from './hooks/useOrgIssueDetail'
 import { OrgIssueEditForm } from './OrgIssueEditForm'
 import { OrgIssueReadView } from './OrgIssueReadView'
+import { IssueActions, IssueDeleteConfirm } from './OrgIssueDetailParts'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
 
-// eslint-disable-next-line max-lines-per-function
-export function OrgIssueDetail({ orgSlug, issueId }: OrgIssueDetailProps) {
+export function OrgIssueDetail({
+  orgSlug,
+  issueId,
+}: OrgIssueDetailProps): React.JSX.Element {
   const state = useOrgIssueDetail(orgSlug, issueId)
 
   useSaveShortcut({
@@ -61,68 +63,13 @@ export function OrgIssueDetail({ orgSlug, issueId }: OrgIssueDetailProps) {
           ← Back to Org Issues
         </Link>
         <div className="issue-actions">
-          {!state.isEditing ? (
-            <>
-              <button
-                onClick={() => state.setIsEditing(true)}
-                className="edit-btn"
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => state.setShowDeleteConfirm(true)}
-                className="delete-btn"
-              >
-                Delete
-              </button>
-            </>
-          ) : (
-            <>
-              <button onClick={state.handleCancelEdit} className="cancel-btn">
-                Cancel
-              </button>
-              <button
-                onClick={state.handleSave}
-                disabled={state.saving || !state.editTitle.trim()}
-                className="save-btn"
-              >
-                {state.saving ? 'Saving...' : 'Save'}
-              </button>
-            </>
-          )}
+          <IssueActions state={state} />
         </div>
       </div>
 
       {state.error && <DaemonErrorMessage error={state.error} />}
 
-      {state.showDeleteConfirm && (
-        <div className="delete-confirm">
-          <p className="delete-confirm-message">
-            Delete this org issue? This will remove it from all org projects.
-          </p>
-          {state.deleteError && (
-            <p className="delete-error-message">{state.deleteError}</p>
-          )}
-          <div className="delete-confirm-actions">
-            <button
-              onClick={() => {
-                state.setShowDeleteConfirm(false)
-                state.setDeleteError(null)
-              }}
-              className="cancel-btn"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={state.handleDelete}
-              disabled={state.deleting}
-              className="confirm-delete-btn"
-            >
-              {state.deleting ? 'Deleting...' : 'Yes, Delete'}
-            </button>
-          </div>
-        </div>
-      )}
+      {state.showDeleteConfirm && <IssueDeleteConfirm state={state} />}
 
       <div className="issue-detail-content">
         {state.isEditing ? (

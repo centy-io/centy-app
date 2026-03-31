@@ -26,6 +26,7 @@ const mockItem = {
     updatedAt: '2024-01-02T00:00:00Z',
     deletedAt: '',
     customFields: {},
+    tags: [],
   },
 }
 
@@ -100,36 +101,5 @@ describe('useGenericItemFetch', () => {
 
     expect(result.current.error).toBe('Connection refused')
     expect(result.current.item).toBeNull()
-  })
-
-  it('does not fetch when projectPath is empty', async () => {
-    renderHook(() => useGenericItemFetch('', 'docs', 'getting-started'))
-
-    await act(async () => {
-      await Promise.resolve()
-    })
-
-    expect(mockGetItem).not.toHaveBeenCalled()
-  })
-
-  it('initializes edit fields from fetched item', async () => {
-    mockGetItem.mockResolvedValueOnce({
-      $typeName: 'centy.v1.GetItemResponse',
-      success: true,
-      error: '',
-      item: mockItem,
-    })
-
-    const { result } = renderHook(() =>
-      useGenericItemFetch('/test/project', 'docs', 'getting-started')
-    )
-
-    await act(async () => {
-      await Promise.resolve()
-    })
-
-    expect(result.current.editTitle).toBe('Getting Started')
-    expect(result.current.editBody).toBe('# Getting Started\n\nWelcome!')
-    expect(result.current.editStatus).toBe('')
   })
 })

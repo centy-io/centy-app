@@ -5,7 +5,12 @@ import { useIssueMoveActions } from './useIssueMoveActions'
 import type { Issue } from '@/gen/centy_pb'
 import { usePinnedItems } from '@/hooks/usePinnedItems'
 
-// eslint-disable-next-line max-lines-per-function
+interface ContextMenuState {
+  x: number
+  y: number
+  issue: Issue
+}
+
 export function useIssueContextMenu(
   projectPath: string,
   fetchIssues: () => void
@@ -17,11 +22,7 @@ export function useIssueContextMenu(
     fetchIssues
   )
 
-  const [contextMenu, setContextMenu] = useState<{
-    x: number
-    y: number
-    issue: Issue
-  } | null>(null)
+  const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null)
   const [showMoveModal, setShowMoveModal] = useState(false)
   const [showDuplicateModal, setShowDuplicateModal] = useState(false)
   const [showStandaloneModal, setShowStandaloneModal] = useState(false)

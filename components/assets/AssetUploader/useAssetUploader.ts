@@ -29,7 +29,6 @@ export function useAssetUploader({
   const initialAssetsKey = JSON.stringify(initialAssets.map(a => a.filename))
   useEffect(() => {
     setAssets(initialAssets)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialAssetsKey])
 
   const validateFile = useCallback((file: File): string | null => {

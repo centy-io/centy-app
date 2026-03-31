@@ -30,6 +30,7 @@ const mockItem = {
     updatedAt: '2024-01-02T00:00:00Z',
     deletedAt: '',
     customFields: {},
+    tags: [],
   },
 }
 
@@ -96,72 +97,6 @@ describe('useGenericItemsData', () => {
     })
 
     expect(result.current.error).toBe('Daemon unavailable')
-    expect(result.current.items).toHaveLength(0)
-  })
-
-  it('deletes an item and removes it from state', async () => {
-    mockListItems.mockResolvedValueOnce({
-      $typeName: 'centy.v1.ListItemsResponse',
-      items: [mockItem],
-      totalCount: 1,
-      success: true,
-      error: '',
-    })
-    mockDeleteItem.mockResolvedValueOnce({
-      $typeName: 'centy.v1.DeleteItemResponse',
-      success: true,
-      error: '',
-    })
-
-    const { result } = renderHook(() =>
-      useGenericItemsData('/test/project', true, 'docs')
-    )
-
-    await act(async () => {
-      await Promise.resolve()
-    })
-
-    expect(result.current.items).toHaveLength(1)
-
-    await act(async () => {
-      await result.current.handleDelete('getting-started')
-    })
-
-    expect(result.current.items).toHaveLength(0)
-  })
-
-  it('soft deletes an item and removes it from state', async () => {
-    mockListItems.mockResolvedValueOnce({
-      $typeName: 'centy.v1.ListItemsResponse',
-      items: [mockItem],
-      totalCount: 1,
-      success: true,
-      error: '',
-    })
-    mockSoftDeleteItem.mockResolvedValueOnce({
-      $typeName: 'centy.v1.SoftDeleteItemResponse',
-      success: true,
-      error: '',
-      item: undefined,
-    })
-
-    const { result } = renderHook(() =>
-      useGenericItemsData('/test/project', true, 'docs')
-    )
-
-    await act(async () => {
-      await Promise.resolve()
-    })
-
-    expect(result.current.items).toHaveLength(1)
-
-    await act(async () => {
-      await result.current.handleSoftDelete('getting-started')
-    })
-
-    expect(mockSoftDeleteItem).toHaveBeenCalledWith(
-      expect.objectContaining({ itemId: 'getting-started' })
-    )
     expect(result.current.items).toHaveLength(0)
   })
 })

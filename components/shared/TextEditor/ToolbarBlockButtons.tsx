@@ -6,78 +6,87 @@ interface ToolbarBlockButtonsProps {
   editor: Editor
 }
 
-// eslint-disable-next-line max-lines-per-function
+interface HeadingButtonsProps {
+  editor: Editor
+}
+
+function HeadingButtons({ editor }: HeadingButtonsProps) {
+  return (
+    <div className="toolbar-group">
+      {([1, 2, 3] as const).map(level => (
+        <button
+          key={level}
+          type="button"
+          onClick={() => editor.chain().focus().toggleHeading({ level }).run()}
+          className={editor.isActive('heading', { level }) ? 'active' : ''}
+          title={`Heading ${level}`}
+        >
+          {`H${level}`}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+interface BlockButtonConfig {
+  label: string
+  title: string
+  activeKey: string
+  onClick: () => void
+  isActive: boolean
+}
+
+function buildBlockButtonConfigs(editor: Editor): BlockButtonConfig[] {
+  return [
+    {
+      label: '\u2022',
+      title: 'Bullet List',
+      activeKey: 'bulletList',
+      onClick: () => editor.chain().focus().toggleBulletList().run(),
+      isActive: editor.isActive('bulletList'),
+    },
+    {
+      label: '1.',
+      title: 'Numbered List',
+      activeKey: 'orderedList',
+      onClick: () => editor.chain().focus().toggleOrderedList().run(),
+      isActive: editor.isActive('orderedList'),
+    },
+    {
+      label: '"',
+      title: 'Blockquote',
+      activeKey: 'blockquote',
+      onClick: () => editor.chain().focus().toggleBlockquote().run(),
+      isActive: editor.isActive('blockquote'),
+    },
+    {
+      label: '{ }',
+      title: 'Code Block',
+      activeKey: 'codeBlock',
+      onClick: () => editor.chain().focus().toggleCodeBlock().run(),
+      isActive: editor.isActive('codeBlock'),
+    },
+  ]
+}
+
 export function ToolbarBlockButtons({ editor }: ToolbarBlockButtonsProps) {
+  const blockButtons = buildBlockButtonConfigs(editor)
   return (
     <>
-      <div className="toolbar-group">
-        <button
-          type="button"
-          onClick={() =>
-            editor.chain().focus().toggleHeading({ level: 1 }).run()
-          }
-          className={editor.isActive('heading', { level: 1 }) ? 'active' : ''}
-          title="Heading 1"
-        >
-          H1
-        </button>
-        <button
-          type="button"
-          onClick={() =>
-            editor.chain().focus().toggleHeading({ level: 2 }).run()
-          }
-          className={editor.isActive('heading', { level: 2 }) ? 'active' : ''}
-          title="Heading 2"
-        >
-          H2
-        </button>
-        <button
-          type="button"
-          onClick={() =>
-            editor.chain().focus().toggleHeading({ level: 3 }).run()
-          }
-          className={editor.isActive('heading', { level: 3 }) ? 'active' : ''}
-          title="Heading 3"
-        >
-          H3
-        </button>
-      </div>
-
+      <HeadingButtons editor={editor} />
       <div className="toolbar-separator" />
-
       <div className="toolbar-group">
-        <button
-          type="button"
-          onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={editor.isActive('bulletList') ? 'active' : ''}
-          title="Bullet List"
-        >
-          &bull;
-        </button>
-        <button
-          type="button"
-          onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          className={editor.isActive('orderedList') ? 'active' : ''}
-          title="Numbered List"
-        >
-          1.
-        </button>
-        <button
-          type="button"
-          onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          className={editor.isActive('blockquote') ? 'active' : ''}
-          title="Blockquote"
-        >
-          &quot;
-        </button>
-        <button
-          type="button"
-          onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-          className={editor.isActive('codeBlock') ? 'active' : ''}
-          title="Code Block"
-        >
-          {'{ }'}
-        </button>
+        {blockButtons.map(btn => (
+          <button
+            key={btn.activeKey}
+            type="button"
+            onClick={btn.onClick}
+            className={btn.isActive ? 'active' : ''}
+            title={btn.title}
+          >
+            {btn.label}
+          </button>
+        ))}
       </div>
     </>
   )

@@ -2,12 +2,8 @@
 
 import { useRef, useEffect } from 'react'
 import '@/styles/components/WorkspaceModeModal.css'
-
-// Workspace mode for workspace execution
-export enum WorkspaceMode {
-  CURRENT = 'current',
-  TEMP = 'temp',
-}
+import { WorkspaceMode } from './WorkspaceMode'
+import { WORKSPACE_OPTIONS } from './WORKSPACE_OPTIONS'
 
 interface WorkspaceModeModalProps {
   issueNumber?: number
@@ -15,15 +11,10 @@ interface WorkspaceModeModalProps {
   onSelect: (mode: WorkspaceMode) => void
 }
 
-// eslint-disable-next-line max-lines-per-function
-export function WorkspaceModeModal({
-  issueNumber,
-  onClose,
-  onSelect,
-}: WorkspaceModeModalProps) {
-  const modalRef = useRef<HTMLDivElement>(null)
-
-  // Close on click outside
+function useWorkspaceModalDismiss(
+  modalRef: React.RefObject<HTMLDivElement | null>,
+  onClose: () => void
+): void {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -34,26 +25,32 @@ export function WorkspaceModeModal({
         onClose()
       }
     }
-
     document.addEventListener('mousedown', handleClickOutside)
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [onClose])
+  }, [modalRef, onClose])
 
-  // Close on Escape
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         onClose()
       }
     }
-
     document.addEventListener('keydown', handleEscape)
     return () => {
       document.removeEventListener('keydown', handleEscape)
     }
   }, [onClose])
+}
+
+export function WorkspaceModeModal({
+  issueNumber,
+  onClose,
+  onSelect,
+}: WorkspaceModeModalProps) {
+  const modalRef = useRef<HTMLDivElement>(null)
+  useWorkspaceModalDismiss(modalRef, onClose)
 
   return (
     <div className="workspace-modal-overlay">
@@ -73,25 +70,18 @@ export function WorkspaceModeModal({
           </p>
 
           <div className="workspace-modal-options">
-            <button
-              onClick={() => onSelect(WorkspaceMode.CURRENT)}
-              className="workspace-option"
-            >
-              <div className="workspace-option-title">Current Project</div>
-              <div className="workspace-option-description">
-                Open in the current project directory
-              </div>
-            </button>
-
-            <button
-              onClick={() => onSelect(WorkspaceMode.TEMP)}
-              className="workspace-option"
-            >
-              <div className="workspace-option-title">Temporary Workspace</div>
-              <div className="workspace-option-description">
-                Create an isolated git worktree for this work
-              </div>
-            </button>
+            {WORKSPACE_OPTIONS.map(option => (
+              <button
+                key={option.mode}
+                onClick={() => onSelect(option.mode)}
+                className="workspace-option"
+              >
+                <div className="workspace-option-title">{option.title}</div>
+                <div className="workspace-option-description">
+                  {option.description}
+                </div>
+              </button>
+            ))}
           </div>
         </div>
       </div>

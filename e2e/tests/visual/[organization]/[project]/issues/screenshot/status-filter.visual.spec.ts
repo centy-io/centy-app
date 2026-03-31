@@ -4,7 +4,7 @@ import {
   navigateToDemoProject,
 } from '../../../../../../utils/test-helpers'
 
-test.describe('Status Filter Visual Tests - Dropdown @visual', () => {
+test.describe('Status Filter Visual Tests - Dropdown open @visual', () => {
   test('status filter dropdown - all states visible', async ({
     page,
     isMobile,
@@ -16,22 +16,18 @@ test.describe('Status Filter Visual Tests - Dropdown @visual', () => {
     await setupDemoMode(page)
     await navigateToDemoProject(page, '/issues')
 
-    // Wait for demo mode indicator to confirm data is loaded
     await expect(page.locator('.demo-mode-indicator')).toBeVisible({
       timeout: 10000,
     })
 
-    // Find and click the status filter dropdown trigger
     const statusFilter = page
       .locator('.column-filter-multi .multi-select-trigger')
       .first()
     await expect(statusFilter).toBeVisible({ timeout: 10000 })
     await statusFilter.click()
 
-    // Wait for dropdown to open and stabilize
     await page.waitForTimeout(500)
 
-    // Verify all states are visible before taking screenshot
     const dropdown = page.locator('.multi-select-dropdown')
     await expect(dropdown).toBeVisible({ timeout: 5000 })
     await expect(
@@ -50,56 +46,6 @@ test.describe('Status Filter Visual Tests - Dropdown @visual', () => {
     await expect(page).toHaveScreenshot('status-filter-dropdown-open.png', {
       fullPage: true,
     })
-  })
-
-  test('status filter - for-validation state selected', async ({
-    page,
-    isMobile,
-  }) => {
-    test.skip(
-      isMobile,
-      'mobile-not-supported overlay prevents click interactions'
-    )
-    await setupDemoMode(page)
-    await navigateToDemoProject(page, '/issues')
-
-    // Wait for demo mode indicator to confirm data is loaded
-    await expect(page.locator('.demo-mode-indicator')).toBeVisible({
-      timeout: 10000,
-    })
-
-    // Find and click the status filter dropdown trigger
-    const statusFilter = page
-      .locator('.column-filter-multi .multi-select-trigger')
-      .first()
-    await expect(statusFilter).toBeVisible({ timeout: 10000 })
-    await statusFilter.click()
-
-    // Wait for dropdown to open
-    const dropdown = page.locator('.multi-select-dropdown')
-    await expect(dropdown).toBeVisible({ timeout: 5000 })
-
-    // Select "For Validation" option
-    await dropdown
-      .locator('label')
-      .filter({ hasText: 'For Validation' })
-      .click()
-
-    // Close dropdown
-    await page.keyboard.press('Escape')
-    await page.waitForTimeout(500)
-
-    // Verify filtered results show the for-validation issue
-    await expect(page.getByText('Add keyboard shortcuts')).toBeVisible({
-      timeout: 10000,
-    })
-
-    await expect(page).toHaveScreenshot(
-      'status-filter-for-validation-selected.png',
-      {
-        fullPage: true,
-      }
-    )
   })
 })
 

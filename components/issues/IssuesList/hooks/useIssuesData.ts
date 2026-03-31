@@ -37,7 +37,6 @@ export function useIssuesData() {
     if (isInitialized === true) {
       fetchIssues()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isInitialized, projectPath])
 
   return {

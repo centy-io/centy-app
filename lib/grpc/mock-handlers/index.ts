@@ -71,12 +71,7 @@ import {
   getIssuesByUuid,
   getDocsBySlug,
 } from './entity-ops'
-import { type MockHandlers } from './types'
-
-export type { MockHandlers } from './types'
-
-// Mock handlers for all RPC methods
-export const mockHandlers: MockHandlers = {
+export const mockHandlers = {
   listProjects,
   getProjectInfo,
   isInitialized,

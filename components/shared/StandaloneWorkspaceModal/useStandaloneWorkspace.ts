@@ -3,7 +3,6 @@ import type { StandaloneWorkspaceModalProps } from './StandaloneWorkspaceModal.t
 import { useModalDismiss } from './useModalDismiss'
 import { useCreateWorkspace } from './useCreateWorkspace'
 import { useDaemonStatus } from '@/components/providers/DaemonStatusProvider'
-import { EditorType } from '@/gen/centy_pb'
 
 export function useStandaloneWorkspace({
   projectPath,
@@ -16,13 +15,11 @@ export function useStandaloneWorkspace({
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [ttlHours, setTtlHours] = useState(12)
-  const [selectedEditor, setSelectedEditor] = useState<EditorType>(
-    EditorType.TERMINAL
-  )
+  const [selectedEditor, setSelectedEditor] = useState<string>('terminal')
 
   const isEditorAvailable = useCallback(
-    (type: EditorType): boolean => {
-      const editor = editors.find(e => e.editorType === type)
+    (editorId: string): boolean => {
+      const editor = editors.find(e => e.editorId === editorId)
       return editor !== undefined ? editor.available : false
     },
     [editors]
@@ -40,7 +37,7 @@ export function useStandaloneWorkspace({
     onClose
   )
 
-  const hasAvailableEditor = isEditorAvailable(EditorType.TERMINAL)
+  const hasAvailableEditor = isEditorAvailable('terminal')
 
   return {
     modalRef,

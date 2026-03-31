@@ -64,14 +64,12 @@ export function useIssueDetail(projectPath: string, issueNumber: string) {
   useEffect(() => {
     fetchIssue()
     fetchAssets()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectPath, issueNumber])
 
   useEffect(() => {
     if (issue && issue.id) {
       recordLastSeen(issue.id)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [issue && issue.id])
 
   return {

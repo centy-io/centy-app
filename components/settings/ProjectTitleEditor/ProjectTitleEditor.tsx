@@ -1,7 +1,9 @@
 'use client'
 
+import type { ReactElement } from 'react'
 import { useProjectTitle } from './useProjectTitle'
 import { TitlePreview } from './TitlePreview'
+import { TitleScopeSelector } from './TitleScopeSelector'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import '@/styles/components/ProjectTitleEditor.css'
 
@@ -9,8 +11,9 @@ interface ProjectTitleEditorProps {
   projectPath: string
 }
 
-// eslint-disable-next-line max-lines-per-function
-export function ProjectTitleEditor({ projectPath }: ProjectTitleEditorProps) {
+export function ProjectTitleEditor({
+  projectPath,
+}: ProjectTitleEditorProps): ReactElement {
   const {
     projectInfo,
     scope,
@@ -31,32 +34,12 @@ export function ProjectTitleEditor({ projectPath }: ProjectTitleEditorProps) {
 
   return (
     <div className="project-title-editor">
-      <div className="title-scope-selector">
-        <span className="title-scope-label">Title Scope:</span>
-        <div className="title-scope-buttons">
-          <button
-            type="button"
-            onClick={() => setScope('user')}
-            className={`title-scope-btn ${scope === 'user' ? 'active' : ''}`}
-          >
-            User (local)
-          </button>
-          <button
-            type="button"
-            onClick={() => setScope('project')}
-            className={`title-scope-btn ${scope === 'project' ? 'active' : ''}`}
-          >
-            Project (shared)
-          </button>
-        </div>
-      </div>
-
+      <TitleScopeSelector scope={scope} onScopeChange={setScope} />
       <p className="title-scope-hint">
         {scope === 'user'
           ? 'User titles are stored locally and only visible to you.'
           : 'Project titles are stored in .centy/project.json and shared with your team.'}
       </p>
-
       <div className="title-input-group">
         <label htmlFor="project-title" className="title-input-label">
           Custom Title:
@@ -70,11 +53,8 @@ export function ProjectTitleEditor({ projectPath }: ProjectTitleEditorProps) {
           className="title-input"
         />
       </div>
-
       {error && <DaemonErrorMessage error={error} className="title-error" />}
-
       {success && <div className="title-success">{success}</div>}
-
       <div className="title-actions">
         <button
           onClick={handleSave}
@@ -91,7 +71,6 @@ export function ProjectTitleEditor({ projectPath }: ProjectTitleEditorProps) {
           Clear Title
         </button>
       </div>
-
       <TitlePreview projectInfo={projectInfo} />
     </div>
   )

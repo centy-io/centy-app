@@ -2,10 +2,10 @@ import { useState, useEffect, useRef } from 'react'
 import { create } from '@bufbuild/protobuf'
 import type { DuplicateModalProps } from './DuplicateModal.types'
 import { useDuplicateAction } from './useDuplicateAction'
+import { useModalDismiss } from './useModalDismiss'
 import { centyClient } from '@/lib/grpc/client'
 import { ListProjectsRequestSchema, type ProjectInfo } from '@/gen/centy_pb'
 
-// eslint-disable-next-line max-lines-per-function
 export function useDuplicateModal({
   entityType,
   entityId,
@@ -34,6 +34,8 @@ export function useDuplicateModal({
     onDuplicated
   )
 
+  useModalDismiss(modalRef, onClose)
+
   useEffect(() => {
     async function loadProjects() {
       try {
@@ -53,32 +55,6 @@ export function useDuplicateModal({
     }
     loadProjects()
   }, [currentProjectPath])
-
-  // Close on click outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        modalRef.current &&
-        event.target instanceof Node &&
-        !modalRef.current.contains(event.target)
-      ) {
-        onClose()
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [onClose])
-
-  // Close on escape
-  useEffect(() => {
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onClose()
-      }
-    }
-    document.addEventListener('keydown', handleEscape)
-    return () => document.removeEventListener('keydown', handleEscape)
-  }, [onClose])
 
   const selectedProjectInfo = projects.find(p => p.path === selectedProject)
   const isSameProject = selectedProject === currentProjectPath

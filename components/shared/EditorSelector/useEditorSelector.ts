@@ -1,6 +1,5 @@
 import { useCallback } from 'react'
 import { useEditorPreference } from './useEditorPreference'
-import { EditorType } from '@/gen/centy_pb'
 
 export function useEditorSelector(
   onOpenInVscode: () => Promise<void>,
@@ -12,9 +11,9 @@ export function useEditorSelector(
 
   const handlePrimaryClick = useCallback(async () => {
     if (disabled || loading || !pref.preferredEditorAvailable) return
-    if (pref.preferredEditor === EditorType.VSCODE) {
+    if (pref.preferredEditor === 'vscode') {
       await onOpenInVscode()
-    } else if (pref.preferredEditor === EditorType.TERMINAL) {
+    } else if (pref.preferredEditor === 'terminal') {
       await onOpenInTerminal()
     }
   }, [
@@ -27,15 +26,15 @@ export function useEditorSelector(
   ])
 
   const handleSelectEditor = useCallback(
-    async (editorType: EditorType) => {
+    async (editorId: string) => {
       if (disabled || loading) return
-      const available = pref.isEditorAvailable(editorType)
+      const available = pref.isEditorAvailable(editorId)
       if (!available) return
-      pref.savePreference(editorType)
+      pref.savePreference(editorId)
       pref.setShowDropdown(false)
-      if (editorType === EditorType.VSCODE) {
+      if (editorId === 'vscode') {
         await onOpenInVscode()
-      } else if (editorType === EditorType.TERMINAL) {
+      } else if (editorId === 'terminal') {
         await onOpenInTerminal()
       }
     },

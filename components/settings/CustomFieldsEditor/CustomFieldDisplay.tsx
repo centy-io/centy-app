@@ -1,3 +1,5 @@
+import type { ReactElement } from 'react'
+import { CustomFieldMoveButtons } from './CustomFieldMoveButtons'
 import { FIELD_TYPES } from './constants'
 import type { CustomFieldDefinition } from '@/gen/centy_pb'
 
@@ -11,7 +13,11 @@ interface CustomFieldDisplayProps {
   onMoveDown: () => void
 }
 
-// eslint-disable-next-line max-lines-per-function
+function getTypeLabel(fieldType: string): string {
+  const found = FIELD_TYPES.find(t => t.value === fieldType)
+  return found ? found.label : fieldType
+}
+
 export function CustomFieldDisplay({
   field,
   index,
@@ -20,43 +26,21 @@ export function CustomFieldDisplay({
   onRemove,
   onMoveUp,
   onMoveDown,
-}: CustomFieldDisplayProps) {
-  const typeLabel =
-    (() => {
-      const found = FIELD_TYPES.find(t => t.value === field.fieldType)
-      return found ? found.label : ''
-    })() || field.fieldType
-
+}: CustomFieldDisplayProps): ReactElement {
   return (
     <div className="custom-field-display">
       <div className="custom-field-header">
-        <div className="custom-field-move-btns">
-          <button
-            type="button"
-            onClick={onMoveUp}
-            disabled={index === 0}
-            className="custom-field-move-btn"
-            title="Move up"
-          >
-            &uarr;
-          </button>
-          <button
-            type="button"
-            onClick={onMoveDown}
-            disabled={index === totalCount - 1}
-            className="custom-field-move-btn"
-            title="Move down"
-          >
-            &darr;
-          </button>
-        </div>
-
+        <CustomFieldMoveButtons
+          index={index}
+          totalCount={totalCount}
+          onMoveUp={onMoveUp}
+          onMoveDown={onMoveDown}
+        />
         <span className="custom-field-name">{field.name}</span>
-
         {field.required && <span className="custom-field-required">*</span>}
-
-        <span className="custom-field-type">{typeLabel}</span>
-
+        <span className="custom-field-type">
+          {getTypeLabel(field.fieldType)}
+        </span>
         <div className="custom-field-actions">
           <button
             type="button"
@@ -74,7 +58,6 @@ export function CustomFieldDisplay({
           </button>
         </div>
       </div>
-
       <div className="custom-field-details">
         {field.defaultValue && (
           <span className="custom-field-default">

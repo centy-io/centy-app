@@ -10,7 +10,26 @@ import {
   type DaemonInfo,
 } from '@/gen/centy_pb'
 
-// eslint-disable-next-line max-lines-per-function
+async function fetchDaemonInfoRequest(): Promise<DaemonInfo> {
+  const request = create(GetDaemonInfoRequestSchema, {})
+  return centyClient.getDaemonInfo(request)
+}
+
+async function shutdownDaemon(): Promise<{
+  success: boolean
+  message: string
+}> {
+  const request = create(ShutdownRequestSchema, {})
+  const response = await centyClient.shutdown(request)
+  return { success: response.success, message: response.message || '' }
+}
+
+async function restartDaemon(): Promise<{ success: boolean; message: string }> {
+  const request = create(RestartRequestSchema, {})
+  const response = await centyClient.restart(request)
+  return { success: response.success, message: response.message || '' }
+}
+
 export function useDaemonActions() {
   const [daemonInfo, setDaemonInfo] = useState<DaemonInfo | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -22,9 +41,7 @@ export function useDaemonActions() {
 
   const fetchDaemonInfo = useCallback(async () => {
     try {
-      const request = create(GetDaemonInfoRequestSchema, {})
-      const response = await centyClient.getDaemonInfo(request)
-      setDaemonInfo(response)
+      setDaemonInfo(await fetchDaemonInfoRequest())
     } catch (err) {
       console.error('Failed to fetch daemon info:', err)
     }
@@ -34,10 +51,9 @@ export function useDaemonActions() {
     setShuttingDown(true)
     setError(null)
     try {
-      const request = create(ShutdownRequestSchema, {})
-      const response = await centyClient.shutdown(request)
-      if (response.success) {
-        setSuccess(response.message || 'Daemon is shutting down...')
+      const result = await shutdownDaemon()
+      if (result.success) {
+        setSuccess(result.message || 'Daemon is shutting down...')
       } else {
         setError('Failed to shutdown daemon')
       }
@@ -55,10 +71,9 @@ export function useDaemonActions() {
     setRestarting(true)
     setError(null)
     try {
-      const request = create(RestartRequestSchema, {})
-      const response = await centyClient.restart(request)
-      if (response.success) {
-        setSuccess(response.message || 'Daemon is restarting...')
+      const result = await restartDaemon()
+      if (result.success) {
+        setSuccess(result.message || 'Daemon is restarting...')
       } else {
         setError('Failed to restart daemon')
       }

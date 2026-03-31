@@ -58,6 +58,10 @@ export function createMockConfig(overrides?: Partial<Config>): Config {
         ? resolvedOverrides.defaultEditor
         : '',
     hooks: resolvedOverrides.hooks !== undefined ? resolvedOverrides.hooks : [],
+    userValues:
+      resolvedOverrides.userValues !== undefined
+        ? resolvedOverrides.userValues
+        : {},
     $typeName: 'centy.v1.Config',
   }
 }
@@ -113,10 +117,6 @@ export function createMockManifest(overrides?: Partial<Manifest>): Manifest {
     createdAt:
       resolvedOverrides.createdAt !== undefined
         ? resolvedOverrides.createdAt
-        : now,
-    updatedAt:
-      resolvedOverrides.updatedAt !== undefined
-        ? resolvedOverrides.updatedAt
         : now,
     $typeName: 'centy.v1.Manifest',
   }

@@ -1,15 +1,10 @@
-/* eslint-disable max-lines */
 import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { create } from '@bufbuild/protobuf'
 import type { RouteLiteral } from 'nextjs-routes'
+import { performSave } from './performSave'
 import { centyClient } from '@/lib/grpc/client'
-import {
-  UpdateItemRequestSchema,
-  DeleteItemRequestSchema,
-  type Issue,
-} from '@/gen/centy_pb'
-import { genericItemToIssue } from '@/lib/genericItemToIssue'
+import { DeleteItemRequestSchema, type Issue } from '@/gen/centy_pb'
 
 interface UseIssueActionsParams {
   projectPath: string
@@ -19,7 +14,14 @@ interface UseIssueActionsParams {
   setError: (error: string | null) => void
 }
 
-// eslint-disable-next-line max-lines-per-function
+interface SaveEditState {
+  editTitle: string
+  editDescription: string
+  editStatus: string
+  editPriority: number
+  setIsEditing: (v: boolean) => void
+}
+
 export function useIssueActions({
   projectPath,
   issueNumber,
@@ -33,41 +35,16 @@ export function useIssueActions({
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   const handleSave = useCallback(
-    async (editState: {
-      editTitle: string
-      editDescription: string
-      editStatus: string
-      editPriority: number
-      setIsEditing: (v: boolean) => void
-    }) => {
+    async (editState: SaveEditState) => {
       if (!projectPath || !issueNumber) return
-      setSaving(true)
-      setError(null)
-
-      try {
-        const request = create(UpdateItemRequestSchema, {
-          projectPath,
-          itemType: 'issues',
-          itemId: issueNumber,
-          title: editState.editTitle,
-          body: editState.editDescription,
-          status: editState.editStatus,
-          priority: editState.editPriority,
-        })
-        const response = await centyClient.updateItem(request)
-        if (response.success && response.item) {
-          setIssue(genericItemToIssue(response.item))
-          editState.setIsEditing(false)
-        } else {
-          setError(response.error || 'Failed to update issue')
-        }
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : 'Failed to connect to daemon'
-        )
-      } finally {
-        setSaving(false)
-      }
+      await performSave(
+        projectPath,
+        issueNumber,
+        editState,
+        setIssue,
+        setError,
+        setSaving
+      )
     },
     [projectPath, issueNumber, setIssue, setError]
   )
@@ -76,7 +53,6 @@ export function useIssueActions({
     if (!projectPath || !issueNumber) return
     setDeleting(true)
     setError(null)
-
     try {
       const request = create(DeleteItemRequestSchema, {
         projectPath,

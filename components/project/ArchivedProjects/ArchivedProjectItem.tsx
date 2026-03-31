@@ -1,5 +1,7 @@
 'use client'
 
+import type { ReactElement } from 'react'
+import { ArchivedProjectItemActions } from './ArchivedProjectItemActions'
 import type { ProjectInfo } from '@/gen/centy_pb'
 
 interface ArchivedProjectItemProps {
@@ -12,7 +14,6 @@ interface ArchivedProjectItemProps {
   onSetConfirmRemove: (v: string | null) => void
 }
 
-// eslint-disable-next-line max-lines-per-function
 export function ArchivedProjectItem({
   project,
   confirmRemove,
@@ -21,7 +22,7 @@ export function ArchivedProjectItem({
   onRestoreAndSelect,
   onRemove,
   onSetConfirmRemove,
-}: ArchivedProjectItemProps) {
+}: ArchivedProjectItemProps): ReactElement {
   return (
     <li className="archived-item">
       <div className="archived-item-info">
@@ -40,46 +41,15 @@ export function ArchivedProjectItem({
         </div>
       </div>
       <div className="archived-item-actions">
-        {confirmRemove === project.path ? (
-          <>
-            <span className="confirm-text">Remove permanently?</span>
-            <button
-              className="confirm-yes-btn"
-              onClick={() => onRemove(project.path)}
-              disabled={removingPath === project.path}
-            >
-              {removingPath === project.path ? 'Removing...' : 'Yes'}
-            </button>
-            <button
-              className="confirm-no-btn"
-              onClick={() => onSetConfirmRemove(null)}
-              disabled={removingPath === project.path}
-            >
-              No
-            </button>
-          </>
-        ) : (
-          <>
-            <button
-              className="restore-btn"
-              onClick={() => onRestore(project.path)}
-            >
-              Restore
-            </button>
-            <button
-              className="restore-select-btn"
-              onClick={() => onRestoreAndSelect(project)}
-            >
-              Restore & Select
-            </button>
-            <button
-              className="remove-btn"
-              onClick={() => onSetConfirmRemove(project.path)}
-            >
-              Remove
-            </button>
-          </>
-        )}
+        <ArchivedProjectItemActions
+          project={project}
+          confirmRemove={confirmRemove}
+          removingPath={removingPath}
+          onRestore={onRestore}
+          onRestoreAndSelect={onRestoreAndSelect}
+          onRemove={onRemove}
+          onSetConfirmRemove={onSetConfirmRemove}
+        />
       </div>
     </li>
   )

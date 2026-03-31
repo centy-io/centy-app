@@ -1,16 +1,15 @@
 'use client'
 
-import Link from 'next/link'
 import { useGenericItemCreate } from './useGenericItemCreate'
-import { GenericCreateFormFields } from './GenericCreateFormFields'
-import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
+import { GenericCreateForm } from './GenericCreateForm'
 
 interface GenericItemCreateProps {
   itemType: string
 }
 
-// eslint-disable-next-line max-lines-per-function
-export function GenericItemCreate({ itemType }: GenericItemCreateProps) {
+export function GenericItemCreate({
+  itemType,
+}: GenericItemCreateProps): React.JSX.Element {
   const {
     projectPath,
     isInitialized,
@@ -61,44 +60,19 @@ export function GenericItemCreate({ itemType }: GenericItemCreateProps) {
   }
 
   return (
-    <div className="create-generic-item">
-      <h2 className="create-generic-title">Create New {displayName}</h2>
-      <form className="create-generic-form" onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label className="form-label" htmlFor="title">
-            Title:
-          </label>
-          <input
-            className="form-input"
-            id="title"
-            type="text"
-            value={title}
-            onChange={e => setTitle(e.target.value)}
-            placeholder={`${displayName} title`}
-            required
-          />
-        </div>
-        <GenericCreateFormFields
-          config={config}
-          status={status}
-          setStatus={setStatus}
-          customFields={customFields}
-          setCustomFields={setCustomFields}
-        />
-        {error && <DaemonErrorMessage error={error} />}
-        <div className="actions">
-          <Link href={listUrl} className="secondary">
-            Cancel
-          </Link>
-          <button
-            type="submit"
-            disabled={!title.trim() || loading}
-            className="primary"
-          >
-            {loading ? 'Creating...' : `Create ${displayName}`}
-          </button>
-        </div>
-      </form>
-    </div>
+    <GenericCreateForm
+      displayName={displayName}
+      title={title}
+      setTitle={setTitle}
+      config={config}
+      status={status}
+      setStatus={setStatus}
+      customFields={customFields}
+      setCustomFields={setCustomFields}
+      loading={loading}
+      error={error}
+      listUrl={listUrl}
+      handleSubmit={handleSubmit}
+    />
   )
 }
