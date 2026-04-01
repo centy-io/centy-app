@@ -1,8 +1,4 @@
-/* eslint-disable max-lines */
-import type { Config, ProjectInfo, Manifest } from '@/gen/centy_pb'
-
-// Fixed date for deterministic visual tests
-const FIXED_DATE = '2024-01-15T10:30:00.000Z'
+import type { Config } from '@/gen/centy_pb'
 
 /**
  * Creates a mock config with default values that can be overridden.
@@ -63,61 +59,5 @@ export function createMockConfig(overrides?: Partial<Config>): Config {
         ? resolvedOverrides.userValues
         : {},
     $typeName: 'centy.v1.Config',
-  }
-}
-
-/**
- * Creates a mock project info object.
- */
-export function createMockProjectInfo(
-  overrides?: Partial<ProjectInfo>
-): ProjectInfo {
-  const o = overrides !== undefined ? overrides : {}
-  const now = FIXED_DATE
-
-  return {
-    path: o.path !== undefined ? o.path : '/test/project',
-    firstAccessed: o.firstAccessed !== undefined ? o.firstAccessed : now,
-    lastAccessed: o.lastAccessed !== undefined ? o.lastAccessed : now,
-    issueCount: o.issueCount !== undefined ? o.issueCount : 0,
-    docCount: o.docCount !== undefined ? o.docCount : 0,
-    initialized: o.initialized !== undefined ? o.initialized : true,
-    name: o.name !== undefined ? o.name : 'Test Project',
-    isFavorite: o.isFavorite !== undefined ? o.isFavorite : false,
-    isArchived: o.isArchived !== undefined ? o.isArchived : false,
-    displayPath: o.displayPath !== undefined ? o.displayPath : '/test/project',
-    organizationSlug:
-      o.organizationSlug !== undefined ? o.organizationSlug : '',
-    organizationName:
-      o.organizationName !== undefined ? o.organizationName : '',
-    userTitle: o.userTitle !== undefined ? o.userTitle : '',
-    projectTitle: o.projectTitle !== undefined ? o.projectTitle : '',
-    projectVersion: o.projectVersion !== undefined ? o.projectVersion : '',
-    projectBehind: o.projectBehind !== undefined ? o.projectBehind : false,
-    $typeName: 'centy.v1.ProjectInfo',
-  }
-}
-
-/**
- * Creates a mock manifest object.
- */
-export function createMockManifest(overrides?: Partial<Manifest>): Manifest {
-  const resolvedOverrides = overrides !== undefined ? overrides : {}
-  const now = FIXED_DATE
-
-  return {
-    schemaVersion:
-      resolvedOverrides.schemaVersion !== undefined
-        ? resolvedOverrides.schemaVersion
-        : 1,
-    centyVersion:
-      resolvedOverrides.centyVersion !== undefined
-        ? resolvedOverrides.centyVersion
-        : '1.0.0',
-    createdAt:
-      resolvedOverrides.createdAt !== undefined
-        ? resolvedOverrides.createdAt
-        : now,
-    $typeName: 'centy.v1.Manifest',
   }
 }

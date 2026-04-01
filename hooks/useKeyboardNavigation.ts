@@ -1,52 +1,11 @@
-/* eslint-disable max-lines */
 'use client'
 
-import { useEffect, useCallback, useMemo } from 'react'
-import { usePathname, useRouter, useParams } from 'next/navigation'
+import { useEffect, useCallback } from 'react'
+import { useRouter } from 'next/navigation'
 import { route } from 'nextjs-routes'
+import { useProjectContext } from './useProjectContext'
 
-// Project-scoped pages (require project context)
-// These are relative paths that will be prefixed with /org/project/
 const PROJECT_SCOPED_PAGES = ['issues', 'docs', 'assets', 'config'] as const
-
-// Root-level routes that don't require project context
-const ROOT_ROUTES = new Set([
-  'organizations',
-  'settings',
-  'archived',
-  'assets',
-  'project',
-])
-
-function useProjectContext() {
-  const pathname = usePathname()
-  const params = useParams()
-
-  const rawOrg = params ? params.organization : undefined
-  const org: string | undefined =
-    typeof rawOrg === 'string' ? rawOrg : undefined
-  const rawProject = params ? params.project : undefined
-  const project: string | undefined =
-    typeof rawProject === 'string' ? rawProject : undefined
-
-  const pathSegments = useMemo(() => {
-    return pathname.split('/').filter(Boolean)
-  }, [pathname])
-
-  const hasProjectContext = useMemo(() => {
-    if (org && project) return true
-    if (pathSegments.length >= 2 && !ROOT_ROUTES.has(pathSegments[0])) {
-      return true
-    }
-    return false
-  }, [org, project, pathSegments])
-
-  const effectiveOrg = org || (hasProjectContext ? pathSegments[0] : undefined)
-  const effectiveProject =
-    project || (hasProjectContext ? pathSegments[1] : undefined)
-
-  return { pathSegments, hasProjectContext, effectiveOrg, effectiveProject }
-}
 
 export function useKeyboardNavigation() {
   const router = useRouter()

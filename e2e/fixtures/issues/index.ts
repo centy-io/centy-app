@@ -1,2 +1,3 @@
-export { createMockIssue, createMockIssueMetadata } from './factories'
+export { createMockIssue } from './factories'
+export { createMockIssueMetadata } from './createMockIssueMetadata'
 export { createIssueScenario, mockIssues } from './scenarios'

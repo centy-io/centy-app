@@ -1,15 +1,11 @@
-/* eslint-disable max-lines */
 'use client'
 
-import { useState, useCallback, useEffect, useMemo } from 'react'
-import { create } from '@bufbuild/protobuf'
-import { centyClient } from '@/lib/grpc/client'
-import { ListUsersRequestSchema, type User } from '@/gen/centy_pb'
+import { useCallback, useMemo } from 'react'
+import { useProjectUsers } from './useProjectUsers'
 import {
   MultiSelect,
   type MultiSelectOption,
 } from '@/components/shared/MultiSelect'
-import { isDaemonUnimplemented } from '@/lib/daemon-error'
 
 interface AssigneeSelectorProps {
   projectPath: string
@@ -17,43 +13,6 @@ interface AssigneeSelectorProps {
   currentAssignees: string[]
   onAssigneesChange: (assignees: string[]) => void
   disabled?: boolean
-}
-
-function useProjectUsers(projectPath: string) {
-  const [users, setUsers] = useState<User[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  const fetchUsers = useCallback(async () => {
-    if (!projectPath) return
-
-    setLoading(true)
-    setError(null)
-
-    try {
-      const request = create(ListUsersRequestSchema, {
-        projectPath,
-      })
-      const response = await centyClient.listUsers(request)
-      setUsers(response.users)
-    } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to load users'
-      if (isDaemonUnimplemented(message)) {
-        setError('User management not available')
-      } else {
-        setError(message)
-      }
-    } finally {
-      setLoading(false)
-    }
-  }, [projectPath])
-
-  useEffect(() => {
-    fetchUsers()
-  }, [fetchUsers])
-
-  return { users, loading, error, setError, fetchUsers }
 }
 
 export function AssigneeSelector({
@@ -73,7 +32,6 @@ export function AssigneeSelector({
   )
 
   const handleChange = useCallback(async () => {
-    // TODO: Implement AssignIssue and UnassignIssue RPCs in the daemon
     setError('Assignee modification not yet implemented')
   }, [setError])
 

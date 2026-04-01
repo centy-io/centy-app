@@ -6,10 +6,8 @@ import { SyncUsersModal } from '../SyncUsersModal'
 import { useUsersData } from './useUsersData'
 import { useUserRoutes } from './useProjectRoutes'
 import { UsersListContent } from './UsersListContent'
-import {
-  ContextMenu,
-  type ContextMenuItem,
-} from '@/components/shared/ContextMenu'
+import { ContextMenu } from '@/components/shared/ContextMenu'
+import type { ContextMenuItem } from '@/components/shared/ContextMenuItem'
 import { type User } from '@/gen/centy_pb'
 
 interface ContextMenuState {

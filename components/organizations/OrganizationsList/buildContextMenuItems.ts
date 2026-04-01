@@ -1,7 +1,7 @@
 import { useRouter } from 'next/navigation'
 import { route } from 'nextjs-routes'
 import type { ContextMenuState } from './OrganizationsList.types'
-import type { ContextMenuItem } from '@/components/shared/ContextMenu'
+import type { ContextMenuItem } from '@/components/shared/ContextMenuItem'
 
 export function buildContextMenuItems(
   contextMenu: ContextMenuState,

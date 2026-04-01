@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { create } from '@bufbuild/protobuf'
 import type { PendingAsset } from './types'
 import type { useAssetUploader } from './useAssetUploader'
@@ -65,13 +65,16 @@ export function useAssetRemoval({
     [onPendingChange, uploader]
   )
 
+  const pendingAssetsRef = useRef(uploader.pendingAssets)
+  pendingAssetsRef.current = uploader.pendingAssets
+
   useEffect(() => {
     return () => {
-      uploader.pendingAssets.forEach(p => {
+      pendingAssetsRef.current.forEach(p => {
         if (p.preview) URL.revokeObjectURL(p.preview)
       })
     }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [])
 
   return { removeAsset, removePending }
 }

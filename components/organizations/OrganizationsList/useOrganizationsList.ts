@@ -12,7 +12,7 @@ import {
   ListOrganizationsRequestSchema,
   type Organization,
 } from '@/gen/centy_pb'
-import type { ContextMenuItem } from '@/components/shared/ContextMenu'
+import type { ContextMenuItem } from '@/components/shared/ContextMenuItem'
 
 export function useOrganizationsList() {
   const router = useRouter()
