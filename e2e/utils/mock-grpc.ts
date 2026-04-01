@@ -2,7 +2,6 @@ import type { Page } from '@playwright/test'
 import type { DescMessage } from '@bufbuild/protobuf'
 import type { GrpcHandler, HandlerConfig } from './mock-grpc-types'
 import { createRouteHandler } from './mock-grpc-route-handler'
-import { DEFAULT_DAEMON_URL } from '@/lib/grpc/client'
 
 /**
  * GrpcMocker - A utility for mocking gRPC-Web calls in Playwright tests.
@@ -16,7 +15,8 @@ export class GrpcMocker {
 
   constructor(page: Page, daemonUrl?: string) {
     this.page = page
-    this.daemonUrl = daemonUrl !== undefined ? daemonUrl : DEFAULT_DAEMON_URL
+    this.daemonUrl =
+      daemonUrl !== undefined ? daemonUrl : 'http://localhost:50051'
     this.handlers = new Map()
     this.isSetup = false
   }

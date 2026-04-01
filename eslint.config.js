@@ -40,6 +40,14 @@ export default [
     },
   },
   {
+    // e2e utilities legitimately reference localhost and hardcoded URLs for test infrastructure
+    files: ['e2e/**'],
+    rules: {
+      'default/no-localhost': 'off',
+      'default/no-hardcoded-urls': 'off',
+    },
+  },
+  {
     // Re-enable max-lines-per-function for test and spec files
     files: [
       '**/*.spec.{js,jsx,ts,tsx}',
