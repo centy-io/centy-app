@@ -1,9 +1,10 @@
+# This file is managed by Centy. Use the Centy CLI to modify it.
 name: Issue
 identifier: uuid
 features:
   displayNumber: true
-  status: true
   priority: true
+  softDelete: false
   assets: true
   orgSync: true
   move: true
@@ -13,5 +14,4 @@ statuses:
 - planning
 - in-progress
 - closed
-defaultStatus: open
 priorityLevels: 3

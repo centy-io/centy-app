@@ -1,3 +1,5 @@
+<!-- This file is managed by Centy. Use the Centy CLI to modify it. -->
+
 # Issues
 
 This folder contains project issues managed by [Centy](https://github.com/centy-io/centy-cli).
