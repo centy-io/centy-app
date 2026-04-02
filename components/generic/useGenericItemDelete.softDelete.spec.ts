@@ -34,6 +34,7 @@ const mockItem = {
     updatedAt: '',
     deletedAt: '',
     customFields: {},
+    tags: [],
   },
 }
 

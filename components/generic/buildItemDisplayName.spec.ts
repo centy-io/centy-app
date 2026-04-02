@@ -10,9 +10,14 @@ describe('buildItemDisplayName', () => {
     const config = {
       $typeName: 'centy.v1.ItemTypeConfigProto' as const,
       name: 'bug',
-      itemType: 'issues',
+      plural: 'bugs',
+      identifier: 'issues',
       statuses: [],
       defaultStatus: '',
+      priorityLevels: 0,
+      customFields: [],
+      icon: '',
+      template: '',
     }
     expect(buildItemDisplayName(config, 'issues')).toBe('Bug')
   })

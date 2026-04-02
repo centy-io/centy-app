@@ -26,6 +26,7 @@ const mockItem = {
     updatedAt: '2024-01-02T00:00:00Z',
     deletedAt: '',
     customFields: {},
+    tags: [],
   },
 }
 
