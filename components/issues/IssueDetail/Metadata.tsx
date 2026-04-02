@@ -35,7 +35,17 @@ export function Metadata({
   onToggleDropdown,
   onStatusChange,
 }: MetadataProps): ReactElement {
-  const priorityLabel = (issue.metadata && issue.metadata.priorityLabel) || ''
+  const priorityNum = issue.metadata && issue.metadata.priority
+  const derivedLabel =
+    priorityNum === 1
+      ? 'High'
+      : priorityNum === 2
+        ? 'Medium'
+        : priorityNum === 3
+          ? 'Low'
+          : ''
+  const priorityLabel =
+    (issue.metadata && issue.metadata.priorityLabel) || derivedLabel
   return (
     <>
       <div className="issue-metadata">
@@ -49,9 +59,11 @@ export function Metadata({
           onToggleDropdown={onToggleDropdown}
           onStatusChange={onStatusChange}
         />
-        <span className={`priority-badge ${getPriorityClass(priorityLabel)}`}>
-          {priorityLabel || 'No priority'}
-        </span>
+        {priorityLabel && (
+          <span className={`priority-badge ${getPriorityClass(priorityLabel)}`}>
+            {priorityLabel}
+          </span>
+        )}
         <span className="issue-date">
           Created:{' '}
           {issue.metadata && issue.metadata.createdAt
