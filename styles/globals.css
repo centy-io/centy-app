@@ -537,6 +537,15 @@ code {
   align-items: center;
 }
 
+.nav-group-project {
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.nav-group-project::-webkit-scrollbar {
+  display: none;
+}
+
 /* Desktop Navigation Divider */
 .nav-divider {
   width: 1px;
