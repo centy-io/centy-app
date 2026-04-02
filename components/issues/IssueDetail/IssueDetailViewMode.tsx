@@ -4,6 +4,7 @@ import type { ReactElement } from 'react'
 import { Metadata } from './Metadata'
 import { ViewContent } from './ViewContent'
 import type { IssueDetailBodyProps } from './IssueDetailBody.types'
+import { ItemTitle } from '@/components/shared/ItemView'
 
 interface IssueDetailViewModeProps {
   issue: IssueDetailBodyProps['issue']
@@ -32,7 +33,7 @@ export function IssueDetailViewMode({
 }: IssueDetailViewModeProps): ReactElement {
   return (
     <>
-      <h1 className="issue-title">{issue.title}</h1>
+      <ItemTitle>{issue.title}</ItemTitle>
       <Metadata
         issue={issue}
         projectPath={projectPath}

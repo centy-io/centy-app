@@ -9,6 +9,7 @@ import { DeleteConfirm } from '@/components/shared/DeleteConfirm'
 import { CommentThread } from '@/components/comments/CommentThread'
 import type { GenericItem } from '@/gen/centy_pb'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
+import { ItemContent } from '@/components/shared/ItemView'
 
 interface ContentProps {
   state: ReturnType<typeof useGenericItemDetailState>
@@ -61,14 +62,14 @@ export function GenericItemContent({
           onConfirm={handleDelete}
         />
       )}
-      <div className="doc-content">
+      <ItemContent>
         <DetailBody
           item={item}
           config={state.config}
           isEditing={isEditing}
           fetch={fetch}
         />
-      </div>
+      </ItemContent>
       {itemType !== 'comments' && (
         <CommentThread
           projectPath={projectPath}

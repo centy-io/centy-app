@@ -68,27 +68,11 @@
   background: var(--color-gray-100);
 }
 
-/* Content Card */
-.generic-item-detail .doc-content {
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-border-default);
-  border-radius: var(--radius-xl);
-  padding: var(--space-6);
-  box-shadow: var(--shadow-sm);
-}
-
 /* View */
 .generic-item-view {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-}
-
-.generic-item-view-title {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--color-gray-900);
-  margin-bottom: var(--space-1);
 }
 
 /* ID */
@@ -202,9 +186,5 @@
 
   .generic-item-detail .header-actions {
     justify-content: flex-end;
-  }
-
-  .generic-item-view-title {
-    font-size: 1.375rem;
   }
 }

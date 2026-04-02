@@ -43,7 +43,7 @@ test.describe('Editor Selector - Basic behavior', () => {
     await expect(page.locator('.demo-mode-indicator')).toBeVisible()
     await page.locator('.editor-dropdown-btn').click()
     await expect(page.locator('.editor-dropdown')).toBeVisible()
-    await page.locator('.issue-content').click()
+    await page.locator('.item-content').click()
 
     await expect(page.locator('.editor-dropdown')).not.toBeVisible()
   })

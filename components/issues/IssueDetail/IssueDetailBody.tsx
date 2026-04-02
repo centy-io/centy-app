@@ -4,6 +4,7 @@ import type { ReactElement } from 'react'
 import { EditForm } from './EditForm'
 import { IssueDetailViewMode } from './IssueDetailViewMode'
 import type { IssueDetailBodyProps } from './IssueDetailBody.types'
+import { ItemContent } from '@/components/shared/ItemView'
 
 function buildToggleDropdown(
   setShowStatusDropdown: (show: boolean) => void,
@@ -43,7 +44,7 @@ export function IssueDetailBody(props: IssueDetailBodyProps): ReactElement {
     issue.displayNumber
   )
   return (
-    <div className="issue-content">
+    <ItemContent>
       <button
         type="button"
         className="issue-number-badge"
@@ -82,6 +83,6 @@ export function IssueDetailBody(props: IssueDetailBodyProps): ReactElement {
           onToggleDropdown={onToggleDropdown}
         />
       )}
-    </div>
+    </ItemContent>
   )
 }

@@ -1,10 +1,10 @@
 ---
 # This file is managed by Centy. Use the Centy CLI to modify it.
 displayNumber: 212
-status: open
+status: closed
 priority: 2
 createdAt: 2026-04-02T22:19:46.429371+00:00
-updatedAt: 2026-04-02T22:19:46.429371+00:00
+updatedAt: 2026-04-02T22:33:39.282635+00:00
 ---
 
 # Unify issue-title and issue-content into a generic component for all item types
