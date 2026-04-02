@@ -139,8 +139,8 @@ importers:
         specifier: 9.39.1
         version: 9.39.1(jiti@2.6.1)
       eslint-config-agent:
-        specifier: ^2.1.0
-        version: 2.1.0(eslint-import-resolver-typescript@4.4.4)(jiti@2.6.1)(storybook@9.1.17(@testing-library/dom@10.4.1)(msw@2.12.4(@types/node@24.10.1)(typescript@5.9.3))(prettier@3.7.4)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(terser@5.46.0)(yaml@2.8.2)))(typescript@5.9.3)
+        specifier: ^3.0.0
+        version: 3.0.0(eslint-import-resolver-typescript@4.4.4)(jiti@2.6.1)(storybook@9.1.17(@testing-library/dom@10.4.1)(msw@2.12.4(@types/node@24.10.1)(typescript@5.9.3))(prettier@3.7.4)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(terser@5.46.0)(yaml@2.8.2)))(typescript@5.9.3)
       eslint-import-resolver-typescript:
         specifier: ^4.4.4
         version: 4.4.4(eslint-plugin-import@2.32.0)(eslint@9.39.1(jiti@2.6.1))
@@ -3548,8 +3548,8 @@ packages:
     peerDependencies:
       eslint: '>=6.0.0'
 
-  eslint-config-agent@2.1.0:
-    resolution: {integrity: sha512-Tf5dhtxYre2weW01Uc+wHCdlp35vjMe1EQCL9GX8rJV/HaBNC8+6PDlltw/39Gd78sTs5+BSoW9yIDJXyEWfMQ==}
+  eslint-config-agent@3.0.0:
+    resolution: {integrity: sha512-1Pprjd6vvTFjb2dwHmwsHxDITT3cWH4dv4rWDdGNAs1mp/Fisl9/l0vS18kuBdQHkUpgVIUrTG8Ypy3ajY19eA==}
     engines: {node: '>=20.0.0'}
 
   eslint-config-developit@1.2.0:
@@ -3722,6 +3722,12 @@ packages:
     peerDependencies:
       eslint: '>=8'
       storybook: ^9.1.17
+
+  eslint-plugin-switch-case@3.0.1:
+    resolution: {integrity: sha512-sLVXDWBFotfABLqLXsUQ7ztDa6CGg+RwakXT+NXGrS4sMY0YCkk7qZbdmGPNlrqtNULEsGfXF8hEkKc6eW5Lkg==}
+    engines: {node: '>=18.18'}
+    peerDependencies:
+      eslint: ^9.8.0
 
   eslint-scope@5.1.1:
     resolution: {integrity: sha512-2NxwbF/hZ0KpepYN0cNbo+FN6XoK7GaHlQhgx/hIZl6Va0bF45RQOOwhLIy8lQDbuCiadSLCBnH2CFYquit5bw==}
@@ -9383,7 +9389,7 @@ snapshots:
       eslint: 9.39.1(jiti@2.6.1)
       semver: 7.7.3
 
-  eslint-config-agent@2.1.0(eslint-import-resolver-typescript@4.4.4)(jiti@2.6.1)(storybook@9.1.17(@testing-library/dom@10.4.1)(msw@2.12.4(@types/node@24.10.1)(typescript@5.9.3))(prettier@3.7.4)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(terser@5.46.0)(yaml@2.8.2)))(typescript@5.9.3):
+  eslint-config-agent@3.0.0(eslint-import-resolver-typescript@4.4.4)(jiti@2.6.1)(storybook@9.1.17(@testing-library/dom@10.4.1)(msw@2.12.4(@types/node@24.10.1)(typescript@5.9.3))(prettier@3.7.4)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(terser@5.46.0)(yaml@2.8.2)))(typescript@5.9.3):
     dependencies:
       '@eslint/eslintrc': 3.3.3
       '@eslint/js': 9.39.1
@@ -9406,6 +9412,7 @@ snapshots:
       eslint-plugin-security: 3.0.1
       eslint-plugin-single-export: 1.1.2(eslint@9.39.1(jiti@2.6.1))
       eslint-plugin-storybook: 9.1.17(eslint@9.39.1(jiti@2.6.1))(storybook@9.1.17(@testing-library/dom@10.4.1)(msw@2.12.4(@types/node@24.10.1)(typescript@5.9.3))(prettier@3.7.4)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(terser@5.46.0)(yaml@2.8.2)))(typescript@5.9.3)
+      eslint-plugin-switch-case: 3.0.1(eslint@9.39.1(jiti@2.6.1))
       globals: 16.5.0
       typescript-eslint: 8.48.1(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3)
     transitivePeerDependencies:
@@ -9523,7 +9530,7 @@ snapshots:
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
-      minimatch: 3.1.2
+      minimatch: 3.1.5
       object.fromentries: 2.0.8
       object.groupby: 1.0.3
       object.values: 1.2.1
@@ -9599,7 +9606,7 @@ snapshots:
       estraverse: 5.3.0
       hasown: 2.0.2
       jsx-ast-utils: 3.3.5
-      minimatch: 3.1.2
+      minimatch: 3.1.5
       object.entries: 1.1.9
       object.fromentries: 2.0.8
       object.values: 1.2.1
@@ -9629,6 +9636,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
       - typescript
+
+  eslint-plugin-switch-case@3.0.1(eslint@9.39.1(jiti@2.6.1)):
+    dependencies:
+      eslint: 9.39.1(jiti@2.6.1)
 
   eslint-scope@5.1.1:
     dependencies:
@@ -9901,7 +9912,7 @@ snapshots:
       fs.realpath: 1.0.0
       inflight: 1.0.6
       inherits: 2.0.4
-      minimatch: 3.1.2
+      minimatch: 3.1.5
       once: 1.4.0
       path-is-absolute: 1.0.1
 
