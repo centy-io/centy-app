@@ -3,6 +3,7 @@
 import type { Issue } from '@/gen/centy_pb'
 import { TextEditor } from '@/components/shared/TextEditor'
 import { ItemMetadata } from '@/components/shared/ItemMetadata'
+import { ItemTitle } from '@/components/shared/ItemView'
 
 interface OrgIssueReadViewProps {
   issue: Issue
@@ -16,7 +17,7 @@ export function OrgIssueReadView({ issue }: OrgIssueReadViewProps) {
 
   return (
     <>
-      <h1 className="issue-title">{issue.title}</h1>
+      <ItemTitle>{issue.title}</ItemTitle>
       <ItemMetadata
         status={status}
         priority={priority}

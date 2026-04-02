@@ -1,6 +1,7 @@
 import type { GenericItem, ItemTypeConfigProto } from '@/gen/centy_pb'
 import { TextEditor } from '@/components/shared/TextEditor'
 import { ItemMetadata } from '@/components/shared/ItemMetadata'
+import { ItemTitle } from '@/components/shared/ItemView'
 
 interface GenericItemViewProps {
   item: GenericItem
@@ -16,7 +17,7 @@ export function GenericItemView({ item, config }: GenericItemViewProps) {
 
   return (
     <div className="generic-item-view">
-      <h1 className="generic-item-view-title">{item.title || item.id}</h1>
+      <ItemTitle>{item.title || item.id}</ItemTitle>
       <ItemMetadata
         status={showStatus && meta ? meta.status : undefined}
         customFields={customFields}
