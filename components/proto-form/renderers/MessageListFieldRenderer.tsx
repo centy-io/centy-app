@@ -1,18 +1,16 @@
 'use client'
 
 import { useState } from 'react'
-import { create } from '@bufbuild/protobuf'
-import type { DescMessage } from '@bufbuild/protobuf'
+import { create, type DescMessage } from '@bufbuild/protobuf'
 import { MessageItem } from './MessageItem'
-import type { FieldRenderProps } from '@/lib/proto-form/types'
+import type {
+  FieldRenderProps,
+  ProtoFormRendererType,
+} from '@/lib/proto-form/types'
 
 interface MessageListFieldProps extends Omit<FieldRenderProps, 'field'> {
   messageDesc: DescMessage
-  ProtoFormRenderer: React.ComponentType<{
-    schema: DescMessage
-    value: Record<string, unknown>
-    onChange: (updates: Record<string, unknown>) => void
-  }>
+  ProtoFormRenderer: ProtoFormRendererType
 }
 
 function toRecordArray(v: unknown): Record<string, unknown>[] {
@@ -26,6 +24,24 @@ function toRecordArray(v: unknown): Record<string, unknown>[] {
     )
   }
   return []
+}
+
+function shiftExpandedAfterRemove(
+  prev: Set<number>,
+  index: number
+): Set<number> {
+  const next = new Set<number>()
+  for (const idx of prev) {
+    if (idx < index) next.add(idx)
+    else if (idx > index) next.add(idx - 1)
+  }
+  return next
+}
+function toggleIndex(prev: Set<number>, index: number): Set<number> {
+  const next = new Set(prev)
+  if (next.has(index)) next.delete(index)
+  else next.add(index)
+  return next
 }
 
 export function MessageListFieldRenderer({
@@ -47,36 +63,6 @@ export function MessageListFieldRenderer({
     setExpanded(prev => new Set([...prev, next.length - 1]))
   }
 
-  const handleRemove = (index: number) => {
-    onChange(items.filter((_, i) => i !== index))
-    setExpanded(prev => {
-      const next = new Set<number>()
-      for (const idx of prev) {
-        if (idx < index) next.add(idx)
-        else if (idx > index) next.add(idx - 1)
-      }
-      return next
-    })
-  }
-
-  const handleItemChange = (
-    index: number,
-    updates: Record<string, unknown>
-  ) => {
-    onChange(
-      items.map((item, i) => (i === index ? { ...item, ...updates } : item))
-    )
-  }
-
-  const toggleExpanded = (index: number) => {
-    setExpanded(prev => {
-      const next = new Set(prev)
-      if (next.has(index)) next.delete(index)
-      else next.add(index)
-      return next
-    })
-  }
-
   return (
     <div className="proto-form-field">
       <label className="proto-form-field-label">{label}</label>
@@ -91,9 +77,16 @@ export function MessageListFieldRenderer({
             index={i}
             messageName={messageDesc.name}
             isExpanded={expanded.has(i)}
-            onToggle={toggleExpanded}
-            onRemove={handleRemove}
-            onItemChange={handleItemChange}
+            onToggle={index => setExpanded(prev => toggleIndex(prev, index))}
+            onRemove={index => {
+              onChange(items.filter((_, j) => j !== index))
+              setExpanded(prev => shiftExpandedAfterRemove(prev, index))
+            }}
+            onItemChange={(idx, upd) =>
+              onChange(
+                items.map((it, j) => (j === idx ? { ...it, ...upd } : it))
+              )
+            }
             messageDesc={messageDesc}
             ProtoFormRenderer={ProtoFormRenderer}
           />

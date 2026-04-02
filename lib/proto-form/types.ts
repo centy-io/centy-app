@@ -1,4 +1,10 @@
-import type { DescField } from '@bufbuild/protobuf'
+import type { DescField, DescMessage } from '@bufbuild/protobuf'
+
+export type ProtoFormRendererType = React.ComponentType<{
+  schema: DescMessage
+  value: Record<string, unknown>
+  onChange: (updates: Record<string, unknown>) => void
+}>
 
 export interface FieldOverride {
   label?: string
