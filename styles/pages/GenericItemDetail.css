@@ -1,5 +1,6 @@
 /* Generic Item Detail Page */
 .generic-item-detail {
+  position: relative;
   max-width: 800px;
   margin: 0 auto;
   padding: var(--space-8);
