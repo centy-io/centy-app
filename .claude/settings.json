@@ -186,7 +186,11 @@
       "mcp__centy__centy_v1_CentyDaemon_GetConfig",
       "mcp__centy__centy_v1_CentyDaemon_GetProjectInfo",
       "Bash(wait)",
-      "mcp__centy__centy_v1_CentyDaemon_UpdateItem"
+      "mcp__centy__centy_v1_CentyDaemon_UpdateItem",
+      "mcp__centy__centy_v1_CentyDaemon_GetOrgIssue",
+      "mcp__centy__centy_v1_CentyDaemon_GetManifest",
+      "mcp__centy__centy_v1_CentyDaemon_GetItem",
+      "mcp__centy__centy_v1_CentyDaemon_ListItemTypes"
     ],
     "deny": ["Bash(npm install)", "Bash(gh issue create:*)"]
   },
