@@ -5,10 +5,7 @@ import { protoToTargetType } from './LinkSection.types'
 import { LinkTargetType } from '@/gen/centy_pb'
 
 export function useLinkRoutes(): {
-  buildLinkRoute: (
-    targetType: LinkTargetType,
-    targetId: string
-  ) => RouteLiteral
+  buildLinkRoute: (targetType: LinkTargetType, targetId: string) => RouteLiteral
 } {
   const params = useParams()
 

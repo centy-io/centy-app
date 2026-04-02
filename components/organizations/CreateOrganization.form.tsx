@@ -80,7 +80,10 @@ export function CreateOrganizationForm({
       </div>
 
       <div className="form-actions">
-        <Link href={route({ pathname: '/organizations' })} className="cancel-btn">
+        <Link
+          href={route({ pathname: '/organizations' })}
+          className="cancel-btn"
+        >
           Cancel
         </Link>
         <button

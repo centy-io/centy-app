@@ -82,15 +82,15 @@ export function CreateOrganization() {
     }
   }, [name, slug, description, router])
 
-  useSaveShortcut({
-    onSave: handleSubmit,
-    enabled: !saving && !!name.trim(),
-  })
+  useSaveShortcut({ onSave: handleSubmit, enabled: !saving && !!name.trim() })
 
   return (
     <div className="create-organization">
       <div className="create-organization-header">
-        <Link href={route({ pathname: '/organizations' })} className="back-link">
+        <Link
+          href={route({ pathname: '/organizations' })}
+          className="back-link"
+        >
           Back to Organizations
         </Link>
         <h2 className="create-organization-title">Create New Organization</h2>

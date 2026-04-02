@@ -30,7 +30,10 @@ function ProjectContextRequired({ requestedPage }: { requestedPage: string }) {
         {pageLabel} are project-scoped. Please select a project to view its{' '}
         {pageLabel.toLowerCase()}.
       </p>
-      <Link href={route({ pathname: '/organizations' })} className="select-project-link">
+      <Link
+        href={route({ pathname: '/organizations' })}
+        className="select-project-link"
+      >
         Select a Project
       </Link>
     </div>
