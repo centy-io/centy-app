@@ -207,10 +207,10 @@
   --shadow-xl: 4px 4px 0 var(--color-border-default);
 }
 
-/* Dark mode header — flat ink black */
+/* Dark mode header — warm dark paper */
 [data-theme='dark'] .app-header {
-  background: #121008;
-  border-bottom-color: #3d3629;
+  background: var(--color-bg-elevated);
+  border-bottom-color: var(--color-gray-800);
 }
 
 /* Smooth theme transition */
@@ -405,12 +405,12 @@ code {
 
 /* Header */
 .app-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--color-bg-elevated);
+  border-bottom: 2px solid var(--color-gray-900);
   padding: var(--space-6) var(--space-8);
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: var(--shadow-lg);
 }
 
 /* Header Top Row */
@@ -439,18 +439,19 @@ code {
   display: inline-block;
   width: 32px;
   height: 32px;
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-default);
   border-radius: var(--radius-md);
   background-image: url('/icon.svg');
   background-repeat: no-repeat;
   background-position: center;
   background-size: 20px;
   vertical-align: middle;
-  transition: opacity var(--transition-fast);
+  transition: background-color var(--transition-fast);
 }
 
 .header-home-link:hover {
-  opacity: 0.9;
+  background-color: var(--color-gray-200);
 }
 
 /* Header context (org / project display) */
@@ -462,23 +463,23 @@ code {
 }
 
 .header-context-link {
-  color: white;
+  color: var(--color-text-secondary);
   text-decoration: none;
-  transition: opacity var(--transition-fast);
+  transition: color var(--transition-fast);
 }
 
 .header-context-link:hover {
-  opacity: 0.8;
+  color: var(--color-text-primary);
   text-decoration: underline;
 }
 
 .header-context-separator {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--color-text-muted);
 }
 
 .app-header p {
   margin: var(--space-1) 0 0;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--color-text-secondary);
   font-size: 0.9375rem;
   font-weight: 400;
 }
@@ -491,7 +492,7 @@ code {
 }
 
 .app-nav a {
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--color-text-secondary);
   text-decoration: none;
   padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-lg);
@@ -502,13 +503,14 @@ code {
 }
 
 .app-nav a:hover {
-  color: white;
-  background: rgba(255, 255, 255, 0.15);
+  color: var(--color-text-primary);
+  background: var(--color-bg-card);
 }
 
 .app-nav a.active {
-  color: white;
-  background: rgba(255, 255, 255, 0.2);
+  color: var(--color-text-primary);
+  background: var(--color-gray-200);
+  font-weight: 600;
 }
 
 .app-nav a.active::after {
@@ -518,13 +520,13 @@ code {
   left: 50%;
   transform: translateX(-50%);
   width: 20px;
-  height: 3px;
-  background: white;
-  border-radius: var(--radius-full);
+  height: 2px;
+  background: var(--color-gray-900);
+  border-radius: 0;
 }
 
 .app-nav a.external-link {
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid var(--color-border-default);
 }
 
 /* Navigation Groups */
@@ -547,7 +549,7 @@ code {
 .nav-divider {
   width: 1px;
   height: 24px;
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--color-border-default);
   margin: 0 var(--space-3);
   flex-shrink: 0;
 }
@@ -562,7 +564,7 @@ code {
 /* Mobile Navigation Divider */
 .mobile-nav-divider {
   height: 1px;
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--color-border-default);
   margin: var(--space-4) 0;
 }
 
@@ -576,28 +578,28 @@ code {
   width: 44px;
   height: 44px;
   padding: 10px;
-  background: rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
   cursor: pointer;
   transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease;
+    background-color var(--transition-fast),
+    border-color var(--transition-fast);
 }
 
 .mobile-menu-toggle:hover {
-  background: rgba(0, 0, 0, 0.35);
-  border-color: rgba(255, 255, 255, 0.35);
+  background: var(--color-gray-200);
+  border-color: var(--color-gray-400);
 }
 
 .mobile-menu-toggle .hamburger-line {
   width: 20px;
   height: 2px;
-  background: white;
-  border-radius: 1px;
+  background: var(--color-text-primary);
+  border-radius: 0;
   transition:
-    transform 0.3s ease,
-    opacity 0.3s ease;
+    transform var(--transition-normal),
+    opacity var(--transition-normal);
 }
 
 .mobile-menu-toggle.open .hamburger-line:nth-child(1) {
@@ -620,10 +622,10 @@ code {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.4);
   z-index: 998;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity var(--transition-slow);
   pointer-events: none;
 }
 
@@ -641,14 +643,14 @@ code {
   width: 280px;
   max-width: 85vw;
   height: 100vh;
-  background: linear-gradient(180deg, #4f46e5 0%, #5b21b6 100%);
+  background: var(--color-bg-elevated);
+  border-left: 2px solid var(--color-gray-900);
   z-index: 999;
   transform: translateX(100%);
-  transition: transform 0.3s ease;
+  transition: transform var(--transition-slow);
   padding: var(--space-6);
   padding-top: calc(var(--space-6) + 60px);
   overflow-y: auto;
-  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
 }
 
 .mobile-menu.open {
@@ -668,7 +670,7 @@ code {
   gap: var(--space-3);
   margin-bottom: var(--space-6);
   padding-bottom: var(--space-6);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid var(--color-border-default);
 }
 
 .mobile-menu-selectors > * {
@@ -683,30 +685,31 @@ code {
 
 .mobile-menu-nav a {
   display: block;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--color-text-secondary);
   text-decoration: none;
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-md);
   font-size: 1rem;
   font-weight: 500;
   transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
+    background-color var(--transition-fast),
+    color var(--transition-fast);
 }
 
 .mobile-menu-nav a:hover {
-  background: rgba(255, 255, 255, 0.15);
-  color: white;
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
 }
 
 .mobile-menu-nav a.active {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
+  background: var(--color-gray-200);
+  color: var(--color-text-primary);
+  font-weight: 600;
 }
 
 .mobile-menu-nav a.external-link {
   margin-top: var(--space-4);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid var(--color-border-default);
 }
 
 /* Main Content */
