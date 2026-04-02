@@ -3,8 +3,8 @@
   align-items: center;
   gap: 6px;
   padding: 6px 10px;
-  background: var(--color-warning-light, rgba(251, 191, 36, 0.15));
-  border: 1px solid rgba(251, 191, 36, 0.4);
+  background: var(--color-warning-alpha-15);
+  border: 1px solid var(--color-warning-alpha-40);
   border-radius: 6px;
   color: var(--color-warning, #f59e0b);
   cursor: pointer;
@@ -15,8 +15,8 @@
 }
 
 .daemon-update-badge:hover {
-  background: rgba(251, 191, 36, 0.25);
-  border-color: rgba(251, 191, 36, 0.6);
+  background: var(--color-warning-alpha-25);
+  border-color: var(--color-warning-alpha-60);
 }
 
 .daemon-update-dot {
@@ -42,7 +42,7 @@
 .daemon-update-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--color-overlay);
   display: flex;
   align-items: center;
   justify-content: center;
