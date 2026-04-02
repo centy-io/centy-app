@@ -183,7 +183,10 @@
       "Bash(pnpm start:*)",
       "Bash(pnpm list:*)",
       "Bash(gh issue:*)",
-      "mcp__centy__centy_v1_CentyDaemon_GetConfig"
+      "mcp__centy__centy_v1_CentyDaemon_GetConfig",
+      "mcp__centy__centy_v1_CentyDaemon_GetProjectInfo",
+      "Bash(wait)",
+      "mcp__centy__centy_v1_CentyDaemon_UpdateItem"
     ],
     "deny": ["Bash(npm install)", "Bash(gh issue create:*)"]
   },
