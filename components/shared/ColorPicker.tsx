@@ -1,7 +1,5 @@
 'use client'
 
-import { colors } from '@/styles/colors'
-
 interface ColorPickerProps {
   value: string
   onChange: (color: string) => void
@@ -9,7 +7,7 @@ interface ColorPickerProps {
 }
 
 export function ColorPicker({ value, onChange, label }: ColorPickerProps) {
-  const displayValue = value || colors.fallback
+  const displayValue = value || '#888888'
 
   return (
     <div className="color-picker">
