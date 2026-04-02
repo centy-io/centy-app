@@ -19,7 +19,7 @@
   padding: 48px;
   max-width: 480px;
   text-align: center;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-xl);
 }
 
 .daemon-disconnected-icon {
@@ -149,13 +149,13 @@
 }
 
 .daemon-demo-button:hover {
-  background: rgba(167, 139, 250, 0.1);
+  background: var(--color-primary-light);
   border-color: var(--color-demo-hover);
   color: var(--color-demo-hover);
 }
 
 .daemon-demo-button:active {
-  background: rgba(167, 139, 250, 0.2);
+  background: var(--color-primary-light);
 }
 
 /* Default icon size for desktop */

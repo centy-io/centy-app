@@ -46,7 +46,7 @@
 .defaults-value-input:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+  box-shadow: 0 0 0 1px var(--color-primary);
 }
 
 .defaults-remove-btn {
@@ -87,7 +87,7 @@
 .defaults-key-input:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+  box-shadow: 0 0 0 1px var(--color-primary);
 }
 
 .defaults-add-row .defaults-value-input {

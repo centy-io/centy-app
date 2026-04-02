@@ -24,7 +24,7 @@
   height: 8px;
   border-radius: 50%;
   background-color: var(--color-warning, #f59e0b);
-  box-shadow: 0 0 6px rgba(251, 191, 36, 0.6);
+
   animation: daemon-update-pulse 2s infinite;
   flex-shrink: 0;
 }
