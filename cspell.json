@@ -40,6 +40,7 @@
     "functionals",
     "gitops",
     "grpc",
+    "grayscale",
     "grpcurl",
     "hotspots",
     "HSTS",
