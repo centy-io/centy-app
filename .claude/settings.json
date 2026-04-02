@@ -205,7 +205,9 @@
       "mcp__plugin_playwright_playwright__browser_run_code",
       "mcp__plugin_playwright_playwright__browser_press_key",
       "mcp__plugin_playwright_playwright__browser_console_messages",
-      "mcp__plugin_playwright_playwright__browser_network_requests"
+      "mcp__plugin_playwright_playwright__browser_network_requests",
+      "Bash(pnpm format:*)",
+      "Bash(gh api:*)"
     ],
     "deny": ["Bash(npm install)", "Bash(gh issue create:*)"]
   },
