@@ -37,10 +37,7 @@ export function CreateOrganization() {
     setError,
   })
 
-  useSaveShortcut({
-    onSave: handleSubmit,
-    enabled: !saving && !!name.trim(),
-  })
+  useSaveShortcut({ onSave: handleSubmit, enabled: !saving && !!name.trim() })
 
   return (
     <div className="create-organization">
