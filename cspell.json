@@ -71,6 +71,7 @@
     "protoc",
     "pytest",
     "radash",
+    "rgba",
     "rustc",
     "rustup",
     "SFIXED",
