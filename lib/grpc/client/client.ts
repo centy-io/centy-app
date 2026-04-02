@@ -7,7 +7,7 @@ import { isDemoMode } from './demo-mode'
 import { getDaemonUrl } from './daemon-url'
 import { CentyDaemon } from '@/gen/centy_pb'
 import { trackGrpcCall } from '@/lib/metrics'
-import { DemoModeError } from '@/lib/errors'
+import { DemoModeError, UnknownError } from '@/lib/errors'
 
 const transport = createGrpcWebTransport({
   baseUrl: getDaemonUrl(),
@@ -34,7 +34,7 @@ function wrapWithMetrics(
     } catch (error) {
       const duration = performance.now() - start
       trackGrpcCall(methodName, duration, false)
-      throw error instanceof Error ? error : new Error(String(error))
+      throw error instanceof Error ? error : new UnknownError(error)
     }
   }
 }
@@ -42,15 +42,12 @@ function wrapWithMetrics(
 // Create a proxy that intercepts calls for metrics and demo mode
 export const centyClient: Client<typeof CentyDaemon> = new Proxy(realClient, {
   get(target, prop: string) {
-    const clientRecord: Record<string, unknown> = target
-    // eslint-disable-next-line security/detect-object-injection
-    const value: unknown = clientRecord[prop]
+    const value: unknown = Reflect.get(target, prop)
 
     // If in demo mode, use mock handlers
     if (isDemoMode()) {
       if (typeof value === 'function') {
-        // eslint-disable-next-line security/detect-object-injection
-        const mockHandler = mockHandlers[prop]
+        const mockHandler = Reflect.get(mockHandlers, prop)
         if (mockHandler) {
           return wrapWithMetrics(async (...args: unknown[]) => {
             try {
@@ -60,7 +57,7 @@ export const centyClient: Client<typeof CentyDaemon> = new Proxy(realClient, {
                 `[Demo Mode] Error in mock handler for ${prop}:`,
                 error
               )
-              throw error instanceof Error ? error : new Error(String(error))
+              throw error instanceof Error ? error : new UnknownError(error)
             }
           }, prop)
         }

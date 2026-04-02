@@ -1,71 +1,66 @@
-import { useState, useCallback, useRef } from 'react'
+import { useCallback } from 'react'
 import { useProjectContext } from './useProjectContext'
-import { useCreateIssueSubmit } from './useCreateIssueSubmit'
+import { useIssueDraft } from './useIssueDraft'
+import { buildHandleSubmit } from './buildHandleSubmit'
+import { useCreateIssueState } from './useCreateIssueState'
+import { buildCreateIssueReturn } from './buildCreateIssueReturn'
+import { useCreateItemSubmit } from '@/hooks/useCreateItemSubmit'
 import { usePathContext } from '@/components/providers/PathContextProvider'
-import { useStateManager } from '@/lib/state'
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
-import type {
-  AssetUploaderHandle,
-  PendingAsset,
-} from '@/components/assets/AssetUploader'
 
 export function useCreateIssue() {
   const { projectPath, isInitialized } = usePathContext()
-  const stateManager = useStateManager()
-  const stateOptions = stateManager.getStateOptions()
-
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
-  const [priority, setPriority] = useState(2)
-  const [status, setStatus] = useState(() => stateManager.getDefaultState())
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [pendingAssets, setPendingAssets] = useState<PendingAsset[]>([])
-  const assetUploaderRef = useRef<AssetUploaderHandle>(null)
-
+  const s = useCreateIssueState()
+  const draft = useIssueDraft(projectPath)
   const { getProjectContext } = useProjectContext(projectPath)
-
-  const { handleSubmit, handleCancel } = useCreateIssueSubmit({
+  const { submitItem, handleCancel } = useCreateItemSubmit({
+    kind: 'issue',
     projectPath,
-    title,
-    description,
-    priority,
-    status,
-    pendingAssets,
-    assetUploaderRef,
     getProjectContext,
-    setLoading,
-    setError,
+    setLoading: s.setLoading,
+    setError: s.setError,
+    clearDraft: draft.clearDraft,
   })
 
+  const handleSubmit = useCallback(
+    (e?: React.FormEvent) =>
+      buildHandleSubmit({
+        title: draft.title,
+        description: draft.description,
+        priority: draft.priority,
+        status: s.status,
+        pendingAssets: s.pendingAssets,
+        assetUploaderRef: s.assetUploaderRef,
+        projectPath,
+        submitItem,
+      })(e),
+    [
+      draft.title,
+      draft.description,
+      draft.priority,
+      s.status,
+      s.pendingAssets,
+      projectPath,
+      submitItem,
+    ]
+  )
+
   const handleKeyboardSave = useCallback(() => {
-    if (!projectPath.trim() || !title.trim() || loading) return
+    if (!projectPath.trim() || !draft.title.trim() || s.loading) return
     void handleSubmit()
-  }, [projectPath, title, loading, handleSubmit])
+  }, [projectPath, draft.title, s.loading, handleSubmit])
 
   useSaveShortcut({
     onSave: handleKeyboardSave,
-    enabled: !!projectPath.trim() && !!title.trim() && !loading,
+    enabled: !!projectPath.trim() && !!draft.title.trim() && !s.loading,
   })
 
-  return {
+  return buildCreateIssueReturn({
     projectPath,
     isInitialized,
-    title,
-    setTitle,
-    description,
-    setDescription,
-    priority,
-    setPriority,
-    status,
-    setStatus,
-    loading,
-    error,
-    pendingAssets,
-    setPendingAssets,
-    assetUploaderRef,
-    stateOptions,
+    draft,
+    s,
     handleSubmit,
     handleCancel,
-  }
+  })
 }

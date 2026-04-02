@@ -1,9 +1,8 @@
-import { useState, useCallback, useEffect, useRef } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import type { StandaloneWorkspaceModalProps } from './StandaloneWorkspaceModal.types'
 import { useModalDismiss } from './useModalDismiss'
 import { useCreateWorkspace } from './useCreateWorkspace'
 import { useDaemonStatus } from '@/components/providers/DaemonStatusProvider'
-import { EditorType } from '@/gen/centy_pb'
 
 export function useStandaloneWorkspace({
   projectPath,
@@ -16,29 +15,15 @@ export function useStandaloneWorkspace({
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [ttlHours, setTtlHours] = useState(12)
-  const [selectedEditor, setSelectedEditor] = useState<EditorType>(
-    EditorType.VSCODE
-  )
+  const [selectedEditor, setSelectedEditor] = useState<string>('terminal')
 
   const isEditorAvailable = useCallback(
-    (type: EditorType): boolean => {
-      const editor = editors.find(e => e.editorType === type)
+    (editorId: string): boolean => {
+      const editor = editors.find(e => e.editorId === editorId)
       return editor !== undefined ? editor.available : false
     },
     [editors]
   )
-
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (
-        !isEditorAvailable(EditorType.VSCODE) &&
-        isEditorAvailable(EditorType.TERMINAL)
-      ) {
-        setSelectedEditor(EditorType.TERMINAL)
-      }
-    }, 0)
-    return () => clearTimeout(timeoutId)
-  }, [isEditorAvailable])
 
   useModalDismiss(modalRef, onClose)
 
@@ -52,9 +37,7 @@ export function useStandaloneWorkspace({
     onClose
   )
 
-  const hasAvailableEditor =
-    isEditorAvailable(EditorType.VSCODE) ||
-    isEditorAvailable(EditorType.TERMINAL)
+  const hasAvailableEditor = isEditorAvailable('terminal')
 
   return {
     modalRef,

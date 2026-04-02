@@ -1,22 +1,14 @@
 'use client'
 
+import type { ReactElement } from 'react'
 import Link from 'next/link'
 import { route } from 'nextjs-routes'
 import { useSharedAssets } from './useSharedAssets'
-import { SharedAssetCard } from './SharedAssetCard'
 import { PreviewModal } from './PreviewModal'
-import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
+import { AssetsContent } from './AssetsContent'
 import { useProject } from '@/components/providers/ProjectProvider'
 
-const formatFileSize = (bytes: bigint | number) => {
-  const size = Number(bytes)
-  if (size < 1024) return `${size} B`
-  if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`
-  return `${(size / (1024 * 1024)).toFixed(1)} MB`
-}
-
-// eslint-disable-next-line max-lines-per-function
-export function SharedAssets() {
+export function SharedAssets(): ReactElement {
   const { projectPath, isInitialized, setIsInitialized } = useProject()
   const shared = useSharedAssets(projectPath, isInitialized, setIsInitialized)
 
@@ -55,36 +47,7 @@ export function SharedAssets() {
       )}
 
       {projectPath && isInitialized === true && (
-        <>
-          {shared.error && <DaemonErrorMessage error={shared.error} />}
-
-          {shared.loading && shared.assets.length === 0 ? (
-            <div className="loading">Loading shared assets...</div>
-          ) : shared.assets.length === 0 ? (
-            <div className="empty-state">
-              <p className="empty-state-text">No shared assets found</p>
-              <p className="hint">
-                Shared assets are files that can be referenced across multiple
-                issues
-              </p>
-            </div>
-          ) : (
-            <div className="assets-grid">
-              {shared.assets.map(asset => (
-                <SharedAssetCard
-                  key={asset.filename}
-                  asset={asset}
-                  deleteConfirm={shared.deleteConfirm}
-                  deleting={shared.deleting}
-                  onPreview={shared.handlePreview}
-                  onDeleteConfirm={shared.setDeleteConfirm}
-                  onDelete={shared.handleDelete}
-                  formatFileSize={formatFileSize}
-                />
-              ))}
-            </div>
-          )}
-        </>
+        <AssetsContent shared={shared} />
       )}
 
       {shared.previewAsset && (

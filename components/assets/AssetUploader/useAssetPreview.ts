@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
 import { GetAssetRequestSchema, type Asset } from '@/gen/centy_pb'
@@ -12,6 +12,8 @@ export function useAssetPreview(
 ) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  const previewUrlRef = useRef(previewUrl)
+  previewUrlRef.current = previewUrl
 
   useEffect(() => {
     let mounted = true
@@ -43,9 +45,9 @@ export function useAssetPreview(
 
     return () => {
       mounted = false
-      if (previewUrl) URL.revokeObjectURL(previewUrl)
+      if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current)
     }
-  }, [asset, projectPath, issueId]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [asset, projectPath, issueId])
 
   const type = asset.mimeType.startsWith('image/')
     ? 'image'

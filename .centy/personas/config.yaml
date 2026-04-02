@@ -1,0 +1,24 @@
+# This file is managed by Centy. Use the Centy CLI to modify it.
+name: persona
+identifier: slug
+features:
+  displayNumber: false
+  priority: false
+  softDelete: false
+  assets: false
+  orgSync: false
+  move: false
+  duplicate: false
+statuses:
+- active
+- archived
+customFields:
+- name: role
+  type: string
+  required: false
+- name: goals
+  type: string
+  required: false
+- name: pain-points
+  type: string
+  required: false

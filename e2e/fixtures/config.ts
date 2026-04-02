@@ -1,15 +1,11 @@
-import {
-  createMockConfig,
-  createMockProjectInfo,
-  createMockManifest,
-} from './config-factories'
+import { createMockConfig } from './config-factories'
+import { createMockProjectInfo } from './createMockProjectInfo'
+import { createMockManifest } from './createMockManifest'
 import type { Config, ProjectInfo, Manifest } from '@/gen/centy_pb'
 
-export {
-  createMockConfig,
-  createMockProjectInfo,
-  createMockManifest,
-} from './config-factories'
+export { createMockConfig } from './config-factories'
+export { createMockProjectInfo } from './createMockProjectInfo'
+export { createMockManifest } from './createMockManifest'
 
 /**
  * Default mock config for general use.

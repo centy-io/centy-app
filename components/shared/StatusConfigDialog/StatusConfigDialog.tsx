@@ -56,7 +56,7 @@ export function StatusConfigDialog({
               state.loading || state.saving || state.selectedOption === null
             }
           >
-            {state.saving ? 'Saving...' : 'Save & Open VS Code'}
+            {state.saving ? 'Saving...' : 'Save & Open Terminal'}
           </button>
         </div>
       </div>

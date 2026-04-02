@@ -2,6 +2,7 @@
 
 import type { DuplicateModalProps } from './DuplicateModal.types'
 import type { useDuplicateModal } from './useDuplicateModal'
+import { ProjectSelect } from './ProjectSelect'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 interface DuplicateModalBodyProps {
@@ -9,7 +10,6 @@ interface DuplicateModalBodyProps {
   state: ReturnType<typeof useDuplicateModal>
 }
 
-// eslint-disable-next-line max-lines-per-function
 export function DuplicateModalBody({ props, state }: DuplicateModalBodyProps) {
   return (
     <div className="move-modal-body">
@@ -24,31 +24,13 @@ export function DuplicateModalBody({ props, state }: DuplicateModalBodyProps) {
 
       <div className="move-modal-field">
         <label className="move-modal-label">Target Project</label>
-        {state.loadingProjects ? (
-          <div className="move-modal-loading">Loading projects...</div>
-        ) : state.projects.length === 0 ? (
-          <div className="move-modal-empty">No projects available</div>
-        ) : (
-          <select
-            value={state.selectedProject}
-            onChange={e => state.setSelectedProject(e.target.value)}
-            className="move-modal-select"
-          >
-            {state.projects.map(project => (
-              <option
-                className="move-modal-option"
-                key={project.path}
-                value={project.path}
-              >
-                {project.userTitle || project.projectTitle || project.name}
-                {project.path === props.currentProjectPath
-                  ? ' (current)'
-                  : ''}{' '}
-                ({project.displayPath})
-              </option>
-            ))}
-          </select>
-        )}
+        <ProjectSelect
+          projects={state.projects}
+          selectedProject={state.selectedProject}
+          currentProjectPath={props.currentProjectPath}
+          loadingProjects={state.loadingProjects}
+          setSelectedProject={state.setSelectedProject}
+        />
       </div>
 
       <div className="move-modal-field">

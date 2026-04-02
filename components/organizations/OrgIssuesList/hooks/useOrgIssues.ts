@@ -3,9 +3,10 @@ import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
 import {
   ListProjectsRequestSchema,
-  ListIssuesRequestSchema,
+  ListItemsRequestSchema,
   type Issue,
 } from '@/gen/centy_pb'
+import { genericItemToIssue } from '@/lib/genericItemToIssue'
 
 async function fetchOrgIssuesFromProjects(
   orgSlug: string
@@ -22,10 +23,13 @@ async function fetchOrgIssuesFromProjects(
   await Promise.all(
     orgProjects.map(async project => {
       try {
-        const res = await centyClient.listIssues(
-          create(ListIssuesRequestSchema, { projectPath: project.path })
+        const res = await centyClient.listItems(
+          create(ListItemsRequestSchema, {
+            projectPath: project.path,
+            itemType: 'issues',
+          })
         )
-        for (const issue of res.issues) {
+        for (const issue of res.items.map(genericItemToIssue)) {
           const meta = issue.metadata
           if (!meta || !meta.isOrgIssue || meta.orgSlug !== orgSlug) continue
           if (seen.has(issue.id)) continue
@@ -59,21 +63,20 @@ export function useOrgIssues(orgSlug: string) {
     try {
       const { issues: fetched, firstProjectPath } =
         await fetchOrgIssuesFromProjects(orgSlug)
-      if (firstProjectPath && !orgProjectPath) {
-        setOrgProjectPath(firstProjectPath)
-      }
+      setOrgProjectPath(prev =>
+        firstProjectPath && !prev ? firstProjectPath : prev
+      )
       setIssues(fetched)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch issues')
     } finally {
       setLoading(false)
     }
-  }, [orgSlug, orgProjectPath])
+  }, [orgSlug])
 
   useEffect(() => {
     fetchIssues()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orgSlug])
+  }, [orgSlug, fetchIssues])
 
   return { issues, loading, error, orgProjectPath, fetchIssues }
 }

@@ -1,0 +1,22 @@
+# This file is managed by Centy. Use the Centy CLI to modify it.
+name: story
+identifier: slug
+features:
+  displayNumber: false
+  priority: false
+  softDelete: false
+  assets: false
+  orgSync: false
+  move: false
+  duplicate: false
+statuses:
+- draft
+- ready
+- done
+customFields:
+- name: persona
+  type: string
+  required: false
+- name: acceptance-criteria
+  type: string
+  required: false

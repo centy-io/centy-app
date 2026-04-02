@@ -8,7 +8,30 @@ import {
   type Config,
 } from '@/gen/centy_pb'
 
-// eslint-disable-next-line max-lines-per-function
+async function fetchConfig(projectPath: string): Promise<{
+  config: Config | null
+  error: string | null
+}> {
+  const request = create(GetConfigRequestSchema, { projectPath })
+  const response = await centyClient.getConfig(request)
+  if (response.config) {
+    return { config: response.config, error: null }
+  }
+  return {
+    config: null,
+    error: response.error || 'Failed to load project configuration',
+  }
+}
+
+function getInitialSelectedOption(config: Config): boolean {
+  if (config.workspace) {
+    return config.workspace.updateStatusOnOpen !== undefined
+      ? config.workspace.updateStatusOnOpen
+      : false
+  }
+  return false
+}
+
 export function useStatusConfig(
   projectPath: string,
   onClose: () => void,
@@ -27,19 +50,12 @@ export function useStatusConfig(
   useEffect(() => {
     async function loadConfig() {
       try {
-        const request = create(GetConfigRequestSchema, { projectPath })
-        const response = await centyClient.getConfig(request)
-        if (response.config) {
-          setConfig(response.config)
-          if (response.config.workspace) {
-            setSelectedOption(
-              response.config.workspace.updateStatusOnOpen !== undefined
-                ? response.config.workspace.updateStatusOnOpen
-                : false
-            )
-          }
+        const result = await fetchConfig(projectPath)
+        if (result.config) {
+          setConfig(result.config)
+          setSelectedOption(getInitialSelectedOption(result.config))
         } else {
-          setError(response.error || 'Failed to load project configuration')
+          setError(result.error)
         }
       } catch (err) {
         console.error('Failed to load config:', err)

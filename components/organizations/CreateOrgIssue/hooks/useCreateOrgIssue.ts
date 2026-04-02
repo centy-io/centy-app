@@ -4,10 +4,13 @@ import { route } from 'nextjs-routes'
 import { create } from '@bufbuild/protobuf'
 import { useOrgProjectPath } from './useOrgProjectPath'
 import { centyClient } from '@/lib/grpc/client'
-import { CreateIssueRequestSchema } from '@/gen/centy_pb'
+import { CreateItemRequestSchema } from '@/gen/centy_pb'
 import { useStateManager } from '@/lib/state'
 
-// eslint-disable-next-line max-lines-per-function
+function formatSubmitErr(err: unknown): string {
+  return err instanceof Error ? err.message : 'Failed to connect to daemon'
+}
+
 export function useCreateOrgIssue(orgSlug: string) {
   const router = useRouter()
   const stateManager = useStateManager()
@@ -21,53 +24,46 @@ export function useCreateOrgIssue(orgSlug: string) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  const issuesRoute = route({
+    pathname: '/organizations/[orgSlug]/issues',
+    query: { orgSlug },
+  })
+
   const handleSubmit = useCallback(
     async (e?: React.FormEvent) => {
       if (e) e.preventDefault()
       if (!orgProjectPath || !title.trim()) return
-
       setLoading(true)
       setError(null)
       try {
-        const res = await centyClient.createIssue(
-          create(CreateIssueRequestSchema, {
+        const res = await centyClient.createItem(
+          create(CreateItemRequestSchema, {
             projectPath: orgProjectPath,
+            itemType: 'issues',
             title: title.trim(),
-            description: description.trim(),
+            body: description.trim(),
             priority,
             status,
-            isOrgIssue: true,
+            customFields: { is_org_issue: 'true' },
           })
         )
         if (res.success) {
-          router.push(
-            route({
-              pathname: '/organizations/[orgSlug]/issues',
-              query: { orgSlug },
-            })
-          )
+          router.push(issuesRoute)
         } else {
           setError(res.error || 'Failed to create org issue')
         }
       } catch (err) {
-        setError(
-          err instanceof Error ? err.message : 'Failed to connect to daemon'
-        )
+        setError(formatSubmitErr(err))
       } finally {
         setLoading(false)
       }
     },
-    [orgProjectPath, orgSlug, title, description, priority, status, router]
+    [orgProjectPath, title, description, priority, status, router, issuesRoute]
   )
 
   const handleCancel = useCallback(() => {
-    router.push(
-      route({
-        pathname: '/organizations/[orgSlug]/issues',
-        query: { orgSlug },
-      })
-    )
-  }, [orgSlug, router])
+    router.push(issuesRoute)
+  }, [router, issuesRoute])
 
   return {
     orgProjectPath,

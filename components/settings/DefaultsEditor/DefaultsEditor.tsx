@@ -1,72 +1,13 @@
-/* eslint-disable max-lines */
 'use client'
 
 import { useState } from 'react'
 import { DefaultsTable } from './DefaultsTable'
+import { AddDefaultRow } from './AddDefaultRow'
 
 interface DefaultsEditorProps {
   value: Record<string, string>
   onChange: (defaults: Record<string, string>) => void
   suggestedKeys?: string[]
-}
-
-interface AddDefaultRowProps {
-  newKey: string
-  newValue: string
-  availableKeys: string[]
-  hasExistingKey: boolean
-  onKeyChange: (key: string) => void
-  onValueChange: (value: string) => void
-  onKeyDown: (e: React.KeyboardEvent) => void
-  onAdd: () => void
-}
-
-function AddDefaultRow({
-  newKey,
-  newValue,
-  availableKeys,
-  hasExistingKey,
-  onKeyChange,
-  onValueChange,
-  onKeyDown,
-  onAdd,
-}: AddDefaultRowProps) {
-  return (
-    <div className="defaults-add-row">
-      <input
-        type="text"
-        value={newKey}
-        onChange={e => onKeyChange(e.target.value)}
-        onKeyDown={onKeyDown}
-        placeholder="Key"
-        className="defaults-key-input"
-        list="suggested-keys"
-      />
-      {availableKeys.length > 0 && (
-        <datalist className="defaults-suggested-keys" id="suggested-keys">
-          {availableKeys.map(k => (
-            <option className="defaults-suggested-option" key={k} value={k} />
-          ))}
-        </datalist>
-      )}
-      <input
-        type="text"
-        value={newValue}
-        onChange={e => onValueChange(e.target.value)}
-        onKeyDown={onKeyDown}
-        placeholder="Value"
-        className="defaults-value-input"
-      />
-      <button
-        type="button"
-        onClick={onAdd}
-        disabled={!newKey.trim() || hasExistingKey}
-        className="defaults-add-btn"
-      >
-        Add
-      </button>
-    </div>
-  )
 }
 
 export function DefaultsEditor({
@@ -91,10 +32,8 @@ export function DefaultsEditor({
   }
 
   const handleRemove = (key: string) => {
-    const newDefaults = { ...value }
-    // eslint-disable-next-line security/detect-object-injection
-    delete newDefaults[key]
-    onChange(newDefaults)
+    const { [key]: _removed, ...rest } = value
+    onChange(rest)
   }
 
   const handleValueChange = (key: string, newVal: string) => {
@@ -110,8 +49,9 @@ export function DefaultsEditor({
     handleAdd()
   }
 
-  // eslint-disable-next-line security/detect-object-injection
-  const availableKeys = resolvedSuggestedKeys.filter(k => !value[k])
+  const availableKeys = resolvedSuggestedKeys.filter(
+    k => !Object.hasOwn(value, k)
+  )
 
   return (
     <div className="defaults-editor">

@@ -1,34 +1,26 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { EDITOR_PREFERENCE_KEY } from './EditorSelector.types'
-import { EditorType, type EditorInfo } from '@/gen/centy_pb'
+import type { EditorInfo } from '@/gen/centy_pb'
 import { useDaemonStatus } from '@/components/providers/DaemonStatusProvider'
 
-// eslint-disable-next-line max-lines-per-function
 export function useEditorPreference() {
   const { editors } = useDaemonStatus()
   const [showDropdown, setShowDropdown] = useState(false)
-  const [preferredEditor, setPreferredEditor] = useState<EditorType>(
-    EditorType.VSCODE
-  )
+  const [preferredEditor, setPreferredEditor] = useState<string>('terminal')
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       const saved = localStorage.getItem(EDITOR_PREFERENCE_KEY)
       if (!saved) return
-      const parsedValue = parseInt(saved, 10)
-      if (parsedValue === EditorType.VSCODE) {
-        setPreferredEditor(EditorType.VSCODE)
-      } else if (parsedValue === EditorType.TERMINAL) {
-        setPreferredEditor(EditorType.TERMINAL)
-      }
+      setPreferredEditor(saved)
     }, 0)
     return () => clearTimeout(timeoutId)
   }, [])
 
-  const savePreference = useCallback((editorType: EditorType) => {
-    setPreferredEditor(editorType)
-    localStorage.setItem(EDITOR_PREFERENCE_KEY, String(editorType))
+  const savePreference = useCallback((editorId: string) => {
+    setPreferredEditor(editorId)
+    localStorage.setItem(EDITOR_PREFERENCE_KEY, editorId)
   }, [])
 
   useEffect(() => {
@@ -50,15 +42,15 @@ export function useEditorPreference() {
   }, [showDropdown])
 
   const getEditorInfo = useCallback(
-    (type: EditorType): EditorInfo | undefined => {
-      return editors.find(e => e.editorType === type)
+    (editorId: string): EditorInfo | undefined => {
+      return editors.find(e => e.editorId === editorId)
     },
     [editors]
   )
 
   const isEditorAvailable = useCallback(
-    (type: EditorType): boolean => {
-      const editor = getEditorInfo(type)
+    (editorId: string): boolean => {
+      const editor = getEditorInfo(editorId)
       return editor !== undefined ? editor.available : false
     },
     [getEditorInfo]
@@ -66,7 +58,7 @@ export function useEditorPreference() {
 
   const preferredEditorInfo = getEditorInfo(preferredEditor)
   const preferredEditorName =
-    (preferredEditorInfo ? preferredEditorInfo.name : '') || 'VS Code'
+    (preferredEditorInfo ? preferredEditorInfo.name : '') || 'Terminal'
   const preferredEditorAvailable = isEditorAvailable(preferredEditor)
   const hasAnyAvailable = editors.some(e => e.available)
 

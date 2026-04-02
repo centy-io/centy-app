@@ -1,8 +1,10 @@
 'use client'
 
 import { useState } from 'react'
+import type { ReactElement } from 'react'
 import { CustomFieldForm } from './CustomFieldForm'
 import { CustomFieldDisplay } from './CustomFieldDisplay'
+import { useFieldListActions } from './useFieldListActions'
 import type { CustomFieldDefinition } from '@/gen/centy_pb'
 
 interface CustomFieldsEditorProps {
@@ -10,52 +12,14 @@ interface CustomFieldsEditorProps {
   onChange: (fields: CustomFieldDefinition[]) => void
 }
 
-// eslint-disable-next-line max-lines-per-function
 export function CustomFieldsEditor({
   fields,
   onChange,
-}: CustomFieldsEditorProps) {
+}: CustomFieldsEditorProps): ReactElement {
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
   const [isAdding, setIsAdding] = useState(false)
 
-  const handleAdd = (field: CustomFieldDefinition) => {
-    onChange([...fields, field])
-    setIsAdding(false)
-  }
-
-  const handleUpdate = (index: number, field: CustomFieldDefinition) => {
-    const newFields = [...fields]
-    // eslint-disable-next-line security/detect-object-injection
-    newFields[index] = field
-    onChange(newFields)
-    setEditingIndex(null)
-  }
-
-  const handleRemove = (index: number) => {
-    onChange(fields.filter((_, i) => i !== index))
-  }
-
-  const handleMoveUp = (index: number) => {
-    if (index === 0) return
-    const newFields = [...fields]
-    const tmp = newFields[index - 1]
-    // eslint-disable-next-line security/detect-object-injection
-    newFields[index - 1] = newFields[index]
-    // eslint-disable-next-line security/detect-object-injection
-    newFields[index] = tmp
-    onChange(newFields)
-  }
-
-  const handleMoveDown = (index: number) => {
-    if (index === fields.length - 1) return
-    const newFields = [...fields]
-    // eslint-disable-next-line security/detect-object-injection
-    const tmp = newFields[index]
-    // eslint-disable-next-line security/detect-object-injection
-    newFields[index] = newFields[index + 1]
-    newFields[index + 1] = tmp
-    onChange(newFields)
-  }
+  const actions = useFieldListActions(fields, onChange)
 
   return (
     <div className="custom-fields-editor">
@@ -69,7 +33,10 @@ export function CustomFieldsEditor({
                   existingNames={fields
                     .filter((_, i) => i !== index)
                     .map(f => f.name)}
-                  onSave={f => handleUpdate(index, f)}
+                  onSave={f => {
+                    actions.handleUpdate(index, f)
+                    setEditingIndex(null)
+                  }}
                   onCancel={() => setEditingIndex(null)}
                 />
               ) : (
@@ -78,21 +45,23 @@ export function CustomFieldsEditor({
                   index={index}
                   totalCount={fields.length}
                   onEdit={() => setEditingIndex(index)}
-                  onRemove={() => handleRemove(index)}
-                  onMoveUp={() => handleMoveUp(index)}
-                  onMoveDown={() => handleMoveDown(index)}
+                  onRemove={() => actions.handleRemove(index)}
+                  onMoveUp={() => actions.handleMoveUp(index)}
+                  onMoveDown={() => actions.handleMoveDown(index)}
                 />
               )}
             </div>
           ))}
         </div>
       )}
-
       {isAdding ? (
         <div className="custom-field-item">
           <CustomFieldForm
             existingNames={fields.map(f => f.name)}
-            onSave={handleAdd}
+            onSave={f => {
+              actions.handleAdd(f)
+              setIsAdding(false)
+            }}
             onCancel={() => setIsAdding(false)}
           />
         </div>
@@ -105,7 +74,6 @@ export function CustomFieldsEditor({
           + Add Custom Field
         </button>
       )}
-
       {fields.length === 0 && !isAdding && (
         <p className="custom-fields-empty">No custom fields configured</p>
       )}

@@ -1,3 +1,5 @@
+import type { ReactElement } from 'react'
+import { DaemonConfirmDialog } from './DaemonConfirmDialog'
 import type { DaemonInfo } from '@/gen/centy_pb'
 
 interface DaemonInfoSectionProps {
@@ -12,7 +14,6 @@ interface DaemonInfoSectionProps {
   onShutdown: () => void
 }
 
-// eslint-disable-next-line max-lines-per-function
 export function DaemonInfoSection({
   daemonInfo,
   restarting,
@@ -23,7 +24,7 @@ export function DaemonInfoSection({
   onShowShutdownConfirm,
   onRestart,
   onShutdown,
-}: DaemonInfoSectionProps) {
+}: DaemonInfoSectionProps): ReactElement {
   return (
     <section className="settings-section">
       <h3 className="settings-section-title">Daemon Information</h3>
@@ -38,7 +39,6 @@ export function DaemonInfoSection({
         ) : (
           <div className="loading-inline">Loading daemon info...</div>
         )}
-
         <div className="daemon-controls">
           <button
             onClick={() => onShowRestartConfirm(true)}
@@ -55,44 +55,24 @@ export function DaemonInfoSection({
             {shuttingDown ? 'Shutting down...' : 'Shutdown Daemon'}
           </button>
         </div>
-
         {showRestartConfirm && (
-          <div className="confirm-dialog">
-            <p className="confirm-dialog-text">
-              Are you sure you want to restart the daemon?
-            </p>
-            <div className="confirm-actions">
-              <button
-                onClick={() => onShowRestartConfirm(false)}
-                className="cancel-btn"
-              >
-                Cancel
-              </button>
-              <button onClick={onRestart} className="confirm-btn">
-                Yes, Restart
-              </button>
-            </div>
-          </div>
+          <DaemonConfirmDialog
+            message="Are you sure you want to restart the daemon?"
+            onCancel={() => onShowRestartConfirm(false)}
+            onConfirm={onRestart}
+            confirmLabel="Yes, Restart"
+            confirmClassName="confirm-btn"
+          />
         )}
-
         {showShutdownConfirm && (
-          <div className="confirm-dialog danger">
-            <p className="confirm-dialog-text">
-              Are you sure you want to shutdown the daemon? You will need to
-              manually restart it.
-            </p>
-            <div className="confirm-actions">
-              <button
-                onClick={() => onShowShutdownConfirm(false)}
-                className="cancel-btn"
-              >
-                Cancel
-              </button>
-              <button onClick={onShutdown} className="confirm-danger-btn">
-                Yes, Shutdown
-              </button>
-            </div>
-          </div>
+          <DaemonConfirmDialog
+            danger
+            message="Are you sure you want to shutdown the daemon? You will need to manually restart it."
+            onCancel={() => onShowShutdownConfirm(false)}
+            onConfirm={onShutdown}
+            confirmLabel="Yes, Shutdown"
+            confirmClassName="confirm-danger-btn"
+          />
         )}
       </div>
     </section>

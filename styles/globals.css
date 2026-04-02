@@ -3,16 +3,17 @@
 @import './App.css';
 
 /* Component styles */
-@import './components/AgentConfigEditor.css';
 @import './components/AssetUploader.css';
 @import './components/ColorPicker.css';
 @import './components/CustomFieldsEditor.css';
 @import './components/DaemonDisconnectedOverlay.css';
 @import './components/DaemonStatusIndicator.css';
+@import './components/DaemonUpdateBadge.css';
 @import './components/DemoModeIndicator.css';
 @import './components/MobileNotSupportedOverlay.css';
 @import './components/DefaultsEditor.css';
 @import './components/InitProject.css';
+@import './components/CommentThread.css';
 @import './components/LinkSection.css';
 @import './components/WorkspaceSettingsEditor.css';
 @import './components/MarkdownEditor.css';
@@ -45,37 +46,40 @@
 @import './pages/OrganizationDetail.css';
 @import './pages/ProjectDashboard.css';
 @import './pages/CreateOrganization.css';
+@import './pages/GenericItemCreate.css';
+@import './pages/GenericItemDetail.css';
+@import './pages/GenericItems.css';
 
 /* Design System */
 :root {
-  /* Colors */
-  --color-primary: #6366f1;
-  --color-primary-hover: #4f46e5;
-  --color-primary-light: #e0e7ff;
-  --color-primary-dark: #3730a3;
+  /* Colors — e-ink palette */
+  --color-primary: #2d5a8e;
+  --color-primary-hover: #1f3f63;
+  --color-primary-light: #dce8f5;
+  --color-primary-dark: #162d47;
 
-  --color-success: #10b981;
-  --color-success-light: #d1fae5;
-  --color-success-dark: #059669;
+  --color-success: #3d6b4f;
+  --color-success-light: #d5e8dc;
+  --color-success-dark: #2a4d38;
 
-  --color-warning: #f59e0b;
-  --color-warning-light: #fef3c7;
-  --color-warning-dark: #d97706;
+  --color-warning: #7a5c1a;
+  --color-warning-light: #f0e6c8;
+  --color-warning-dark: #5a4212;
 
-  --color-danger: #ef4444;
-  --color-danger-light: #fee2e2;
-  --color-danger-dark: #dc2626;
+  --color-danger: #8b2e2e;
+  --color-danger-light: #f0d5d5;
+  --color-danger-dark: #6a2020;
 
-  --color-gray-50: #f9fafb;
-  --color-gray-100: #f3f4f6;
-  --color-gray-200: #e5e7eb;
-  --color-gray-300: #d1d5db;
-  --color-gray-400: #9ca3af;
-  --color-gray-500: #6b7280;
-  --color-gray-600: #4b5563;
-  --color-gray-700: #374151;
-  --color-gray-800: #1f2937;
-  --color-gray-900: #111827;
+  --color-gray-50: #f8f5ef;
+  --color-gray-100: #f0ebe2;
+  --color-gray-200: #e0d9ce;
+  --color-gray-300: #c8bfb2;
+  --color-gray-400: #a89e91;
+  --color-gray-500: #7d7368;
+  --color-gray-600: #5a5248;
+  --color-gray-700: #3d3730;
+  --color-gray-800: #262118;
+  --color-gray-900: #150f08;
 
   /* Typography */
   --font-sans:
@@ -94,101 +98,119 @@
   --space-10: 2.5rem;
   --space-12: 3rem;
 
-  /* Border Radius */
-  --radius-sm: 0.375rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
-  --radius-2xl: 1.5rem;
+  /* Border Radius — crisper/printed feel */
+  --radius-sm: 0.125rem;
+  --radius-md: 0.25rem;
+  --radius-lg: 0.375rem;
+  --radius-xl: 0.5rem;
+  --radius-2xl: 0.625rem;
   --radius-full: 9999px;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg:
-    0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-xl:
-    0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  /* Shadows — crisp offset borders, no blur */
+  --shadow-sm: 1px 1px 0 var(--color-border-default);
+  --shadow-md: 2px 2px 0 var(--color-border-default);
+  --shadow-lg: 3px 3px 0 var(--color-border-default);
+  --shadow-xl: 4px 4px 0 var(--color-border-default);
 
-  /* Transitions */
-  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-normal: 200ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  /* Transitions — minimal, e-ink style */
+  --transition-fast: 80ms linear;
+  --transition-normal: 120ms linear;
+  --transition-slow: 200ms linear;
 
-  /* Semantic color tokens */
-  --color-bg-surface: white;
-  --color-bg-input: white;
-  --color-bg-elevated: white;
-  --color-bg-card: white;
-  --color-border-default: var(--color-gray-200);
+  /* Semantic color tokens — paper tones */
+  --color-bg-surface: #f8f5ef;
+  --color-bg-input: #f5f1e8;
+  --color-bg-elevated: #f0ebe2;
+  --color-bg-card: #f0ebe2;
+  --color-border-default: #c0b8aa;
   --color-text-primary: var(--color-gray-900);
   --color-text-secondary: var(--color-gray-600);
   --color-text-muted: var(--color-gray-500);
 
-  /* Priority low color (blue) */
-  --color-priority-low-bg: #dbeafe;
-  --color-priority-low-text: #1d4ed8;
+  /* Priority low color */
+  --color-priority-low-bg: #dce8f5;
+  --color-priority-low-text: #2d5a8e;
+
+  /* Demo mode colors (muted slate) */
+  --color-demo: #7a8fa6;
+  --color-demo-dark: #526a82;
+  --color-demo-hover: #9aafc4;
+
+  /* Code syntax highlighting tokens */
+  --color-code-comment: #7d7368;
+  --color-code-variable: #8b2e2e;
+  --color-code-number: #7a5c1a;
+  --color-code-string: #3d6b4f;
+  --color-code-title: #2d5a8e;
+  --color-code-keyword: #5a3d6b;
 }
 
-/* Dark Mode Variables */
+/* Dark Mode Variables — e-ink dark (warm near-black paper) */
 [data-theme='dark'] {
-  /* Invert gray scale for dark mode */
-  --color-gray-50: #111827;
-  --color-gray-100: #1f2937;
-  --color-gray-200: #374151;
-  --color-gray-300: #4b5563;
-  --color-gray-400: #6b7280;
-  --color-gray-500: #9ca3af;
-  --color-gray-600: #d1d5db;
-  --color-gray-700: #e5e7eb;
-  --color-gray-800: #f3f4f6;
-  --color-gray-900: #f9fafb;
+  /* Warm dark gray scale */
+  --color-gray-50: #1a1712;
+  --color-gray-100: #242018;
+  --color-gray-200: #302b21;
+  --color-gray-300: #42392d;
+  --color-gray-400: #63574a;
+  --color-gray-500: #8a7d70;
+  --color-gray-600: #b0a496;
+  --color-gray-700: #cec4b6;
+  --color-gray-800: #e2dcd2;
+  --color-gray-900: #eee9e0;
 
-  /* Adjust primary colors for dark backgrounds */
-  --color-primary: #818cf8;
-  --color-primary-hover: #a5b4fc;
-  --color-primary-light: #312e81;
-  --color-primary-dark: #c7d2fe;
+  /* Muted primary for dark */
+  --color-primary: #7ba8c4;
+  --color-primary-hover: #9cc0d8;
+  --color-primary-light: #1e3348;
+  --color-primary-dark: #a8c8de;
 
-  /* Status colors adjusted for dark backgrounds */
-  --color-success: #34d399;
-  --color-success-light: #064e3b;
-  --color-success-dark: #6ee7b7;
+  /* Status colors muted for dark */
+  --color-success: #6a9e7a;
+  --color-success-light: #1a2e21;
+  --color-success-dark: #8abf9a;
 
-  --color-warning: #fbbf24;
-  --color-warning-light: #78350f;
-  --color-warning-dark: #fcd34d;
+  --color-warning: #b89040;
+  --color-warning-light: #2e2210;
+  --color-warning-dark: #d4aa60;
 
-  --color-danger: #f87171;
-  --color-danger-light: #7f1d1d;
-  --color-danger-dark: #fca5a5;
+  --color-danger: #c25858;
+  --color-danger-light: #2e1414;
+  --color-danger-dark: #d87878;
 
-  /* Semantic tokens for dark mode */
-  --color-bg-surface: #1a1a1a;
-  --color-bg-input: #2a2a2a;
-  --color-bg-elevated: #252525;
-  --color-bg-card: #252525;
-  --color-border-default: #444;
-  --color-text-primary: #f9fafb;
-  --color-text-secondary: #d1d5db;
-  --color-text-muted: #9ca3af;
+  /* Semantic tokens — warm dark paper */
+  --color-bg-surface: #1a1712;
+  --color-bg-input: #201d17;
+  --color-bg-elevated: #242018;
+  --color-bg-card: #242018;
+  --color-border-default: #3d3629;
+  --color-text-primary: #eee9e0;
+  --color-text-secondary: #cec4b6;
+  --color-text-muted: #8a7d70;
 
   /* Priority low color for dark mode */
-  --color-priority-low-bg: #1e3a5f;
-  --color-priority-low-text: #60a5fa;
+  --color-priority-low-bg: #1e3348;
+  --color-priority-low-text: #7ba8c4;
 
-  /* Darker shadows for dark mode */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
-  --shadow-lg:
-    0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.3);
-  --shadow-xl:
-    0 20px 25px -5px rgb(0 0 0 / 0.4), 0 8px 10px -6px rgb(0 0 0 / 0.3);
+  /* Code syntax highlighting tokens for dark mode */
+  --color-code-comment: #8a7d70;
+  --color-code-variable: #c25858;
+  --color-code-number: #b89040;
+  --color-code-string: #6a9e7a;
+  --color-code-title: #7ba8c4;
+  --color-code-keyword: #9a7ab8;
+
+  /* Crisp offset shadows for dark mode */
+  --shadow-sm: 1px 1px 0 var(--color-border-default);
+  --shadow-md: 2px 2px 0 var(--color-border-default);
+  --shadow-lg: 3px 3px 0 var(--color-border-default);
+  --shadow-xl: 4px 4px 0 var(--color-border-default);
 }
 
-/* Dark mode header gradient */
+/* Dark mode header — flat ink black */
 [data-theme='dark'] .app-header {
-  background: linear-gradient(135deg, #4f46e5 0%, #5b21b6 100%);
+  background: #121008;
+  border-bottom-color: #3d3629;
 }
 
 /* Smooth theme transition */
@@ -234,7 +256,7 @@ h6 {
   margin: 0;
   font-weight: 600;
   line-height: 1.3;
-  color: var(--color-gray-900);
+  color: var(--color-text-primary);
 }
 
 h1 {
@@ -324,7 +346,7 @@ textarea:focus,
 select:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px var(--color-primary-light);
+  box-shadow: 0 0 0 1px var(--color-primary);
 }
 
 textarea {
@@ -347,7 +369,7 @@ label {
   display: block;
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--color-gray-700);
+  color: var(--color-text-secondary);
   margin-bottom: var(--space-2);
 }
 
@@ -512,6 +534,15 @@ code {
   align-items: center;
 }
 
+.nav-group-project {
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.nav-group-project::-webkit-scrollbar {
+  display: none;
+}
+
 /* Desktop Navigation Divider */
 .nav-divider {
   width: 1px;
@@ -545,8 +576,8 @@ code {
   width: 44px;
   height: 44px;
   padding: 10px;
-  background: #2a2a2a;
-  border: 1px solid #444;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 6px;
   cursor: pointer;
   transition:
@@ -555,8 +586,8 @@ code {
 }
 
 .mobile-menu-toggle:hover {
-  background: #333;
-  border-color: #555;
+  background: rgba(0, 0, 0, 0.35);
+  border-color: rgba(255, 255, 255, 0.35);
 }
 
 .mobile-menu-toggle .hamburger-line {
@@ -768,7 +799,7 @@ main {
   padding: 48px;
   max-width: 480px;
   text-align: center;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-xl);
 }
 
 .daemon-disconnected-icon {
@@ -814,8 +845,8 @@ main {
 }
 
 .daemon-retry-button {
-  background: #3b82f6;
-  color: var(--color-text-primary);
+  background: var(--color-primary);
+  color: white;
   border: none;
   border-radius: 8px;
   padding: 12px 32px;
@@ -826,11 +857,11 @@ main {
 }
 
 .daemon-retry-button:hover {
-  background: #2563eb;
+  background: var(--color-primary-hover);
 }
 
 .daemon-retry-button:active {
-  background: #1d4ed8;
+  background: var(--color-primary-dark);
 }
 
 /* Daemon Status Indicator */
@@ -849,8 +880,8 @@ main {
 }
 
 .daemon-status-indicator:hover {
-  background: #333;
-  border-color: #555;
+  background: var(--color-gray-200);
+  border-color: var(--color-gray-300);
 }
 
 .daemon-status-dot {
@@ -862,12 +893,10 @@ main {
 
 .daemon-status-indicator.connected .daemon-status-dot {
   background-color: var(--color-success);
-  box-shadow: 0 0 6px rgba(74, 222, 128, 0.5);
 }
 
 .daemon-status-indicator.disconnected .daemon-status-dot {
   background-color: var(--color-danger);
-  box-shadow: 0 0 6px rgba(239, 68, 68, 0.5);
 }
 
 .daemon-status-indicator.checking .daemon-status-dot {
@@ -921,8 +950,8 @@ main {
 }
 
 .project-selector-trigger:hover {
-  background: #333;
-  border-color: #555;
+  background: var(--color-gray-200);
+  border-color: var(--color-gray-300);
 }
 
 .project-icon {
@@ -948,7 +977,7 @@ main {
   background: var(--color-bg-input);
   border: 1px solid var(--color-border-default);
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-md);
   z-index: 1000;
   overflow: hidden;
   display: flex;
@@ -983,7 +1012,7 @@ main {
 }
 
 .project-selector-header .refresh-btn:hover {
-  background: #333;
+  background: var(--color-gray-200);
   color: var(--color-text-primary);
 }
 
@@ -1033,16 +1062,16 @@ main {
 .project-item {
   padding: 12px 16px;
   cursor: pointer;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--color-border-default);
   transition: background 0.2s;
 }
 
 .project-item:hover {
-  background: #333;
+  background: var(--color-gray-200);
 }
 
 .project-item.selected {
-  background: #2d4a3e;
+  background: var(--color-success-light);
   border-left: 3px solid var(--color-success);
 }
 
@@ -1117,7 +1146,7 @@ main {
 }
 
 .init-project-btn:hover {
-  background: #22c55e;
+  background: var(--color-success-dark);
 }
 
 .project-selector-manual {
@@ -1134,7 +1163,7 @@ main {
 .manual-path-input {
   flex: 1;
   padding: 8px 12px;
-  background: #333;
+  background: var(--color-gray-100);
   border: 1px solid var(--color-border-default);
   border-radius: 4px;
   color: var(--color-text-primary);
@@ -1143,7 +1172,7 @@ main {
 
 .manual-path-input:focus {
   outline: none;
-  border-color: #646cff;
+  border-color: var(--color-primary);
 }
 
 .manual-path-input::placeholder {
@@ -1162,7 +1191,7 @@ main {
 }
 
 .manual-path-submit:hover:not(:disabled) {
-  background: #535bf2;
+  background: var(--color-primary-hover);
 }
 
 .manual-path-submit:disabled {
@@ -1174,7 +1203,7 @@ main {
 .archive-btn {
   margin-left: auto;
   background: transparent;
-  border: 1px solid #555;
+  border: 1px solid var(--color-gray-300);
   color: var(--color-text-muted);
   padding: 4px 8px;
   border-radius: 4px;
@@ -1206,9 +1235,9 @@ main {
 }
 
 .view-archived-link:hover {
-  background: #333;
+  background: var(--color-gray-200);
   color: var(--color-text-primary);
-  border-color: #555;
+  border-color: var(--color-gray-300);
 }
 
 /* Daemon Error Message Content */

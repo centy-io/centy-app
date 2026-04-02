@@ -36,15 +36,13 @@
   font-weight: 600;
   font-size: 0.9375rem;
   text-decoration: none;
-  box-shadow: 0 2px 4px rgba(99, 102, 241, 0.3);
+
   transition: all var(--transition-fast);
 }
 
 .docs-header .create-btn:hover {
   background: var(--color-primary-hover);
   color: white;
-  box-shadow: 0 4px 8px rgba(99, 102, 241, 0.4);
-  transform: translateY(-1px);
 }
 
 .docs-header .refresh-btn {

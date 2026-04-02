@@ -1,10 +1,4 @@
-import type { MultiSelectOption } from '@/components/shared/MultiSelect'
-
-export const PRIORITY_OPTIONS: MultiSelectOption[] = [
-  { value: 'high', label: 'High' },
-  { value: 'medium', label: 'Medium' },
-  { value: 'low', label: 'Low' },
-]
+export { PRIORITY_OPTIONS } from './PRIORITY_OPTIONS'
 
 export const getPriorityClass = (priorityLabel: string): string => {
   switch (priorityLabel.toLowerCase()) {

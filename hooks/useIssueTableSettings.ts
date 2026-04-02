@@ -1,32 +1,42 @@
 'use client'
 
-import { useCallback, useSyncExternalStore } from 'react'
+import { useCallback } from 'react'
+import { useSearchParams, useRouter, usePathname } from 'next/navigation'
+import { route } from 'nextjs-routes'
 import type { SortingState, ColumnFiltersState } from '@tanstack/react-table'
-import {
-  subscribe,
-  getSnapshot,
-  getServerSnapshot,
-  updateSettings,
-} from './useIssueTableSettings.store'
-import { usePathContext } from '@/components/providers/PathContextProvider'
+import { parseFilterParam } from './parseFilterParam'
+import { serializeFilterParam } from './serializeFilterParam'
+import { parseSortParam } from './parseSortParam'
+import { serializeSortParam } from './serializeSortParam'
 
 export function useIssueTableSettings() {
-  const { projectPath } = usePathContext()
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const pathname = usePathname()
 
-  const settings = useSyncExternalStore(
-    useCallback(listener => subscribe(projectPath, listener), [projectPath]),
-    useCallback(() => getSnapshot(projectPath), [projectPath]),
-    getServerSnapshot
-  )
+  const columnFilters = parseFilterParam(searchParams.get('filter'))
+  const sorting = parseSortParam(searchParams.get('sort'))
 
   const setSorting = useCallback(
     (value: SortingState | ((prev: SortingState) => SortingState)) => {
-      updateSettings(projectPath, prev => ({
-        ...prev,
-        sorting: typeof value === 'function' ? value(prev.sorting) : value,
-      }))
+      const next =
+        typeof value === 'function'
+          ? value(parseSortParam(searchParams.get('sort')))
+          : value
+      const newSort = serializeSortParam(next)
+      const currentFilter = searchParams.get('filter')
+      const pathSegments = pathname.split('/').filter(Boolean)
+      const extra: { filter?: string; sort?: string } = {}
+      if (currentFilter !== null) extra.filter = currentFilter
+      if (newSort !== null) extra.sort = newSort
+      router.replace(
+        route({
+          pathname: '/[...path]',
+          query: { path: pathSegments, ...extra },
+        })
+      )
     },
-    [projectPath]
+    [searchParams, router, pathname]
   )
 
   const setColumnFilters = useCallback(
@@ -35,19 +45,25 @@ export function useIssueTableSettings() {
         | ColumnFiltersState
         | ((prev: ColumnFiltersState) => ColumnFiltersState)
     ) => {
-      updateSettings(projectPath, prev => ({
-        ...prev,
-        columnFilters:
-          typeof value === 'function' ? value(prev.columnFilters) : value,
-      }))
+      const next =
+        typeof value === 'function'
+          ? value(parseFilterParam(searchParams.get('filter')))
+          : value
+      const newFilter = serializeFilterParam(next)
+      const currentSort = searchParams.get('sort')
+      const pathSegments = pathname.split('/').filter(Boolean)
+      const extra: { filter?: string; sort?: string } = {}
+      if (newFilter !== null) extra.filter = newFilter
+      if (currentSort !== null) extra.sort = currentSort
+      router.replace(
+        route({
+          pathname: '/[...path]',
+          query: { path: pathSegments, ...extra },
+        })
+      )
     },
-    [projectPath]
+    [searchParams, router, pathname]
   )
 
-  return {
-    sorting: settings.sorting,
-    setSorting,
-    columnFilters: settings.columnFilters,
-    setColumnFilters,
-  }
+  return { sorting, setSorting, columnFilters, setColumnFilters }
 }

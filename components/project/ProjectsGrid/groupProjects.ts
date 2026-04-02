@@ -1,6 +1,5 @@
+import type { GroupedProject } from './GroupedProject'
 import type { ProjectInfo, Organization } from '@/gen/centy_pb'
-
-export type GroupedProject = [string, { name: string; projects: ProjectInfo[] }]
 
 /**
  * Group projects by organization slug, sort groups and projects within each group

@@ -1,48 +1,8 @@
 'use client'
 
-import { useState } from 'react'
-import { create, type DescMessage } from '@bufbuild/protobuf'
 import { MessageItem } from './MessageItem'
-import type {
-  FieldRenderProps,
-  ProtoFormRendererType,
-} from '@/lib/proto-form/types'
-
-interface MessageListFieldProps extends Omit<FieldRenderProps, 'field'> {
-  messageDesc: DescMessage
-  ProtoFormRenderer: ProtoFormRendererType
-}
-
-function toRecordArray(v: unknown): Record<string, unknown>[] {
-  if (Array.isArray(v)) {
-    return v.filter(
-      item =>
-        item !== null &&
-        item !== undefined &&
-        typeof item === 'object' &&
-        !Array.isArray(item)
-    )
-  }
-  return []
-}
-
-function shiftExpandedAfterRemove(
-  prev: Set<number>,
-  index: number
-): Set<number> {
-  const next = new Set<number>()
-  for (const idx of prev) {
-    if (idx < index) next.add(idx)
-    else if (idx > index) next.add(idx - 1)
-  }
-  return next
-}
-function toggleIndex(prev: Set<number>, index: number): Set<number> {
-  const next = new Set(prev)
-  if (next.has(index)) next.delete(index)
-  else next.add(index)
-  return next
-}
+import { useMessageListState } from './useMessageListState'
+import type { MessageListFieldProps } from './MessageListFieldProps.types'
 
 export function MessageListFieldRenderer({
   messageDesc,
@@ -52,16 +12,14 @@ export function MessageListFieldRenderer({
   onChange,
   ProtoFormRenderer,
 }: MessageListFieldProps) {
-  const items = toRecordArray(value)
-  const [expanded, setExpanded] = useState<Set<number>>(new Set())
-
-  const handleAdd = () => {
-    const newItem: Record<string, unknown> = {}
-    Object.assign(newItem, create(messageDesc))
-    const next = [...items, newItem]
-    onChange(next)
-    setExpanded(prev => new Set([...prev, next.length - 1]))
-  }
+  const {
+    items,
+    expanded,
+    handleAdd,
+    handleRemove,
+    handleItemChange,
+    toggleExpanded,
+  } = useMessageListState(value, onChange, messageDesc)
 
   return (
     <div className="proto-form-field">
@@ -77,16 +35,9 @@ export function MessageListFieldRenderer({
             index={i}
             messageName={messageDesc.name}
             isExpanded={expanded.has(i)}
-            onToggle={index => setExpanded(prev => toggleIndex(prev, index))}
-            onRemove={index => {
-              onChange(items.filter((_, j) => j !== index))
-              setExpanded(prev => shiftExpandedAfterRemove(prev, index))
-            }}
-            onItemChange={(idx, upd) =>
-              onChange(
-                items.map((it, j) => (j === idx ? { ...it, ...upd } : it))
-              )
-            }
+            onToggle={toggleExpanded}
+            onRemove={handleRemove}
+            onItemChange={handleItemChange}
             messageDesc={messageDesc}
             ProtoFormRenderer={ProtoFormRenderer}
           />

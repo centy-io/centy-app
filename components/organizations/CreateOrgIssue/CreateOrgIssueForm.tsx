@@ -1,8 +1,8 @@
 'use client'
 
-import type { CreateOrgIssueFormProps } from './CreateOrgIssue.types'
-import { PrioritySelect } from './PrioritySelect'
-import { StatusSelect } from './StatusSelect'
+import type { CreateOrgIssueFormProps } from './CreateOrgIssueForm.types'
+import { OrgIssuePrioritySelect } from './OrgIssuePrioritySelect'
+import { OrgIssueStatusSelect } from './OrgIssueStatusSelect'
 import { TextEditor } from '@/components/shared/TextEditor'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
@@ -37,6 +37,7 @@ export function CreateOrgIssueForm({
           required
         />
       </div>
+
       <div className="form-group">
         <label className="form-label" htmlFor="org-issue-description">
           Description:
@@ -50,13 +51,17 @@ export function CreateOrgIssueForm({
           minHeight={150}
         />
       </div>
-      <PrioritySelect value={priority} onChange={setPriority} />
-      <StatusSelect
-        value={status}
-        onChange={setStatus}
-        options={stateOptions}
+
+      <OrgIssuePrioritySelect priority={priority} setPriority={setPriority} />
+
+      <OrgIssueStatusSelect
+        status={status}
+        setStatus={setStatus}
+        stateOptions={stateOptions}
       />
+
       {error && <DaemonErrorMessage error={error} />}
+
       <div className="actions">
         <button type="button" onClick={onCancel} className="secondary">
           Cancel

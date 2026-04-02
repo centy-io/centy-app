@@ -11,7 +11,21 @@ import {
 } from '@/gen/centy_pb'
 import { centyClient } from '@/lib/grpc/client'
 
-// eslint-disable-next-line max-lines-per-function
+function getInverseLinkTypeName(
+  linkTypes: LinkTypeInfo[],
+  linkType: string
+): string {
+  const type = linkTypes.find(t => t.name === linkType)
+  return (type ? type.inverse : '') || linkType
+}
+
+function getEntityLabel(item: EntityItem): string {
+  if (item.displayNumber) {
+    return `#${item.displayNumber} - ${item.title}`
+  }
+  return `${item.id} - ${item.title}`
+}
+
 export function useAddLinkModal({
   entityId,
   entityType,
@@ -66,18 +80,6 @@ export function useAddLinkModal({
     loadLinkTypes()
   }, [projectPath])
 
-  const getInverseLinkType = (linkType: string) => {
-    const type = linkTypes.find(t => t.name === linkType)
-    return (type ? type.inverse : '') || linkType
-  }
-
-  const getEntityLabel = (item: EntityItem) => {
-    if (item.displayNumber) {
-      return `#${item.displayNumber} - ${item.title}`
-    }
-    return `${item.id} - ${item.title}`
-  }
-
   return {
     modalRef,
     linkTypes,
@@ -89,7 +91,8 @@ export function useAddLinkModal({
     loadingTypes,
     error,
     handleCreateLink,
-    getInverseLinkType,
+    getInverseLinkType: (linkType: string) =>
+      getInverseLinkTypeName(linkTypes, linkType),
     getEntityLabel,
     entityType,
     ...search,

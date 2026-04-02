@@ -8,7 +8,7 @@
   display: flex;
   border-radius: var(--radius-md);
   overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--color-border-default);
 }
 
 /* Primary button (left side) */
@@ -27,22 +27,22 @@
 
 /* VS Code theme (blue) */
 .editor-primary-btn.vscode {
-  background: linear-gradient(135deg, #007acc, #0098ff);
+  background: #005a9e;
   color: white;
 }
 
 .editor-primary-btn.vscode:hover:not(:disabled) {
-  background: linear-gradient(135deg, #005a9e, #007acc);
+  background: #004070;
 }
 
 /* Terminal theme (green) */
 .editor-primary-btn.terminal {
-  background: linear-gradient(135deg, #10b981, #34d399);
+  background: var(--color-success);
   color: white;
 }
 
 .editor-primary-btn.terminal:hover:not(:disabled) {
-  background: linear-gradient(135deg, #059669, #10b981);
+  background: var(--color-success-dark);
 }
 
 .editor-primary-btn:disabled {
@@ -63,21 +63,21 @@
 }
 
 .editor-dropdown-btn.vscode {
-  background: linear-gradient(135deg, #007acc, #0098ff);
+  background: #005a9e;
   color: white;
 }
 
 .editor-dropdown-btn.vscode:hover:not(:disabled) {
-  background: linear-gradient(135deg, #005a9e, #007acc);
+  background: #004070;
 }
 
 .editor-dropdown-btn.terminal {
-  background: linear-gradient(135deg, #10b981, #34d399);
+  background: var(--color-success);
   color: white;
 }
 
 .editor-dropdown-btn.terminal:hover:not(:disabled) {
-  background: linear-gradient(135deg, #059669, #10b981);
+  background: var(--color-success-dark);
 }
 
 .editor-dropdown-btn:disabled {

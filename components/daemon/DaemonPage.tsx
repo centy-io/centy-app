@@ -1,13 +1,14 @@
 'use client'
 
+import type { ReactElement } from 'react'
+import { DaemonStatusSection } from './DaemonStatusSection'
 import { useDaemonActions } from '@/components/settings/GeneralSettings/useDaemonActions'
 import { useDaemonStatus } from '@/components/providers/DaemonStatusProvider'
 import { DaemonInfoSection } from '@/components/settings/GeneralSettings/DaemonInfoSection'
 import { DaemonSettings } from '@/components/settings/DaemonSettings'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
-// eslint-disable-next-line max-lines-per-function
-export function DaemonPage() {
+export function DaemonPage(): ReactElement {
   const { status, checkNow, lastChecked } = useDaemonStatus()
   const {
     daemonInfo,
@@ -23,13 +24,6 @@ export function DaemonPage() {
     handleRestart,
   } = useDaemonActions()
 
-  const statusLabels: Record<typeof status, string> = {
-    connected: 'Connected',
-    disconnected: 'Disconnected',
-    checking: 'Checking...',
-    demo: 'Demo Mode',
-  }
-
   return (
     <div className="settings-page">
       <div className="settings-header">
@@ -39,29 +33,11 @@ export function DaemonPage() {
         </button>
       </div>
 
-      <section className="settings-section">
-        <h3 className="settings-section-title">Status</h3>
-        <div className="settings-card">
-          <div className="info-grid">
-            <div className="info-item">
-              <span className="info-label">Connection</span>
-              {}
-              <span className={`info-value daemon-status-text ${status}`}>
-                {/* eslint-disable-next-line security/detect-object-injection */}
-                {statusLabels[status]}
-              </span>
-            </div>
-            {lastChecked && (
-              <div className="info-item">
-                <span className="info-label">Last Checked</span>
-                <span className="info-value">
-                  {lastChecked.toLocaleTimeString()}
-                </span>
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
+      <DaemonStatusSection
+        status={status}
+        lastChecked={lastChecked}
+        checkNow={checkNow}
+      />
 
       {error && <DaemonErrorMessage error={error} />}
       {success && <div className="success-message">{success}</div>}

@@ -1,13 +1,9 @@
 import { useState, useCallback, useEffect } from 'react'
-import { create } from '@bufbuild/protobuf'
+import { useDebounce } from 'use-debounce'
 import type { EntityItem } from './AddLinkModal.types'
-import { filterAndMapIssues, filterAndMapDocs } from './entityFilters'
-import { centyClient } from '@/lib/grpc/client'
-import {
-  ListIssuesRequestSchema,
-  ListDocsRequestSchema,
-  type Link as LinkType,
-} from '@/gen/centy_pb'
+import { fetchIssueEntities } from './fetchIssueEntities'
+import { fetchDocEntities } from './fetchDocEntities'
+import type { Link as LinkType } from '@/gen/centy_pb'
 
 export function useEntitySearch(
   projectPath: string,
@@ -19,6 +15,7 @@ export function useEntitySearch(
     'issue'
   )
   const [searchQuery, setSearchQuery] = useState('')
+  const [debouncedSearchQuery] = useDebounce(searchQuery, 400)
   const [searchResults, setSearchResults] = useState<EntityItem[]>([])
   const [loadingSearch, setLoadingSearch] = useState(false)
 
@@ -28,24 +25,20 @@ export function useEntitySearch(
     try {
       let results: EntityItem[] = []
       if (targetTypeFilter === 'issue') {
-        const request = create(ListIssuesRequestSchema, { projectPath })
-        const response = await centyClient.listIssues(request)
-        results = filterAndMapIssues(
-          response.issues,
+        results = await fetchIssueEntities(
+          projectPath,
           entityId,
           existingLinks,
           selectedLinkType,
-          searchQuery
+          debouncedSearchQuery
         )
       } else if (targetTypeFilter === 'doc') {
-        const request = create(ListDocsRequestSchema, { projectPath })
-        const response = await centyClient.listDocs(request)
-        results = filterAndMapDocs(
-          response.docs,
+        results = await fetchDocEntities(
+          projectPath,
           entityId,
           existingLinks,
           selectedLinkType,
-          searchQuery
+          debouncedSearchQuery
         )
       }
       setSearchResults(results)
@@ -57,7 +50,7 @@ export function useEntitySearch(
   }, [
     projectPath,
     targetTypeFilter,
-    searchQuery,
+    debouncedSearchQuery,
     entityId,
     existingLinks,
     selectedLinkType,

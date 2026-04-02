@@ -28,8 +28,8 @@ export function useCreateLink(
       const request = create(CreateLinkRequestSchema, {
         projectPath,
         sourceId: entityId,
-        // eslint-disable-next-line security/detect-object-injection
-        sourceType: targetTypeToProto[entityType],
+        sourceType:
+          entityType === 'issue' ? LinkTargetType.ISSUE : LinkTargetType.DOC,
         targetId: selectedTarget.id,
         targetType: targetTypeToProto[selectedTarget.type],
         linkType: selectedLinkType,

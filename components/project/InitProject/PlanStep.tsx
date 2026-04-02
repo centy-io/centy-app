@@ -1,11 +1,8 @@
-/* eslint-disable max-lines */
 'use client'
 
-import {
-  type FileInfo,
-  FileType,
-  type ReconciliationPlan,
-} from '@/gen/centy_pb'
+import { FileList } from './FileList'
+import { CheckboxList } from './CheckboxList'
+import type { ReconciliationPlan } from '@/gen/centy_pb'
 
 interface PlanStepProps {
   plan: ReconciliationPlan
@@ -17,69 +14,6 @@ interface PlanStepProps {
   toggleReset: (path: string) => void
   handleReset: () => void
   handleExecutePlan: () => Promise<void>
-}
-
-function FileList({ files, title }: { files: FileInfo[]; title: string }) {
-  if (files.length === 0) return null
-  return (
-    <div className="file-list">
-      <h4 className="file-list-title">{title}</h4>
-      <ul className="file-list-items">
-        {files.map(file => (
-          <li className="file-list-item" key={file.path}>
-            <span className="file-icon">
-              {file.fileType === FileType.DIRECTORY
-                ? '\uD83D\uDCC1'
-                : '\uD83D\uDCC4'}
-            </span>
-            <span className="file-path">{file.path}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
-}
-
-function CheckboxList({
-  files,
-  title,
-  selected,
-  toggle,
-  description,
-}: {
-  files: FileInfo[]
-  title: string
-  selected: Set<string>
-  toggle: (path: string) => void
-  description: string
-}) {
-  if (files.length === 0) return null
-  return (
-    <div className="file-list checkbox-list">
-      <h4 className="file-list-title">{title}</h4>
-      <p className="description">{description}</p>
-      <ul className="file-list-items">
-        {files.map(file => (
-          <li className="file-list-item" key={file.path}>
-            <label className="form-label">
-              <input
-                className="form-checkbox"
-                type="checkbox"
-                checked={selected.has(file.path)}
-                onChange={() => toggle(file.path)}
-              />
-              <span className="file-icon">
-                {file.fileType === FileType.DIRECTORY
-                  ? '\uD83D\uDCC1'
-                  : '\uD83D\uDCC4'}
-              </span>
-              <span className="file-path">{file.path}</span>
-            </label>
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
 }
 
 export function PlanStep({

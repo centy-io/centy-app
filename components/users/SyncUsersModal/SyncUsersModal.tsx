@@ -1,19 +1,15 @@
-/* eslint-disable max-lines */
 'use client'
 
 import { useCallback, useEffect } from 'react'
 import { useSyncUsers } from './useSyncUsers'
-import { SyncPreview } from './SyncPreview'
-import { SyncResults } from './SyncResults'
-import { isDaemonUnimplemented } from '@/lib/daemon-error'
-import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
+import { SyncModalContent } from './SyncModalContent'
+import { SyncModalActions } from './SyncModalActions'
 
 interface SyncUsersModalProps {
   onClose: () => void
   onSynced: (createdCount: number) => void
 }
 
-// eslint-disable-next-line max-lines-per-function
 export function SyncUsersModal({ onClose, onSynced }: SyncUsersModalProps) {
   const sync = useSyncUsers()
 
@@ -42,71 +38,22 @@ export function SyncUsersModal({ onClose, onSynced }: SyncUsersModalProps) {
             &times;
           </button>
         </div>
-        <div className="sync-modal-content">
-          {sync.state === 'loading' && (
-            <div className="sync-loading">
-              <p className="sync-loading-text">Checking git history...</p>
-            </div>
-          )}
-          {sync.state === 'error' && (
-            <div className="sync-error">
-              <DaemonErrorMessage error={sync.error || ''} />
-              {sync.error && !isDaemonUnimplemented(sync.error) && (
-                <button onClick={sync.fetchPreview} className="retry-btn">
-                  Retry
-                </button>
-              )}
-            </div>
-          )}
-          {sync.state === 'preview' && (
-            <div className="sync-preview">
-              <SyncPreview
-                wouldCreate={sync.wouldCreate}
-                wouldSkip={sync.wouldSkip}
-              />
-            </div>
-          )}
-          {sync.state === 'syncing' && (
-            <div className="sync-loading">
-              <p className="sync-loading-text">Creating users...</p>
-            </div>
-          )}
-          {sync.state === 'success' && (
-            <SyncResults
-              created={sync.created}
-              skipped={sync.skipped}
-              syncErrors={sync.syncErrors}
-            />
-          )}
-        </div>
-        <div className="sync-modal-actions">
-          {sync.state === 'preview' && sync.wouldCreate.length > 0 && (
-            <>
-              <button onClick={handleClose} className="cancel-btn">
-                Cancel
-              </button>
-              <button onClick={sync.handleSync} className="sync-confirm-btn">
-                Create {sync.wouldCreate.length} User
-                {sync.wouldCreate.length !== 1 ? 's' : ''}
-              </button>
-            </>
-          )}
-          {sync.state === 'preview' && sync.wouldCreate.length === 0 && (
-            <button onClick={handleClose} className="done-btn">
-              Done
-            </button>
-          )}
-          {sync.state === 'success' && (
-            <button onClick={handleClose} className="done-btn">
-              Done
-            </button>
-          )}
-          {sync.state === 'error' && (
-            <button onClick={handleClose} className="cancel-btn">
-              Close
-            </button>
-          )}
-        </div>
+        <SyncModalContent
+          state={sync.state}
+          error={sync.error}
+          wouldCreate={sync.wouldCreate}
+          wouldSkip={sync.wouldSkip}
+          created={sync.created}
+          skipped={sync.skipped}
+          syncErrors={sync.syncErrors}
+          fetchPreview={sync.fetchPreview}
+        />
+        <SyncModalActions
+          state={sync.state}
+          wouldCreateCount={sync.wouldCreate.length}
+          handleClose={handleClose}
+          handleSync={sync.handleSync}
+        />
       </div>
     </div>
   )

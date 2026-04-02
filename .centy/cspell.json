@@ -14,7 +14,7 @@
     "priorityLevels",
     "schemaVersion",
     "stateColors",
-    "updateStatusOnStart",
-    "updatedAt"
+    "updatedAt",
+    "updateStatusOnStart"
   ]
 }

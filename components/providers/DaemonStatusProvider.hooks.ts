@@ -4,70 +4,37 @@ import { useState, useEffect, useCallback } from 'react'
 import type { DaemonStatus } from './DaemonStatusProvider.types'
 import {
   CHECK_INTERVAL_MS,
-  createFallbackEditors,
-  applyDemoState,
-  buildDemoUrl,
   buildDemoRedirectUrl,
+  initializeDemoFromUrl,
 } from './DaemonStatusProvider.helpers'
 import {
-  centyClient,
-  enableDemoMode,
-  disableDemoMode,
-  isDemoMode,
-} from '@/lib/grpc/client'
+  useEditorState,
+  useCheckDaemonStatus,
+} from './DaemonStatusProvider.hooks.helpers'
+import { enableDemoMode, disableDemoMode, isDemoMode } from '@/lib/grpc/client'
 import { DEMO_ORG_SLUG, DEMO_PROJECT_PATH } from '@/lib/grpc/demo-data'
-import type { EditorInfo } from '@/gen/centy_pb'
 import { trackDaemonConnection } from '@/lib/metrics'
 
-// eslint-disable-next-line max-lines-per-function
 export function useDaemonStatusState() {
   const [status, setStatus] = useState<DaemonStatus>('checking')
   const [lastChecked, setLastChecked] = useState<Date | null>(null)
   const [hasMounted, setHasMounted] = useState(false)
-  const [vscodeAvailable, setVscodeAvailable] = useState<boolean | null>(null)
-  const [editors, setEditors] = useState<EditorInfo[]>([])
+  const [daemonVersion, setDaemonVersion] = useState<string | null>(null)
+  const [latestDaemonVersion, setLatestDaemonVersion] = useState<string | null>(
+    null
+  )
 
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      const urlParams = new URLSearchParams(window.location.search)
-      if (urlParams.get('demo') === 'true' && !isDemoMode()) {
-        enableDemoMode()
-        applyDemoState(setStatus, setVscodeAvailable, setEditors)
-        const newUrl = buildDemoUrl(DEMO_ORG_SLUG, DEMO_PROJECT_PATH)
-        window.history.replaceState({}, '', newUrl)
-      } else if (isDemoMode()) {
-        applyDemoState(setStatus, setVscodeAvailable, setEditors)
-      }
-      setHasMounted(true)
-    }, 0)
-    return () => clearTimeout(timeoutId)
-  }, [])
+  const { editors, vscodeAvailable, setEditors, setEditorsLoaded } =
+    useEditorState()
 
-  const checkDaemonStatus = useCallback(async () => {
-    if (isDemoMode()) {
-      applyDemoState(setStatus, setVscodeAvailable, setEditors)
-      return
-    }
-    setStatus('checking')
-    try {
-      const daemonInfo = await centyClient.getDaemonInfo({})
-      setStatus('connected')
-      setVscodeAvailable(daemonInfo.vscodeAvailable)
-      trackDaemonConnection(true, false)
-      try {
-        const resp = await centyClient.getSupportedEditors({})
-        setEditors(resp.editors)
-      } catch {
-        setEditors(createFallbackEditors(daemonInfo.vscodeAvailable))
-      }
-    } catch {
-      setStatus('disconnected')
-      setVscodeAvailable(null)
-      setEditors([])
-      trackDaemonConnection(false, false)
-    }
-    setLastChecked(new Date())
-  }, [])
+  const checkDaemonStatus = useCheckDaemonStatus({
+    setStatus,
+    setDaemonVersion,
+    setLatestDaemonVersion,
+    setLastChecked,
+    setEditors,
+    setEditorsLoaded,
+  })
 
   const enterDemoMode = useCallback(() => {
     enableDemoMode()
@@ -83,8 +50,15 @@ export function useDaemonStatusState() {
     disableDemoMode()
     setStatus('checking')
     setTimeout(() => checkDaemonStatus(), 100)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [checkDaemonStatus])
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      initializeDemoFromUrl(setStatus, setEditors, setEditorsLoaded)
+      setHasMounted(true)
+    }, 0)
+    return () => clearTimeout(timeoutId)
+  }, [setEditors, setEditorsLoaded])
 
   useEffect(() => {
     if (!hasMounted || isDemoMode()) return
@@ -94,8 +68,7 @@ export function useDaemonStatusState() {
       clearTimeout(timeoutId)
       clearInterval(interval)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasMounted])
+  }, [hasMounted, checkDaemonStatus])
 
   return {
     status,
@@ -105,5 +78,7 @@ export function useDaemonStatusState() {
     exitDemoMode,
     vscodeAvailable,
     editors,
+    daemonVersion,
+    latestDaemonVersion,
   }
 }

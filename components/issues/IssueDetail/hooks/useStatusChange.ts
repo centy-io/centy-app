@@ -1,9 +1,32 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
-import { UpdateIssueRequestSchema, type Issue } from '@/gen/centy_pb'
+import { UpdateItemRequestSchema, type Issue } from '@/gen/centy_pb'
+import { genericItemToIssue } from '@/lib/genericItemToIssue'
 
-// eslint-disable-next-line max-lines-per-function
+function useClickOutside(
+  ref: React.RefObject<HTMLDivElement | null>,
+  enabled: boolean,
+  onClickOutside: () => void
+): void {
+  useEffect(() => {
+    const handleMouseDown = (event: MouseEvent) => {
+      if (
+        ref.current &&
+        !(event.target instanceof Node && ref.current.contains(event.target))
+      ) {
+        onClickOutside()
+      }
+    }
+    if (enabled) {
+      document.addEventListener('mousedown', handleMouseDown)
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleMouseDown)
+    }
+  }, [ref, enabled, onClickOutside])
+}
+
 export function useStatusChange(
   projectPath: string,
   issueNumber: string,
@@ -16,26 +39,8 @@ export function useStatusChange(
   const [updatingStatus, setUpdatingStatus] = useState(false)
   const statusDropdownRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        statusDropdownRef.current &&
-        !(
-          event.target instanceof Node &&
-          statusDropdownRef.current.contains(event.target)
-        )
-      ) {
-        setShowStatusDropdown(false)
-      }
-    }
-
-    if (showStatusDropdown) {
-      document.addEventListener('mousedown', handleClickOutside)
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [showStatusDropdown])
+  const closeDropdown = useCallback(() => setShowStatusDropdown(false), [])
+  useClickOutside(statusDropdownRef, showStatusDropdown, closeDropdown)
 
   const handleStatusChange = useCallback(
     async (newStatus: string) => {
@@ -46,20 +51,18 @@ export function useStatusChange(
       }
       setUpdatingStatus(true)
       setError(null)
-
       try {
-        const request = create(UpdateIssueRequestSchema, {
+        const request = create(UpdateItemRequestSchema, {
           projectPath,
-          issueId: issueNumber,
+          itemType: 'issues',
+          itemId: issueNumber,
           status: newStatus,
         })
-        const response = await centyClient.updateIssue(request)
-        if (response.success && response.issue) {
-          setIssue(response.issue)
-          setEditStatus(
-            (response.issue.metadata && response.issue.metadata.status) ||
-              'open'
-          )
+        const response = await centyClient.updateItem(request)
+        if (response.success && response.item) {
+          const updated = genericItemToIssue(response.item)
+          setIssue(updated)
+          setEditStatus((updated.metadata && updated.metadata.status) || 'open')
         } else {
           setError(response.error || 'Failed to update status')
         }

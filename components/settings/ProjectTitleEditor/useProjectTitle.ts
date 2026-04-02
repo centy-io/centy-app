@@ -1,14 +1,15 @@
 'use client'
 
 import { useState, useCallback, useEffect } from 'react'
-import { create } from '@bufbuild/protobuf'
-import { saveTitle, clearTitle, type TitleActionResult } from './titleActions'
-import { centyClient } from '@/lib/grpc/client'
-import { ListProjectsRequestSchema, type ProjectInfo } from '@/gen/centy_pb'
+import { saveTitle, clearTitle } from './titleActions'
+import { fetchProjectByPath } from './fetchProjectByPath'
+import { buildTitleDerivedValues } from './buildTitleDerivedValues'
+import { runTitleAction } from './runTitleAction'
+import type { TitleScope } from './TitleScope'
+import type { ProjectInfo } from '@/gen/centy_pb'
 
-export type TitleScope = 'user' | 'project'
+export type { TitleScope } from './TitleScope'
 
-// eslint-disable-next-line max-lines-per-function
 export function useProjectTitle(projectPath: string) {
   const [projectInfo, setProjectInfo] = useState<ProjectInfo | null>(null)
   const [userTitle, setUserTitle] = useState('')
@@ -18,51 +19,31 @@ export function useProjectTitle(projectPath: string) {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
 
-  useEffect(() => {
-    if (!projectPath) return
-    const fetchProjectInfo = async () => {
-      try {
-        const request = create(ListProjectsRequestSchema, {})
-        const response = await centyClient.listProjects(request)
-        const project = response.projects.find(p => p.path === projectPath)
-        if (project) {
-          updateFromResponse(project)
-        }
-      } catch (err) {
-        console.error('Failed to fetch project info:', err)
-      }
-    }
-    fetchProjectInfo()
-  }, [projectPath])
-
-  const updateFromResponse = (project: ProjectInfo) => {
+  const updateFromResponse = useCallback((project: ProjectInfo) => {
     setProjectInfo(project)
     setUserTitle(project.userTitle || '')
     setProjectTitle(project.projectTitle || '')
-  }
+  }, [])
+
+  useEffect(() => {
+    if (!projectPath) return
+    fetchProjectByPath(projectPath)
+      .then(project => {
+        if (project) updateFromResponse(project)
+      })
+      .catch(err => console.error('Failed to fetch project info:', err))
+  }, [projectPath, updateFromResponse])
 
   const runAction = useCallback(
-    async (action: () => Promise<TitleActionResult>) => {
-      setError(null)
-      setSuccess(null)
-      setSaving(true)
-      try {
-        const result = await action()
-        if (!result.success) {
-          setError(result.error || 'Operation failed')
-          return
-        }
-        if (result.project) {
-          updateFromResponse(result.project)
-        }
-        setSuccess(result.message || 'Done')
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Operation failed')
-      } finally {
-        setSaving(false)
-      }
-    },
-    []
+    (action: Parameters<typeof runTitleAction>[0]['action']) =>
+      runTitleAction({
+        action,
+        setError,
+        setSuccess,
+        setSaving,
+        updateFromResponse,
+      }),
+    [updateFromResponse]
   )
 
   const handleSave = useCallback(
@@ -76,12 +57,14 @@ export function useProjectTitle(projectPath: string) {
     [runAction, scope, projectPath]
   )
 
-  const currentTitle = scope === 'user' ? userTitle : projectTitle
-  const setCurrentTitle = scope === 'user' ? setUserTitle : setProjectTitle
-  const hasChanges =
-    scope === 'user'
-      ? userTitle !== ((projectInfo ? projectInfo.userTitle : '') || '')
-      : projectTitle !== ((projectInfo ? projectInfo.projectTitle : '') || '')
+  const derived = buildTitleDerivedValues(
+    scope,
+    userTitle,
+    projectTitle,
+    setUserTitle,
+    setProjectTitle,
+    projectInfo
+  )
 
   return {
     projectInfo,
@@ -90,9 +73,7 @@ export function useProjectTitle(projectPath: string) {
     saving,
     error,
     success,
-    currentTitle,
-    setCurrentTitle,
-    hasChanges,
+    ...derived,
     handleSave,
     handleClear,
   }

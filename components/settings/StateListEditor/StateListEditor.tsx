@@ -1,6 +1,8 @@
 'use client'
 
+import type { ReactElement } from 'react'
 import { StateItem } from './StateItem'
+import { AddStateRow } from './AddStateRow'
 import { useStateListHandlers } from './useStateListHandlers'
 
 interface StateListEditorProps {
@@ -12,7 +14,6 @@ interface StateListEditorProps {
   onDefaultChange: (defaultState: string) => void
 }
 
-// eslint-disable-next-line max-lines-per-function
 export function StateListEditor({
   states,
   stateColors,
@@ -20,7 +21,7 @@ export function StateListEditor({
   onStatesChange,
   onColorsChange,
   onDefaultChange,
-}: StateListEditorProps) {
+}: StateListEditorProps): ReactElement {
   const {
     newState,
     setNewState,
@@ -62,26 +63,13 @@ export function StateListEditor({
           />
         ))}
       </div>
-
-      <div className="state-add-row">
-        <input
-          type="text"
-          value={newState}
-          onChange={e => setNewState(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="New state name..."
-          className="state-add-input"
-        />
-        <button
-          type="button"
-          onClick={handleAddState}
-          disabled={isAddDisabled}
-          className="state-add-btn"
-        >
-          + Add State
-        </button>
-      </div>
-
+      <AddStateRow
+        newState={newState}
+        isAddDisabled={isAddDisabled}
+        onChange={setNewState}
+        onKeyDown={handleKeyDown}
+        onAdd={handleAddState}
+      />
       <p className="state-hint">
         Drag to reorder. The default state is used for new issues.
       </p>

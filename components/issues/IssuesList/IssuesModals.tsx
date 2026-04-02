@@ -2,10 +2,8 @@
 
 import type { ReactElement } from 'react'
 import type { Issue } from '@/gen/centy_pb'
-import {
-  ContextMenu,
-  type ContextMenuItem,
-} from '@/components/shared/ContextMenu'
+import { ContextMenu } from '@/components/shared/ContextMenu'
+import type { ContextMenuItem } from '@/components/shared/ContextMenuItem'
 import { MoveModal } from '@/components/shared/MoveModal'
 import { DuplicateModal } from '@/components/shared/DuplicateModal'
 import { StandaloneWorkspaceModal } from '@/components/shared/StandaloneWorkspaceModal'

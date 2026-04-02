@@ -1,11 +1,15 @@
 'use client'
 
+import type { DescMessage } from '@bufbuild/protobuf'
 import { ListFieldRenderer } from './ListFieldRenderer'
 import { MessageListFieldRenderer } from './MessageListFieldRenderer'
-import type {
-  FieldRenderProps,
-  ProtoFormRendererType,
-} from '@/lib/proto-form/types'
+import type { FieldRenderProps } from '@/lib/proto-form/FieldRenderProps.types'
+
+type ProtoFormRendererType = React.ComponentType<{
+  schema: DescMessage
+  value: Record<string, unknown>
+  onChange: (updates: Record<string, unknown>) => void
+}>
 
 type ListField = Extract<FieldRenderProps['field'], { fieldKind: 'list' }>
 

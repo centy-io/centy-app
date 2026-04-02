@@ -1,5 +1,5 @@
 import type { Issue } from '@/gen/centy_pb'
-import type { ContextMenuItem } from '@/components/shared/ContextMenu'
+import type { ContextMenuItem } from '@/components/shared/ContextMenuItem'
 import type { PinnedItem } from '@/hooks/usePinnedItems'
 
 interface PinActions {

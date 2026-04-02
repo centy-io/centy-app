@@ -1,7 +1,8 @@
 import { useState, useCallback, useEffect } from 'react'
 import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
-import { ListIssuesRequestSchema, type Issue } from '@/gen/centy_pb'
+import { ListItemsRequestSchema, type Issue } from '@/gen/centy_pb'
+import { genericItemToIssue } from '@/lib/genericItemToIssue'
 import { usePathContext } from '@/components/providers/PathContextProvider'
 
 export function useIssuesData() {
@@ -17,11 +18,12 @@ export function useIssuesData() {
     setError(null)
 
     try {
-      const request = create(ListIssuesRequestSchema, {
+      const request = create(ListItemsRequestSchema, {
         projectPath: projectPath.trim(),
+        itemType: 'issues',
       })
-      const response = await centyClient.listIssues(request)
-      setIssues(response.issues)
+      const response = await centyClient.listItems(request)
+      setIssues(response.items.map(genericItemToIssue))
     } catch (err) {
       setError(
         err instanceof Error ? err.message : 'Failed to connect to daemon'
@@ -35,7 +37,6 @@ export function useIssuesData() {
     if (isInitialized === true) {
       fetchIssues()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isInitialized, projectPath])
 
   return {

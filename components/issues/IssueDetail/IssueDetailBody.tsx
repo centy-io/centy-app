@@ -2,36 +2,56 @@
 
 import type { ReactElement } from 'react'
 import { EditForm } from './EditForm'
-import { ViewContent } from './ViewContent'
-import { Metadata } from './Metadata'
+import { IssueDetailViewMode } from './IssueDetailViewMode'
 import type { IssueDetailBodyProps } from './IssueDetailBody.types'
 
-// eslint-disable-next-line max-lines-per-function
-export function IssueDetailBody({
-  issue,
-  projectPath,
-  issueNumber,
-  editState,
-  stateManager,
-  stateOptions,
-  statusChange,
-  assets,
-  setAssets,
-  copyToClipboard,
-}: IssueDetailBodyProps): ReactElement {
+function buildToggleDropdown(
+  setShowStatusDropdown: (show: boolean) => void,
+  showStatusDropdown: boolean
+): () => void {
+  return () => setShowStatusDropdown(!showStatusDropdown)
+}
+
+function buildNumberBadgeHandler(
+  copyToClipboard: IssueDetailBodyProps['copyToClipboard'],
+  issueNumber: string,
+  displayNumber: number
+): () => void {
+  return () => copyToClipboard(issueNumber, `issue #${displayNumber}`)
+}
+
+export function IssueDetailBody(props: IssueDetailBodyProps): ReactElement {
+  const {
+    issue,
+    projectPath,
+    issueNumber,
+    editState,
+    stateManager,
+    stateOptions,
+    statusChange,
+    assets,
+    setAssets,
+    copyToClipboard,
+  } = props
+  const onToggleDropdown = buildToggleDropdown(
+    statusChange.setShowStatusDropdown,
+    statusChange.showStatusDropdown
+  )
+  const onBadgeClick = buildNumberBadgeHandler(
+    copyToClipboard,
+    issueNumber,
+    issue.displayNumber
+  )
   return (
     <div className="issue-content">
       <button
         type="button"
         className="issue-number-badge"
-        onClick={() =>
-          copyToClipboard(issueNumber, `issue #${issue.displayNumber}`)
-        }
+        onClick={onBadgeClick}
         title="Click to copy UUID"
       >
         #{issue.displayNumber}
       </button>
-
       {editState.isEditing ? (
         <EditForm
           projectPath={projectPath}
@@ -49,34 +69,18 @@ export function IssueDetailBody({
           setAssets={setAssets}
         />
       ) : (
-        <>
-          <h1 className="issue-title">{issue.title}</h1>
-          <Metadata
-            issue={issue}
-            projectPath={projectPath}
-            issueNumber={issueNumber}
-            stateManager={stateManager}
-            stateOptions={stateOptions}
-            showStatusDropdown={statusChange.showStatusDropdown}
-            updatingStatus={statusChange.updatingStatus}
-            statusDropdownRef={statusChange.statusDropdownRef}
-            assignees={editState.assignees}
-            setAssignees={editState.setAssignees}
-            onToggleDropdown={() =>
-              statusChange.setShowStatusDropdown(
-                !statusChange.showStatusDropdown
-              )
-            }
-            onStatusChange={statusChange.handleStatusChange}
-          />
-          <ViewContent
-            issue={issue}
-            projectPath={projectPath}
-            issueNumber={issueNumber}
-            assets={assets}
-            setAssets={setAssets}
-          />
-        </>
+        <IssueDetailViewMode
+          issue={issue}
+          projectPath={projectPath}
+          issueNumber={issueNumber}
+          stateManager={stateManager}
+          stateOptions={stateOptions}
+          statusChange={statusChange}
+          editState={editState}
+          assets={assets}
+          setAssets={setAssets}
+          onToggleDropdown={onToggleDropdown}
+        />
       )}
     </div>
   )

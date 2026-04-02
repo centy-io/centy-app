@@ -1,4 +1,5 @@
-import { createMockIssue, createMockIssueMetadata } from './factories'
+import { createMockIssue } from './factories'
+import { createMockIssueMetadata } from './createMockIssueMetadata'
 import type { Issue } from '@/gen/centy_pb'
 
 /**

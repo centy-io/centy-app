@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { MapEntriesTable } from './MapEntriesTable'
 import { MapAddRow } from './MapAddRow'
-import type { FieldRenderProps } from '@/lib/proto-form/types'
+import type { FieldRenderProps } from '@/lib/proto-form/FieldRenderProps.types'
 
 interface MapFieldProps extends Omit<FieldRenderProps, 'field'> {
   label: string
@@ -43,10 +43,8 @@ export function MapFieldRenderer({
   }
 
   const handleRemove = (key: string) => {
-    const next = { ...map }
-    // eslint-disable-next-line security/detect-object-injection
-    delete next[key]
-    onChange(next)
+    const entries = Object.entries(map).filter(([k]) => k !== key)
+    onChange(Object.fromEntries(entries))
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {

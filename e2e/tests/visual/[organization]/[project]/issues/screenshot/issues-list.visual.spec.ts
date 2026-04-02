@@ -87,8 +87,6 @@ test.describe('Demo Mode Issues Visual Tests @visual', () => {
     // Set up demo mode before navigating
     await page.addInitScript(() => {
       sessionStorage.setItem('centy_demo_mode', 'true')
-      localStorage.setItem('centy-selected-org', 'demo-org')
-      localStorage.setItem('centy-project-path', '/demo/centy-showcase')
     })
 
     // Navigate directly to issues page in demo mode

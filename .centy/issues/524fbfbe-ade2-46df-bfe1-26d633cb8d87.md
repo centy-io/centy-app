@@ -1,9 +1,9 @@
 ---
 displayNumber: 160
-status: open
+status: closed
 priority: 3
 createdAt: 2026-02-17T14:14:56.102338+00:00
-updatedAt: 2026-02-17T14:14:56.102338+00:00
+updatedAt: 2026-02-22T20:56:50.463574+00:00
 ---
 
 # Remove `security/detect-object-injection` ESLint rule override

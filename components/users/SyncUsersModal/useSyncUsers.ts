@@ -2,12 +2,14 @@
 
 import { useState, useCallback, useEffect } from 'react'
 import { create } from '@bufbuild/protobuf'
+import type { SyncState } from './SyncState'
 import { centyClient } from '@/lib/grpc/client'
 import { SyncUsersRequestSchema, type GitContributor } from '@/gen/centy_pb'
 import { usePathContext } from '@/components/providers/PathContextProvider'
 import { isDaemonUnimplemented } from '@/lib/daemon-error'
+import { OperationError } from '@/lib/OperationError'
 
-export type SyncState = 'loading' | 'preview' | 'syncing' | 'success' | 'error'
+export type { SyncState } from './SyncState'
 
 function formatError(err: unknown): string {
   const msg = err instanceof Error ? err.message : 'Failed to connect to daemon'
@@ -38,7 +40,9 @@ export function useSyncUsers() {
         setWouldSkip(res.wouldSkip)
         setState('preview')
       } else {
-        setError(formatError(new Error(res.error || 'Failed to fetch')))
+        setError(
+          formatError(new OperationError(res.error || 'Failed to fetch'))
+        )
         setState('error')
       }
     } catch (err) {
@@ -49,7 +53,6 @@ export function useSyncUsers() {
 
   useEffect(() => {
     void fetchPreview()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleSync = useCallback(async () => {
@@ -65,7 +68,7 @@ export function useSyncUsers() {
         setSyncErrors(res.errors)
         setState('success')
       } else {
-        setError(formatError(new Error(res.error || 'Failed to sync')))
+        setError(formatError(new OperationError(res.error || 'Failed to sync')))
         setState('error')
       }
     } catch (err) {

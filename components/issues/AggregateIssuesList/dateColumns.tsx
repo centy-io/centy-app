@@ -28,21 +28,20 @@ export function createPriorityColumn(stateManager: {
         return selectedValues.includes(priority)
       },
       sortingFn: (rowA, rowB) => {
-        const priorityOrder: Record<string, number> = {
-          high: 1,
-          critical: 1,
-          p1: 1,
-          medium: 2,
-          normal: 2,
-          p2: 2,
-          low: 3,
-          p3: 3,
-          unknown: 4,
-        }
+        const priorityOrder = new Map<string, number>([
+          ['high', 1],
+          ['critical', 1],
+          ['p1', 1],
+          ['medium', 2],
+          ['normal', 2],
+          ['p2', 2],
+          ['low', 3],
+          ['p3', 3],
+          ['unknown', 4],
+        ])
         const a = String(rowA.getValue('priority')).toLowerCase()
         const b = String(rowB.getValue('priority')).toLowerCase()
-        // eslint-disable-next-line security/detect-object-injection
-        return (priorityOrder[a] || 4) - (priorityOrder[b] || 4)
+        return (priorityOrder.get(a) || 4) - (priorityOrder.get(b) || 4)
       },
     }
   )

@@ -29,14 +29,6 @@ export function ManifestSection({ manifest }: ManifestSectionProps) {
                   : '-'}
               </span>
             </div>
-            <div className="info-item">
-              <span className="info-label">Updated</span>
-              <span className="info-value">
-                {manifest.updatedAt
-                  ? new Date(manifest.updatedAt).toLocaleString()
-                  : '-'}
-              </span>
-            </div>
           </div>
         </div>
       </div>

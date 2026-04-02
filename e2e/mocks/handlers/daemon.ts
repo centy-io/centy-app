@@ -11,12 +11,9 @@ export interface DaemonHandlerOptions {
  */
 export function addDaemonHandlers(
   mocker: GrpcMocker,
-  options?: DaemonHandlerOptions
+  _options?: DaemonHandlerOptions
 ): GrpcMocker {
-  const resolvedOptions = options !== undefined ? options : {}
-  const { vscodeAvailable = true } = resolvedOptions
-
-  // GetDaemonInfo - provides daemon version and VS Code availability
+  // GetDaemonInfo - provides daemon version
   mocker.addHandler(
     'GetDaemonInfo',
     GetDaemonInfoRequestSchema,
@@ -25,7 +22,6 @@ export function addDaemonHandlers(
       $typeName: 'centy.v1.DaemonInfo',
       version: '1.0.0 (Test)',
       binaryPath: '/test/centy-daemon',
-      vscodeAvailable,
     })
   )
 

@@ -1,10 +1,7 @@
 import { useState, useCallback } from 'react'
 import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
-import {
-  DuplicateIssueRequestSchema,
-  DuplicateDocRequestSchema,
-} from '@/gen/centy_pb'
+import { DuplicateItemRequestSchema } from '@/gen/centy_pb'
 
 export function useDuplicateAction(
   entityType: 'issue' | 'doc',
@@ -24,29 +21,31 @@ export function useDuplicateAction(
     setError(null)
     try {
       if (entityType === 'issue') {
-        const request = create(DuplicateIssueRequestSchema, {
+        const request = create(DuplicateItemRequestSchema, {
           sourceProjectPath: currentProjectPath,
-          issueId: entityId,
+          itemType: 'issues',
+          itemId: entityId,
           targetProjectPath: selectedProject,
           newTitle: newTitle || undefined,
         })
-        const response = await centyClient.duplicateIssue(request)
-        if (response.success && response.issue) {
-          onDuplicated(response.issue.id, selectedProject)
+        const response = await centyClient.duplicateItem(request)
+        if (response.success && response.item) {
+          onDuplicated(response.item.id, selectedProject)
         } else {
           setError(response.error || 'Failed to duplicate issue')
         }
       } else {
-        const request = create(DuplicateDocRequestSchema, {
+        const request = create(DuplicateItemRequestSchema, {
           sourceProjectPath: currentProjectPath,
-          slug: entityId,
+          itemType: 'docs',
+          itemId: entityId,
           targetProjectPath: selectedProject,
-          newSlug: newSlug || undefined,
+          newId: newSlug || undefined,
           newTitle: newTitle || undefined,
         })
-        const response = await centyClient.duplicateDoc(request)
-        if (response.success && response.doc) {
-          onDuplicated(response.doc.slug, selectedProject)
+        const response = await centyClient.duplicateItem(request)
+        if (response.success && response.item) {
+          onDuplicated(response.item.id, selectedProject)
         } else {
           setError(response.error || 'Failed to duplicate document')
         }

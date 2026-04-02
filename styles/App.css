@@ -7,12 +7,12 @@
 
 /* Header */
 .app-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--color-gray-900);
+  border-bottom: 1px solid var(--color-gray-800);
   padding: var(--space-6) var(--space-8);
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: var(--shadow-lg);
 }
 
 /* Header Top Row */
@@ -122,9 +122,9 @@
   left: 50%;
   transform: translateX(-50%);
   width: 20px;
-  height: 3px;
+  height: 2px;
   background: white;
-  border-radius: var(--radius-full);
+  border-radius: 0;
 }
 
 .app-nav a.external-link {
@@ -136,10 +136,7 @@
 main {
   flex: 1;
   background: var(--color-bg-surface);
-  border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
-  margin-top: -var(--space-4);
   position: relative;
-  box-shadow: var(--shadow-xl);
 }
 
 /* Responsive */
@@ -204,18 +201,16 @@ main {
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-3) var(--space-6);
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--color-primary);
   color: white;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-primary-dark);
   font-weight: 500;
   text-decoration: none;
-  transition:
-    transform var(--transition-fast),
-    box-shadow var(--transition-fast);
+  transition: background var(--transition-fast);
 }
 
 .project-context-required .select-project-link:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  background: var(--color-primary-hover);
   color: white;
 }

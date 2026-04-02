@@ -1,13 +1,17 @@
 'use client'
 
+import type { DescMessage } from '@bufbuild/protobuf'
 import { ScalarFieldRenderer } from './renderers/ScalarFieldRenderer'
 import { MapFieldRenderer } from './renderers/MapFieldRenderer'
 import { MessageFieldRenderer } from './renderers/MessageFieldRenderer'
-import { ListFieldBranch } from './renderers/ListFieldBranch'
-import type {
-  FieldRenderProps,
-  ProtoFormRendererType,
-} from '@/lib/proto-form/types'
+import { renderListField } from './renderListField'
+import type { FieldRenderProps } from '@/lib/proto-form/FieldRenderProps.types'
+
+type ProtoFormRendererType = React.ComponentType<{
+  schema: DescMessage
+  value: Record<string, unknown>
+  onChange: (updates: Record<string, unknown>) => void
+}>
 
 interface AutoFieldRendererProps extends FieldRenderProps {
   ProtoFormRenderer: ProtoFormRendererType
@@ -32,6 +36,7 @@ export function AutoFieldRenderer({
       />
     )
   }
+
   if (field.fieldKind === 'map') {
     return (
       <MapFieldRenderer
@@ -42,18 +47,17 @@ export function AutoFieldRenderer({
       />
     )
   }
+
   if (field.fieldKind === 'list') {
-    return (
-      <ListFieldBranch
-        field={field}
-        label={label}
-        description={description}
-        value={value}
-        onChange={onChange}
-        ProtoFormRenderer={ProtoFormRenderer}
-      />
-    )
+    return renderListField(field, {
+      label,
+      description,
+      value,
+      onChange,
+      ProtoFormRenderer,
+    })
   }
+
   if (field.fieldKind === 'message') {
     return (
       <MessageFieldRenderer

@@ -1,9 +1,11 @@
-/* eslint-disable max-lines, max-lines-per-function */
 'use client'
 
-import Link from 'next/link'
 import { type RouteLiteral } from 'nextjs-routes'
+import { NameField } from './NameField'
+import { UserIdField } from './UserIdField'
+import { EmailField } from './EmailField'
 import { GitUsernamesField } from './GitUsernamesField'
+import { FormActions } from './FormActions'
 
 interface CreateUserFormProps {
   name: string
@@ -44,67 +46,16 @@ export function CreateUserForm({
       }}
       className="create-user-form"
     >
-      <div className="form-group">
-        <label className="form-label" htmlFor="name">
-          Name <span className="required">*</span>
-        </label>
-        <input
-          className="form-input"
-          id="name"
-          type="text"
-          value={name}
-          onChange={e => setName(e.target.value)}
-          placeholder="Display name"
-          required
-        />
-      </div>
-      <div className="form-group">
-        <label className="form-label" htmlFor="userId">
-          User ID
-        </label>
-        <input
-          className="form-input"
-          id="userId"
-          type="text"
-          value={userId}
-          onChange={e => onUserIdChange(e.target.value)}
-          placeholder="Auto-generated from name"
-        />
-        <span className="form-hint">
-          Unique identifier (slug format). Leave empty to auto-generate.
-        </span>
-      </div>
-      <div className="form-group">
-        <label className="form-label" htmlFor="email">
-          Email
-        </label>
-        <input
-          className="form-input"
-          id="email"
-          type="email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          placeholder="Email address (optional)"
-        />
-      </div>
+      <NameField name={name} setName={setName} />
+      <UserIdField userId={userId} onUserIdChange={onUserIdChange} />
+      <EmailField email={email} setEmail={setEmail} />
       <GitUsernamesField
         gitUsernames={gitUsernames}
         onAddGitUsername={onAddGitUsername}
         onRemoveGitUsername={onRemoveGitUsername}
         onGitUsernameChange={onGitUsernameChange}
       />
-      <div className="form-actions">
-        <Link href={usersListUrl} className="cancel-btn">
-          Cancel
-        </Link>
-        <button
-          type="submit"
-          disabled={saving || !name.trim()}
-          className="save-btn"
-        >
-          {saving ? 'Creating...' : 'Create User'}
-        </button>
-      </div>
+      <FormActions saving={saving} name={name} usersListUrl={usersListUrl} />
     </form>
   )
 }
