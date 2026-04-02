@@ -18,7 +18,7 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
     vscodeAvailable,
     editors,
     daemonVersion,
-    latestDaemonVersion,
+    daemonUpdateAvailable,
   } = useDaemonStatusState()
 
   return (
@@ -33,7 +33,7 @@ export function DaemonStatusProvider({ children }: { children: ReactNode }) {
         vscodeAvailable,
         editors,
         daemonVersion,
-        latestDaemonVersion,
+        daemonUpdateAvailable,
       }}
     >
       {children}

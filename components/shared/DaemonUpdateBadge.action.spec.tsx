@@ -34,7 +34,7 @@ function setupDaemonStatus() {
     vscodeAvailable: null,
     editors: [],
     daemonVersion: '0.3.1',
-    latestDaemonVersion: '0.3.2',
+    daemonUpdateAvailable: true,
   })
 }
 

@@ -6,7 +6,6 @@ import { DaemonUpdateDialog } from './DaemonUpdateDialog'
 import { centyClient } from '@/lib/grpc/client'
 import { RestartRequestSchema } from '@/gen/centy_pb'
 import { useDaemonStatus } from '@/components/providers/DaemonStatusProvider'
-import { isNewerVersion } from '@/lib/compareVersions'
 import { DAEMON_INSTALL_URL } from '@/lib/constants/urls'
 
 const INSTALL_COMMAND = `curl -fsSL ${DAEMON_INSTALL_URL} | sh`
@@ -24,18 +23,14 @@ async function restartDaemon(): Promise<{ success: boolean; message: string }> {
 }
 
 export function DaemonUpdateBadge() {
-  const { daemonVersion, latestDaemonVersion } = useDaemonStatus()
+  const { daemonUpdateAvailable } = useDaemonStatus()
   const [dialogOpen, setDialogOpen] = useState(false)
   const [copied, setCopied] = useState(false)
   const [restartCopied, setRestartCopied] = useState(false)
   const [restarting, setRestarting] = useState(false)
   const [restartResult, setRestartResult] = useState<RestartResult | null>(null)
 
-  if (
-    !daemonVersion ||
-    !latestDaemonVersion ||
-    !isNewerVersion(daemonVersion, latestDaemonVersion)
-  ) {
+  if (!daemonUpdateAvailable) {
     return null
   }
 
@@ -73,15 +68,13 @@ export function DaemonUpdateBadge() {
       <button
         className="daemon-update-badge"
         onClick={() => setDialogOpen(true)}
-        title={`Daemon update available: ${latestDaemonVersion}`}
+        title="Daemon update available"
       >
         <span className="daemon-update-dot" />
         <span className="daemon-update-label">Update available</span>
       </button>
       {dialogOpen && (
         <DaemonUpdateDialog
-          daemonVersion={daemonVersion}
-          latestDaemonVersion={latestDaemonVersion}
           copied={copied}
           restartCopied={restartCopied}
           restarting={restarting}

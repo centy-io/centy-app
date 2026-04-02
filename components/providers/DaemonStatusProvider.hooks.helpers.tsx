@@ -7,6 +7,9 @@ import { centyClient, isDemoMode } from '@/lib/grpc/client'
 import type { EditorInfo } from '@/gen/centy_pb'
 import { trackDaemonConnection } from '@/lib/metrics'
 import { fetchLatestDaemonVersion } from '@/lib/fetchLatestDaemonVersion'
+import { isNewerVersion } from '@/lib/compareVersions'
+import { readDaemonUpdateCache } from '@/lib/readDaemonUpdateCache'
+import { writeDaemonUpdateCache } from '@/lib/writeDaemonUpdateCache'
 
 export interface EditorState {
   editors: EditorInfo[]
@@ -30,7 +33,7 @@ export function useEditorState(): EditorState {
 export interface DaemonCheckArgs {
   setStatus: React.Dispatch<React.SetStateAction<DaemonStatus>>
   setDaemonVersion: React.Dispatch<React.SetStateAction<string | null>>
-  setLatestDaemonVersion: React.Dispatch<React.SetStateAction<string | null>>
+  setDaemonUpdateAvailable: React.Dispatch<React.SetStateAction<boolean>>
   setLastChecked: React.Dispatch<React.SetStateAction<Date | null>>
   setEditors: React.Dispatch<React.SetStateAction<EditorInfo[]>>
   setEditorsLoaded: React.Dispatch<React.SetStateAction<boolean>>
@@ -42,7 +45,7 @@ export function useCheckDaemonStatus(
   const {
     setStatus,
     setDaemonVersion,
-    setLatestDaemonVersion,
+    setDaemonUpdateAvailable,
     setLastChecked,
     setEditors,
     setEditorsLoaded,
@@ -57,13 +60,23 @@ export function useCheckDaemonStatus(
     try {
       const daemonInfo = await centyClient.getDaemonInfo({})
       setStatus('connected')
-      setDaemonVersion(daemonInfo.version || null)
+      const version = daemonInfo.version || null
+      setDaemonVersion(version)
       trackDaemonConnection(true, false)
       const resp = await centyClient.getSupportedEditors({})
       setEditors(resp.editors)
       setEditorsLoaded(true)
-      const latest = await fetchLatestDaemonVersion()
-      setLatestDaemonVersion(latest)
+      if (version) {
+        const cached = readDaemonUpdateCache(version)
+        if (cached !== null) {
+          setDaemonUpdateAvailable(cached)
+        } else {
+          const latest = await fetchLatestDaemonVersion()
+          const hasUpdate = latest ? isNewerVersion(version, latest) : false
+          writeDaemonUpdateCache(version, hasUpdate)
+          setDaemonUpdateAvailable(hasUpdate)
+        }
+      }
     } catch {
       setStatus('disconnected')
       setEditors([])
@@ -75,7 +88,7 @@ export function useCheckDaemonStatus(
   }, [
     setStatus,
     setDaemonVersion,
-    setLatestDaemonVersion,
+    setDaemonUpdateAvailable,
     setLastChecked,
     setEditors,
     setEditorsLoaded,
