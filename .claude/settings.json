@@ -195,7 +195,8 @@
       "mcp__centy__centy_v1_CentyDaemon_ListOrgIssues",
       "mcp__centy__centy_v1_CentyDaemon_GetOrgConfig",
       "mcp__centy__centy_v1_CentyDaemon_ListItems",
-      "mcp__centy__centy_v1_CentyDaemon_DeleteItem"
+      "mcp__centy__centy_v1_CentyDaemon_DeleteItem",
+      "mcp__centy__centy_v1_CentyDaemon_UntrackProject"
     ],
     "deny": ["Bash(npm install)", "Bash(gh issue create:*)"]
   },
