@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { route } from 'nextjs-routes'
+import type { RouteLiteral } from 'nextjs-routes'
 import type { OrgIssueDetailProps } from './OrgIssueDetail.types'
 import { useOrgIssueDetail } from './hooks/useOrgIssueDetail'
 import { OrgIssueEditForm } from './OrgIssueEditForm'
@@ -13,7 +14,7 @@ import { useSaveShortcut } from '@/hooks/useSaveShortcut'
 
 function renderGuardState(
   state: ReturnType<typeof useOrgIssueDetail>,
-  backLink: string
+  backLink: RouteLiteral
 ): React.JSX.Element | null {
   if (state.loading) {
     return (
