@@ -1,5 +1,6 @@
 /* Organization Detail Page */
 .organization-detail {
+  position: relative;
   max-width: 720px;
   margin: 0 auto;
   padding: var(--space-8);
@@ -16,37 +17,6 @@
 .organization-actions {
   display: flex;
   gap: var(--space-3);
-}
-
-/* Delete Confirm */
-.delete-confirm {
-  background: var(--color-danger-light);
-  border: 1px solid var(--color-danger-alpha-20);
-  border-radius: var(--radius-lg);
-  padding: var(--space-4);
-  margin-bottom: var(--space-6);
-}
-
-.delete-confirm p {
-  margin: 0 0 var(--space-3);
-  color: var(--color-danger-dark);
-  font-weight: 500;
-}
-
-.delete-warning {
-  font-weight: 400;
-  font-size: 0.875rem;
-}
-
-.delete-error-message {
-  color: var(--color-danger);
-  font-size: 0.875rem;
-}
-
-.delete-confirm-actions {
-  display: flex;
-  gap: var(--space-3);
-  margin-top: var(--space-4);
 }
 
 /* Content */

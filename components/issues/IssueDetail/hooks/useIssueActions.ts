@@ -3,8 +3,13 @@ import { useRouter } from 'next/navigation'
 import { create } from '@bufbuild/protobuf'
 import type { RouteLiteral } from 'nextjs-routes'
 import { performSave } from './performSave'
+import { callItemApi } from '@/lib/callItemApi'
 import { centyClient } from '@/lib/grpc/client'
-import { DeleteItemRequestSchema, type Issue } from '@/gen/centy_pb'
+import {
+  DeleteItemRequestSchema,
+  SoftDeleteItemRequestSchema,
+  type Issue,
+} from '@/gen/centy_pb'
 
 interface UseIssueActionsParams {
   projectPath: string
@@ -51,29 +56,38 @@ export function useIssueActions({
 
   const handleDelete = useCallback(async () => {
     if (!projectPath || !issueNumber) return
-    setDeleting(true)
-    setError(null)
-    try {
-      const request = create(DeleteItemRequestSchema, {
-        projectPath,
-        itemType: 'issues',
-        itemId: issueNumber,
-      })
-      const response = await centyClient.deleteItem(request)
-      if (response.success) {
-        router.push(issuesListUrl)
-      } else {
-        setError(response.error || 'Failed to delete issue')
-        setShowDeleteConfirm(false)
-      }
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to connect to daemon'
-      )
-      setShowDeleteConfirm(false)
-    } finally {
-      setDeleting(false)
-    }
+    const res = await callItemApi(
+      () =>
+        centyClient.deleteItem(
+          create(DeleteItemRequestSchema, {
+            projectPath,
+            itemType: 'issues',
+            itemId: issueNumber,
+          })
+        ),
+      setDeleting,
+      setError
+    )
+    if (res && res.success) router.push(issuesListUrl)
+    else if (res) setError(res.error || 'Failed to delete issue')
+  }, [projectPath, issueNumber, router, issuesListUrl, setError])
+
+  const handleSoftDelete = useCallback(async () => {
+    if (!projectPath || !issueNumber) return
+    const res = await callItemApi(
+      () =>
+        centyClient.softDeleteItem(
+          create(SoftDeleteItemRequestSchema, {
+            projectPath,
+            itemType: 'issues',
+            itemId: issueNumber,
+          })
+        ),
+      setDeleting,
+      setError
+    )
+    if (res && res.success) router.push(issuesListUrl)
+    else if (res) setError(res.error || 'Failed to archive issue')
   }, [projectPath, issueNumber, router, issuesListUrl, setError])
 
   return {
@@ -83,5 +97,6 @@ export function useIssueActions({
     setShowDeleteConfirm,
     handleSave,
     handleDelete,
+    handleSoftDelete,
   }
 }

@@ -168,59 +168,6 @@
   color: white;
 }
 
-/* Delete Confirm Overlay */
-.delete-confirm-overlay {
-  position: absolute;
-  inset: 0;
-  background: var(--color-white-95);
-  border-radius: var(--radius-xl);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-4);
-  padding: var(--space-4);
-}
-
-.delete-confirm-overlay p {
-  font-size: 0.9375rem;
-  color: var(--color-gray-700);
-  text-align: center;
-}
-
-.delete-confirm-actions {
-  display: flex;
-  gap: var(--space-2);
-}
-
-.delete-confirm-actions .cancel-btn {
-  padding: var(--space-2) var(--space-4);
-  background: var(--color-bg-surface);
-  color: var(--color-text-primary);
-  border: 1px solid var(--color-border-default);
-  border-radius: var(--radius-md);
-  font-weight: 500;
-  font-size: 0.875rem;
-}
-
-.delete-confirm-actions .confirm-delete-btn {
-  padding: var(--space-2) var(--space-4);
-  background: var(--color-danger);
-  color: white;
-  border: none;
-  border-radius: var(--radius-md);
-  font-weight: 500;
-  font-size: 0.875rem;
-}
-
-.delete-confirm-actions .cancel-btn:hover {
-  background: var(--color-gray-100);
-}
-
-.delete-confirm-actions .confirm-delete-btn:hover:not(:disabled) {
-  background: var(--color-danger-dark);
-}
-
 /* Empty State, Loading, Error (shared with IssuesList) */
 .docs-list .loading {
   text-align: center;

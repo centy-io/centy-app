@@ -196,7 +196,16 @@
       "mcp__centy__centy_v1_CentyDaemon_GetOrgConfig",
       "mcp__centy__centy_v1_CentyDaemon_ListItems",
       "mcp__centy__centy_v1_CentyDaemon_DeleteItem",
-      "mcp__centy__centy_v1_CentyDaemon_UntrackProject"
+      "mcp__centy__centy_v1_CentyDaemon_UntrackProject",
+      "mcp__plugin_playwright_playwright__browser_take_screenshot",
+      "mcp__plugin_playwright_playwright__browser_navigate",
+      "mcp__plugin_playwright_playwright__browser_click",
+      "mcp__plugin_playwright_playwright__browser_snapshot",
+      "mcp__plugin_playwright_playwright__browser_evaluate",
+      "mcp__plugin_playwright_playwright__browser_run_code",
+      "mcp__plugin_playwright_playwright__browser_press_key",
+      "mcp__plugin_playwright_playwright__browser_console_messages",
+      "mcp__plugin_playwright_playwright__browser_network_requests"
     ],
     "deny": ["Bash(npm install)", "Bash(gh issue create:*)"]
   },

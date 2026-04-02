@@ -1,5 +1,6 @@
 /* User Detail Page */
 .user-detail {
+  position: relative;
   max-width: 720px;
   margin: 0 auto;
   padding: var(--space-8);
@@ -52,22 +53,6 @@
   border-color: var(--color-gray-400);
 }
 
-.delete-btn {
-  padding: var(--space-2) var(--space-4);
-  background: var(--color-bg-card);
-  color: var(--color-danger);
-  border: 1px solid var(--color-danger);
-  border-radius: var(--radius-md);
-  font-weight: 500;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.delete-btn:hover {
-  background: var(--color-danger);
-  color: white;
-}
-
 .save-btn {
   padding: var(--space-2) var(--space-4);
   background: var(--color-primary);
@@ -86,26 +71,6 @@
 .save-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-}
-
-/* Delete Confirm */
-.delete-confirm {
-  background: var(--color-danger-light);
-  border: 1px solid var(--color-danger-alpha-20);
-  border-radius: var(--radius-lg);
-  padding: var(--space-4);
-  margin-bottom: var(--space-6);
-}
-
-.delete-confirm p {
-  margin: 0 0 var(--space-4);
-  color: var(--color-danger-dark);
-  font-weight: 500;
-}
-
-.delete-confirm-actions {
-  display: flex;
-  gap: var(--space-3);
 }
 
 /* Content */

@@ -156,50 +156,6 @@
   color: white;
 }
 
-/* Delete Confirm Overlay */
-.delete-confirm-overlay {
-  position: absolute;
-  inset: 0;
-  background: var(--color-white-95);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-3);
-  padding: var(--space-3);
-}
-
-.delete-confirm-overlay p {
-  font-size: 0.8125rem;
-  color: var(--color-gray-700);
-  text-align: center;
-}
-
-.delete-confirm-actions {
-  display: flex;
-  gap: var(--space-2);
-}
-
-.delete-confirm-actions .cancel-btn,
-.delete-confirm-actions .confirm-delete-btn {
-  padding: var(--space-1) var(--space-3);
-  font-size: 0.75rem;
-  border-radius: var(--radius-md);
-  font-weight: 500;
-}
-
-.delete-confirm-actions .cancel-btn {
-  background: var(--color-bg-surface);
-  color: var(--color-text-primary);
-  border: 1px solid var(--color-border-default);
-}
-
-.delete-confirm-actions .confirm-delete-btn {
-  background: var(--color-danger);
-  color: white;
-  border: none;
-}
-
 /* Preview Modal */
 .preview-modal {
   position: fixed;

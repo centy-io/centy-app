@@ -44,6 +44,7 @@ export function IssueDetail({ issueNumber }: IssueDetailProps): ReactElement {
         copyToClipboard={state.copyToClipboard}
         onSave={state.onSave}
         onDelete={state.actions.handleDelete}
+        onSoftDelete={state.actions.handleSoftDelete}
         onMove={() => state.setShowMoveModal(true)}
         onDuplicate={() => state.setShowDuplicateModal(true)}
         onShowDeleteConfirm={state.actions.setShowDeleteConfirm}

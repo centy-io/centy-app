@@ -1,5 +1,6 @@
 /* Issue Detail Page */
 .issue-detail {
+  position: relative;
   max-width: 800px;
   margin: 0 auto;
   padding: var(--space-8);
@@ -125,15 +126,6 @@
   cursor: help;
 }
 
-.delete-btn {
-  background: var(--color-danger-light);
-  color: var(--color-danger-dark);
-}
-
-.delete-btn:hover {
-  background: #fecaca;
-}
-
 .cancel-btn {
   background: var(--color-gray-100);
   color: var(--color-gray-700);
@@ -194,38 +186,6 @@
   text-align: center;
   padding: var(--space-12);
   color: var(--color-gray-500);
-}
-
-/* Delete Confirmation */
-.delete-confirm {
-  background: var(--color-danger-light);
-  border: 1px solid var(--color-danger-alpha-20);
-  border-radius: var(--radius-xl);
-  padding: var(--space-5);
-  margin-bottom: var(--space-6);
-  animation: slideDown 0.2s ease-out;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.delete-confirm p {
-  color: var(--color-danger-dark);
-  font-weight: 500;
-  margin-bottom: var(--space-4);
-}
-
-.delete-confirm-actions {
-  display: flex;
-  gap: var(--space-3);
 }
 
 /* Issue Content Card */
@@ -616,13 +576,5 @@
 
   .form-row {
     grid-template-columns: 1fr;
-  }
-
-  .delete-confirm-actions {
-    flex-direction: column;
-  }
-
-  .delete-confirm-actions button {
-    width: 100%;
   }
 }

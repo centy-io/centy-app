@@ -3,8 +3,8 @@
 import type { ReactElement, RefObject } from 'react'
 import type { RouteLiteral } from 'nextjs-routes'
 import { Header } from './Header'
-import { DeleteConfirmation } from './DeleteConfirmation'
 import { IssueDetailBody } from './IssueDetailBody'
+import { DeleteConfirm } from '@/components/shared/DeleteConfirm'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import type { Issue, Asset } from '@/gen/centy_pb'
 
@@ -47,6 +47,7 @@ interface IssueDetailContentProps {
   copyToClipboard: (text: string, label: string) => void
   onSave: () => void
   onDelete: () => void
+  onSoftDelete: () => void
   onMove: () => void
   onDuplicate: () => void
   onShowDeleteConfirm: (v: boolean) => void
@@ -76,9 +77,11 @@ export function IssueDetailContent(
       />
       {error && <DaemonErrorMessage error={error} />}
       {showDeleteConfirm && (
-        <DeleteConfirmation
+        <DeleteConfirm
+          message={`Delete "${props.issue.title || props.issueNumber}"?`}
           deleting={props.deleting}
           onCancel={() => props.onShowDeleteConfirm(false)}
+          onSoftDelete={props.onSoftDelete}
           onConfirm={props.onDelete}
         />
       )}

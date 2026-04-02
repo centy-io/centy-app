@@ -1,6 +1,5 @@
-import { useState } from 'react'
-import { DeleteConfirmOverlay } from './DeleteConfirmOverlay'
 import { ItemCardContent } from './ItemCardContent'
+import { DeleteConfirm } from '@/components/shared/DeleteConfirm'
 import type { GenericItem, ItemTypeConfigProto } from '@/gen/centy_pb'
 import { useAppLink } from '@/hooks/useAppLink'
 
@@ -30,12 +29,6 @@ export function GenericItemCard({
   onHardDeleteConfirm,
 }: GenericItemCardProps): React.JSX.Element {
   const { createLink } = useAppLink()
-  const [permanentStep, setPermanentStep] = useState(false)
-
-  const handleCancel = (): void => {
-    setPermanentStep(false)
-    onDeleteCancel()
-  }
 
   return (
     <div className="generic-item-card context-menu-row">
@@ -56,17 +49,13 @@ export function GenericItemCard({
         x
       </button>
       {deleteConfirm === item.id && (
-        <div className="delete-confirm-overlay">
-          <DeleteConfirmOverlay
-            item={item}
-            deleting={deleting}
-            permanentStep={permanentStep}
-            setPermanentStep={setPermanentStep}
-            onCancel={handleCancel}
-            onSoftDelete={onSoftDeleteConfirm}
-            onHardDelete={onHardDeleteConfirm}
-          />
-        </div>
+        <DeleteConfirm
+          message={`Delete "${item.title || item.id}"?`}
+          deleting={deleting}
+          onCancel={onDeleteCancel}
+          onSoftDelete={() => onSoftDeleteConfirm(item.id)}
+          onConfirm={() => onHardDeleteConfirm(item.id)}
+        />
       )}
     </div>
   )

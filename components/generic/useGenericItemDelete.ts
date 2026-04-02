@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react'
 import { create } from '@bufbuild/protobuf'
 import { useRouter } from 'next/navigation'
 import type { RouteLiteral } from 'nextjs-routes'
-import { callItemApi } from './callItemApi'
+import { callItemApi } from '@/lib/callItemApi'
 import { centyClient } from '@/lib/grpc/client'
 import {
   DeleteItemRequestSchema,

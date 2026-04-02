@@ -123,30 +123,6 @@
   white-space: nowrap;
 }
 
-/* Delete Confirm (inline) */
-.delete-confirm {
-  background: var(--color-danger-light);
-  border: 1px solid var(--color-danger-alpha-20);
-  border-radius: var(--radius-lg);
-  padding: var(--space-4);
-  margin-bottom: var(--space-4);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: var(--space-4);
-}
-
-.delete-confirm p {
-  margin: 0;
-  color: var(--color-danger-dark);
-  font-weight: 500;
-}
-
-.delete-confirm-actions {
-  display: flex;
-  gap: var(--space-3);
-}
-
 .cancel-btn {
   padding: var(--space-2) var(--space-4);
   background: var(--color-bg-card);

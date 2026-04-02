@@ -6,7 +6,8 @@ import type { OrgIssueDetailProps } from './OrgIssueDetail.types'
 import { useOrgIssueDetail } from './hooks/useOrgIssueDetail'
 import { OrgIssueEditForm } from './OrgIssueEditForm'
 import { OrgIssueReadView } from './OrgIssueReadView'
-import { IssueActions, IssueDeleteConfirm } from './OrgIssueDetailParts'
+import { IssueActions } from './OrgIssueDetailParts'
+import { DeleteConfirm } from '@/components/shared/DeleteConfirm'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
 
@@ -69,7 +70,18 @@ export function OrgIssueDetail({
 
       {state.error && <DaemonErrorMessage error={state.error} />}
 
-      {state.showDeleteConfirm && <IssueDeleteConfirm state={state} />}
+      {state.showDeleteConfirm && (
+        <DeleteConfirm
+          message="Delete this org issue? This will remove it from all org projects."
+          deleting={state.deleting}
+          onCancel={() => {
+            state.setShowDeleteConfirm(false)
+            state.setDeleteError(null)
+          }}
+          onConfirm={state.handleDelete}
+          error={state.deleteError}
+        />
+      )}
 
       <div className="issue-detail-content">
         {state.isEditing ? (

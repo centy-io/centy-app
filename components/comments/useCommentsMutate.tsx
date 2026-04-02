@@ -6,7 +6,7 @@ import {
   DeleteItemRequestSchema,
   type GenericItem,
 } from '@/gen/centy_pb'
-import { callItemApi } from '@/components/generic/callItemApi'
+import { callItemApi } from '@/lib/callItemApi'
 
 export function useUpdateComment(
   projectPath: string,

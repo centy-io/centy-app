@@ -14,7 +14,7 @@ import {
   NotFoundState,
 } from './UserDetailStates'
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
-import { DeleteConfirmDialog } from '@/components/shared/DeleteConfirmDialog'
+import { DeleteConfirm } from '@/components/shared/DeleteConfirm'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 interface UserDetailProps {
@@ -72,7 +72,7 @@ export function UserDetail({ userId }: UserDetailProps) {
       />
       {data.error && <DaemonErrorMessage error={data.error} />}
       {data.showDeleteConfirm && (
-        <DeleteConfirmDialog
+        <DeleteConfirm
           message="Are you sure you want to delete this user?"
           onCancel={() => data.setShowDeleteConfirm(false)}
           onConfirm={data.handleDelete}

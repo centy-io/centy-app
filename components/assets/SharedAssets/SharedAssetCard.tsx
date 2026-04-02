@@ -1,5 +1,6 @@
 'use client'
 
+import { DeleteConfirm } from '@/components/shared/DeleteConfirm'
 import type { Asset } from '@/gen/centy_pb'
 
 interface SharedAssetCardProps {
@@ -52,26 +53,12 @@ export function SharedAssetCard({
         x
       </button>
       {deleteConfirm === asset.filename && (
-        <div className="delete-confirm-overlay">
-          <p className="delete-confirm-message">
-            Delete &ldquo;{asset.filename}&rdquo;?
-          </p>
-          <div className="delete-confirm-actions">
-            <button
-              onClick={() => onDeleteConfirm(null)}
-              className="cancel-btn"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={() => onDelete(asset.filename)}
-              disabled={deleting}
-              className="confirm-delete-btn"
-            >
-              {deleting ? 'Deleting...' : 'Delete'}
-            </button>
-          </div>
-        </div>
+        <DeleteConfirm
+          message={`Delete "${asset.filename}"?`}
+          deleting={deleting}
+          onCancel={() => onDeleteConfirm(null)}
+          onConfirm={() => onDelete(asset.filename)}
+        />
       )}
     </div>
   )

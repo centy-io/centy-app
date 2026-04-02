@@ -1,9 +1,9 @@
 'use client'
 
-import { OrgDeleteConfirm } from './OrgDeleteConfirm'
 import { OrgDetailContent } from './OrgDetailContent'
 import { OrgDetailHeader } from './OrgDetailHeader'
 import type { OrganizationDetailViewProps } from './OrganizationDetailViewProps'
+import { DeleteConfirm } from '@/components/shared/DeleteConfirm'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 export function OrganizationDetailView(
@@ -45,14 +45,23 @@ export function OrganizationDetailView(
       />
       {error && <DaemonErrorMessage error={error} />}
       {showDeleteConfirm && (
-        <OrgDeleteConfirm
-          projects={projects}
+        <DeleteConfirm
+          message="Are you sure you want to delete this organization?"
           deleting={deleting}
-          deleteError={deleteError}
-          handleDelete={handleDelete}
-          setShowDeleteConfirm={setShowDeleteConfirm}
-          setDeleteError={setDeleteError}
-        />
+          onCancel={() => {
+            setShowDeleteConfirm(false)
+            setDeleteError(null)
+          }}
+          onConfirm={handleDelete}
+          error={deleteError}
+        >
+          {projects.length > 0 && (
+            <p className="delete-warning">
+              This organization has {projects.length} project(s). They will
+              become ungrouped.
+            </p>
+          )}
+        </DeleteConfirm>
       )}
       <OrgDetailContent
         organization={organization}

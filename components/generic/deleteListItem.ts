@@ -1,5 +1,5 @@
 import { create } from '@bufbuild/protobuf'
-import { callItemApi } from './callItemApi'
+import { callItemApi } from '@/lib/callItemApi'
 import { centyClient } from '@/lib/grpc/client'
 import { DeleteItemRequestSchema } from '@/gen/centy_pb'
 

@@ -3,9 +3,9 @@
 import { ArchivedBanner } from './ArchivedBanner'
 import { DetailBody } from './DetailBody'
 import { GenericItemDetailHeader } from './GenericItemDetailHeader'
-import { GenericItemDeleteConfirm } from './GenericItemDeleteConfirm'
 import { buildItemDisplayName } from './buildItemDisplayName'
 import type { useGenericItemDetailState } from './useGenericItemDetailState'
+import { DeleteConfirm } from '@/components/shared/DeleteConfirm'
 import { CommentThread } from '@/components/comments/CommentThread'
 import type { GenericItem } from '@/gen/centy_pb'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
@@ -53,12 +53,12 @@ export function GenericItemContent({
         <ArchivedBanner restoring={restoring} onRestore={handleRestore} />
       )}
       {showDeleteConfirm && (
-        <GenericItemDeleteConfirm
-          itemLabel={item.title || item.id}
+        <DeleteConfirm
+          message={`Delete "${item.title || item.id}"?`}
           deleting={deleting}
           onCancel={() => setShowDeleteConfirm(false)}
           onSoftDelete={handleSoftDelete}
-          onHardDelete={handleDelete}
+          onConfirm={handleDelete}
         />
       )}
       <div className="doc-content">
