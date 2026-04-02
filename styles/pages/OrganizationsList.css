@@ -145,7 +145,7 @@
 /* Delete Confirm (inline) */
 .delete-confirm {
   background: var(--color-danger-light);
-  border: 1px solid rgba(239, 68, 68, 0.2);
+  border: 1px solid var(--color-danger-alpha-20);
   border-radius: var(--radius-lg);
   padding: var(--space-4);
   margin-bottom: var(--space-4);

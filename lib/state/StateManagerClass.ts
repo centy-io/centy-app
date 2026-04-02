@@ -1,5 +1,6 @@
 import type { StateOption } from './StateOption'
 import type { Config } from '@/gen/centy_pb'
+import { colors } from '@/styles/colors'
 
 /**
  * StateManager - Single source of truth for issue state options.
@@ -16,9 +17,9 @@ export class StateManager {
   static {
     StateManager.DEFAULT_STATES = ['open', 'in-progress', 'closed'] as const
     StateManager.DEFAULT_COLORS = {
-      open: '#10b981',
-      'in-progress': '#f59e0b',
-      closed: '#6b7280',
+      open: colors.stateOpen,
+      'in-progress': colors.stateInProgress,
+      closed: colors.stateClosed,
     }
     StateManager.DEFAULT_STATE = 'open'
   }

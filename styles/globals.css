@@ -622,7 +622,7 @@ code {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: var(--color-overlay-light);
   z-index: 998;
   opacity: 0;
   transition: opacity var(--transition-slow);
@@ -787,7 +787,7 @@ main {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.85);
+  background: var(--color-overlay-dark);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -922,15 +922,15 @@ main {
 }
 
 .daemon-status-indicator.connected {
-  border-color: rgba(74, 222, 128, 0.3);
+  border-color: var(--color-success-glow);
 }
 
 .daemon-status-indicator.disconnected {
-  border-color: rgba(239, 68, 68, 0.3);
+  border-color: var(--color-danger-glow);
 }
 
 .daemon-status-indicator.checking {
-  border-color: rgba(251, 191, 36, 0.3);
+  border-color: var(--color-warning-glow);
 }
 
 /* Project Selector */
@@ -1028,7 +1028,7 @@ main {
   padding: 12px 16px;
   color: var(--color-danger);
   font-size: 0.9em;
-  background: rgba(255, 107, 107, 0.1);
+  background: var(--color-error-light);
 }
 
 .project-selector-loading {
@@ -1263,7 +1263,7 @@ main {
 }
 
 .daemon-error-logs code {
-  background: rgba(0, 0, 0, 0.1);
+  background: var(--color-shadow-faint);
   color: inherit;
   font-size: 0.875em;
 }

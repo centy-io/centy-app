@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { StateManager } from '@/lib/state'
+import { colors } from '@/styles/colors'
 
 const DEFAULT_STATE_COLORS = StateManager.getDefaultColors()
 
@@ -17,7 +18,7 @@ export function useStateListHandlers(
     return (
       new Map(Object.entries(stateColors)).get(state) ||
       new Map(Object.entries(DEFAULT_STATE_COLORS)).get(state) ||
-      '#888888'
+      colors.fallback
     )
   }
 

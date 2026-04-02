@@ -1,9 +1,11 @@
+import { colors as colorTokens } from '@/styles/colors'
+
 const DEFAULT_PRIORITY_COLORS: Record<string, string> = {
-  '1': '#ef4444',
-  '2': '#f59e0b',
-  '3': '#10b981',
-  '4': '#3b82f6',
-  '5': '#8b5cf6',
+  '1': colorTokens.priority1,
+  '2': colorTokens.priority2,
+  '3': colorTokens.priority3,
+  '4': colorTokens.priority4,
+  '5': colorTokens.priority5,
 }
 
 export function getPriorityColor(
@@ -11,6 +13,8 @@ export function getPriorityColor(
   level: number
 ): string {
   return (
-    colors[String(level)] || DEFAULT_PRIORITY_COLORS[String(level)] || '#888888'
+    colors[String(level)] ||
+    DEFAULT_PRIORITY_COLORS[String(level)] ||
+    colorTokens.fallback
   )
 }
