@@ -7,7 +7,7 @@ import { UsersListHeader } from './UsersListHeader'
 import { UsersEmptyState } from './UsersEmptyState'
 import { type User } from '@/gen/centy_pb'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
-import { DeleteConfirmDialog } from '@/components/shared/DeleteConfirmDialog'
+import { DeleteConfirm } from '@/components/shared/DeleteConfirm'
 
 interface UsersListContentProps {
   projectPath: string
@@ -67,7 +67,7 @@ export function UsersListContent(props: UsersListContentProps) {
         <>
           {error && <DaemonErrorMessage error={error} />}
           {showDeleteConfirm && (
-            <DeleteConfirmDialog
+            <DeleteConfirm
               message="Are you sure you want to delete this user?"
               onCancel={() => setShowDeleteConfirm(null)}
               onConfirm={() => {
