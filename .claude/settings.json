@@ -182,7 +182,8 @@
       "Bash(git submodule:*)",
       "Bash(pnpm start:*)",
       "Bash(pnpm list:*)",
-      "Bash(gh issue:*)"
+      "Bash(gh issue:*)",
+      "mcp__centy__centy_v1_CentyDaemon_GetConfig"
     ],
     "deny": ["Bash(npm install)", "Bash(gh issue create:*)"]
   },
