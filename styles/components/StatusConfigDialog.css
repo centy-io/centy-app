@@ -108,7 +108,7 @@
 
 .status-config-option.selected {
   border-color: var(--color-primary);
-  background: rgba(99, 102, 241, 0.05);
+  background: var(--color-primary-light);
 }
 
 .status-config-option input[type='radio'] {

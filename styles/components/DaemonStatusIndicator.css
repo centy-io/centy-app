@@ -26,12 +26,10 @@
 
 .daemon-status-indicator.connected .daemon-status-dot {
   background-color: var(--color-success);
-  box-shadow: 0 0 6px rgba(74, 222, 128, 0.5);
 }
 
 .daemon-status-indicator.disconnected .daemon-status-dot {
   background-color: var(--color-danger);
-  box-shadow: 0 0 6px rgba(239, 68, 68, 0.5);
 }
 
 .daemon-status-indicator.checking .daemon-status-dot {
@@ -67,7 +65,6 @@
 
 .daemon-status-indicator.demo .daemon-status-dot {
   background-color: var(--color-demo);
-  box-shadow: 0 0 6px rgba(167, 139, 250, 0.5);
 }
 
 .daemon-status-indicator.demo {

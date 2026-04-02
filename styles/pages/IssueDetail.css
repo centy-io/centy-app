@@ -84,39 +84,33 @@
 }
 
 .ai-plan-btn {
-  background: linear-gradient(135deg, var(--color-primary), #8b5cf6);
+  background: var(--color-primary);
   color: white;
-  box-shadow: 0 2px 4px rgba(99, 102, 241, 0.3);
+  border: 1px solid var(--color-primary-dark);
 }
 
 .ai-plan-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, var(--color-primary-hover), #7c3aed);
-  box-shadow: 0 4px 8px rgba(99, 102, 241, 0.4);
-  transform: translateY(-1px);
+  background: var(--color-primary-hover);
 }
 
 .ai-plan-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-  transform: none;
 }
 
 .vscode-btn {
-  background: linear-gradient(135deg, #007acc, #0098ff);
+  background: #005a9e;
   color: white;
-  box-shadow: 0 2px 4px rgba(0, 122, 204, 0.3);
+  border: 1px solid #004070;
 }
 
 .vscode-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #005a9e, #007acc);
-  box-shadow: 0 4px 8px rgba(0, 122, 204, 0.4);
-  transform: translateY(-1px);
+  background: #004070;
 }
 
 .vscode-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-  transform: none;
 }
 
 .vscode-unavailable-hint {
@@ -152,12 +146,10 @@
 .save-btn {
   background: var(--color-primary);
   color: white;
-  box-shadow: 0 2px 4px rgba(99, 102, 241, 0.3);
 }
 
 .save-btn:hover:not(:disabled) {
   background: var(--color-primary-hover);
-  box-shadow: 0 4px 8px rgba(99, 102, 241, 0.4);
 }
 
 .confirm-delete-btn {
