@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { colors } from '@/styles/colors'
 
 function MobileNotSupportedIcon() {
   return (
@@ -32,7 +31,7 @@ function MobileNotSupportedIcon() {
         y1="2"
         x2="22"
         y2="22"
-        stroke={colors.dangerRed}
+        stroke="var(--color-danger-red)"
         strokeWidth="2.5"
       />
     </svg>

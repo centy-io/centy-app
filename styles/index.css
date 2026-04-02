@@ -29,7 +29,23 @@
   --color-gray-800: #262118;
   --color-gray-900: #150f08;
 
-  /* Overlay colors — see styles/colors.ts for source values */
+  /* Default state colors */
+  --color-state-open: #10b981;
+  --color-state-in-progress: #f59e0b;
+  --color-state-closed: #6b7280;
+
+  /* Default priority colors */
+  --color-priority-1: #ef4444;
+  --color-priority-2: #f59e0b;
+  --color-priority-3: #10b981;
+  --color-priority-4: #3b82f6;
+  --color-priority-5: #8b5cf6;
+
+  /* Fallback and semantic colors */
+  --color-fallback: #888888;
+  --color-danger-red: #ef4444;
+
+  /* Overlay colors */
   --color-overlay: rgba(0, 0, 0, 0.5);
   --color-overlay-dark: rgba(0, 0, 0, 0.85);
   --color-overlay-medium: rgba(0, 0, 0, 0.8);

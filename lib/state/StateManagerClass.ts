@@ -1,6 +1,5 @@
 import type { StateOption } from './StateOption'
 import type { Config } from '@/gen/centy_pb'
-import { colors } from '@/styles/colors'
 
 /**
  * StateManager - Single source of truth for issue state options.
@@ -17,9 +16,9 @@ export class StateManager {
   static {
     StateManager.DEFAULT_STATES = ['open', 'in-progress', 'closed'] as const
     StateManager.DEFAULT_COLORS = {
-      open: colors.stateOpen,
-      'in-progress': colors.stateInProgress,
-      closed: colors.stateClosed,
+      open: 'var(--color-state-open)',
+      'in-progress': 'var(--color-state-in-progress)',
+      closed: 'var(--color-state-closed)',
     }
     StateManager.DEFAULT_STATE = 'open'
   }
@@ -72,7 +71,7 @@ export class StateManager {
     if (configColor) return configColor
     return (
       new Map(Object.entries(StateManager.DEFAULT_COLORS)).get(state) ||
-      '#888888'
+      'var(--color-fallback)'
     )
   }
 
