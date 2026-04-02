@@ -2,9 +2,9 @@
 
 import type { ReactElement, RefObject } from 'react'
 import { StatusDropdown } from './StatusDropdown'
-import { getPriorityClass } from './IssueDetail.types'
 import type { Issue } from '@/gen/centy_pb'
 import { AssigneeSelector } from '@/components/users/AssigneeSelector'
+import { ItemMetadata } from '@/components/shared/ItemMetadata'
 
 interface MetadataProps {
   issue: Issue
@@ -35,48 +35,28 @@ export function Metadata({
   onToggleDropdown,
   onStatusChange,
 }: MetadataProps): ReactElement {
-  const priorityNum = issue.metadata && issue.metadata.priority
-  const derivedLabel =
-    priorityNum === 1
-      ? 'High'
-      : priorityNum === 2
-        ? 'Medium'
-        : priorityNum === 3
-          ? 'Low'
-          : ''
-  const priorityLabel =
-    (issue.metadata && issue.metadata.priorityLabel) || derivedLabel
   return (
     <>
-      <div className="issue-metadata">
-        <StatusDropdown
-          issue={issue}
-          stateManager={stateManager}
-          stateOptions={stateOptions}
-          showStatusDropdown={showStatusDropdown}
-          updatingStatus={updatingStatus}
-          statusDropdownRef={statusDropdownRef}
-          onToggleDropdown={onToggleDropdown}
-          onStatusChange={onStatusChange}
-        />
-        {priorityLabel && (
-          <span className={`priority-badge ${getPriorityClass(priorityLabel)}`}>
-            {priorityLabel}
-          </span>
-        )}
-        <span className="issue-date">
-          Created:{' '}
-          {issue.metadata && issue.metadata.createdAt
-            ? new Date(issue.metadata.createdAt).toLocaleString()
-            : '-'}
-        </span>
-        {issue.metadata && issue.metadata.updatedAt && (
-          <span className="issue-date">
-            Updated: {new Date(issue.metadata.updatedAt).toLocaleString()}
-          </span>
-        )}
-      </div>
-
+      <ItemMetadata
+        statusNode={
+          <StatusDropdown
+            issue={issue}
+            stateManager={stateManager}
+            stateOptions={stateOptions}
+            showStatusDropdown={showStatusDropdown}
+            updatingStatus={updatingStatus}
+            statusDropdownRef={statusDropdownRef}
+            onToggleDropdown={onToggleDropdown}
+            onStatusChange={onStatusChange}
+          />
+        }
+        priority={issue.metadata ? issue.metadata.priority : undefined}
+        priorityLabel={
+          issue.metadata ? issue.metadata.priorityLabel : undefined
+        }
+        createdAt={issue.metadata ? issue.metadata.createdAt : undefined}
+        updatedAt={issue.metadata ? issue.metadata.updatedAt : undefined}
+      />
       <div className="issue-assignees">
         <h4 className="assignees-title">Assignees</h4>
         <AssigneeSelector
