@@ -200,7 +200,6 @@
   font-family: var(--font-mono);
   font-size: 0.875rem;
   font-weight: 600;
-  margin-bottom: var(--space-4);
   cursor: pointer;
   transition: all var(--transition-fast);
 }

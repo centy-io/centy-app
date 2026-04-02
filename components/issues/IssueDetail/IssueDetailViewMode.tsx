@@ -4,7 +4,7 @@ import type { ReactElement } from 'react'
 import { Metadata } from './Metadata'
 import { ViewContent } from './ViewContent'
 import type { IssueDetailBodyProps } from './IssueDetailBody.types'
-import { ItemTitle } from '@/components/shared/ItemView'
+import { ItemTitleWithBadge } from '@/components/shared/ItemView'
 
 interface IssueDetailViewModeProps {
   issue: IssueDetailBodyProps['issue']
@@ -17,6 +17,7 @@ interface IssueDetailViewModeProps {
   assets: IssueDetailBodyProps['assets']
   setAssets: IssueDetailBodyProps['setAssets']
   onToggleDropdown: () => void
+  onBadgeClick: () => void
 }
 
 export function IssueDetailViewMode({
@@ -30,10 +31,24 @@ export function IssueDetailViewMode({
   assets,
   setAssets,
   onToggleDropdown,
+  onBadgeClick,
 }: IssueDetailViewModeProps): ReactElement {
   return (
     <>
-      <ItemTitle>{issue.title}</ItemTitle>
+      <ItemTitleWithBadge
+        badge={
+          <button
+            type="button"
+            className="issue-number-badge"
+            onClick={onBadgeClick}
+            title="Click to copy UUID"
+          >
+            #{issue.displayNumber}
+          </button>
+        }
+      >
+        {issue.title}
+      </ItemTitleWithBadge>
       <Metadata
         issue={issue}
         projectPath={projectPath}

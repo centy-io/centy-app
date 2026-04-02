@@ -45,14 +45,6 @@ export function IssueDetailBody(props: IssueDetailBodyProps): ReactElement {
   )
   return (
     <ItemContent>
-      <button
-        type="button"
-        className="issue-number-badge"
-        onClick={onBadgeClick}
-        title="Click to copy UUID"
-      >
-        #{issue.displayNumber}
-      </button>
       {editState.isEditing ? (
         <EditForm
           projectPath={projectPath}
@@ -81,6 +73,7 @@ export function IssueDetailBody(props: IssueDetailBodyProps): ReactElement {
           assets={assets}
           setAssets={setAssets}
           onToggleDropdown={onToggleDropdown}
+          onBadgeClick={onBadgeClick}
         />
       )}
     </ItemContent>
