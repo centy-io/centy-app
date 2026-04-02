@@ -1,71 +1,35 @@
 'use client'
 
 import { useState } from 'react'
+import { create } from '@bufbuild/protobuf'
+import { DaemonUpdateDialog } from './DaemonUpdateDialog'
+import { centyClient } from '@/lib/grpc/client'
+import { RestartRequestSchema } from '@/gen/centy_pb'
 import { useDaemonStatus } from '@/components/providers/DaemonStatusProvider'
 import { isNewerVersion } from '@/lib/compareVersions'
 import { DAEMON_INSTALL_URL } from '@/lib/constants/urls'
 
 const INSTALL_COMMAND = `curl -fsSL ${DAEMON_INSTALL_URL} | sh`
+const RESTART_COMMAND = 'centy daemon restart'
 
-interface UpdateDialogProps {
-  daemonVersion: string
-  latestDaemonVersion: string
-  copied: boolean
-  onClose: () => void
-  onCopy: () => void
+interface RestartResult {
+  success: boolean
+  message: string
 }
 
-function UpdateDialog({
-  daemonVersion,
-  latestDaemonVersion,
-  copied,
-  onClose,
-  onCopy,
-}: UpdateDialogProps) {
-  return (
-    <div className="daemon-update-overlay" onClick={onClose}>
-      <div className="daemon-update-dialog" onClick={e => e.stopPropagation()}>
-        <div className="daemon-update-dialog-header">
-          <h3 className="daemon-update-dialog-title">
-            Daemon update available
-          </h3>
-          <button
-            className="daemon-update-close-btn"
-            onClick={onClose}
-            aria-label="Close"
-          >
-            ×
-          </button>
-        </div>
-        <p className="daemon-update-dialog-desc">
-          A new version of the centy daemon is available:{' '}
-          <strong className="daemon-update-version">
-            {latestDaemonVersion}
-          </strong>{' '}
-          (current: {daemonVersion}).
-        </p>
-        <p className="daemon-update-dialog-desc">
-          Run the following command to upgrade:
-        </p>
-        <div className="daemon-update-code-block">
-          <code className="daemon-update-command">{INSTALL_COMMAND}</code>
-          <button
-            className="daemon-update-copy-btn"
-            onClick={onCopy}
-            title="Copy to clipboard"
-          >
-            {copied ? '✓' : 'Copy'}
-          </button>
-        </div>
-      </div>
-    </div>
-  )
+async function restartDaemon(): Promise<{ success: boolean; message: string }> {
+  const request = create(RestartRequestSchema, {})
+  const response = await centyClient.restart(request)
+  return { success: response.success, message: response.message || '' }
 }
 
 export function DaemonUpdateBadge() {
   const { daemonVersion, latestDaemonVersion } = useDaemonStatus()
   const [dialogOpen, setDialogOpen] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [restartCopied, setRestartCopied] = useState(false)
+  const [restarting, setRestarting] = useState(false)
+  const [restartResult, setRestartResult] = useState<RestartResult | null>(null)
 
   if (
     !daemonVersion ||
@@ -81,6 +45,29 @@ export function DaemonUpdateBadge() {
     setTimeout(() => setCopied(false), 2000)
   }
 
+  const handleRestartCopy = async () => {
+    await navigator.clipboard.writeText(RESTART_COMMAND)
+    setRestartCopied(true)
+    setTimeout(() => setRestartCopied(false), 2000)
+  }
+
+  const handleRestart = async () => {
+    setRestarting(true)
+    setRestartResult(null)
+    try {
+      const result = await restartDaemon()
+      setRestartResult(result)
+    } catch (err) {
+      setRestartResult({
+        success: false,
+        message:
+          err instanceof Error ? err.message : 'Failed to connect to daemon',
+      })
+    } finally {
+      setRestarting(false)
+    }
+  }
+
   return (
     <>
       <button
@@ -92,12 +79,19 @@ export function DaemonUpdateBadge() {
         <span className="daemon-update-label">Update available</span>
       </button>
       {dialogOpen && (
-        <UpdateDialog
+        <DaemonUpdateDialog
           daemonVersion={daemonVersion}
           latestDaemonVersion={latestDaemonVersion}
           copied={copied}
+          restartCopied={restartCopied}
+          restarting={restarting}
+          restartResult={restartResult}
+          installCommand={INSTALL_COMMAND}
+          restartCommand={RESTART_COMMAND}
           onClose={() => setDialogOpen(false)}
           onCopy={handleCopy}
+          onRestartCopy={handleRestartCopy}
+          onRestart={handleRestart}
         />
       )}
     </>

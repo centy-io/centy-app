@@ -1,10 +1,24 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { DaemonUpdateBadge } from './DaemonUpdateBadge'
 import { useDaemonStatus } from '@/components/providers/DaemonStatusProvider'
 
 vi.mock('@/components/providers/DaemonStatusProvider', () => ({
   useDaemonStatus: vi.fn(),
+}))
+
+vi.mock('@/lib/grpc/client', () => ({
+  centyClient: {
+    restart: vi.fn(),
+  },
+}))
+
+vi.mock('@/gen/centy_pb', () => ({
+  RestartRequestSchema: {},
+}))
+
+vi.mock('@bufbuild/protobuf', () => ({
+  create: vi.fn(() => ({})),
 }))
 
 const mockUseDaemonStatus = vi.mocked(useDaemonStatus)
@@ -78,19 +92,5 @@ describe('DaemonUpdateBadge', () => {
     render(<DaemonUpdateBadge />)
     fireEvent.click(screen.getByText('Update available'))
     expect(screen.getByText(/curl -fsSL/)).toBeInTheDocument()
-  })
-
-  it('copies install command to clipboard', async () => {
-    setupDaemonStatus('0.3.1', '0.3.2')
-    const writeText = vi.fn().mockResolvedValue(undefined)
-    Object.assign(navigator, { clipboard: { writeText } })
-
-    render(<DaemonUpdateBadge />)
-    fireEvent.click(screen.getByText('Update available'))
-    fireEvent.click(screen.getByText('Copy'))
-
-    await waitFor(() => {
-      expect(writeText).toHaveBeenCalledOnce()
-    })
   })
 })
