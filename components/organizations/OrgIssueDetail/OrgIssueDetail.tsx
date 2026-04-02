@@ -11,6 +11,40 @@ import { DeleteConfirm } from '@/components/shared/DeleteConfirm'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
 
+function renderGuardState(
+  state: ReturnType<typeof useOrgIssueDetail>,
+  backLink: string
+): React.JSX.Element | null {
+  if (state.loading) {
+    return (
+      <div className="issue-detail">
+        <div className="loading">Loading issue...</div>
+      </div>
+    )
+  }
+  if (state.error && !state.issue) {
+    return (
+      <div className="issue-detail">
+        <DaemonErrorMessage error={state.error} />
+        <Link href={backLink} className="back-link">
+          Back to Org Issues
+        </Link>
+      </div>
+    )
+  }
+  if (!state.issue) {
+    return (
+      <div className="issue-detail">
+        <div className="error-message">Issue not found</div>
+        <Link href={backLink} className="back-link">
+          Back to Org Issues
+        </Link>
+      </div>
+    )
+  }
+  return null
+}
+
 export function OrgIssueDetail({
   orgSlug,
   issueId,
@@ -27,35 +61,8 @@ export function OrgIssueDetail({
     query: { orgSlug },
   })
 
-  if (state.loading) {
-    return (
-      <div className="issue-detail">
-        <div className="loading">Loading issue...</div>
-      </div>
-    )
-  }
-
-  if (state.error && !state.issue) {
-    return (
-      <div className="issue-detail">
-        <DaemonErrorMessage error={state.error} />
-        <Link href={backLink} className="back-link">
-          Back to Org Issues
-        </Link>
-      </div>
-    )
-  }
-
-  if (!state.issue) {
-    return (
-      <div className="issue-detail">
-        <div className="error-message">Issue not found</div>
-        <Link href={backLink} className="back-link">
-          Back to Org Issues
-        </Link>
-      </div>
-    )
-  }
+  const guardView = renderGuardState(state, backLink)
+  if (guardView) return guardView
 
   return (
     <div className="issue-detail">
