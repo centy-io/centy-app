@@ -23,10 +23,7 @@ vi.mock('@bufbuild/protobuf', () => ({
 
 const mockUseDaemonStatus = vi.mocked(useDaemonStatus)
 
-function setupDaemonStatus(
-  daemonVersion: string | null,
-  latestDaemonVersion: string | null
-) {
+function setupDaemonStatus(daemonUpdateAvailable: boolean) {
   mockUseDaemonStatus.mockReturnValue({
     status: 'connected',
     lastChecked: null,
@@ -36,8 +33,8 @@ function setupDaemonStatus(
     demoProjectPath: '',
     vscodeAvailable: null,
     editors: [],
-    daemonVersion,
-    latestDaemonVersion,
+    daemonVersion: '0.3.1',
+    daemonUpdateAvailable,
   })
 }
 
@@ -46,39 +43,27 @@ describe('DaemonUpdateBadge', () => {
     vi.clearAllMocks()
   })
 
-  it('renders the update badge when a newer version is available', () => {
-    setupDaemonStatus('0.3.1', '0.3.2')
+  it('renders the update badge when an update is available', () => {
+    setupDaemonStatus(true)
     render(<DaemonUpdateBadge />)
     expect(screen.getByText('Update available')).toBeInTheDocument()
   })
 
-  it('does not render when daemon is on latest version', () => {
-    setupDaemonStatus('0.3.2', '0.3.2')
-    const { container } = render(<DaemonUpdateBadge />)
-    expect(container.firstChild).toBeNull()
-  })
-
-  it('does not render when daemonVersion is null', () => {
-    setupDaemonStatus(null, '0.3.2')
-    const { container } = render(<DaemonUpdateBadge />)
-    expect(container.firstChild).toBeNull()
-  })
-
-  it('does not render when latestDaemonVersion is null', () => {
-    setupDaemonStatus('0.3.1', null)
+  it('does not render when no update is available', () => {
+    setupDaemonStatus(false)
     const { container } = render(<DaemonUpdateBadge />)
     expect(container.firstChild).toBeNull()
   })
 
   it('opens dialog when badge is clicked', () => {
-    setupDaemonStatus('0.3.1', '0.3.2')
+    setupDaemonStatus(true)
     render(<DaemonUpdateBadge />)
     fireEvent.click(screen.getByText('Update available'))
     expect(screen.getByText('Daemon update available')).toBeInTheDocument()
   })
 
   it('closes dialog when close button is clicked', () => {
-    setupDaemonStatus('0.3.1', '0.3.2')
+    setupDaemonStatus(true)
     render(<DaemonUpdateBadge />)
     fireEvent.click(screen.getByText('Update available'))
     fireEvent.click(screen.getByLabelText('Close'))
@@ -88,7 +73,7 @@ describe('DaemonUpdateBadge', () => {
   })
 
   it('shows install command in dialog', () => {
-    setupDaemonStatus('0.3.1', '0.3.2')
+    setupDaemonStatus(true)
     render(<DaemonUpdateBadge />)
     fireEvent.click(screen.getByText('Update available'))
     expect(screen.getByText(/curl -fsSL/)).toBeInTheDocument()

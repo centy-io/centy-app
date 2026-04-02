@@ -20,9 +20,8 @@ export function useDaemonStatusState() {
   const [lastChecked, setLastChecked] = useState<Date | null>(null)
   const [hasMounted, setHasMounted] = useState(false)
   const [daemonVersion, setDaemonVersion] = useState<string | null>(null)
-  const [latestDaemonVersion, setLatestDaemonVersion] = useState<string | null>(
-    null
-  )
+  const [daemonUpdateAvailable, setDaemonUpdateAvailable] =
+    useState<boolean>(false)
 
   const { editors, vscodeAvailable, setEditors, setEditorsLoaded } =
     useEditorState()
@@ -30,7 +29,7 @@ export function useDaemonStatusState() {
   const checkDaemonStatus = useCheckDaemonStatus({
     setStatus,
     setDaemonVersion,
-    setLatestDaemonVersion,
+    setDaemonUpdateAvailable,
     setLastChecked,
     setEditors,
     setEditorsLoaded,
@@ -79,6 +78,6 @@ export function useDaemonStatusState() {
     vscodeAvailable,
     editors,
     daemonVersion,
-    latestDaemonVersion,
+    daemonUpdateAvailable,
   }
 }

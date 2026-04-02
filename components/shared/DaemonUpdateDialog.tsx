@@ -22,8 +22,6 @@ function CommandBlock({ command, copied, onCopy }: CommandBlockProps) {
 }
 
 interface DaemonUpdateDialogProps {
-  daemonVersion: string
-  latestDaemonVersion: string
   copied: boolean
   restartCopied: boolean
   restarting: boolean
@@ -37,8 +35,6 @@ interface DaemonUpdateDialogProps {
 }
 
 export function DaemonUpdateDialog({
-  daemonVersion,
-  latestDaemonVersion,
   copied,
   restartCopied,
   restarting,
@@ -66,14 +62,8 @@ export function DaemonUpdateDialog({
           </button>
         </div>
         <p className="daemon-update-dialog-desc">
-          A new version of the centy daemon is available:{' '}
-          <strong className="daemon-update-version">
-            {latestDaemonVersion}
-          </strong>{' '}
-          (current: {daemonVersion}).
-        </p>
-        <p className="daemon-update-dialog-desc">
-          Run the following command to upgrade:
+          A new version of the centy daemon is available. Run the following
+          command to upgrade:
         </p>
         <CommandBlock
           command={installCommand}
