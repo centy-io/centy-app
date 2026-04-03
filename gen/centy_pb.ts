@@ -7,10 +7,8 @@ export * from './centy/v1/generic_item_pb'
 // Legacy types — Issue, Doc and related request/response shapes.
 // These were removed from the canonical proto (centy-io/proto) as the API
 // migrated to the generic-item model. They are kept here as plain TypeScript
-// interfaces so that existing adapters (genericItemToIssue / genericItemToDoc)
-// and demo/test fixtures continue to compile without changes to every call
-// site. No protobuf serialisation is needed for these types; they are only
-// used as data-display objects in the UI.
+// interfaces so that demo/test fixtures continue to compile. No protobuf
+// serialisation is needed for these types.
 // ---------------------------------------------------------------------------
 
 import type { Manifest } from './centy/v1/generic_item_pb'

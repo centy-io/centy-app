@@ -1,9 +1,9 @@
 import type { EditStateSlice } from './EditStateSlice'
 import type { StatusChangeSlice } from './StatusChangeSlice'
-import type { Issue, Asset } from '@/gen/centy_pb'
+import type { GenericItem, Asset } from '@/gen/centy_pb'
 
 export interface IssueDetailBodyProps {
-  issue: Issue
+  issue: GenericItem
   projectPath: string
   issueNumber: string
   editState: EditStateSlice

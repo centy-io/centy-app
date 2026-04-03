@@ -1,4 +1,4 @@
-import type { Issue } from '@/gen/centy_pb'
+import type { GenericItem } from '@/gen/centy_pb'
 import type { ContextMenuItem } from '@/components/shared/ContextMenuItem'
 import type { PinnedItem } from '@/hooks/usePinnedItems'
 
@@ -9,7 +9,7 @@ interface PinActions {
 }
 
 interface BuildMenuParams {
-  issue: Issue
+  issue: GenericItem
   pinActions: PinActions
   onView: () => void
   onMove: () => void
@@ -27,16 +27,16 @@ export function buildContextMenuItems({
 }: BuildMenuParams): ContextMenuItem[] {
   return [
     {
-      label: pinActions.isPinned(issue.issueNumber) ? 'Unpin' : 'Pin',
+      label: pinActions.isPinned(issue.id) ? 'Unpin' : 'Pin',
       onClick: () => {
-        if (pinActions.isPinned(issue.issueNumber)) {
-          pinActions.unpinItem(issue.issueNumber)
+        if (pinActions.isPinned(issue.id)) {
+          pinActions.unpinItem(issue.id)
         } else {
           pinActions.pinItem({
-            id: issue.issueNumber,
+            id: issue.id,
             type: 'issue',
             title: issue.title,
-            displayNumber: issue.displayNumber,
+            displayNumber: issue.metadata ? issue.metadata.displayNumber : 0,
           })
         }
         onClose()
