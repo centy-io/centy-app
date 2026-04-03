@@ -31,13 +31,9 @@ export default [
     },
   },
   {
-    // Use void operator to explicitly discard void return values in arrow function shorthands
     files: ['**/*.ts', '**/*.tsx', '**/*.mts', '**/*.cts'],
     rules: {
-      '@typescript-eslint/no-confusing-void-expression': [
-        'error',
-        { ignoreVoidOperator: true },
-      ],
+      '@typescript-eslint/no-confusing-void-expression': 'error',
       // Numbers are safe and common in template literals
       '@typescript-eslint/restrict-template-expressions': [
         'error',

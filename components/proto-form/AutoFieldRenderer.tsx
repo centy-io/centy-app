@@ -86,7 +86,9 @@ export function AutoFieldRenderer({
             ? String(value)
             : ''
         }
-        onChange={e => void onChange(e.target.value)}
+        onChange={e => {
+          onChange(e.target.value)
+        }}
       />
     </div>
   )

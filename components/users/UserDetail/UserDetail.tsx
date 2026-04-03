@@ -65,8 +65,12 @@ export function UserDetail({ userId }: UserDetailProps) {
         isEditing={data.isEditing}
         saving={data.saving}
         editName={data.editName}
-        onEdit={() => void data.setIsEditing(true)}
-        onDelete={() => void data.setShowDeleteConfirm(true)}
+        onEdit={() => {
+          data.setIsEditing(true)
+        }}
+        onDelete={() => {
+          data.setShowDeleteConfirm(true)
+        }}
         onCancelEdit={handleCancelEdit}
         onSave={() => void data.handleSave()}
       />
@@ -74,7 +78,9 @@ export function UserDetail({ userId }: UserDetailProps) {
       {data.showDeleteConfirm && (
         <DeleteConfirm
           message="Are you sure you want to delete this user?"
-          onCancel={() => void data.setShowDeleteConfirm(false)}
+          onCancel={() => {
+            data.setShowDeleteConfirm(false)
+          }}
           onConfirm={() => void data.handleDelete()}
           deleting={data.deleting}
         />

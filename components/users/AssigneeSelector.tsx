@@ -77,7 +77,7 @@ export function AssigneeSelector({
         options={options}
         value={currentAssignees}
         onChange={() => {
-          void handleChange()
+          handleChange()
         }}
         placeholder="Unassigned"
         className="assignee-multi-select"
