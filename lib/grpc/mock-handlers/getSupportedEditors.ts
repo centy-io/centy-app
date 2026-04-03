@@ -1,14 +1,14 @@
 'use client'
 
 export async function getSupportedEditors(): Promise<{
-  editors: Array<{
+  editors: {
     $typeName: 'centy.v1.EditorInfo'
     name: string
     description: string
     available: boolean
     editorId: string
     terminalWrapper: boolean
-  }>
+  }[]
 }> {
   return {
     editors: [

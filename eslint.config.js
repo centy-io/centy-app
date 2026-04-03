@@ -34,7 +34,6 @@ export default [
       // Dot notation preference (stylistic)
       '@typescript-eslint/dot-notation': 'off',
       // Miscellaneous stylistic rules from stylisticTypeChecked
-      '@typescript-eslint/array-type': 'off',
       '@typescript-eslint/no-base-to-string': 'off',
       '@typescript-eslint/use-unknown-in-catch-callback-variable': 'off',
       '@typescript-eslint/prefer-find': 'off',

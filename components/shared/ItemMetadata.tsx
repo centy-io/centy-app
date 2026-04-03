@@ -28,7 +28,7 @@ interface ItemMetadataProps {
   /** Custom field values keyed by field name. */
   customFields?: Record<string, string>
   /** Config entries that define which custom fields to display and in what order. */
-  customFieldsConfig?: Array<{ name: string }>
+  customFieldsConfig?: { name: string }[]
   /**
    * Content rendered first inside the metadata strip — useful for
    * item-type-specific leading badges (e.g., "Org Issue #5", "ID: abc").

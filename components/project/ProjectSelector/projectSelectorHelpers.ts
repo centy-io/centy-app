@@ -66,7 +66,7 @@ function filterAndSortProjects(
 function buildGroupedProjects(
   visibleProjects: ProjectInfo[],
   selectedOrgSlug: string | null | undefined,
-  organizations: Array<{ slug: string; name: string }>
+  organizations: { slug: string; name: string }[]
 ): GroupedProjects {
   if (selectedOrgSlug !== null && selectedOrgSlug !== undefined) return null
   const groups = new Map<string, { name: string; projects: ProjectInfo[] }>()
