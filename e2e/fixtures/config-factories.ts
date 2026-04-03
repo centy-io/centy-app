@@ -69,7 +69,6 @@ export function createMockProjectInfo(
   overrides?: Partial<ProjectInfo>
 ): ProjectInfo {
   const resolvedOverrides = overrides !== undefined ? overrides : {}
-  const now = FIXED_DATE
 
   return {
     path:
@@ -79,11 +78,11 @@ export function createMockProjectInfo(
     firstAccessed:
       resolvedOverrides.firstAccessed !== undefined
         ? resolvedOverrides.firstAccessed
-        : now,
+        : FIXED_DATE,
     lastAccessed:
       resolvedOverrides.lastAccessed !== undefined
         ? resolvedOverrides.lastAccessed
-        : now,
+        : FIXED_DATE,
     issueCount:
       resolvedOverrides.issueCount !== undefined
         ? resolvedOverrides.issueCount
