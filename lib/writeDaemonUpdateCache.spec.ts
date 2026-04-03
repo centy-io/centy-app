@@ -12,7 +12,7 @@ describe('writeDaemonUpdateCache', () => {
     writeDaemonUpdateCache('1.0.0', true)
     const raw = localStorage.getItem(CACHE_KEY)
     expect(raw).not.toBeNull()
-    const parsed = JSON.parse(raw!)
+    const parsed = JSON.parse(raw || '')
     expect(parsed).toEqual({ daemonVersion: '1.0.0', hasUpdate: true })
   })
 
@@ -20,7 +20,7 @@ describe('writeDaemonUpdateCache', () => {
     writeDaemonUpdateCache('1.0.0', true)
     writeDaemonUpdateCache('1.0.1', false)
     const raw = localStorage.getItem(CACHE_KEY)
-    const parsed = JSON.parse(raw!)
+    const parsed = JSON.parse(raw || '')
     expect(parsed).toEqual({ daemonVersion: '1.0.1', hasUpdate: false })
   })
 })

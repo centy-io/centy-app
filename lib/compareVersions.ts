@@ -8,8 +8,10 @@ export function isNewerVersion(versionA: string, versionB: string): boolean {
   const bQueue = normalize(versionB).split('.').map(Number)
 
   while (aQueue.length > 0 || bQueue.length > 0) {
-    const a = aQueue.length > 0 ? aQueue.shift()! : 0
-    const b = bQueue.length > 0 ? bQueue.shift()! : 0
+    const aShifted = aQueue.shift()
+    const a = aShifted !== undefined ? aShifted : 0
+    const bShifted = bQueue.shift()
+    const b = bShifted !== undefined ? bShifted : 0
     if (b > a) return true
     if (b < a) return false
   }
