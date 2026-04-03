@@ -52,8 +52,7 @@ export class StateManager {
    */
   getDefaultState(): string {
     return (
-      (this.config && this.config.defaults.status) ||
-      StateManager.DEFAULT_STATE
+      (this.config && this.config.defaults.status) || StateManager.DEFAULT_STATE
     )
   }
 
