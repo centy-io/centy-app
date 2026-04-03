@@ -19,8 +19,8 @@ export function genericItemToDoc(item: GenericItem): Doc {
       createdAt: (meta && meta.createdAt) || '',
       updatedAt: (meta && meta.updatedAt) || '',
       deletedAt: (meta && meta.deletedAt) || '',
-      isOrgDoc: cf['is_org_doc'] === 'true',
-      orgSlug: cf['org_slug'] || '',
+      isOrgDoc: cf.is_org_doc === 'true',
+      orgSlug: cf.org_slug || '',
     },
   }
 }

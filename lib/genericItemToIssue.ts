@@ -24,13 +24,13 @@ export function genericItemToIssue(item: GenericItem): Issue {
       createdAt: (meta && meta.createdAt) || '',
       updatedAt: (meta && meta.updatedAt) || '',
       customFields: {},
-      priorityLabel: cf['priority_label'] || '',
-      draft: cf['draft'] === 'true',
+      priorityLabel: cf.priority_label || '',
+      draft: cf.draft === 'true',
       deletedAt: (meta && meta.deletedAt) || '',
-      isOrgIssue: cf['is_org_issue'] === 'true',
-      orgSlug: cf['org_slug'] || '',
-      orgDisplayNumber: cf['org_display_number']
-        ? parseInt(cf['org_display_number'], 10)
+      isOrgIssue: cf.is_org_issue === 'true',
+      orgSlug: cf.org_slug || '',
+      orgDisplayNumber: cf.org_display_number
+        ? parseInt(cf.org_display_number, 10)
         : 0,
     },
   }
