@@ -1,1 +1,2 @@
+pnpm proto
 pnpm exec lint-staged
