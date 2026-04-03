@@ -8,5 +8,7 @@ export function updateState(
   const store = pinnedItemsStoreState.getOrCreate(projectPath)
   store.state = updater(store.state)
   pinnedItemsStoreState.save(projectPath, store.state)
-  store.listeners.forEach(listener => listener())
+  store.listeners.forEach(listener => {
+    listener()
+  })
 }

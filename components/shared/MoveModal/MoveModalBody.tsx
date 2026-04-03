@@ -35,7 +35,9 @@ export function MoveModalBody({ props, state }: MoveModalBodyProps) {
           <input
             type="text"
             value={state.newSlug}
-            onChange={e => state.setNewSlug(e.target.value)}
+            onChange={e => {
+              state.setNewSlug(e.target.value)
+            }}
             placeholder={props.entityId}
             className="move-modal-input"
           />

@@ -39,7 +39,9 @@ export function useGenericItemCreate(itemType: string) {
         displayName,
         setLoading,
         setError,
-        id => router.push(createLink(`/${itemType}/${id}`))
+        id => {
+          router.push(createLink(`/${itemType}/${id}`))
+        }
       )
     },
     [

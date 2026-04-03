@@ -44,7 +44,9 @@ export function OrgGroup({
             project={project}
             orgSlug={orgSlug}
             orgName={groupName}
-            onClick={() => onProjectClick(project)}
+            onClick={() => {
+              onProjectClick(project)
+            }}
             onToggleFavorite={onToggleFavorite}
           />
         ))}

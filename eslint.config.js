@@ -24,8 +24,6 @@ export default [
       '@typescript-eslint/prefer-optional-chain': 'off',
       // Next.js requires generateStaticParams to be async even without await
       '@typescript-eslint/require-await': 'off',
-      // Common React event handler pattern: onClick={() => handler()}
-      '@typescript-eslint/no-confusing-void-expression': 'off',
       // Promise-returning functions in React event handlers (e.g. onClick={asyncFn})
       '@typescript-eslint/no-misused-promises': 'off',
       // Template literal with non-string types (stylistic strictness)

@@ -50,7 +50,9 @@ export function EditorSelector({
         />
         <button
           className={`editor-dropdown-btn ${state.preferredEditor === 'terminal' ? 'terminal' : 'vscode'}`}
-          onClick={() => state.setShowDropdown(!state.showDropdown)}
+          onClick={() => {
+            state.setShowDropdown(!state.showDropdown)
+          }}
           disabled={resolvedDisabled || resolvedLoading}
           aria-label="Select editor"
           aria-expanded={state.showDropdown}

@@ -33,7 +33,9 @@ export function GenericCreateFormFields({
               className="form-input"
               id="status"
               value={status}
-              onChange={e => setStatus(e.target.value)}
+              onChange={e => {
+                setStatus(e.target.value)
+              }}
             >
               {config.statuses.map(s => (
                 <option key={s} value={s} className="form-option">
@@ -55,12 +57,12 @@ export function GenericCreateFormFields({
               className="form-input"
               id={`field-${field.name}`}
               value={customFields[field.name] || ''}
-              onChange={e =>
+              onChange={e => {
                 setCustomFields({
                   ...customFields,
                   [field.name]: e.target.value,
                 })
-              }
+              }}
               placeholder={field.name}
               rows={3}
               required={field.required}

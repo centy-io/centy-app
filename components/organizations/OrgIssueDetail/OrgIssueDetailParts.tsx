@@ -12,11 +12,18 @@ export function IssueActions({ state }: IssueActionsProps): React.JSX.Element {
   if (!state.isEditing) {
     return (
       <>
-        <button onClick={() => state.setIsEditing(true)} className="edit-btn">
+        <button
+          onClick={() => {
+            state.setIsEditing(true)
+          }}
+          className="edit-btn"
+        >
           Edit
         </button>
         <button
-          onClick={() => state.setShowDeleteConfirm(true)}
+          onClick={() => {
+            state.setShowDeleteConfirm(true)
+          }}
           className="delete-btn"
         >
           Delete

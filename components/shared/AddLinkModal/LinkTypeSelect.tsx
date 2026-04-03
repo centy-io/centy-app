@@ -19,7 +19,9 @@ export function LinkTypeSelect({
   return (
     <select
       value={selectedLinkType}
-      onChange={e => setSelectedLinkType(e.target.value)}
+      onChange={e => {
+        setSelectedLinkType(e.target.value)
+      }}
       className="link-modal-select"
     >
       {linkTypes.map(type => (

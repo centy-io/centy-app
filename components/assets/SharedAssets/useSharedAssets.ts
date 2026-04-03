@@ -48,7 +48,9 @@ export function useSharedAssets(
 
   useEffect(() => {
     const timeoutId = setTimeout(() => checkInit(projectPath), 300)
-    return () => clearTimeout(timeoutId)
+    return () => {
+      clearTimeout(timeoutId)
+    }
   }, [projectPath, checkInit])
 
   useEffect(() => {

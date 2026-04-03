@@ -40,7 +40,9 @@ export function ProjectGroupList({
           <div key={orgSlug || '__ungrouped'} className="project-group">
             <button
               className="project-group-header"
-              onClick={() => toggleOrgCollapse(orgSlug)}
+              onClick={() => {
+                toggleOrgCollapse(orgSlug)
+              }}
               aria-expanded={!isCollapsed}
             >
               <span

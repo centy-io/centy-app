@@ -49,7 +49,9 @@ export function ListFieldRenderer({
               <button
                 type="button"
                 className="proto-form-tag-remove"
-                onClick={() => handleRemove(i)}
+                onClick={() => {
+                  handleRemove(i)
+                }}
                 aria-label={`Remove ${String(item)}`}
               >
                 ×
@@ -64,7 +66,9 @@ export function ListFieldRenderer({
           type="text"
           className="proto-form-input"
           value={newItem}
-          onChange={e => setNewItem(e.target.value)}
+          onChange={e => {
+            setNewItem(e.target.value)
+          }}
           onKeyDown={handleKeyDown}
           placeholder={`Add ${label.toLowerCase()} item`}
         />

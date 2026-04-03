@@ -21,7 +21,9 @@ export function OrgIssueEditForm({ state }: OrgIssueEditFormProps) {
           id="edit-title"
           type="text"
           value={state.editTitle}
-          onChange={e => state.setEditTitle(e.target.value)}
+          onChange={e => {
+            state.setEditTitle(e.target.value)
+          }}
           placeholder="Issue title"
         />
       </div>
@@ -34,7 +36,9 @@ export function OrgIssueEditForm({ state }: OrgIssueEditFormProps) {
           className="form-select"
           id="edit-priority"
           value={state.editPriority}
-          onChange={e => state.setEditPriority(Number(e.target.value))}
+          onChange={e => {
+            state.setEditPriority(Number(e.target.value))
+          }}
         >
           <option className="form-option" value={1}>
             High
@@ -56,7 +60,9 @@ export function OrgIssueEditForm({ state }: OrgIssueEditFormProps) {
           className="form-select"
           id="edit-status"
           value={state.editStatus}
-          onChange={e => state.setEditStatus(e.target.value)}
+          onChange={e => {
+            state.setEditStatus(e.target.value)
+          }}
         >
           {state.stateOptions.map(opt => (
             <option className="form-option" key={opt.value} value={opt.value}>

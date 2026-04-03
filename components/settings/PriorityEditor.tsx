@@ -40,7 +40,9 @@ export function PriorityEditor({
         <select
           id="priority-levels"
           value={levels}
-          onChange={e => handleLevelsChange(Number(e.target.value))}
+          onChange={e => {
+            handleLevelsChange(Number(e.target.value))
+          }}
           className="priority-levels-select"
         >
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => (
@@ -58,7 +60,9 @@ export function PriorityEditor({
             level={level}
             totalLevels={levels}
             color={getPriorityColor(colors, level)}
-            onColorChange={color => handleColorChange(level, color)}
+            onColorChange={color => {
+              handleColorChange(level, color)
+            }}
           />
         ))}
       </div>

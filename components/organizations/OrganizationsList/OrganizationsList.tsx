@@ -58,7 +58,9 @@ export function OrganizationsList(): React.JSX.Element {
           items={state.contextMenuItems}
           x={state.contextMenu.x}
           y={state.contextMenu.y}
-          onClose={() => state.setContextMenu(null)}
+          onClose={() => {
+            state.setContextMenu(null)
+          }}
         />
       )}
     </div>

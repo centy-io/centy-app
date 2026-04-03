@@ -54,23 +54,25 @@ export function useInitProject() {
     projectPath,
     setStep,
     setError,
-    setResult: r => setResult(r),
-    setPlan: p => setPlan(p),
+    setResult: r => {
+      setResult(r)
+    },
+    setPlan: p => {
+      setPlan(p)
+    },
     setSelectedRestore,
     setSelectedReset,
     selectedRestore,
     selectedReset,
   })
 
-  const toggleRestore = useCallback(
-    (path: string) => setSelectedRestore(prev => toggleSetItem(prev, path)),
-    []
-  )
+  const toggleRestore = useCallback((path: string) => {
+    setSelectedRestore(prev => toggleSetItem(prev, path))
+  }, [])
 
-  const toggleReset = useCallback(
-    (path: string) => setSelectedReset(prev => toggleSetItem(prev, path)),
-    []
-  )
+  const toggleReset = useCallback((path: string) => {
+    setSelectedReset(prev => toggleSetItem(prev, path))
+  }, [])
 
   const handleReset = useCallback(() => {
     setStep('input')

@@ -19,7 +19,9 @@ export function DaemonDisconnectedOverlay() {
   const handleCopy = async () => {
     await navigator.clipboard.writeText(INSTALL_COMMAND)
     setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    setTimeout(() => {
+      setCopied(false)
+    }, 2000)
   }
 
   return (

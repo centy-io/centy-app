@@ -59,7 +59,9 @@ export const AssetUploader = forwardRef<
           {uploader.error}
           <button
             className="asset-dismiss-btn"
-            onClick={() => uploader.setError(null)}
+            onClick={() => {
+              uploader.setError(null)
+            }}
           >
             Dismiss
           </button>
