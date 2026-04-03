@@ -29,15 +29,9 @@ export const CONFIG_FIELD_GROUPS: FieldGroup[] = [
           states={allowedStates}
           stateColors={stateColors}
           defaultState={defaultState}
-          onStatesChange={states => {
-            onChange({ allowedStates: states })
-          }}
-          onColorsChange={colors => {
-            onChange({ stateColors: colors })
-          }}
-          onDefaultChange={ds => {
-            onChange({ defaultState: ds })
-          }}
+          onStatesChange={states => void onChange({ allowedStates: states })}
+          onColorsChange={colors => void onChange({ stateColors: colors })}
+          onDefaultChange={ds => void onChange({ defaultState: ds })}
         />
       )
     },
@@ -54,12 +48,8 @@ export const CONFIG_FIELD_GROUPS: FieldGroup[] = [
         <PriorityEditor
           levels={priorityLevels}
           colors={priorityColors}
-          onLevelsChange={levels => {
-            onChange({ priorityLevels: levels })
-          }}
-          onColorsChange={colors => {
-            onChange({ priorityColors: colors })
-          }}
+          onLevelsChange={levels => void onChange({ priorityLevels: levels })}
+          onColorsChange={colors => void onChange({ priorityColors: colors })}
         />
       )
     },
@@ -72,9 +62,7 @@ export const CONFIG_FIELD_GROUPS: FieldGroup[] = [
     render: ({ value, onChange }) => (
       <CustomFieldsEditor
         fields={toCustomFields(value.customFields)}
-        onChange={fields => {
-          onChange({ customFields: fields })
-        }}
+        onChange={fields => void onChange({ customFields: fields })}
       />
     ),
   },
@@ -86,9 +74,7 @@ export const CONFIG_FIELD_GROUPS: FieldGroup[] = [
     render: ({ value, onChange }) => (
       <DefaultsEditor
         value={toStringRecord(value.defaults)}
-        onChange={d => {
-          onChange({ defaults: d })
-        }}
+        onChange={d => void onChange({ defaults: d })}
         suggestedKeys={toCustomFields(value.customFields).map(f => f.name)}
       />
     ),
@@ -101,9 +87,7 @@ export const CONFIG_FIELD_GROUPS: FieldGroup[] = [
     render: ({ value, onChange }) => (
       <WorkspaceSettingsEditor
         value={toWorkspaceConfig(value.workspace)}
-        onChange={ws => {
-          onChange({ workspace: ws })
-        }}
+        onChange={ws => void onChange({ workspace: ws })}
       />
     ),
   },
