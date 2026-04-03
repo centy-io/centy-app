@@ -8,7 +8,9 @@ function getStorageKey(projectPath: string): string {
 }
 
 function toPinnedItemArray(val: unknown): PinnedItem[] {
-  return Array.isArray(val) ? val : []
+  if (!Array.isArray(val)) return []
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  return val
 }
 
 function loadFromStorage(projectPath: string): PinnedItemsState {

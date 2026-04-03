@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { setupDemoMode, navigateToDemoProject } from '../../utils/test-helpers'
 
-interface IssueDraft {
+interface DraftIssue {
   title: string
   description: string
   priority: number
@@ -17,9 +17,11 @@ test.describe('Create Issue Form - Draft persistence', () => {
     await page.locator('input#title').fill('Draft issue title')
     await page.waitForTimeout(100)
 
-    const draft = await page.evaluate<IssueDraft | null>((key: string) => {
+    const draft = await page.evaluate<DraftIssue | null>((key: string) => {
       const raw = localStorage.getItem(key)
-      return raw ? JSON.parse(raw) : null
+      if (!raw) return null
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return JSON.parse(raw)
     }, DRAFT_STORAGE_KEY)
 
     expect(draft).not.toBeNull()
@@ -71,9 +73,11 @@ test.describe('Create Issue Form - Draft persistence', () => {
     await page.locator('select#priority').selectOption('3')
     await page.waitForTimeout(100)
 
-    const draft = await page.evaluate<IssueDraft | null>((key: string) => {
+    const draft = await page.evaluate<DraftIssue | null>((key: string) => {
       const raw = localStorage.getItem(key)
-      return raw ? JSON.parse(raw) : null
+      if (!raw) return null
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return JSON.parse(raw)
     }, DRAFT_STORAGE_KEY)
 
     expect(draft).not.toBeNull()

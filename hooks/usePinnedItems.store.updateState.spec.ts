@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { subscribe, getSnapshot, updateState } from './usePinnedItems.store'
+import type { PinnedItemsState } from './pinnedItemsState'
 
 let testCounter = 0
 function uniquePath(): string {

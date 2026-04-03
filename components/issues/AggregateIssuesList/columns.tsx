@@ -66,7 +66,7 @@ function makeStatusColumn(stateManager: StateManager) {
         )
       },
       enableColumnFilter: true,
-      filterFn: (row, columnId, filterValue) => {
+      filterFn: (row, columnId, filterValue: string[]) => {
         const selectedValues = Array.isArray(filterValue) ? filterValue : []
         return (
           selectedValues.length === 0 ||
@@ -85,7 +85,7 @@ function makeDisplayNumberColumn() {
       header: '#',
       cell: info => `#${info.getValue()}`,
       enableColumnFilter: true,
-      filterFn: (row, columnId, filterValue) =>
+      filterFn: (row, columnId, filterValue: string) =>
         String(row.getValue(columnId)).includes(filterValue),
     }
   )

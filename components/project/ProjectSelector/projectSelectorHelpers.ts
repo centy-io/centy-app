@@ -28,7 +28,12 @@ function loadCollapsedOrgs(): Set<string> {
   if (typeof window === 'undefined') return new Set()
   try {
     const s = localStorage.getItem(COLLAPSED_ORGS_KEY)
-    return s ? new Set(JSON.parse(s)) : new Set()
+    if (!s) return new Set()
+    const parsed: unknown = JSON.parse(s)
+    if (!Array.isArray(parsed)) return new Set()
+    return new Set(
+      parsed.filter((item): item is string => typeof item === 'string')
+    )
   } catch {
     return new Set()
   }
