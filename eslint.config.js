@@ -31,8 +31,6 @@ export default [
       '@typescript-eslint/no-unnecessary-condition': 'off',
       // Empty functions (e.g. no-op callbacks)
       '@typescript-eslint/no-empty-function': 'off',
-      // Dot notation preference (stylistic)
-      '@typescript-eslint/dot-notation': 'off',
       // Miscellaneous stylistic rules from stylisticTypeChecked
       '@typescript-eslint/array-type': 'off',
       '@typescript-eslint/no-base-to-string': 'off',
