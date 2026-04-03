@@ -63,8 +63,9 @@ export function useProjectsData() {
       })
       const response = await centyClient.setProjectFavorite(request)
       if (response.success && response.project) {
+        const updated = response.project
         setProjects(prev =>
-          prev.map(p => (p.path === project.path ? response.project! : p))
+          prev.map(p => (p.path === project.path ? updated : p))
         )
       }
     } catch (err) {

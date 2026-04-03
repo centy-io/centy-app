@@ -19,8 +19,8 @@ export default [
       '@typescript-eslint/restrict-template-expressions': 'off',
       // Unhandled floating promises
       '@typescript-eslint/no-floating-promises': 'off',
-      // Non-null assertions (!): banned by strictTypeChecked, used across codebase
-      '@typescript-eslint/no-non-null-assertion': 'off',
+      // Non-null assertions (!): banned by strictTypeChecked, all usages replaced with proper null checks
+      '@typescript-eslint/no-non-null-assertion': 'error',
       // Type-unsafe operations involving any
       '@typescript-eslint/no-unsafe-return': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
@@ -31,10 +31,7 @@ export default [
       '@typescript-eslint/no-unnecessary-condition': 'off',
       // Empty functions (e.g. no-op callbacks)
       '@typescript-eslint/no-empty-function': 'off',
-      // Dot notation preference (stylistic)
-      '@typescript-eslint/dot-notation': 'off',
       // Miscellaneous stylistic rules from stylisticTypeChecked
-      '@typescript-eslint/array-type': 'off',
       '@typescript-eslint/no-base-to-string': 'off',
       '@typescript-eslint/use-unknown-in-catch-callback-variable': 'off',
       '@typescript-eslint/prefer-regexp-exec': 'off',

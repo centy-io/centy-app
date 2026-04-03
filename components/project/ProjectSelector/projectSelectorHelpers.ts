@@ -66,18 +66,20 @@ function filterAndSortProjects(
 function buildGroupedProjects(
   visibleProjects: ProjectInfo[],
   selectedOrgSlug: string | null | undefined,
-  organizations: Array<{ slug: string; name: string }>
+  organizations: { slug: string; name: string }[]
 ): GroupedProjects {
   if (selectedOrgSlug !== null && selectedOrgSlug !== undefined) return null
   const groups = new Map<string, { name: string; projects: ProjectInfo[] }>()
   groups.set('', { name: 'Ungrouped', projects: [] })
   for (const p of visibleProjects) {
     const s = p.organizationSlug || ''
-    if (!groups.has(s)) {
+    let group = groups.get(s)
+    if (!group) {
       const o = organizations.find(o => o.slug === s)
-      groups.set(s, { name: (o ? o.name : '') || s, projects: [] })
+      group = { name: (o ? o.name : '') || s, projects: [] }
+      groups.set(s, group)
     }
-    groups.get(s)!.projects.push(p)
+    group.projects.push(p)
   }
   return Array.from(groups.entries())
     .filter(([, g]) => g.projects.length > 0)
