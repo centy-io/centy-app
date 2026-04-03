@@ -46,7 +46,7 @@ export function createUserColumns() {
         return usernames.length > 0 ? usernames.join(', ') : '-'
       },
       enableColumnFilter: true,
-      filterFn: (row, columnId, filterValue) => {
+      filterFn: (row, columnId, filterValue: string) => {
         const val = row.getValue(columnId)
         const usernames: string[] = Array.isArray(val) ? val : []
         return usernames.some(u =>
