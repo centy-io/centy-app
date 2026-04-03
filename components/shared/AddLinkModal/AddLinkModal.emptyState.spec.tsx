@@ -6,7 +6,7 @@ import {
   makeListItemsResponse,
 } from './AddLinkModal.spec-utils'
 import { AddLinkModal } from '.'
-import { LinkTargetType, type Link as LinkType } from '@/gen/centy_pb'
+import type { Link as LinkType } from '@/gen/centy_pb'
 import { centyClient } from '@/lib/grpc/client'
 
 vi.mock('@/lib/grpc/client', () => ({
@@ -82,7 +82,7 @@ describe('AddLinkModal - Empty state and exclusions', () => {
     const existingLinks: LinkType[] = [
       {
         targetId: 'issue-1',
-        targetType: LinkTargetType.ISSUE,
+        targetItemType: 'issue',
         linkType: 'blocks',
         createdAt: '2026-01-01T00:00:00Z',
         $typeName: 'centy.v1.Link',

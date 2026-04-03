@@ -12,11 +12,10 @@ import {
 import { centyClient } from '@/lib/grpc/client'
 
 function getInverseLinkTypeName(
-  linkTypes: LinkTypeInfo[],
+  _linkTypes: LinkTypeInfo[],
   linkType: string
 ): string {
-  const type = linkTypes.find(t => t.name === linkType)
-  return (type ? type.inverse : '') || linkType
+  return linkType
 }
 
 function getEntityLabel(item: EntityItem): string {

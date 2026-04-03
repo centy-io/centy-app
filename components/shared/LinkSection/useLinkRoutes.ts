@@ -1,10 +1,9 @@
 import { useCallback, useMemo } from 'react'
 import { useParams } from 'next/navigation'
 import { route, type RouteLiteral } from 'nextjs-routes'
-import { LinkTargetType } from '@/gen/centy_pb'
 
 export function useLinkRoutes(): {
-  buildLinkRoute: (targetType: LinkTargetType, targetId: string) => RouteLiteral
+  buildLinkRoute: (targetItemType: string, targetId: string) => RouteLiteral
 } {
   const params = useParams()
 
@@ -18,27 +17,19 @@ export function useLinkRoutes(): {
   }, [params])
 
   const buildLinkRoute = useCallback(
-    (targetType: LinkTargetType, targetId: string): RouteLiteral => {
+    (targetItemType: string, targetId: string): RouteLiteral => {
       if (!projectContext) return route({ pathname: '/' })
-      const targetTypeName =
-        targetType === LinkTargetType.ISSUE
-          ? 'issue'
-          : targetType === LinkTargetType.DOC
-            ? 'doc'
-            : 'unknown'
-      switch (targetTypeName) {
-        case 'issue':
-          return route({
-            pathname: '/[organization]/[project]/issues/[issueId]',
-            query: { ...projectContext, issueId: targetId },
-          })
-        case 'doc':
-          return route({
-            pathname: '/[organization]/[project]/docs/[slug]',
-            query: { ...projectContext, slug: targetId },
-          })
-        case 'unknown':
-          return route({ pathname: '/' })
+      if (targetItemType === 'issue') {
+        return route({
+          pathname: '/[organization]/[project]/issues/[issueId]',
+          query: { ...projectContext, issueId: targetId },
+        })
+      }
+      if (targetItemType === 'doc') {
+        return route({
+          pathname: '/[organization]/[project]/docs/[slug]',
+          query: { ...projectContext, slug: targetId },
+        })
       }
       return route({ pathname: '/' })
     },

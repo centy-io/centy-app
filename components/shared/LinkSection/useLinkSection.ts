@@ -3,7 +3,6 @@ import { create } from '@bufbuild/protobuf'
 import { useLinkRoutes } from './useLinkRoutes'
 import { deleteLinkRequest } from './deleteLinkRequest'
 import { removeLinkFromList } from './removeLinkFromList'
-import { toLinkTargetType } from './toLinkTargetType'
 import { centyClient } from '@/lib/grpc/client'
 import { ListLinksRequestSchema, type Link as LinkType } from '@/gen/centy_pb'
 import { usePathContext } from '@/components/providers/PathContextProvider'
@@ -25,7 +24,7 @@ export function useLinkSection(entityId: string, entityType: 'issue' | 'doc') {
       const request = create(ListLinksRequestSchema, {
         projectPath,
         entityId,
-        entityType: toLinkTargetType(entityType),
+        entityItemType: entityType,
       })
       const response = await centyClient.listLinks(request)
       setLinks(response.links)
@@ -46,12 +45,7 @@ export function useLinkSection(entityId: string, entityType: 'issue' | 'doc') {
       setDeletingLinkId(`${link.targetId}-${link.linkType}`)
       setError(null)
       try {
-        const result = await deleteLinkRequest(
-          projectPath,
-          entityId,
-          entityType,
-          link
-        )
+        const result = await deleteLinkRequest(projectPath, link)
         if (result.success) {
           setLinks(prev => removeLinkFromList(prev, link))
         } else {
@@ -63,7 +57,7 @@ export function useLinkSection(entityId: string, entityType: 'issue' | 'doc') {
         setDeletingLinkId(null)
       }
     },
-    [projectPath, entityId, entityType]
+    [projectPath, entityId]
   )
 
   const handleLinkCreated = useCallback(() => {

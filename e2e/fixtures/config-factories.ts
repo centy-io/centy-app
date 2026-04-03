@@ -29,7 +29,6 @@ export function createMockConfig(overrides?: Partial<Config>): Config {
     },
     customLinkTypes: resolvedOverrides.customLinkTypes ?? [],
     defaultEditor: resolvedOverrides.defaultEditor ?? '',
-    hooks: resolvedOverrides.hooks ?? [],
     userValues: resolvedOverrides.userValues ?? {},
     $typeName: 'centy.v1.Config',
   }

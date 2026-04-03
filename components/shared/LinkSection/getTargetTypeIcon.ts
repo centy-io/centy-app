@@ -1,12 +1,9 @@
-import { LinkTargetType } from '@/gen/centy_pb'
-
-export function getTargetTypeIcon(targetType: LinkTargetType): string {
-  switch (targetType) {
-    case LinkTargetType.ISSUE:
-      return '!'
-    case LinkTargetType.DOC:
-      return 'D'
-    case LinkTargetType.UNSPECIFIED:
-      return '?'
+export function getTargetTypeIcon(targetItemType: string): string {
+  if (targetItemType === 'issue') {
+    return '!'
   }
+  if (targetItemType === 'doc') {
+    return 'D'
+  }
+  return '?'
 }

@@ -4,7 +4,6 @@ import type { AddLinkModalProps } from '../AddLinkModal'
 import { createMockLink } from './LinkSection.spec-utils'
 import { LinkSection } from '.'
 import { centyClient } from '@/lib/grpc/client'
-import { LinkTargetType } from '@/gen/centy_pb'
 
 vi.mock('@/lib/grpc/client', () => ({
   centyClient: {
@@ -72,7 +71,7 @@ describe('LinkSection - Initial state', () => {
         createMockLink({
           targetId: 'doc-1',
           linkType: 'related-to',
-          targetType: LinkTargetType.DOC,
+          targetItemType: 'doc',
         }),
       ],
       totalCount: 3,

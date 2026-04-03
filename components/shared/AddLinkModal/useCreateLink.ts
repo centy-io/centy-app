@@ -2,12 +2,7 @@ import { useState, useCallback } from 'react'
 import { create } from '@bufbuild/protobuf'
 import type { EntityItem } from './AddLinkModal.types'
 import { centyClient } from '@/lib/grpc/client'
-import { CreateLinkRequestSchema, LinkTargetType } from '@/gen/centy_pb'
-
-const targetTypeToProto: Record<string, LinkTargetType> = {
-  issue: LinkTargetType.ISSUE,
-  doc: LinkTargetType.DOC,
-}
+import { CreateLinkRequestSchema } from '@/gen/centy_pb'
 
 export function useCreateLink(
   projectPath: string,
@@ -28,10 +23,9 @@ export function useCreateLink(
       const request = create(CreateLinkRequestSchema, {
         projectPath,
         sourceId: entityId,
-        sourceType:
-          entityType === 'issue' ? LinkTargetType.ISSUE : LinkTargetType.DOC,
+        sourceItemType: entityType,
         targetId: selectedTarget.id,
-        targetType: targetTypeToProto[selectedTarget.type],
+        targetItemType: selectedTarget.type,
         linkType: selectedLinkType,
       })
       const response = await centyClient.createLink(request)
