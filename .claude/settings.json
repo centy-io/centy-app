@@ -208,7 +208,8 @@
       "mcp__plugin_playwright_playwright__browser_network_requests",
       "Bash(pnpm format:*)",
       "Bash(gh api:*)",
-      "mcp__centy__centy_v1_CentyDaemon_GetDaemonInfo"
+      "mcp__centy__centy_v1_CentyDaemon_GetDaemonInfo",
+      "Bash(xxd)"
     ],
     "deny": ["Bash(npm install)", "Bash(gh issue create:*)"]
   },
