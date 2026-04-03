@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { subscribe, getSnapshot, updateState } from './usePinnedItems.store'
+import type { PinnedItemsState } from './pinnedItemsState'
 
 let testCounter = 0
 function uniquePath(): string {
@@ -37,7 +38,7 @@ describe('updateState', () => {
 
     updateState(path, () => ({ items: [newItem] }))
 
-    const stored = JSON.parse(
+    const stored: PinnedItemsState = JSON.parse(
       localStorage.getItem(`centy-pinned-items-${path}`)!
     )
     expect(stored.items).toContainEqual(newItem)
