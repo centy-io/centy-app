@@ -18,20 +18,6 @@ const baseConfig = config.map(c => {
 export default [
   ...baseConfig,
   {
-    // Disable rules from strictTypeChecked that conflict with project philosophy or require
-    // large-scale refactoring. These should be addressed in separate issues.
-    rules: {
-      // Optional chaining (?.) is fully supported in all target browsers and consistent with ?? usage
-      'no-optional-chaining/no-optional-chaining': 'off',
-      // Non-null assertions (!): banned by strictTypeChecked, all usages replaced with proper null checks
-      '@typescript-eslint/no-non-null-assertion': 'error',
-      // Miscellaneous stylistic rules from stylisticTypeChecked
-      '@typescript-eslint/no-meaningless-void-operator': 'off',
-      '@typescript-eslint/prefer-regexp-exec': 'off',
-      '@typescript-eslint/no-unnecessary-type-parameters': 'off',
-    },
-  },
-  {
     // Use void operator to explicitly discard void return values in arrow function shorthands
     files: ['**/*.ts', '**/*.tsx', '**/*.mts', '**/*.cts'],
     rules: {

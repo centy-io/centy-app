@@ -71,7 +71,9 @@ export function DaemonUpdateBadge() {
     <>
       <button
         className="daemon-update-badge"
-        onClick={() => void setDialogOpen(true)}
+        onClick={() => {
+          setDialogOpen(true)
+        }}
         title="Daemon update available"
       >
         <span className="daemon-update-dot" />
@@ -85,7 +87,9 @@ export function DaemonUpdateBadge() {
           restartResult={restartResult}
           installCommand={INSTALL_COMMAND}
           restartCommand={RESTART_COMMAND}
-          onClose={() => void setDialogOpen(false)}
+          onClose={() => {
+            setDialogOpen(false)
+          }}
           onCopy={() => void handleCopy()}
           onRestartCopy={() => void handleRestartCopy()}
           onRestart={() => void handleRestart()}
