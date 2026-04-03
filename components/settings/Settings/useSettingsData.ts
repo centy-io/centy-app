@@ -10,7 +10,6 @@ function useUnsavedWarning(isDirty: boolean): void {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (!isDirty) return
       e.preventDefault()
-      e.returnValue = ''
     }
     window.addEventListener('beforeunload', handleBeforeUnload)
     return () => window.removeEventListener('beforeunload', handleBeforeUnload)
