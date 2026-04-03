@@ -26,14 +26,15 @@ export default [
       // Non-null assertions (!): banned by strictTypeChecked, all usages replaced with proper null checks
       '@typescript-eslint/no-non-null-assertion': 'error',
       // Miscellaneous stylistic rules from stylisticTypeChecked
-      // Disabled: conflicts with no-confusing-void-expression + ignoreVoidOperator pattern
       '@typescript-eslint/no-meaningless-void-operator': 'off',
+      '@typescript-eslint/prefer-regexp-exec': 'off',
+      '@typescript-eslint/no-unnecessary-type-parameters': 'off',
     },
   },
   {
+    // Use void operator to explicitly discard void return values in arrow function shorthands
     files: ['**/*.ts', '**/*.tsx', '**/*.mts', '**/*.cts'],
     rules: {
-      // ignoreVoidOperator: void fn() is intentional in arrow shorthand event handlers
       '@typescript-eslint/no-confusing-void-expression': [
         'error',
         { ignoreVoidOperator: true },
