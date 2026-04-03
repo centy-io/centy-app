@@ -15,7 +15,7 @@ describe('TextEditor - Edit Mode', () => {
   })
 
   it('should render editable content', async () => {
-    render(<TextEditor value="# Hello" mode="edit" onChange={() => {}} />)
+    render(<TextEditor value="# Hello" mode="edit" onChange={vi.fn()} />)
 
     await waitFor(() => {
       expect(screen.getByTitle('Bold (Ctrl+B)')).toBeInTheDocument()
@@ -26,7 +26,7 @@ describe('TextEditor - Edit Mode', () => {
   })
 
   it('should show toolbar in edit mode', async () => {
-    render(<TextEditor value="" mode="edit" onChange={() => {}} />)
+    render(<TextEditor value="" mode="edit" onChange={vi.fn()} />)
 
     await waitFor(() => {
       expect(screen.getByTitle('Bold (Ctrl+B)')).toBeInTheDocument()
@@ -50,7 +50,7 @@ describe('TextEditor - Edit Mode', () => {
     render(
       <TextEditor
         value=""
-        onChange={() => {}}
+        onChange={vi.fn()}
         mode="edit"
         className="custom-class"
       />
@@ -64,7 +64,7 @@ describe('TextEditor - Edit Mode', () => {
 
   it('should render with custom minHeight', async () => {
     render(
-      <TextEditor value="" onChange={() => {}} mode="edit" minHeight={300} />
+      <TextEditor value="" onChange={vi.fn()} mode="edit" minHeight={300} />
     )
 
     await waitFor(() => {
@@ -85,7 +85,7 @@ describe('TextEditor - Link functionality', () => {
 
   it('should open prompt when link button is clicked', async () => {
     mockPrompt.mockReturnValue(null)
-    render(<TextEditor value="" mode="edit" onChange={() => {}} />)
+    render(<TextEditor value="" mode="edit" onChange={vi.fn()} />)
 
     await waitFor(() => {
       expect(screen.getByTitle('Add Link')).toBeInTheDocument()
@@ -101,7 +101,7 @@ describe('TextEditor - Link functionality', () => {
 
   it('should add link when URL is provided', async () => {
     mockPrompt.mockReturnValue('https://example.com')
-    render(<TextEditor value="" mode="edit" onChange={() => {}} />)
+    render(<TextEditor value="" mode="edit" onChange={vi.fn()} />)
 
     await waitFor(() => {
       expect(screen.getByTitle('Add Link')).toBeInTheDocument()

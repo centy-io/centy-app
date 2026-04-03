@@ -90,6 +90,7 @@ describe('AddLinkModal - Display and loading', () => {
 
   it('should show loading state while fetching link types', () => {
     vi.mocked(centyClient.getAvailableLinkTypes).mockImplementation(
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       () => new Promise(() => {})
     )
 

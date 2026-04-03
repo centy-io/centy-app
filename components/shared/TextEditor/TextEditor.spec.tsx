@@ -113,7 +113,7 @@ describe('TextEditor - Backward Compatibility', () => {
   })
 
   it('should default to edit mode when no mode specified', async () => {
-    render(<TextEditor value="" onChange={() => {}} />)
+    render(<TextEditor value="" onChange={vi.fn()} />)
 
     await waitFor(() => {
       expect(screen.getByTitle('Bold (Ctrl+B)')).toBeInTheDocument()

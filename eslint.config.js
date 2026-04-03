@@ -29,8 +29,6 @@ export default [
       '@typescript-eslint/no-unsafe-call': 'off',
       // Unnecessary conditions (can produce false positives)
       '@typescript-eslint/no-unnecessary-condition': 'off',
-      // Empty functions (e.g. no-op callbacks)
-      '@typescript-eslint/no-empty-function': 'off',
       // Dot notation preference (stylistic)
       '@typescript-eslint/dot-notation': 'off',
       // Miscellaneous stylistic rules from stylisticTypeChecked

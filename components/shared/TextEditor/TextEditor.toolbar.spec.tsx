@@ -15,7 +15,7 @@ describe('TextEditor - Toolbar buttons', () => {
   })
 
   it('should click bold button', async () => {
-    render(<TextEditor value="" mode="edit" onChange={() => {}} />)
+    render(<TextEditor value="" mode="edit" onChange={vi.fn()} />)
 
     await waitFor(() => {
       expect(screen.getByTitle('Bold (Ctrl+B)')).toBeInTheDocument()
@@ -30,7 +30,7 @@ describe('TextEditor - Toolbar buttons', () => {
   })
 
   it('should click italic button', async () => {
-    render(<TextEditor value="" mode="edit" onChange={() => {}} />)
+    render(<TextEditor value="" mode="edit" onChange={vi.fn()} />)
 
     await waitFor(() => {
       expect(screen.getByTitle('Italic (Ctrl+I)')).toBeInTheDocument()
@@ -45,7 +45,7 @@ describe('TextEditor - Toolbar buttons', () => {
   })
 
   it('should click heading buttons', async () => {
-    render(<TextEditor value="" mode="edit" onChange={() => {}} />)
+    render(<TextEditor value="" mode="edit" onChange={vi.fn()} />)
 
     await waitFor(() => {
       expect(screen.getByTitle('Heading 1')).toBeInTheDocument()
@@ -72,7 +72,7 @@ describe('TextEditor - Toolbar buttons', () => {
   })
 
   it('should click list buttons', async () => {
-    render(<TextEditor value="" mode="edit" onChange={() => {}} />)
+    render(<TextEditor value="" mode="edit" onChange={vi.fn()} />)
 
     await waitFor(() => {
       expect(screen.getByTitle('Bullet List')).toBeInTheDocument()

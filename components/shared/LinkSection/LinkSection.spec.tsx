@@ -38,6 +38,7 @@ describe('LinkSection - Initial state', () => {
 
   it('should show loading state initially', () => {
     vi.mocked(centyClient.listLinks).mockImplementation(
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       () => new Promise(() => {})
     )
 

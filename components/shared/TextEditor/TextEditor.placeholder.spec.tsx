@@ -15,7 +15,7 @@ describe('TextEditor - Placeholder', () => {
   })
 
   it('should render with default placeholder in edit mode', async () => {
-    render(<TextEditor value="" mode="edit" onChange={() => {}} />)
+    render(<TextEditor value="" mode="edit" onChange={vi.fn()} />)
 
     await waitFor(() => {
       const editorContent = document.querySelector('.editor-content')
@@ -28,7 +28,7 @@ describe('TextEditor - Placeholder', () => {
       <TextEditor
         value=""
         mode="edit"
-        onChange={() => {}}
+        onChange={vi.fn()}
         placeholder="Enter your text..."
       />
     )
@@ -44,7 +44,7 @@ describe('TextEditor - Placeholder', () => {
       <TextEditor
         value=""
         mode="edit"
-        onChange={() => {}}
+        onChange={vi.fn()}
         placeholder="Custom placeholder"
       />
     )
