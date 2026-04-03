@@ -8,7 +8,9 @@ export function createPriorityColumn(stateManager: {
   getStateClass: (status: string) => string
 }) {
   return columnHelper.accessor(
-    row => (row.metadata && row.metadata.priorityLabel) || 'unknown',
+    row =>
+      (row.metadata ? row.metadata.customFields.priority_label : null) ||
+      'unknown',
     {
       id: 'priority',
       header: 'Priority',

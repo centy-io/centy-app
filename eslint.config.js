@@ -26,20 +26,14 @@ export default [
       '@typescript-eslint/no-unsafe-assignment': 'off',
       '@typescript-eslint/no-unsafe-argument': 'off',
       '@typescript-eslint/no-unsafe-call': 'off',
-      // Unnecessary conditions (can produce false positives)
-      '@typescript-eslint/no-unnecessary-condition': 'off',
+      // Unnecessary conditions - enabled; false positives suppressed inline
       // Empty functions (e.g. no-op callbacks)
       '@typescript-eslint/no-empty-function': 'off',
-      // Dot notation preference (stylistic)
-      '@typescript-eslint/dot-notation': 'off',
       // Miscellaneous stylistic rules from stylisticTypeChecked
-      '@typescript-eslint/array-type': 'off',
-      '@typescript-eslint/no-base-to-string': 'off',
       '@typescript-eslint/use-unknown-in-catch-callback-variable': 'off',
+      '@typescript-eslint/no-meaningless-void-operator': 'off',
       '@typescript-eslint/prefer-regexp-exec': 'off',
-      '@typescript-eslint/prefer-find': 'off',
       '@typescript-eslint/no-unnecessary-type-parameters': 'off',
-      '@typescript-eslint/consistent-generic-constructors': 'off',
     },
   },
   {

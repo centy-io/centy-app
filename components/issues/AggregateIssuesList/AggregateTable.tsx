@@ -35,7 +35,7 @@ export function AggregateTable({
           {table.getRowModel().rows.map(row => (
             <tr
               className="issue-row"
-              key={`${row.original.projectPath}-${row.original.issueNumber}`}
+              key={`${row.original.projectPath}-${row.original.id}`}
             >
               {row.getVisibleCells().map(cell => (
                 <td key={cell.id} className={getCellClassName(cell.column.id)}>

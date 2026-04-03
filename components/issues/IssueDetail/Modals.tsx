@@ -1,14 +1,14 @@
 'use client'
 
 import type { ReactElement } from 'react'
-import type { Issue } from '@/gen/centy_pb'
+import type { GenericItem } from '@/gen/centy_pb'
 import { MoveModal } from '@/components/shared/MoveModal'
 import { DuplicateModal } from '@/components/shared/DuplicateModal'
 import { StatusConfigDialog } from '@/components/shared/StatusConfigDialog'
 
 interface ModalsProps {
   projectPath: string
-  issue: Issue | null
+  issue: GenericItem | null
   showMoveModal: boolean
   showDuplicateModal: boolean
   showStatusConfigDialog: boolean

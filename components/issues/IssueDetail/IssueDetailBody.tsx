@@ -41,7 +41,7 @@ export function IssueDetailBody(props: IssueDetailBodyProps): ReactElement {
   const onBadgeClick = buildNumberBadgeHandler(
     copyToClipboard,
     issueNumber,
-    issue.displayNumber
+    issue.metadata ? issue.metadata.displayNumber : 0
   )
   return (
     <ItemContent>

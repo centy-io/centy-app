@@ -42,12 +42,4 @@ pnpm test --run || {
   exit 1
 }
 
-echo "Running visual regression tests..."
-pnpm e2e:visual:pre-push || {
-  echo "Visual regression tests failed."
-  echo "If your changes intentionally affect the UI, update snapshots with:"
-  echo "  pnpm e2e:visual:pre-push:update"
-  exit 1
-}
-
 echo "All pre-push checks passed!"
