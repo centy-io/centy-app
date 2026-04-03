@@ -53,7 +53,7 @@ export function useUserData(userId: string, usersListUrl: RouteLiteral) {
   }, [projectPath, userId])
 
   useEffect(() => {
-    fetchUser()
+    void fetchUser()
   }, [fetchUser])
 
   const mutations = useUserMutations(

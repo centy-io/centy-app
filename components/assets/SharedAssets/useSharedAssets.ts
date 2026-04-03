@@ -52,7 +52,7 @@ export function useSharedAssets(
   }, [projectPath, checkInit])
 
   useEffect(() => {
-    if (isInitialized === true) fetchAssets()
+    if (isInitialized === true) void fetchAssets()
   }, [isInitialized, fetchAssets])
 
   return {

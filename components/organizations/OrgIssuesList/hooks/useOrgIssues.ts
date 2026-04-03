@@ -78,7 +78,7 @@ export function useOrgIssues(orgSlug: string) {
   }, [orgSlug])
 
   useEffect(() => {
-    fetchIssues()
+    void fetchIssues()
   }, [orgSlug, fetchIssues])
 
   return { issues, loading, error, orgProjectPath, fetchIssues }

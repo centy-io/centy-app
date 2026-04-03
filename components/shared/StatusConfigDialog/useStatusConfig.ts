@@ -64,7 +64,7 @@ export function useStatusConfig(
         setLoading(false)
       }
     }
-    loadConfig()
+    void loadConfig()
   }, [projectPath])
 
   const handleSave = useCallback(async () => {

@@ -42,7 +42,7 @@ export function useItemTypeConfig(
       }
     }
 
-    fetchConfig()
+    void fetchConfig()
   }, [projectPath, isInitialized, itemType])
 
   return { config, loading, error }

@@ -72,7 +72,7 @@ export function LegacyUrlRedirect() {
       }
     }
 
-    redirect()
+    void redirect()
   }, [searchParams, pathname, router])
 
   if (isRedirecting) {

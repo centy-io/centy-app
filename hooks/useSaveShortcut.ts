@@ -30,7 +30,7 @@ export function useSaveShortcut({ onSave, enabled }: UseSaveShortcutOptions) {
       event.preventDefault()
 
       if (resolvedEnabled) {
-        onSaveRef.current()
+        void onSaveRef.current()
       }
     }
 

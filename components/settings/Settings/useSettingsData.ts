@@ -72,7 +72,7 @@ export function useSettingsData(
 
   useEffect(() => {
     if (isInitialized === true) {
-      doFetchProjectData()
+      void doFetchProjectData()
     }
   }, [isInitialized, doFetchProjectData])
 

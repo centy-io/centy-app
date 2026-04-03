@@ -42,7 +42,7 @@ export function useProjectResolution(
         if (!cancelled) setIsLoading(false)
       }
     }
-    resolve()
+    void resolve()
     return () => {
       cancelled = true
     }

@@ -25,7 +25,7 @@ export function useArchivedProjectFetch(archivedPaths: string[]) {
   }, [])
 
   useEffect(() => {
-    fetchProjects()
+    void fetchProjects()
   }, [fetchProjects])
 
   const archivedProjects = allProjects.filter(p =>

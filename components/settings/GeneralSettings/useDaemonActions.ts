@@ -88,7 +88,7 @@ export function useDaemonActions() {
   }, [])
 
   useEffect(() => {
-    fetchDaemonInfo()
+    void fetchDaemonInfo()
   }, [fetchDaemonInfo])
 
   return {
