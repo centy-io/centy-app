@@ -5,10 +5,10 @@ import type { HeaderGroup } from '@tanstack/react-table'
 import { flexRender } from '@tanstack/react-table'
 import { IssuesColumnFilter, getSortIndicator } from './IssuesColumnFilter'
 import type { MultiSelectOption } from '@/components/shared/MultiSelect'
-import type { Issue } from '@/gen/centy_pb'
+import type { GenericItem } from '@/gen/centy_pb'
 
 interface IssuesTableHeaderProps {
-  headerGroups: HeaderGroup<Issue>[]
+  headerGroups: HeaderGroup<GenericItem>[]
   statusOptions: MultiSelectOption[]
 }
 

@@ -1,13 +1,13 @@
 import { useState, useCallback, useEffect } from 'react'
 import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
-import { ListItemsRequestSchema, type Issue } from '@/gen/centy_pb'
-import { genericItemToIssue } from '@/lib/genericItemToIssue'
+import { ListItemsRequestSchema } from '@/gen/centy_pb'
+import type { GenericItem } from '@/gen/centy_pb'
 import { usePathContext } from '@/components/providers/PathContextProvider'
 
 export function useIssuesData() {
   const { projectPath, isInitialized } = usePathContext()
-  const [issues, setIssues] = useState<Issue[]>([])
+  const [issues, setIssues] = useState<GenericItem[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -23,7 +23,7 @@ export function useIssuesData() {
         itemType: 'issues',
       })
       const response = await centyClient.listItems(request)
-      setIssues(response.items.map(genericItemToIssue))
+      setIssues(response.items)
     } catch (err) {
       setError(
         err instanceof Error ? err.message : 'Failed to connect to daemon'

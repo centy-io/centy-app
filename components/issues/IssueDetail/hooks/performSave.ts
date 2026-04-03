@@ -1,7 +1,7 @@
 import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
-import { UpdateItemRequestSchema, type Issue } from '@/gen/centy_pb'
-import { genericItemToIssue } from '@/lib/genericItemToIssue'
+import { UpdateItemRequestSchema } from '@/gen/centy_pb'
+import type { GenericItem } from '@/gen/centy_pb'
 
 interface SaveEditState {
   editTitle: string
@@ -15,7 +15,7 @@ export async function performSave(
   projectPath: string,
   issueNumber: string,
   editState: SaveEditState,
-  setIssue: (issue: Issue) => void,
+  setIssue: (issue: GenericItem) => void,
   setError: (error: string | null) => void,
   setSaving: (v: boolean) => void
 ): Promise<void> {
@@ -33,7 +33,7 @@ export async function performSave(
     })
     const response = await centyClient.updateItem(request)
     if (response.success && response.item) {
-      setIssue(genericItemToIssue(response.item))
+      setIssue(response.item)
       editState.setIsEditing(false)
     } else {
       setError(response.error || 'Failed to update issue')

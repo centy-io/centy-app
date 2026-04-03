@@ -44,7 +44,7 @@ function makeTitleColumn(createProjectLink: CreateProjectLink) {
           href={createProjectLink(
             issue.orgSlug,
             issue.projectName,
-            `issues/${issue.issueNumber}`
+            `issues/${issue.id}`
           )}
           className="issue-title-link"
         >
@@ -90,15 +90,19 @@ export function createAggregateColumns(
 ) {
   return [
     makeProjectColumn(createProjectLink),
-    columnHelper.accessor('displayNumber', {
-      header: '#',
-      cell: info => `#${info.getValue()}`,
-      enableColumnFilter: true,
-      filterFn: (row, columnId, filterValue) => {
-        const value = row.getValue(columnId)
-        return String(value).includes(filterValue)
-      },
-    }),
+    columnHelper.accessor(
+      row => (row.metadata ? row.metadata.displayNumber : 0),
+      {
+        id: 'displayNumber',
+        header: '#',
+        cell: info => `#${info.getValue()}`,
+        enableColumnFilter: true,
+        filterFn: (row, columnId, filterValue) => {
+          const value = row.getValue(columnId)
+          return String(value).includes(filterValue)
+        },
+      }
+    ),
     makeTitleColumn(createProjectLink),
     makeStatusColumn(stateManager),
   ]

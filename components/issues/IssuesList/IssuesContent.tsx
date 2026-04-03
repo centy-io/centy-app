@@ -5,7 +5,7 @@ import Link from 'next/link'
 import type { Table as TanstackTable } from '@tanstack/react-table'
 import type { RouteLiteral } from 'nextjs-routes'
 import { IssuesTable } from './IssuesTable'
-import type { Issue } from '@/gen/centy_pb'
+import type { GenericItem } from '@/gen/centy_pb'
 import type { MultiSelectOption } from '@/components/shared/MultiSelect'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
@@ -14,11 +14,11 @@ interface IssuesContentProps {
   isInitialized: boolean | null
   loading: boolean
   error: string | null
-  issues: Issue[]
-  table: TanstackTable<Issue>
+  issues: GenericItem[]
+  table: TanstackTable<GenericItem>
   statusOptions: MultiSelectOption[]
   createLink: (path: string) => RouteLiteral
-  onContextMenu: (e: React.MouseEvent, issue: Issue) => void
+  onContextMenu: (e: React.MouseEvent, issue: GenericItem) => void
 }
 
 export function IssuesContent({
