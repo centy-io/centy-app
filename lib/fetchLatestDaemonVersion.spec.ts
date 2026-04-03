@@ -7,7 +7,7 @@ vi.stubGlobal('fetch', mockFetch)
 function mockOkResponse(body: string) {
   mockFetch.mockResolvedValueOnce({
     ok: true,
-    text: async () => body,
+    text: () => body,
   })
 }
 

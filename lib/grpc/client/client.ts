@@ -64,6 +64,7 @@ export const centyClient: Client<typeof CentyDaemon> = new Proxy(realClient, {
         }
         // If no mock handler, still call the mock but log a warning
         console.warn(`[Demo Mode] No mock handler for method: ${prop}`)
+        // eslint-disable-next-line @typescript-eslint/require-await
         return async () => {
           throw new DemoModeError(prop)
         }

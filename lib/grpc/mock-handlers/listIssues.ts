@@ -25,6 +25,7 @@ function filterIssues(
   return filtered
 }
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function listIssues(
   request: ListIssuesRequest
 ): Promise<ListIssuesResponse> {

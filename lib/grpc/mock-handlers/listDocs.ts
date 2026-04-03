@@ -3,6 +3,7 @@
 import { DEMO_PROJECT_PATH, DEMO_DOCS } from '../demo-data'
 import type { ListDocsRequest, ListDocsResponse } from '@/gen/centy_pb'
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function listDocs(
   request: ListDocsRequest
 ): Promise<ListDocsResponse> {

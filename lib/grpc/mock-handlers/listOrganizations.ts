@@ -6,6 +6,7 @@ import type {
   ListOrganizationsResponse,
 } from '@/gen/centy_pb'
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function listOrganizations(
   _request: ListOrganizationsRequest
 ): Promise<ListOrganizationsResponse> {

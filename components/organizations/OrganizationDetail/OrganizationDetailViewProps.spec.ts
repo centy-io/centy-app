@@ -29,7 +29,9 @@ describe('OrganizationDetailViewProps', () => {
       setEditSlug: () => undefined,
       setShowDeleteConfirm: () => undefined,
       setDeleteError: () => undefined,
+      // eslint-disable-next-line @typescript-eslint/require-await
       handleSave: async () => undefined,
+      // eslint-disable-next-line @typescript-eslint/require-await
       handleDelete: async () => undefined,
       handleCancelEdit: () => undefined,
     }

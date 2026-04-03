@@ -3,6 +3,7 @@
 import { DEMO_ISSUES } from '../demo-data'
 import type { GetIssueByDisplayNumberRequest, Issue } from '@/gen/centy_pb'
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function getIssueByDisplayNumber(
   request: GetIssueByDisplayNumberRequest
 ): Promise<{

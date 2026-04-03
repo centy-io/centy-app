@@ -1,5 +1,6 @@
 'use client'
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function spawnWorkspace(): Promise<{
   success: boolean
   message: string

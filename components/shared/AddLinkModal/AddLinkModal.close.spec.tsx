@@ -61,19 +61,19 @@ function setupAddLinkModalMocks() {
 describe('AddLinkModal - Close behavior', () => {
   beforeEach(setupAddLinkModalMocks)
 
-  it('should call onClose when close button is clicked', async () => {
+  it('should call onClose when close button is clicked', () => {
     render(<AddLinkModal {...defaultProps} />)
     fireEvent.click(screen.getByText('x'))
     expect(mockOnClose).toHaveBeenCalled()
   })
 
-  it('should call onClose when cancel button is clicked', async () => {
+  it('should call onClose when cancel button is clicked', () => {
     render(<AddLinkModal {...defaultProps} />)
     fireEvent.click(screen.getByText('Cancel'))
     expect(mockOnClose).toHaveBeenCalled()
   })
 
-  it('should call onClose when clicking outside modal', async () => {
+  it('should call onClose when clicking outside modal', () => {
     render(<AddLinkModal {...defaultProps} />)
 
     const overlay = document.querySelector('.link-modal-overlay')
@@ -84,7 +84,7 @@ describe('AddLinkModal - Close behavior', () => {
     expect(mockOnClose).toHaveBeenCalled()
   })
 
-  it('should call onClose when pressing Escape', async () => {
+  it('should call onClose when pressing Escape', () => {
     render(<AddLinkModal {...defaultProps} />)
 
     fireEvent.keyDown(document, { key: 'Escape' })

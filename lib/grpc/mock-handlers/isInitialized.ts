@@ -6,6 +6,7 @@ import type {
   IsInitializedResponse,
 } from '@/gen/centy_pb'
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function isInitialized(
   request: IsInitializedRequest
 ): Promise<IsInitializedResponse> {

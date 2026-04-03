@@ -92,7 +92,7 @@ describe('TextEditor - Link functionality', () => {
     })
 
     const linkButton = screen.getByTitle('Add Link')
-    await act(async () => {
+    act(() => {
       fireEvent.click(linkButton)
     })
 
@@ -108,7 +108,7 @@ describe('TextEditor - Link functionality', () => {
     })
 
     const linkButton = screen.getByTitle('Add Link')
-    await act(async () => {
+    act(() => {
       fireEvent.click(linkButton)
     })
 

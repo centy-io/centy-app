@@ -54,7 +54,7 @@ describe('TextEditor - Placeholder', () => {
     })
 
     const mdButton = screen.getByTitle('Toggle Raw Markdown')
-    await act(async () => {
+    act(() => {
       fireEvent.click(mdButton)
     })
 

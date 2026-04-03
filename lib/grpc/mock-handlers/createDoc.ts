@@ -3,6 +3,7 @@
 import { DEMO_DOCS } from '../demo-data'
 import type { CreateDocResponse } from '@/gen/centy_pb'
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function createDoc(): Promise<CreateDocResponse> {
   console.warn('[Demo Mode] createDoc called - changes not persisted')
   return {

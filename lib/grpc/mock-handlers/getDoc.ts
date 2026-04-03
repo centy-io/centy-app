@@ -3,6 +3,7 @@
 import { DEMO_DOCS } from '../demo-data'
 import type { GetDocRequest, Doc } from '@/gen/centy_pb'
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function getDoc(request: GetDocRequest): Promise<{
   success: boolean
   error: string

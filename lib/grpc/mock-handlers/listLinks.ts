@@ -3,6 +3,7 @@
 import { DEMO_LINKS } from '../demo-data'
 import type { ListLinksRequest, ListLinksResponse } from '@/gen/centy_pb'
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function listLinks(
   request: ListLinksRequest
 ): Promise<ListLinksResponse> {

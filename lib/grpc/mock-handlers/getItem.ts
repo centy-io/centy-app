@@ -6,6 +6,7 @@ import { issueToGenericItem } from './issueToGenericItem'
 import { docToGenericItem } from './docToGenericItem'
 import type { GetItemRequest, GetItemResponse } from '@/gen/centy_pb'
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function getItem(
   request: GetItemRequest
 ): Promise<GetItemResponse> {

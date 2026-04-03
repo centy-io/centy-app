@@ -22,7 +22,7 @@ describe('TextEditor - Toolbar buttons', () => {
     })
 
     const boldButton = screen.getByTitle('Bold (Ctrl+B)')
-    await act(async () => {
+    act(() => {
       fireEvent.click(boldButton)
     })
 
@@ -37,7 +37,7 @@ describe('TextEditor - Toolbar buttons', () => {
     })
 
     const italicButton = screen.getByTitle('Italic (Ctrl+I)')
-    await act(async () => {
+    act(() => {
       fireEvent.click(italicButton)
     })
 
@@ -55,17 +55,17 @@ describe('TextEditor - Toolbar buttons', () => {
     const h2Button = screen.getByTitle('Heading 2')
     const h3Button = screen.getByTitle('Heading 3')
 
-    await act(async () => {
+    act(() => {
       fireEvent.click(h1Button)
     })
     expect(h1Button).toBeInTheDocument()
 
-    await act(async () => {
+    act(() => {
       fireEvent.click(h2Button)
     })
     expect(h2Button).toBeInTheDocument()
 
-    await act(async () => {
+    act(() => {
       fireEvent.click(h3Button)
     })
     expect(h3Button).toBeInTheDocument()
@@ -81,12 +81,12 @@ describe('TextEditor - Toolbar buttons', () => {
     const bulletListButton = screen.getByTitle('Bullet List')
     const orderedListButton = screen.getByTitle('Numbered List')
 
-    await act(async () => {
+    act(() => {
       fireEvent.click(bulletListButton)
     })
     expect(bulletListButton).toBeInTheDocument()
 
-    await act(async () => {
+    act(() => {
       fireEvent.click(orderedListButton)
     })
     expect(orderedListButton).toBeInTheDocument()

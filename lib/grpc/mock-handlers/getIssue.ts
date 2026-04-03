@@ -4,6 +4,7 @@ import { DEMO_ISSUES } from '../demo-data'
 import { findIssueByFlexibleId } from './resolve-issue'
 import type { GetIssueRequest, Issue } from '@/gen/centy_pb'
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function getIssue(request: GetIssueRequest): Promise<{
   success: boolean
   error: string

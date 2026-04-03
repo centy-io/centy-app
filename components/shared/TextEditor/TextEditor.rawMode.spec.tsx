@@ -32,7 +32,7 @@ describe('TextEditor - Raw mode toggle', () => {
       const mdButton = screen.getByTitle('Toggle Raw Markdown')
       expect(mdButton).toHaveTextContent('MD')
 
-      await act(async () => {
+      act(() => {
         fireEvent.click(mdButton)
       })
 
@@ -50,7 +50,7 @@ describe('TextEditor - Raw mode toggle', () => {
 
     const mdButton = screen.getByTitle('Toggle Raw Markdown')
 
-    await act(async () => {
+    act(() => {
       fireEvent.click(mdButton)
     })
 
@@ -68,12 +68,12 @@ describe('TextEditor - Raw mode toggle', () => {
     })
 
     const mdButton = screen.getByTitle('Toggle Raw Markdown')
-    await act(async () => {
+    act(() => {
       fireEvent.click(mdButton)
     })
 
     const textarea = screen.getByRole('textbox')
-    await act(async () => {
+    act(() => {
       fireEvent.change(textarea, { target: { value: '# New content' } })
     })
 

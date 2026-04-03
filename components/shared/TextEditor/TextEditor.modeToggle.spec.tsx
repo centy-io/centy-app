@@ -50,7 +50,7 @@ describe('TextEditor - Mode Toggle', () => {
       expect(screen.getByText('Edit')).toBeInTheDocument()
     })
 
-    await act(async () => {
+    act(() => {
       fireEvent.click(screen.getByText('Edit'))
     })
 

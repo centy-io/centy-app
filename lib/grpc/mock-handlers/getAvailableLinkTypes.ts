@@ -5,6 +5,7 @@ import type {
   GetAvailableLinkTypesResponse,
 } from '@/gen/centy_pb'
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function getAvailableLinkTypes(
   _request: GetAvailableLinkTypesRequest
 ): Promise<GetAvailableLinkTypesResponse> {

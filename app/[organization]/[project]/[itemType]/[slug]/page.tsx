@@ -2,6 +2,7 @@ import { GenericItemDetail } from '@/components/generic/GenericItemDetail'
 
 export const dynamic = 'force-static'
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function generateStaticParams() {
   return [
     {

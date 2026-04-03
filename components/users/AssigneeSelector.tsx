@@ -31,7 +31,7 @@ export function AssigneeSelector({
     [users]
   )
 
-  const handleChange = useCallback(async () => {
+  const handleChange = useCallback(() => {
     setError('Assignee modification not yet implemented')
   }, [setError])
 

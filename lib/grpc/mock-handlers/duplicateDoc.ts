@@ -3,6 +3,7 @@
 import { DEMO_DOCS } from '../demo-data'
 import type { Doc } from '@/gen/centy_pb'
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function duplicateDoc(): Promise<{
   success: boolean
   doc: Doc

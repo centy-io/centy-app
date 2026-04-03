@@ -69,7 +69,7 @@ function setupAddLinkModalMocks() {
 describe('AddLinkModal - Display and loading', () => {
   beforeEach(setupAddLinkModalMocks)
 
-  it('should render modal with header and close button', async () => {
+  it('should render modal with header and close button', () => {
     render(<AddLinkModal {...defaultProps} />)
 
     expect(screen.getByText('Add Link')).toBeInTheDocument()

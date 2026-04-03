@@ -2,6 +2,7 @@ import { IssueDetail } from '@/components/issues/IssueDetail'
 
 export const dynamic = 'force-static'
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function generateStaticParams() {
   return [
     {

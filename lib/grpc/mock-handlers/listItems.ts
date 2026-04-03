@@ -11,6 +11,7 @@ import type {
 
 const EMPTY_ITEMS: GenericItem[] = []
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function listItems(
   request: ListItemsRequest
 ): Promise<ListItemsResponse> {

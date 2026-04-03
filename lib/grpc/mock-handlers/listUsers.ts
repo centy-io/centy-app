@@ -3,6 +3,7 @@
 import { DEMO_PROJECT_PATH, DEMO_USERS } from '../demo-data'
 import type { ListUsersRequest, ListUsersResponse } from '@/gen/centy_pb'
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function listUsers(
   request: ListUsersRequest
 ): Promise<ListUsersResponse> {

@@ -3,6 +3,7 @@
 import { DEMO_PROJECT_PATH, DEMO_ASSETS } from '../demo-data'
 import type { ListAssetsRequest, ListAssetsResponse } from '@/gen/centy_pb'
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function listAssets(
   request: ListAssetsRequest
 ): Promise<ListAssetsResponse> {
