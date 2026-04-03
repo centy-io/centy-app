@@ -4,15 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-### Features
+---
 
-- Replace docs-specific pages with generic slug-based dynamic route (#138)
-- Debounce search query in AddLinkModal to reduce network requests (#186)
-- Debounce functionality added to search inputs across the app
+## 0.1.1 — 2026-04-04
 
-### Refactors
+### Fixes
 
-- Use `use-debounce` library instead of manual `setTimeout` debounce (#186)
+- Filter unlisted item types from nav-group-project (#247)
+- Add `listed` field to demo mock so nav shows item types in demo mode
+- Remove reconciliation plan UI after daemon removed those RPCs
 
 ---
 
