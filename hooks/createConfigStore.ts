@@ -34,7 +34,9 @@ function buildCacheState(configCache: Map<string, CacheState>) {
       loading: cache.loading,
       error: cache.error,
     }
-    cache.listeners.forEach(listener => listener())
+    cache.listeners.forEach(listener => {
+      listener()
+    })
   }
 
   return { getOrCreate, notify }

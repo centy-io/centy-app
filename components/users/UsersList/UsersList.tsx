@@ -81,12 +81,16 @@ export function UsersList() {
           items={contextMenuItems}
           x={contextMenu.x}
           y={contextMenu.y}
-          onClose={() => setContextMenu(null)}
+          onClose={() => {
+            setContextMenu(null)
+          }}
         />
       )}
       {showSyncModal && (
         <SyncUsersModal
-          onClose={() => setShowSyncModal(false)}
+          onClose={() => {
+            setShowSyncModal(false)
+          }}
           onSynced={handleSynced}
         />
       )}

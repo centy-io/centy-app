@@ -21,7 +21,9 @@ export function PrioritySelect({ value, onChange }: PrioritySelectProps) {
         className="form-select"
         id="org-issue-priority"
         value={value}
-        onChange={e => onChange(Number(e.target.value))}
+        onChange={e => {
+          onChange(Number(e.target.value))
+        }}
       >
         {PRIORITY_OPTIONS.map(opt => (
           <option key={opt.value} className="form-option" value={opt.value}>

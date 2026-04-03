@@ -24,7 +24,9 @@ export function OrganizationsTable({
           {table.getRowModel().rows.map(row => (
             <tr
               key={row.original.slug}
-              onContextMenu={e => onContextMenu(e, row.original)}
+              onContextMenu={e => {
+                onContextMenu(e, row.original)
+              }}
               className="context-menu-row"
             >
               {row.getVisibleCells().map(cell => (
@@ -36,7 +38,9 @@ export function OrganizationsTable({
                 <button
                   type="button"
                   className="untrack-btn"
-                  onClick={() => onUntrack(row.original.slug)}
+                  onClick={() => {
+                    onUntrack(row.original.slug)
+                  }}
                 >
                   Untrack
                 </button>

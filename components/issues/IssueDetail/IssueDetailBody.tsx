@@ -10,7 +10,9 @@ function buildToggleDropdown(
   setShowStatusDropdown: (show: boolean) => void,
   showStatusDropdown: boolean
 ): () => void {
-  return () => setShowStatusDropdown(!showStatusDropdown)
+  return () => {
+    setShowStatusDropdown(!showStatusDropdown)
+  }
 }
 
 function buildNumberBadgeHandler(
@@ -18,7 +20,9 @@ function buildNumberBadgeHandler(
   issueNumber: string,
   displayNumber: number
 ): () => void {
-  return () => copyToClipboard(issueNumber, `issue #${displayNumber}`)
+  return () => {
+    copyToClipboard(issueNumber, `issue #${displayNumber}`)
+  }
 }
 
 export function IssueDetailBody(props: IssueDetailBodyProps): ReactElement {

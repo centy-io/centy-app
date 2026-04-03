@@ -16,7 +16,9 @@ export function EmailField({ email, setEmail }: EmailFieldProps) {
         id="email"
         type="email"
         value={email}
-        onChange={e => setEmail(e.target.value)}
+        onChange={e => {
+          setEmail(e.target.value)
+        }}
         placeholder="Email address (optional)"
       />
     </div>

@@ -12,7 +12,9 @@ function useUnsavedWarning(isDirty: boolean): void {
       e.preventDefault()
     }
     window.addEventListener('beforeunload', handleBeforeUnload)
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+    }
   }, [isDirty])
 }
 

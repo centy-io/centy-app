@@ -17,7 +17,9 @@ export function DefaultValueField({
       {fieldType === 'enum' ? (
         <select
           value={defaultValue}
-          onChange={e => onChange(e.target.value)}
+          onChange={e => {
+            onChange(e.target.value)
+          }}
           className="custom-field-form-select"
         >
           <option className="form-option" value="">
@@ -32,7 +34,9 @@ export function DefaultValueField({
       ) : fieldType === 'boolean' ? (
         <select
           value={defaultValue}
-          onChange={e => onChange(e.target.value)}
+          onChange={e => {
+            onChange(e.target.value)
+          }}
           className="custom-field-form-select"
         >
           <option className="form-option" value="">
@@ -49,7 +53,9 @@ export function DefaultValueField({
         <input
           type={fieldType === 'number' ? 'number' : 'text'}
           value={defaultValue}
-          onChange={e => onChange(e.target.value)}
+          onChange={e => {
+            onChange(e.target.value)
+          }}
           placeholder={fieldType === 'number' ? '0' : 'Default value...'}
           className="custom-field-form-input"
         />

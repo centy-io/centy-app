@@ -77,7 +77,9 @@ export function useOrganizationDetail(orgSlug: string) {
         orgSlug,
         setDeleting: st.setDeleting,
         setDeleteError: st.setDeleteError,
-        onSuccess: () => router.push(route({ pathname: '/organizations' })),
+        onSuccess: () => {
+          router.push(route({ pathname: '/organizations' }))
+        },
       }),
     [orgSlug, router]
   )

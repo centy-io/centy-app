@@ -11,7 +11,12 @@ interface PreviewModalProps {
 export function PreviewModal({ asset, url, onClose }: PreviewModalProps) {
   return (
     <div className="preview-modal" onClick={onClose}>
-      <div className="preview-modal-content" onClick={e => e.stopPropagation()}>
+      <div
+        className="preview-modal-content"
+        onClick={e => {
+          e.stopPropagation()
+        }}
+      >
         <button className="preview-close-btn" onClick={onClose}>
           x
         </button>

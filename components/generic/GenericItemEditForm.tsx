@@ -39,7 +39,9 @@ export function GenericItemEditForm({
           id="edit-title"
           type="text"
           value={editTitle}
-          onChange={e => setEditTitle(e.target.value)}
+          onChange={e => {
+            setEditTitle(e.target.value)
+          }}
         />
       </div>
       {config &&
@@ -58,9 +60,9 @@ export function GenericItemEditForm({
             key={field.name}
             fieldName={field.name}
             value={editCustomFields[field.name] || ''}
-            onChange={value =>
+            onChange={value => {
               setEditCustomFields({ ...editCustomFields, [field.name]: value })
-            }
+            }}
           />
         ))}
       {hasBody && <BodyField editBody={editBody} setEditBody={setEditBody} />}

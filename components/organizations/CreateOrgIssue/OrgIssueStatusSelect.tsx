@@ -20,7 +20,9 @@ export function OrgIssueStatusSelect({
         className="form-select"
         id="org-issue-status"
         value={status}
-        onChange={e => setStatus(e.target.value)}
+        onChange={e => {
+          setStatus(e.target.value)
+        }}
       >
         {stateOptions.map(option => (
           <option

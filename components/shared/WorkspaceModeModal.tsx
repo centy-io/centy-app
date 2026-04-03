@@ -73,7 +73,9 @@ export function WorkspaceModeModal({
             {WORKSPACE_OPTIONS.map(option => (
               <button
                 key={option.mode}
-                onClick={() => onSelect(option.mode)}
+                onClick={() => {
+                  onSelect(option.mode)
+                }}
                 className="workspace-option"
               >
                 <div className="workspace-option-title">{option.title}</div>

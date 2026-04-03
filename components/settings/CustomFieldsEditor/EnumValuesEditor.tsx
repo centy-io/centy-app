@@ -30,7 +30,9 @@ export function EnumValuesEditor({
             <button
               className="custom-field-enum-remove-btn"
               type="button"
-              onClick={() => onRemove(value)}
+              onClick={() => {
+                onRemove(value)
+              }}
             >
               &times;
             </button>
@@ -41,7 +43,9 @@ export function EnumValuesEditor({
         <input
           type="text"
           value={newEnumValue}
-          onChange={e => setNewEnumValue(e.target.value)}
+          onChange={e => {
+            setNewEnumValue(e.target.value)
+          }}
           onKeyDown={e => {
             if (e.key !== 'Enter') return
             e.preventDefault()

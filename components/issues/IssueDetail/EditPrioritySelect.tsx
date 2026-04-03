@@ -20,7 +20,9 @@ export function EditPrioritySelect({
         className="form-select"
         id="edit-priority"
         value={editPriority}
-        onChange={e => setEditPriority(Number(e.target.value))}
+        onChange={e => {
+          setEditPriority(Number(e.target.value))
+        }}
       >
         <option className="form-option" value={1}>
           High

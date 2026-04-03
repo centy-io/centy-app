@@ -21,7 +21,9 @@ export function CheckboxList({
                 className="form-checkbox"
                 type="checkbox"
                 checked={selected.has(file.path)}
-                onChange={() => toggle(file.path)}
+                onChange={() => {
+                  toggle(file.path)
+                }}
               />
               <span className="file-icon">
                 {file.fileType === FileType.DIRECTORY

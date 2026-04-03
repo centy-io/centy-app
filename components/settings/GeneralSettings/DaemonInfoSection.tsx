@@ -41,14 +41,14 @@ export function DaemonInfoSection({
         )}
         <div className="daemon-controls">
           <button
-            onClick={() => onShowRestartConfirm(true)}
+            onClick={() => void onShowRestartConfirm(true)}
             className="restart-btn"
             disabled={restarting}
           >
             {restarting ? 'Restarting...' : 'Restart Daemon'}
           </button>
           <button
-            onClick={() => onShowShutdownConfirm(true)}
+            onClick={() => void onShowShutdownConfirm(true)}
             className="shutdown-btn"
             disabled={shuttingDown}
           >
@@ -58,7 +58,7 @@ export function DaemonInfoSection({
         {showRestartConfirm && (
           <DaemonConfirmDialog
             message="Are you sure you want to restart the daemon?"
-            onCancel={() => onShowRestartConfirm(false)}
+            onCancel={() => void onShowRestartConfirm(false)}
             onConfirm={onRestart}
             confirmLabel="Yes, Restart"
             confirmClassName="confirm-btn"
@@ -68,7 +68,7 @@ export function DaemonInfoSection({
           <DaemonConfirmDialog
             danger
             message="Are you sure you want to shutdown the daemon? You will need to manually restart it."
-            onCancel={() => onShowShutdownConfirm(false)}
+            onCancel={() => void onShowShutdownConfirm(false)}
             onConfirm={onShutdown}
             confirmLabel="Yes, Shutdown"
             confirmClassName="confirm-danger-btn"

@@ -58,7 +58,7 @@ export function useMultiSelect(
       }
     }
     document.addEventListener('keydown', handleKeyDown)
-    return () => document.removeEventListener('keydown', handleKeyDown)
+    return () => void document.removeEventListener('keydown', handleKeyDown)
   }, [isOpen])
 
   const getDisplayText = (placeholder: string) => {

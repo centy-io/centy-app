@@ -18,14 +18,18 @@ export function TitleScopeSelector({
       <div className="title-scope-buttons">
         <button
           type="button"
-          onClick={() => onScopeChange('user')}
+          onClick={() => {
+            onScopeChange('user')
+          }}
           className={`title-scope-btn ${scope === 'user' ? 'active' : ''}`}
         >
           User (local)
         </button>
         <button
           type="button"
-          onClick={() => onScopeChange('project')}
+          onClick={() => {
+            onScopeChange('project')
+          }}
           className={`title-scope-btn ${scope === 'project' ? 'active' : ''}`}
         >
           Project (shared)

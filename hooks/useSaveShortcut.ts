@@ -35,6 +35,8 @@ export function useSaveShortcut({ onSave, enabled }: UseSaveShortcutOptions) {
     }
 
     window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
   }, [resolvedEnabled])
 }

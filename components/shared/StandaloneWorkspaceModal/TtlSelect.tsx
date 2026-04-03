@@ -14,7 +14,9 @@ export function TtlSelect({ ttlHours, setTtlHours }: TtlSelectProps) {
       <select
         id="workspace-ttl"
         value={ttlHours}
-        onChange={e => setTtlHours(Number(e.target.value))}
+        onChange={e => {
+          setTtlHours(Number(e.target.value))
+        }}
         className="standalone-modal-select"
       >
         {TTL_OPTIONS.map(option => (

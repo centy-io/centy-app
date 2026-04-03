@@ -52,7 +52,9 @@ function useMobileDetection() {
     checkMobile()
     window.addEventListener('resize', checkMobile)
 
-    return () => window.removeEventListener('resize', checkMobile)
+    return () => {
+      window.removeEventListener('resize', checkMobile)
+    }
   }, [])
 
   return isMobile
@@ -88,7 +90,9 @@ export function MobileNotSupportedOverlay() {
         </div>
         <button
           className="mobile-dismiss-button"
-          onClick={() => setDismissed(true)}
+          onClick={() => {
+            setDismissed(true)
+          }}
         >
           Continue Anyway
         </button>

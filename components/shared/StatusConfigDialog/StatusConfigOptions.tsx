@@ -25,7 +25,9 @@ export function StatusConfigOptions({
             type="radio"
             name="updateStatus"
             checked={selectedOption === true}
-            onChange={() => onSelectOption(true)}
+            onChange={() => {
+              onSelectOption(true)
+            }}
           />
           <div className="status-config-option-content">
             <span className="status-config-option-title">
@@ -46,7 +48,9 @@ export function StatusConfigOptions({
             type="radio"
             name="updateStatus"
             checked={selectedOption === false}
-            onChange={() => onSelectOption(false)}
+            onChange={() => {
+              onSelectOption(false)
+            }}
           />
           <div className="status-config-option-content">
             <span className="status-config-option-title">

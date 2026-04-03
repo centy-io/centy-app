@@ -35,7 +35,9 @@ export function MessageItem({
         <button
           type="button"
           className="proto-form-message-item-toggle"
-          onClick={() => onToggle(index)}
+          onClick={() => {
+            onToggle(index)
+          }}
         >
           <span className="proto-form-message-item-arrow">
             {isExpanded ? '▾' : '▸'}
@@ -45,7 +47,9 @@ export function MessageItem({
         <button
           type="button"
           className="proto-form-remove-btn"
-          onClick={() => onRemove(index)}
+          onClick={() => {
+            onRemove(index)
+          }}
           aria-label={`Remove item ${index + 1}`}
         >
           ×
@@ -56,7 +60,9 @@ export function MessageItem({
           <ProtoFormRenderer
             schema={messageDesc}
             value={item}
-            onChange={updates => onItemChange(index, updates)}
+            onChange={updates => {
+              onItemChange(index, updates)
+            }}
           />
         </div>
       )}

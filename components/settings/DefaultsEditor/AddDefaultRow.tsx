@@ -24,7 +24,9 @@ export function AddDefaultRow({
       <input
         type="text"
         value={newKey}
-        onChange={e => onKeyChange(e.target.value)}
+        onChange={e => {
+          onKeyChange(e.target.value)
+        }}
         onKeyDown={onKeyDown}
         placeholder="Key"
         className="defaults-key-input"
@@ -40,7 +42,9 @@ export function AddDefaultRow({
       <input
         type="text"
         value={newValue}
-        onChange={e => onValueChange(e.target.value)}
+        onChange={e => {
+          onValueChange(e.target.value)
+        }}
         onKeyDown={onKeyDown}
         placeholder="Value"
         className="defaults-value-input"

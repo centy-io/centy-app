@@ -10,7 +10,9 @@ export function useMobileMenu(pathname: string) {
     const timeoutId = setTimeout(() => {
       setMobileMenuOpen(false)
     }, 0)
-    return () => clearTimeout(timeoutId)
+    return () => {
+      clearTimeout(timeoutId)
+    }
   }, [pathname])
 
   // Close mobile menu on escape key
@@ -21,7 +23,9 @@ export function useMobileMenu(pathname: string) {
       }
     }
     document.addEventListener('keydown', handleEscape)
-    return () => document.removeEventListener('keydown', handleEscape)
+    return () => {
+      document.removeEventListener('keydown', handleEscape)
+    }
   }, [])
 
   // Prevent body scroll when mobile menu is open
@@ -39,6 +43,8 @@ export function useMobileMenu(pathname: string) {
   return {
     mobileMenuOpen,
     setMobileMenuOpen,
-    toggleMobileMenu: () => setMobileMenuOpen(prev => !prev),
+    toggleMobileMenu: () => {
+      setMobileMenuOpen(prev => !prev)
+    },
   }
 }

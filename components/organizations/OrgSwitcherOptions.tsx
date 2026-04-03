@@ -21,7 +21,9 @@ export function OrgOption({
       role="option"
       aria-selected={isSelected}
       className={`org-option ${isSelected ? 'selected' : ''}`}
-      onClick={() => onSelect(slug)}
+      onClick={() => {
+        onSelect(slug)
+      }}
     >
       <span className="org-option-name">{label}</span>
     </li>
@@ -52,7 +54,9 @@ export function OrgList({
           role="option"
           aria-selected={selectedOrgSlug === org.slug}
           className={`org-option ${selectedOrgSlug === org.slug ? 'selected' : ''}`}
-          onClick={() => onSelect(org.slug)}
+          onClick={() => {
+            onSelect(org.slug)
+          }}
         >
           <span className="org-option-name">{org.name}</span>
           <span className="org-project-count">{org.projectCount}</span>
