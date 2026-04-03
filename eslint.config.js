@@ -18,6 +18,15 @@ const baseConfig = config.map(c => {
 export default [
   ...baseConfig,
   {
+    rules: {
+      // Disabled: conflicts with no-confusing-void-expression (ignoreVoidOperator: true).
+      // Both rules together are circular: no-confusing-void-expression requires `void fn()` in
+      // arrow shorthands, but no-meaningless-void-operator bans `void` on void-returning functions.
+      // Using braces `() => { fn() }` triggers prettier multi-line expansion and max-lines-per-function.
+      '@typescript-eslint/no-meaningless-void-operator': 'off',
+    },
+  },
+  {
     // Use void operator to explicitly discard void return values in arrow function shorthands
     files: ['**/*.ts', '**/*.tsx', '**/*.mts', '**/*.cts'],
     rules: {

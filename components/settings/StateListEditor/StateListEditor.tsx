@@ -54,22 +54,14 @@ export function StateListEditor({
             index={index}
             totalStates={states.length}
             isDragging={draggedIndex === index}
-            onDragStart={() => {
-              setDraggedIndex(index)
-            }}
+            onDragStart={() => void setDraggedIndex(index)}
             onDragOver={e => {
               handleDragOver(e, index)
             }}
-            onDragEnd={() => {
-              setDraggedIndex(null)
-            }}
-            onColorChange={color => {
-              handleColorChange(state, color)
-            }}
+            onDragEnd={() => void setDraggedIndex(null)}
+            onColorChange={color => void handleColorChange(state, color)}
             onDefaultChange={onDefaultChange}
-            onRemove={() => {
-              handleRemoveState(state)
-            }}
+            onRemove={() => void handleRemoveState(state)}
           />
         ))}
       </div>
