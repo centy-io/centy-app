@@ -13,7 +13,9 @@ test.describe('Create Issue Form - Draft persistence', () => {
 
     const draft = await page.evaluate((key: string) => {
       const raw = localStorage.getItem(key)
-      return raw ? JSON.parse(raw) : null
+      if (!raw) return null
+      const parsed: Record<string, unknown> = JSON.parse(raw)
+      return parsed
     }, DRAFT_STORAGE_KEY)
 
     expect(draft).not.toBeNull()
@@ -66,7 +68,9 @@ test.describe('Create Issue Form - Draft persistence', () => {
 
     const draft = await page.evaluate((key: string) => {
       const raw = localStorage.getItem(key)
-      return raw ? JSON.parse(raw) : null
+      if (!raw) return null
+      const parsed: Record<string, unknown> = JSON.parse(raw)
+      return parsed
     }, DRAFT_STORAGE_KEY)
 
     expect(draft).not.toBeNull()

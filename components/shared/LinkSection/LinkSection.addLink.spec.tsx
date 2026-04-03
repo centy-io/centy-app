@@ -12,7 +12,10 @@ vi.mock('@/lib/grpc/client', () => ({
 
 const mockUsePathContext = vi.fn()
 vi.mock('@/components/providers/PathContextProvider', () => ({
-  usePathContext: () => mockUsePathContext(),
+  usePathContext: () => {
+    const v: unknown = mockUsePathContext()
+    return v
+  },
 }))
 
 vi.mock('../AddLinkModal/index', () => ({
