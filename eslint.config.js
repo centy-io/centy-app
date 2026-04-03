@@ -36,7 +36,6 @@ export default [
       '@typescript-eslint/no-meaningless-void-operator': 'off',
       '@typescript-eslint/prefer-regexp-exec': 'off',
       '@typescript-eslint/no-unnecessary-type-parameters': 'off',
-      '@typescript-eslint/consistent-generic-constructors': 'off',
     },
   },
   {
