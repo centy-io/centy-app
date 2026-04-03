@@ -28,6 +28,7 @@
   "ignoreBinaries": ["serve"],
   "ignoreDependencies": [
     "@bufbuild/protoc-gen-es",
+    "baseline-browser-mapping",
     "@centy-io/assets",
     "@cspell/dict-he",
     "import-in-the-middle",
