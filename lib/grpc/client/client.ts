@@ -47,7 +47,9 @@ export const centyClient: Client<typeof CentyDaemon> = new Proxy(realClient, {
     // If in demo mode, use mock handlers
     if (isDemoMode()) {
       if (typeof value === 'function') {
-        const mockHandler = Reflect.get(mockHandlers, prop)
+        const mockHandler:
+          | ((...args: unknown[]) => Promise<unknown>)
+          | undefined = Reflect.get(mockHandlers, prop)
         if (mockHandler) {
           return wrapWithMetrics(async (...args: unknown[]) => {
             try {
