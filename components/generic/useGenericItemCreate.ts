@@ -7,7 +7,7 @@ import { usePathContext } from '@/components/providers/PathContextProvider'
 import { useAppLink } from '@/hooks/useAppLink'
 
 function buildDisplayName(itemType: string, configName: string | null): string {
-  const name = configName ? configName : itemType
+  const name = configName ?? itemType
   return name.charAt(0).toUpperCase() + name.slice(1)
 }
 

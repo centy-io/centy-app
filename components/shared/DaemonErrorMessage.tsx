@@ -9,8 +9,7 @@ export function DaemonErrorMessage({
   error,
   className,
 }: DaemonErrorMessageProps) {
-  const resolvedClassName =
-    className !== undefined ? className : 'error-message'
+  const resolvedClassName = className ?? 'error-message'
   const parsed = parseDaemonError(error)
 
   return (

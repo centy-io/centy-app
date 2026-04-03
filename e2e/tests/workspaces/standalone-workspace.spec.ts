@@ -117,7 +117,7 @@ test.describe.serial('Standalone Workspace Modal - Close actions', () => {
     await expect(page.getByText('New Standalone Workspace')).toBeVisible()
 
     // Click on the overlay (outside the modal) - use bottom left to avoid demo-mode-indicator
-    const viewport = page.viewportSize() || { height: 600 }
+    const viewport = page.viewportSize() ?? { height: 600 }
     await page
       .locator('.standalone-modal-overlay')
       .click({ position: { x: 10, y: viewport.height - 50 } })

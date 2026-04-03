@@ -28,15 +28,16 @@ export function AssetGrid({
 
   return (
     <div className="asset-grid">
-      {assets.map(asset => (
-        <AssetPreviewItem
-          key={asset.filename}
-          asset={asset}
-          projectPath={projectPath}
-          issueId={issueId!}
-          onRemove={() => onRemoveAsset(asset.filename)}
-        />
-      ))}
+      {issueId &&
+        assets.map(asset => (
+          <AssetPreviewItem
+            key={asset.filename}
+            asset={asset}
+            projectPath={projectPath}
+            issueId={issueId}
+            onRemove={() => onRemoveAsset(asset.filename)}
+          />
+        ))}
       {pendingAssets.map(pending => (
         <PendingAssetPreviewItem
           key={pending.id}

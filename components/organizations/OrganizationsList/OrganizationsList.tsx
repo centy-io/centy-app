@@ -9,8 +9,10 @@ import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 export function OrganizationsList(): React.JSX.Element {
   const state = useOrganizationsList()
-  const cascadeOrg = state.showCascadeConfirm
-    ? state.organizations.find(o => o.slug === state.showCascadeConfirm)
+  const deleteConfirmSlug = state.showDeleteConfirm
+  const cascadeConfirmSlug = state.showCascadeConfirm
+  const cascadeOrg = cascadeConfirmSlug
+    ? state.organizations.find(o => o.slug === cascadeConfirmSlug)
     : undefined
   const cascadeProjectCount =
     cascadeOrg !== undefined ? cascadeOrg.projectCount : 0
@@ -24,7 +26,7 @@ export function OrganizationsList(): React.JSX.Element {
         onSortChange={state.setSortPreset}
       />
       {state.error && <DaemonErrorMessage error={state.error} />}
-      {state.showDeleteConfirm && (
+      {deleteConfirmSlug && (
         <DeleteConfirm
           message="Are you sure you want to untrack this organization?"
           confirmLabel="Untrack"
@@ -33,11 +35,11 @@ export function OrganizationsList(): React.JSX.Element {
             state.setShowDeleteConfirm(null)
             state.setDeleteError(null)
           }}
-          onConfirm={() => state.handleDelete(state.showDeleteConfirm!)}
+          onConfirm={() => state.handleDelete(deleteConfirmSlug)}
           error={state.deleteError}
         />
       )}
-      {state.showCascadeConfirm && (
+      {cascadeConfirmSlug && (
         <DeleteConfirm
           message={`This organization has ${cascadeProjectCount} project${cascadeProjectCount !== 1 ? 's' : ''}. Untracking it will also untrack all of its projects. Do you want to continue?`}
           confirmLabel="Untrack All"
@@ -46,7 +48,7 @@ export function OrganizationsList(): React.JSX.Element {
             state.setShowCascadeConfirm(null)
             state.setDeleteError(null)
           }}
-          onConfirm={() => state.handleDeleteCascade(state.showCascadeConfirm!)}
+          onConfirm={() => state.handleDeleteCascade(cascadeConfirmSlug)}
           error={state.deleteError}
         />
       )}

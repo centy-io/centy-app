@@ -49,8 +49,9 @@ export function useAssetUploader({
         projectPath
       )
       if (result.success && result.asset) {
+        const { asset } = result
         setAssets(prev => {
-          const updated = [...prev, result.asset!]
+          const updated = [...prev, asset]
           if (onAssetsChange) onAssetsChange(updated)
           return updated
         })

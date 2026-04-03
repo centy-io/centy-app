@@ -11,14 +11,14 @@ describe('serializeFilterParam', () => {
     const result = serializeFilterParam([
       { id: 'status', value: ['open', 'in-progress'] },
     ])
-    expect(JSON.parse(result!)).toEqual({
+    expect(JSON.parse(result ?? 'null')).toEqual({
       status: { $in: ['open', 'in-progress'] },
     })
   })
 
   it('serializes scalar value directly', () => {
     const result = serializeFilterParam([{ id: 'priority', value: 'high' }])
-    expect(JSON.parse(result!)).toEqual({ priority: 'high' })
+    expect(JSON.parse(result ?? 'null')).toEqual({ priority: 'high' })
   })
 
   it('round-trips through parse and serialize', () => {

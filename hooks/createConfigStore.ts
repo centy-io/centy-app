@@ -17,15 +17,13 @@ interface ConfigStore {
 
 function buildCacheState(configCache: Map<string, CacheState>) {
   function getOrCreate(projectPath: string): CacheState {
-    if (!configCache.has(projectPath)) {
+    let entry = configCache.get(projectPath)
+    if (!entry) {
       const snapshot: ConfigSnapshot = { ...DEFAULT_CACHE_STATE }
-      configCache.set(projectPath, {
-        ...DEFAULT_CACHE_STATE,
-        listeners: new Set(),
-        snapshot,
-      })
+      entry = { ...DEFAULT_CACHE_STATE, listeners: new Set(), snapshot }
+      configCache.set(projectPath, entry)
     }
-    return configCache.get(projectPath)!
+    return entry
   }
 
   function notify(projectPath: string): void {
@@ -89,7 +87,7 @@ export function createConfigStore(): ConfigStore {
   ): Promise<void> {
     if (!projectPath) return
     const cache = getOrCreate(projectPath)
-    const resolvedForce = force !== undefined ? force : false
+    const resolvedForce = force ?? false
     if (cache.loading || (cache.config && !resolvedForce)) return
     await runFetchConfig(cache, projectPath, notify)
   }

@@ -30,7 +30,7 @@ function buildSuccessPath(
   const { organization, project } = ctx
   return route({
     pathname: '/[organization]/[project]/issues/[issueId]',
-    query: { organization, project, issueId: result.issueNumber || '' },
+    query: { organization, project, issueId: result.issueNumber ?? '' },
   })
 }
 
@@ -62,7 +62,7 @@ export function useCreateItemSubmit({
           const ctx = await getProjectContext()
           router.push(buildSuccessPath(kind, ctx, result))
         } else {
-          setError(result.error || `Failed to create ${kind}`)
+          setError(result.error ?? `Failed to create ${kind}`)
         }
       } catch (err) {
         setError(

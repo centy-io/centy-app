@@ -3,18 +3,8 @@
 import Link from 'next/link'
 import { route } from 'nextjs-routes'
 import type { GenericItem } from '@/gen/centy_pb'
-
-function priorityLabel(priority: number): string {
-  if (priority === 1) return 'High'
-  if (priority === 2) return 'Medium'
-  return 'Low'
-}
-
-function priorityClass(priority: number): string {
-  if (priority === 1) return 'priority-high'
-  if (priority === 2) return 'priority-medium'
-  return 'priority-low'
-}
+import { getPriorityClass } from '@/components/shared/getPriorityClass'
+import { getPriorityLabel } from '@/components/shared/getPriorityLabel'
 
 interface OrgIssuesTableProps {
   orgSlug: string
@@ -41,7 +31,7 @@ export function OrgIssuesTable({ orgSlug, issues }: OrgIssuesTableProps) {
               ? parseInt(meta.customFields.org_display_number || '0', 10)
               : 0
             const orgNum = cfOrgNum || (meta ? meta.displayNumber : 0)
-            const status = (meta && meta.status) || '—'
+            const status = (meta && meta.status) ?? '—'
             const priority = meta ? meta.priority : 2
             const createdAt =
               meta && meta.createdAt
@@ -65,8 +55,10 @@ export function OrgIssuesTable({ orgSlug, issues }: OrgIssuesTableProps) {
                   <span className="status-badge">{status}</span>
                 </td>
                 <td className="org-issue-priority-cell">
-                  <span className={`priority-badge ${priorityClass(priority)}`}>
-                    {priorityLabel(priority)}
+                  <span
+                    className={`priority-badge ${getPriorityClass(getPriorityLabel(priority))}`}
+                  >
+                    {getPriorityLabel(priority) || 'Unknown'}
                   </span>
                 </td>
                 <td className="org-issue-date">{createdAt}</td>

@@ -17,7 +17,7 @@ export function ArchivedStaleItem({
     <li className="archived-item stale">
       <div className="archived-item-info">
         <span className="archived-item-name">
-          {path.split('/').pop() || path}
+          {path.split('/').pop() ?? path}
         </span>
         <span className="archived-item-path">{path}</span>
         <div className="archived-item-stats">

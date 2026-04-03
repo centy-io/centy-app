@@ -62,7 +62,7 @@ export function useStatusChange(
         if (response.success && response.item) {
           const updated = response.item
           setIssue(updated)
-          setEditStatus((updated.metadata && updated.metadata.status) || 'open')
+          setEditStatus((updated.metadata && updated.metadata.status) ?? 'open')
         } else {
           setError(response.error || 'Failed to update status')
         }

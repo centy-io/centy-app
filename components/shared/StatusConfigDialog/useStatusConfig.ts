@@ -25,9 +25,7 @@ async function fetchConfig(projectPath: string): Promise<{
 
 function getInitialSelectedOption(config: Config): boolean {
   if (config.workspace) {
-    return config.workspace.updateStatusOnOpen !== undefined
-      ? config.workspace.updateStatusOnOpen
-      : false
+    return config.workspace.updateStatusOnOpen ?? false
   }
   return false
 }
@@ -64,7 +62,7 @@ export function useStatusConfig(
         setLoading(false)
       }
     }
-    loadConfig()
+    void loadConfig()
   }, [projectPath])
 
   const handleSave = useCallback(async () => {

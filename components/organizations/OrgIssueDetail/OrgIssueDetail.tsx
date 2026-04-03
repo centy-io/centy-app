@@ -94,9 +94,9 @@ export function OrgIssueDetail({
       <div className="issue-detail-content">
         {state.isEditing ? (
           <OrgIssueEditForm state={state} />
-        ) : (
-          <OrgIssueReadView issue={state.issue!} />
-        )}
+        ) : state.issue ? (
+          <OrgIssueReadView issue={state.issue} />
+        ) : null}
       </div>
     </div>
   )

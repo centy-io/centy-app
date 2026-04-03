@@ -16,7 +16,7 @@ export function LinkPreview({
   getInverseLinkType,
 }: LinkPreviewProps) {
   const targetDisplay =
-    selectedTarget.displayNumber || selectedTarget.id.slice(0, 8)
+    selectedTarget.displayNumber ?? selectedTarget.id.slice(0, 8)
 
   return (
     <div className="link-modal-preview">

@@ -53,7 +53,7 @@ export function useCreateUser() {
       } else {
         setError(
           formatCreateUserError(
-            new OperationError(res.error || 'Failed to create user')
+            new OperationError(res.error ?? 'Failed to create user')
           )
         )
       }

@@ -45,17 +45,18 @@ export function LegacyUrlRedirect() {
       }
     }
 
+    const path = projectPath
     async function redirect() {
       setIsRedirecting(true)
 
       try {
-        const result = await resolveProjectPath(projectPath!)
+        const result = await resolveProjectPath(path)
 
         if (result) {
           const orgPart = result.orgSlug || UNGROUPED_ORG_MARKER
 
           // Extract the page from pathname (e.g., /issues -> issues)
-          const page = pathname.split('/').find(Boolean) || 'issues'
+          const page = pathname.split('/').find(Boolean) ?? 'issues'
 
           // Build new URL and redirect
           router.replace(
@@ -72,7 +73,7 @@ export function LegacyUrlRedirect() {
       }
     }
 
-    redirect()
+    void redirect()
   }, [searchParams, pathname, router])
 
   if (isRedirecting) {

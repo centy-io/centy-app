@@ -7,7 +7,9 @@ import { IssueDetailContent } from './IssueDetailContent'
 import { Modals } from './Modals'
 import type { IssueDetailProps } from './IssueDetail.types'
 
-export function IssueDetail({ issueNumber }: IssueDetailProps): ReactElement {
+export function IssueDetail({
+  issueNumber,
+}: IssueDetailProps): ReactElement | null {
   const state = useIssueDetailPage(issueNumber)
 
   const loadingView = renderLoadingState({
@@ -20,8 +22,8 @@ export function IssueDetail({ issueNumber }: IssueDetailProps): ReactElement {
   })
 
   if (loadingView) return loadingView
-  // After this point, issue is guaranteed to be non-null
-  const issue = state.detail.issue!
+  const issue = state.detail.issue
+  if (!issue) return null
 
   return (
     <>

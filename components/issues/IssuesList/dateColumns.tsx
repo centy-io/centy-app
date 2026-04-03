@@ -5,7 +5,7 @@ const columnHelper = createColumnHelper<GenericItem>()
 
 export function createCreatedAtColumn() {
   return columnHelper.accessor(
-    row => (row.metadata && row.metadata.createdAt) || '',
+    row => (row.metadata && row.metadata.createdAt) ?? '',
     {
       id: 'createdAt',
       header: 'Created',

@@ -6,11 +6,8 @@ const FIXED_DATE = '2024-01-15T10:30:00.000Z'
  * Creates a mock issue with default values that can be overridden.
  */
 export function createMockIssue(overrides?: Partial<Issue>): Issue {
-  const resolvedOverrides = overrides !== undefined ? overrides : {}
-  const displayNumber =
-    resolvedOverrides.displayNumber !== undefined
-      ? resolvedOverrides.displayNumber
-      : 1
+  const resolvedOverrides = overrides ?? {}
+  const displayNumber = resolvedOverrides.displayNumber ?? 1
   const now = FIXED_DATE
 
   const defaultMetadata: IssueMetadata = {
@@ -30,23 +27,12 @@ export function createMockIssue(overrides?: Partial<Issue>): Issue {
   }
 
   return {
-    id:
-      resolvedOverrides.id !== undefined
-        ? resolvedOverrides.id
-        : `issue-${displayNumber}`,
+    id: resolvedOverrides.id ?? `issue-${displayNumber}`,
     displayNumber,
-    issueNumber:
-      resolvedOverrides.issueNumber !== undefined
-        ? resolvedOverrides.issueNumber
-        : `uuid-${displayNumber}`,
-    title:
-      resolvedOverrides.title !== undefined
-        ? resolvedOverrides.title
-        : `Test Issue ${displayNumber}`,
+    issueNumber: resolvedOverrides.issueNumber ?? `uuid-${displayNumber}`,
+    title: resolvedOverrides.title ?? `Test Issue ${displayNumber}`,
     description:
-      resolvedOverrides.description !== undefined
-        ? resolvedOverrides.description
-        : `Description for issue ${displayNumber}`,
+      resolvedOverrides.description ?? `Description for issue ${displayNumber}`,
     metadata: {
       ...defaultMetadata,
       ...resolvedOverrides.metadata,

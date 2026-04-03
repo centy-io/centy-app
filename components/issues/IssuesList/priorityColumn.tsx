@@ -1,5 +1,5 @@
 import { createColumnHelper } from '@tanstack/react-table'
-import { getPriorityClass } from './IssuesList.types'
+import { getPriorityClass, getPriorityLabel } from './IssuesList.types'
 import type { GenericItem } from '@/gen/centy_pb'
 
 const columnHelper = createColumnHelper<GenericItem>()
@@ -19,8 +19,7 @@ const PRIORITY_ORDER = new Map<string, number>([
 export function createPriorityColumn() {
   return columnHelper.accessor(
     row =>
-      (row.metadata ? row.metadata.customFields.priority_label : null) ||
-      'unknown',
+      getPriorityLabel(row.metadata ? row.metadata.priority : 0) || 'Unknown',
     {
       id: 'priority',
       header: 'Priority',
@@ -42,7 +41,7 @@ export function createPriorityColumn() {
       sortingFn: (rowA, rowB) => {
         const a = String(rowA.getValue('priority')).toLowerCase()
         const b = String(rowB.getValue('priority')).toLowerCase()
-        return (PRIORITY_ORDER.get(a) || 4) - (PRIORITY_ORDER.get(b) || 4)
+        return (PRIORITY_ORDER.get(a) ?? 4) - (PRIORITY_ORDER.get(b) ?? 4)
       },
     }
   )

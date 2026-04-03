@@ -8,7 +8,7 @@ interface UseSaveShortcutOptions {
 }
 
 export function useSaveShortcut({ onSave, enabled }: UseSaveShortcutOptions) {
-  const resolvedEnabled = enabled !== undefined ? enabled : true
+  const resolvedEnabled = enabled ?? true
   const onSaveRef = useRef(onSave)
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export function useSaveShortcut({ onSave, enabled }: UseSaveShortcutOptions) {
       event.preventDefault()
 
       if (resolvedEnabled) {
-        onSaveRef.current()
+        void onSaveRef.current()
       }
     }
 

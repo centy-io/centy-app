@@ -85,7 +85,7 @@ export function useAppLink() {
       projectName: string,
       path: string
     ): RouteLiteral => {
-      const orgPart = orgSlug || UNGROUPED_ORG_MARKER
+      const orgPart = orgSlug ?? UNGROUPED_ORG_MARKER
       const normalizedPath = path.startsWith('/') ? path.slice(1) : path
       return route({
         pathname: '/[...path]',
@@ -97,12 +97,13 @@ export function useAppLink() {
 
   const hasProjectContext = Boolean(org && project)
 
-  const currentContext = hasProjectContext
-    ? {
-        orgSlug: org === UNGROUPED_ORG_MARKER ? null : org,
-        projectName: project!,
-      }
-    : null
+  const currentContext =
+    org && project
+      ? {
+          orgSlug: org === UNGROUPED_ORG_MARKER ? null : org,
+          projectName: project,
+        }
+      : null
 
   return {
     createLink,

@@ -77,7 +77,7 @@ export function useAddLinkModal({
         setLoadingTypes(false)
       }
     }
-    loadLinkTypes()
+    void loadLinkTypes()
   }, [projectPath])
 
   return {

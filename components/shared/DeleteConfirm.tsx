@@ -29,7 +29,7 @@ export function DeleteConfirm({
   error,
   children,
 }: DeleteConfirmProps): React.JSX.Element {
-  const label = confirmLabel !== undefined ? confirmLabel : 'Delete'
+  const label = confirmLabel ?? 'Delete'
   const [pendingAction, setPendingAction] = useState<'soft' | 'hard' | null>(
     null
   )
@@ -40,7 +40,7 @@ export function DeleteConfirm({
 
   function handleSoftDelete() {
     setPendingAction('soft')
-    onSoftDelete!()
+    if (onSoftDelete) onSoftDelete()
   }
 
   function handleConfirm() {

@@ -8,7 +8,7 @@ export const createMockLinkTypeInfo = (
   ({
     name,
     inverse,
-    description: description !== undefined ? description : '',
+    description: description ?? '',
     $typeName: 'centy.v1.LinkTypeInfo' as const,
     $unknown: undefined,
   }) as LinkTypeInfo
@@ -22,13 +22,13 @@ export const createMockGenericItem = (overrides: {
   status?: string
 }): GenericItem =>
   ({
-    id: overrides.id || 'item-1',
-    itemType: overrides.itemType || 'issues',
-    title: overrides.title || 'Test Item',
-    body: overrides.body || '',
+    id: overrides.id ?? 'item-1',
+    itemType: overrides.itemType ?? 'issues',
+    title: overrides.title ?? 'Test Item',
+    body: overrides.body ?? '',
     metadata: {
-      displayNumber: overrides.displayNumber || 1,
-      status: overrides.status || 'open',
+      displayNumber: overrides.displayNumber ?? 1,
+      status: overrides.status ?? 'open',
       priority: 2,
       createdAt: '2024-01-01T00:00:00Z',
       updatedAt: '2024-01-01T00:00:00Z',

@@ -53,7 +53,7 @@ export function useDuplicateModal({
         setLoadingProjects(false)
       }
     }
-    loadProjects()
+    void loadProjects()
   }, [currentProjectPath])
 
   const selectedProjectInfo = projects.find(p => p.path === selectedProject)

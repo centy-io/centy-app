@@ -34,7 +34,7 @@ export function useOrganizationsList() {
   }, [])
 
   useEffect(() => {
-    fetchOrganizations()
+    void fetchOrganizations()
   }, [fetchOrganizations])
 
   const handleDelete = useCallback(async (slug: string) => {

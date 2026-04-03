@@ -35,7 +35,7 @@ export function SyncModalContent({
       )}
       {state === 'error' && (
         <div className="sync-error">
-          <DaemonErrorMessage error={error || ''} />
+          <DaemonErrorMessage error={error ?? ''} />
           {error && !isDaemonUnimplemented(error) && (
             <button onClick={fetchPreview} className="retry-btn">
               Retry

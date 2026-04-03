@@ -52,7 +52,7 @@ export function useOrganizationDetail(orgSlug: string) {
   }, [orgSlug])
 
   useEffect(() => {
-    fetchOrganization()
+    void fetchOrganization()
   }, [fetchOrganization])
 
   const handleSave = useCallback(

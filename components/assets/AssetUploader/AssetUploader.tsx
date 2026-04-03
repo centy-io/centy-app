@@ -23,8 +23,8 @@ export const AssetUploader = forwardRef<
   },
   ref
 ) {
-  const resolvedInitialAssets = initialAssets !== undefined ? initialAssets : []
-  const targetId = issueId || prId
+  const resolvedInitialAssets = initialAssets ?? []
+  const targetId = issueId ?? prId
   const uploader = useAssetUploader({
     projectPath,
     targetId,

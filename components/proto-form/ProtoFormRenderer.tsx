@@ -21,8 +21,8 @@ export function ProtoFormRenderer({
   fieldGroups,
   fieldOverrides,
 }: ProtoFormRendererProps) {
-  const groups = fieldGroups !== undefined ? fieldGroups : []
-  const overrides = fieldOverrides !== undefined ? fieldOverrides : {}
+  const groups = fieldGroups ?? []
+  const overrides = fieldOverrides ?? {}
 
   const claimedFields = new Set<string>()
   for (const group of groups) {

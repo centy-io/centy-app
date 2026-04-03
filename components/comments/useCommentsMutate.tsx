@@ -40,7 +40,8 @@ export function useUpdateComment(
         setError
       )
       if (res && res.success && res.item) {
-        setComments(prev => prev.map(c => (c.id === commentId ? res.item! : c)))
+        const { item } = res
+        setComments(prev => prev.map(c => (c.id === commentId ? item : c)))
       } else if (res) {
         setError(res.error || 'Failed to update comment')
       }

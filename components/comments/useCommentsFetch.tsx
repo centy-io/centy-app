@@ -79,7 +79,8 @@ export function useAddComment(
         setError
       )
       if (res && res.success && res.item) {
-        setComments(prev => [...prev, res.item!])
+        const { item } = res
+        setComments(prev => [...prev, item])
         return true
       } else if (res) {
         setError(res.error || 'Failed to add comment')

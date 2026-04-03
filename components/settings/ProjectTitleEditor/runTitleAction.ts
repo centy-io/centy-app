@@ -19,11 +19,11 @@ export async function runTitleAction(
   try {
     const result = await action()
     if (!result.success) {
-      setError(result.error || 'Operation failed')
+      setError(result.error ?? 'Operation failed')
       return
     }
     if (result.project) updateFromResponse(result.project)
-    setSuccess(result.message || 'Done')
+    setSuccess(result.message ?? 'Done')
   } catch (err) {
     setError(err instanceof Error ? err.message : 'Operation failed')
   } finally {

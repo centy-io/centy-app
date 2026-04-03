@@ -15,8 +15,7 @@ export class GrpcMocker {
 
   constructor(page: Page, daemonUrl?: string) {
     this.page = page
-    this.daemonUrl =
-      daemonUrl !== undefined ? daemonUrl : 'http://localhost:50051'
+    this.daemonUrl = daemonUrl ?? 'http://localhost:50051'
     this.handlers = new Map()
     this.isSetup = false
   }

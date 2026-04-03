@@ -31,13 +31,12 @@ export function useNavItemTypes(
       setItemTypes([])
       return
     }
+    const org = effectiveOrg
+    const project = effectiveProject
     let cancelled = false
     async function fetchItemTypes() {
       try {
-        const resolution = await resolveProject(
-          effectiveOrg!,
-          effectiveProject!
-        )
+        const resolution = await resolveProject(org, project)
         if (cancelled || !resolution) return
         const req = create(ListItemTypesRequestSchema, {
           projectPath: resolution.projectPath,
@@ -51,7 +50,7 @@ export function useNavItemTypes(
               name: t.plural.charAt(0).toUpperCase() + t.plural.slice(1),
               plural: t.plural,
               itemCount: 0,
-              href: buildItemHref(effectiveOrg!, effectiveProject!, t.plural),
+              href: buildItemHref(org, project, t.plural),
             }))
             .sort(
               (a, b) =>
@@ -62,7 +61,7 @@ export function useNavItemTypes(
         // silently fall back to empty
       }
     }
-    fetchItemTypes()
+    void fetchItemTypes()
     return () => {
       cancelled = true
     }
