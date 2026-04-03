@@ -58,7 +58,9 @@ export function useDaemonStatusState() {
       initializeDemoFromUrl(setStatus, setEditors, setEditorsLoaded)
       setHasMounted(true)
     }, 0)
-    return () => clearTimeout(timeoutId)
+    return () => {
+      clearTimeout(timeoutId)
+    }
   }, [setEditors, setEditorsLoaded])
 
   useEffect(() => {

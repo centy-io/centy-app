@@ -49,7 +49,9 @@ export function CommentItem({
           <button
             type="button"
             className="comment-edit-btn"
-            onClick={() => setIsEditing(true)}
+            onClick={() => {
+              setIsEditing(true)
+            }}
             disabled={isEditing || isDeleting}
           >
             Edit
@@ -57,7 +59,9 @@ export function CommentItem({
           <button
             type="button"
             className="comment-delete-btn"
-            onClick={() => onDelete(comment.id)}
+            onClick={() => {
+              onDelete(comment.id)
+            }}
             disabled={isDeleting || isSaving}
           >
             {isDeleting ? 'Deleting...' : 'Delete'}

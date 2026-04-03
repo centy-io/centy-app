@@ -25,7 +25,9 @@ export function IssuesList() {
         fetchIssues={() => {
           void fetchIssues()
         }}
-        onShowStandaloneModal={() => ctx.setShowStandaloneModal(true)}
+        onShowStandaloneModal={() => {
+          ctx.setShowStandaloneModal(true)
+        }}
         createLink={ctx.createLink}
       />
       <IssuesContent
@@ -43,7 +45,9 @@ export function IssuesList() {
         projectPath={projectPath}
         contextMenu={ctx.contextMenu}
         contextMenuItems={ctx.contextMenuItems}
-        onCloseContextMenu={() => ctx.setContextMenu(null)}
+        onCloseContextMenu={() => {
+          ctx.setContextMenu(null)
+        }}
         showMoveModal={ctx.showMoveModal}
         showDuplicateModal={ctx.showDuplicateModal}
         showStandaloneModal={ctx.showStandaloneModal}
@@ -56,7 +60,9 @@ export function IssuesList() {
           ctx.setShowDuplicateModal(false)
           ctx.setSelectedIssue(null)
         }}
-        onCloseStandaloneModal={() => ctx.setShowStandaloneModal(false)}
+        onCloseStandaloneModal={() => {
+          ctx.setShowStandaloneModal(false)
+        }}
         onMoved={ctx.handleMoved}
         onDuplicated={ctx.handleDuplicated}
       />

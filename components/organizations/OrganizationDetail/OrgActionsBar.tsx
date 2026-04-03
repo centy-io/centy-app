@@ -23,11 +23,18 @@ export function OrgActionsBar(props: ActionsBarProps): React.JSX.Element {
   if (!isEditing) {
     return (
       <>
-        <button onClick={() => setIsEditing(true)} className="edit-btn">
+        <button
+          onClick={() => {
+            setIsEditing(true)
+          }}
+          className="edit-btn"
+        >
           Edit
         </button>
         <button
-          onClick={() => setShowDeleteConfirm(true)}
+          onClick={() => {
+            setShowDeleteConfirm(true)
+          }}
           className="delete-btn"
         >
           Delete

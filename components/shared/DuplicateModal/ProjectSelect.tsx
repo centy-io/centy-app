@@ -26,7 +26,9 @@ export function ProjectSelect({
   return (
     <select
       value={selectedProject}
-      onChange={e => setSelectedProject(e.target.value)}
+      onChange={e => {
+        setSelectedProject(e.target.value)
+      }}
       className="move-modal-select"
     >
       {projects.map(project => (

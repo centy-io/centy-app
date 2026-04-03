@@ -62,7 +62,9 @@ export function MapFieldRenderer({
       {entries.length > 0 && (
         <MapEntriesTable
           entries={entries}
-          onValueChange={(k, v) => onChange({ ...map, [k]: v })}
+          onValueChange={(k, v) => {
+            onChange({ ...map, [k]: v })
+          }}
           onRemove={handleRemove}
         />
       )}

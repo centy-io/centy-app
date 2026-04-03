@@ -24,7 +24,12 @@ export function SharedAssetCard({
 }: SharedAssetCardProps) {
   return (
     <div className="asset-card">
-      <div className="asset-preview" onClick={() => onPreview(asset)}>
+      <div
+        className="asset-preview"
+        onClick={() => {
+          onPreview(asset)
+        }}
+      >
         {asset.mimeType.startsWith('image/') ? (
           <div className="preview-placeholder image">IMG</div>
         ) : asset.mimeType.startsWith('video/') ? (
@@ -56,8 +61,12 @@ export function SharedAssetCard({
         <DeleteConfirm
           message={`Delete "${asset.filename}"?`}
           deleting={deleting}
-          onCancel={() => onDeleteConfirm(null)}
-          onConfirm={() => onDelete(asset.filename)}
+          onCancel={() => {
+            onDeleteConfirm(null)
+          }}
+          onConfirm={() => {
+            onDelete(asset.filename)
+          }}
         />
       )}
     </div>

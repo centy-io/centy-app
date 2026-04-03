@@ -64,7 +64,9 @@ export function useIssueContextMenu(
           setShowDuplicateModal(true)
           setContextMenu(null)
         },
-        onClose: () => setContextMenu(null),
+        onClose: () => {
+          setContextMenu(null)
+        },
       })
     : []
 

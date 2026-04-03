@@ -18,6 +18,8 @@ export function useClickOutside(
     }
 
     document.addEventListener('click', handleClickOutside)
-    return () => document.removeEventListener('click', handleClickOutside)
+    return () => {
+      document.removeEventListener('click', handleClickOutside)
+    }
   }, [isOpen, onClose, containerClass])
 }

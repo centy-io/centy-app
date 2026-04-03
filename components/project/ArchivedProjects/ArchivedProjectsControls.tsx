@@ -23,7 +23,9 @@ export function RemoveAllControl({ state }: { state: State }): ReactElement {
         </button>
         <button
           className="confirm-no-btn"
-          onClick={() => state.setConfirmRemoveAll(false)}
+          onClick={() => {
+            state.setConfirmRemoveAll(false)
+          }}
           disabled={state.removingAll}
         >
           No
@@ -34,7 +36,9 @@ export function RemoveAllControl({ state }: { state: State }): ReactElement {
   return (
     <button
       className="remove-all-btn"
-      onClick={() => state.setConfirmRemoveAll(true)}
+      onClick={() => {
+        state.setConfirmRemoveAll(true)
+      }}
     >
       Remove all
     </button>

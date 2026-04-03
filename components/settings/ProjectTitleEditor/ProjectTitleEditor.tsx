@@ -48,7 +48,9 @@ export function ProjectTitleEditor({
           id="project-title"
           type="text"
           value={currentTitle}
-          onChange={e => setCurrentTitle(e.target.value)}
+          onChange={e => {
+            setCurrentTitle(e.target.value)
+          }}
           placeholder={projectInfo.name || 'Project name'}
           className="title-input"
         />

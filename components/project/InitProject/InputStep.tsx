@@ -35,7 +35,9 @@ export function InputStep({
             id="project-path"
             type="text"
             value={projectPath}
-            onChange={e => setProjectPath(e.target.value)}
+            onChange={e => {
+              setProjectPath(e.target.value)
+            }}
             placeholder="/path/to/your/project"
           />
           {isTauri && (

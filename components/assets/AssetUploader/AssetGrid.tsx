@@ -35,14 +35,18 @@ export function AssetGrid({
             asset={asset}
             projectPath={projectPath}
             issueId={issueId}
-            onRemove={() => onRemoveAsset(asset.filename)}
+            onRemove={() => {
+              onRemoveAsset(asset.filename)
+            }}
           />
         ))}
       {pendingAssets.map(pending => (
         <PendingAssetPreviewItem
           key={pending.id}
           pending={pending}
-          onRemove={() => onRemovePending(pending.id)}
+          onRemove={() => {
+            onRemovePending(pending.id)
+          }}
         />
       ))}
     </div>

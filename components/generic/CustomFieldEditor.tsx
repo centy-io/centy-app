@@ -23,7 +23,9 @@ export function CustomFieldEditor({
         id={`edit-field-${fieldName}`}
         value={value}
         rows={3}
-        onChange={e => onChange(e.target.value)}
+        onChange={e => {
+          onChange(e.target.value)
+        }}
       />
     </div>
   )

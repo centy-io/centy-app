@@ -33,7 +33,12 @@ export function UsersListHeader({
             >
               {loading ? 'Loading...' : 'Refresh'}
             </button>
-            <button onClick={() => setShowSyncModal(true)} className="sync-btn">
+            <button
+              onClick={() => {
+                setShowSyncModal(true)
+              }}
+              className="sync-btn"
+            >
               Sync from Git
             </button>
           </>

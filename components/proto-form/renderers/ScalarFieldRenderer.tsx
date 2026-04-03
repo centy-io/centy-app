@@ -22,7 +22,9 @@ export function ScalarFieldRenderer({
           type="checkbox"
           className="proto-form-checkbox"
           checked={Boolean(value)}
-          onChange={e => onChange(e.target.checked)}
+          onChange={e => {
+            onChange(e.target.checked)
+          }}
         />
         <span className="proto-form-checkbox-text">
           <strong className="proto-form-field-label">{label}</strong>
@@ -74,7 +76,9 @@ export function ScalarFieldRenderer({
         type="text"
         className="proto-form-input"
         value={typeof value === 'string' ? value : ''}
-        onChange={e => onChange(e.target.value)}
+        onChange={e => {
+          onChange(e.target.value)
+        }}
       />
     </div>
   )

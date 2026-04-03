@@ -38,7 +38,9 @@ export function OrgSwitcherDropdown({
         <h3 className="org-switcher-title">Filter by Organization</h3>
         <button
           className="refresh-btn"
-          onClick={() => onRefresh()}
+          onClick={() => {
+            onRefresh()
+          }}
           disabled={loading}
           title="Refresh organizations"
         >

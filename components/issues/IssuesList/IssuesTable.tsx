@@ -36,7 +36,9 @@ export function IssuesTable({
           {table.getRowModel().rows.map(row => (
             <tr
               key={row.original.id}
-              onContextMenu={e => onContextMenu(e, row.original)}
+              onContextMenu={e => {
+                onContextMenu(e, row.original)
+              }}
               className="context-menu-row"
             >
               {row.getVisibleCells().map(cell => (

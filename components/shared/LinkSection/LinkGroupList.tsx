@@ -51,7 +51,9 @@ export function LinkGroupList({
                   {editable && (
                     <button
                       className="link-delete-btn"
-                      onClick={() => onDeleteLink(link)}
+                      onClick={() => {
+                        onDeleteLink(link)
+                      }}
                       disabled={isDeleting}
                       title="Remove link"
                     >

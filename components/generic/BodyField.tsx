@@ -17,7 +17,9 @@ export function BodyField({
         id="edit-body"
         rows={6}
         value={editBody}
-        onChange={e => setEditBody(e.target.value)}
+        onChange={e => {
+          setEditBody(e.target.value)
+        }}
       />
     </div>
   )

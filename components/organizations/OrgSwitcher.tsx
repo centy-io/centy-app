@@ -36,7 +36,13 @@ export function OrgSwitcher(): React.JSX.Element {
     }
   }, [isOpen])
 
-  useClickOutside(isOpen, () => setIsOpen(false), '.org-switcher-container')
+  useClickOutside(
+    isOpen,
+    () => {
+      setIsOpen(false)
+    },
+    '.org-switcher-container'
+  )
 
   const handleSelect = (slug: string | null | undefined): void => {
     setSelectedOrgSlug(slug)
@@ -50,7 +56,9 @@ export function OrgSwitcher(): React.JSX.Element {
       <button
         ref={refs.setReference}
         className="org-switcher-trigger"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          setIsOpen(!isOpen)
+        }}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
         title="Filter by organization"
@@ -71,7 +79,9 @@ export function OrgSwitcher(): React.JSX.Element {
             void refreshOrganizations()
           }}
           onSelect={handleSelect}
-          onClose={() => setIsOpen(false)}
+          onClose={() => {
+            setIsOpen(false)
+          }}
         />
       )}
     </div>

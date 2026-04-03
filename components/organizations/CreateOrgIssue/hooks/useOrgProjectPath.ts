@@ -18,8 +18,12 @@ export function useOrgProjectPath(orgSlug: string) {
         const initialized = res.projects.find(p => p.initialized)
         setOrgProjectPath(initialized ? initialized.path : null)
       })
-      .catch(() => setOrgProjectPath(null))
-      .finally(() => setInitLoading(false))
+      .catch(() => {
+        setOrgProjectPath(null)
+      })
+      .finally(() => {
+        setInitLoading(false)
+      })
   }, [orgSlug])
 
   return { orgProjectPath, initLoading }

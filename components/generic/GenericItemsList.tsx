@@ -46,8 +46,12 @@ export function GenericItemsList({ itemType }: GenericItemsListProps) {
         displayName={displayName}
         deleteConfirm={data.deleteConfirm}
         deleting={data.deleting}
-        onDeleteRequest={id => data.setDeleteConfirm(id)}
-        onDeleteCancel={() => data.setDeleteConfirm(null)}
+        onDeleteRequest={id => {
+          data.setDeleteConfirm(id)
+        }}
+        onDeleteCancel={() => {
+          data.setDeleteConfirm(null)
+        }}
         onSoftDeleteConfirm={id => {
           void data.handleSoftDelete(id)
         }}

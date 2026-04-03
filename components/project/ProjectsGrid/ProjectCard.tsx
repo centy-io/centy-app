@@ -23,7 +23,9 @@ export function ProjectCard({
         <h3 className="project-name">{project.name}</h3>
         <button
           className={`favorite-btn ${project.isFavorite ? 'active' : ''}`}
-          onClick={e => onToggleFavorite(e, project)}
+          onClick={e => {
+            onToggleFavorite(e, project)
+          }}
           title={
             project.isFavorite ? 'Remove from favorites' : 'Add to favorites'
           }

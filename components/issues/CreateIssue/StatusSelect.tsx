@@ -23,7 +23,9 @@ export function StatusSelect({
         className="form-select"
         id="status"
         value={status}
-        onChange={e => setStatus(e.target.value)}
+        onChange={e => {
+          setStatus(e.target.value)
+        }}
       >
         {stateOptions.map(option => (
           <option

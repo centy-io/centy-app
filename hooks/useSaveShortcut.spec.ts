@@ -20,7 +20,9 @@ describe('useSaveShortcut - key combinations', () => {
   })
 
   it('should call onSave when Ctrl+S is pressed', () => {
-    renderHook(() => useSaveShortcut({ onSave: mockOnSave }))
+    renderHook(() => {
+      useSaveShortcut({ onSave: mockOnSave })
+    })
 
     fireKeyboardEvent({ key: 's', ctrlKey: true })
 
@@ -28,7 +30,9 @@ describe('useSaveShortcut - key combinations', () => {
   })
 
   it('should call onSave when Cmd+S (metaKey) is pressed', () => {
-    renderHook(() => useSaveShortcut({ onSave: mockOnSave }))
+    renderHook(() => {
+      useSaveShortcut({ onSave: mockOnSave })
+    })
 
     fireKeyboardEvent({ key: 's', metaKey: true })
 
@@ -36,7 +40,9 @@ describe('useSaveShortcut - key combinations', () => {
   })
 
   it('should call onSave with uppercase S key', () => {
-    renderHook(() => useSaveShortcut({ onSave: mockOnSave }))
+    renderHook(() => {
+      useSaveShortcut({ onSave: mockOnSave })
+    })
 
     fireKeyboardEvent({ key: 'S', ctrlKey: true })
 
@@ -50,7 +56,9 @@ describe('useSaveShortcut - non-save shortcuts', () => {
   })
 
   it('should not call onSave when Alt+S is pressed (not save shortcut)', () => {
-    renderHook(() => useSaveShortcut({ onSave: mockOnSave }))
+    renderHook(() => {
+      useSaveShortcut({ onSave: mockOnSave })
+    })
 
     fireKeyboardEvent({ key: 's', altKey: true })
 
@@ -58,7 +66,9 @@ describe('useSaveShortcut - non-save shortcuts', () => {
   })
 
   it('should not call onSave when Shift+S is pressed (not save shortcut)', () => {
-    renderHook(() => useSaveShortcut({ onSave: mockOnSave }))
+    renderHook(() => {
+      useSaveShortcut({ onSave: mockOnSave })
+    })
 
     fireKeyboardEvent({ key: 's', shiftKey: true })
 
@@ -66,7 +76,9 @@ describe('useSaveShortcut - non-save shortcuts', () => {
   })
 
   it('should not call onSave when Ctrl+Alt+S is pressed', () => {
-    renderHook(() => useSaveShortcut({ onSave: mockOnSave }))
+    renderHook(() => {
+      useSaveShortcut({ onSave: mockOnSave })
+    })
 
     fireKeyboardEvent({ key: 's', ctrlKey: true, altKey: true })
 
@@ -74,7 +86,9 @@ describe('useSaveShortcut - non-save shortcuts', () => {
   })
 
   it('should not call onSave when Ctrl+Shift+S is pressed', () => {
-    renderHook(() => useSaveShortcut({ onSave: mockOnSave }))
+    renderHook(() => {
+      useSaveShortcut({ onSave: mockOnSave })
+    })
 
     fireKeyboardEvent({ key: 's', ctrlKey: true, shiftKey: true })
 
@@ -82,7 +96,9 @@ describe('useSaveShortcut - non-save shortcuts', () => {
   })
 
   it('should not call onSave for other keys with Ctrl', () => {
-    renderHook(() => useSaveShortcut({ onSave: mockOnSave }))
+    renderHook(() => {
+      useSaveShortcut({ onSave: mockOnSave })
+    })
 
     fireKeyboardEvent({ key: 'a', ctrlKey: true })
 

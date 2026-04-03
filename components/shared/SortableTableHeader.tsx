@@ -44,7 +44,9 @@ export function SortableTableHeader<T>({
                       const v = header.column.getFilterValue()
                       return typeof v === 'string' ? v : ''
                     })()}
-                    onChange={e => header.column.setFilterValue(e.target.value)}
+                    onChange={e => {
+                      header.column.setFilterValue(e.target.value)
+                    }}
                   />
                 )}
               </div>

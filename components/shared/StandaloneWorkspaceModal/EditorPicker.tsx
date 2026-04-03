@@ -19,7 +19,9 @@ export function EditorPicker({
           <button
             type="button"
             className={`standalone-editor-option ${selectedEditor === 'terminal' ? 'selected' : ''}`}
-            onClick={() => setSelectedEditor('terminal')}
+            onClick={() => {
+              setSelectedEditor('terminal')
+            }}
           >
             <span className="editor-option-name">Terminal</span>
           </button>

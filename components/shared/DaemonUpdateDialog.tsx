@@ -48,7 +48,12 @@ export function DaemonUpdateDialog({
 }: DaemonUpdateDialogProps) {
   return (
     <div className="daemon-update-overlay" onClick={onClose}>
-      <div className="daemon-update-dialog" onClick={e => e.stopPropagation()}>
+      <div
+        className="daemon-update-dialog"
+        onClick={e => {
+          e.stopPropagation()
+        }}
+      >
         <div className="daemon-update-dialog-header">
           <h3 className="daemon-update-dialog-title">
             Daemon update available
