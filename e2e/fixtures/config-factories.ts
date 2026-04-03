@@ -1,4 +1,8 @@
-import type { Config } from '@/gen/centy_pb'
+/* eslint-disable max-lines */
+import type { Config, ProjectInfo, Manifest } from '@/gen/centy_pb'
+
+// Fixed date for deterministic visual tests
+const FIXED_DATE = '2024-01-15T10:30:00.000Z'
 
 /**
  * Creates a mock config with default values that can be overridden.
@@ -54,10 +58,110 @@ export function createMockConfig(overrides?: Partial<Config>): Config {
         ? resolvedOverrides.defaultEditor
         : '',
     hooks: resolvedOverrides.hooks !== undefined ? resolvedOverrides.hooks : [],
-    userValues:
-      resolvedOverrides.userValues !== undefined
-        ? resolvedOverrides.userValues
-        : {},
     $typeName: 'centy.v1.Config',
+  }
+}
+
+/**
+ * Creates a mock project info object.
+ */
+export function createMockProjectInfo(
+  overrides?: Partial<ProjectInfo>
+): ProjectInfo {
+  const resolvedOverrides = overrides !== undefined ? overrides : {}
+  const now = FIXED_DATE
+
+  return {
+    path:
+      resolvedOverrides.path !== undefined
+        ? resolvedOverrides.path
+        : '/test/project',
+    firstAccessed:
+      resolvedOverrides.firstAccessed !== undefined
+        ? resolvedOverrides.firstAccessed
+        : now,
+    lastAccessed:
+      resolvedOverrides.lastAccessed !== undefined
+        ? resolvedOverrides.lastAccessed
+        : now,
+    issueCount:
+      resolvedOverrides.issueCount !== undefined
+        ? resolvedOverrides.issueCount
+        : 0,
+    docCount:
+      resolvedOverrides.docCount !== undefined ? resolvedOverrides.docCount : 0,
+    initialized:
+      resolvedOverrides.initialized !== undefined
+        ? resolvedOverrides.initialized
+        : true,
+    name:
+      resolvedOverrides.name !== undefined
+        ? resolvedOverrides.name
+        : 'Test Project',
+    isFavorite:
+      resolvedOverrides.isFavorite !== undefined
+        ? resolvedOverrides.isFavorite
+        : false,
+    isArchived:
+      resolvedOverrides.isArchived !== undefined
+        ? resolvedOverrides.isArchived
+        : false,
+    displayPath:
+      resolvedOverrides.displayPath !== undefined
+        ? resolvedOverrides.displayPath
+        : '/test/project',
+    organizationSlug:
+      resolvedOverrides.organizationSlug !== undefined
+        ? resolvedOverrides.organizationSlug
+        : '',
+    organizationName:
+      resolvedOverrides.organizationName !== undefined
+        ? resolvedOverrides.organizationName
+        : '',
+    userTitle:
+      resolvedOverrides.userTitle !== undefined
+        ? resolvedOverrides.userTitle
+        : '',
+    projectTitle:
+      resolvedOverrides.projectTitle !== undefined
+        ? resolvedOverrides.projectTitle
+        : '',
+    projectVersion:
+      resolvedOverrides.projectVersion !== undefined
+        ? resolvedOverrides.projectVersion
+        : '',
+    projectBehind:
+      resolvedOverrides.projectBehind !== undefined
+        ? resolvedOverrides.projectBehind
+        : false,
+    $typeName: 'centy.v1.ProjectInfo',
+  }
+}
+
+/**
+ * Creates a mock manifest object.
+ */
+export function createMockManifest(overrides?: Partial<Manifest>): Manifest {
+  const resolvedOverrides = overrides !== undefined ? overrides : {}
+  const now = FIXED_DATE
+
+  return {
+    schemaVersion:
+      resolvedOverrides.schemaVersion !== undefined
+        ? resolvedOverrides.schemaVersion
+        : 1,
+    centyVersion:
+      resolvedOverrides.centyVersion !== undefined
+        ? resolvedOverrides.centyVersion
+        : '1.0.0',
+    createdAt:
+      resolvedOverrides.createdAt !== undefined
+        ? resolvedOverrides.createdAt
+        : now,
+    updatedAt:
+      resolvedOverrides.updatedAt !== undefined
+        ? resolvedOverrides.updatedAt
+        : now,
+    $typeName: 'centy.v1.Manifest',
   }
 }

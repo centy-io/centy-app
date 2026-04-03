@@ -74,10 +74,11 @@ function makeStatusColumn(stateManager: StateManager) {
       },
       enableColumnFilter: true,
       filterFn: (row, columnId, filterValue) => {
-        const status = String(row.getValue(columnId))
         const selectedValues = Array.isArray(filterValue) ? filterValue : []
-        if (selectedValues.length === 0) return true
-        return selectedValues.includes(status)
+        return (
+          selectedValues.length === 0 ||
+          selectedValues.includes(String(row.getValue(columnId)))
+        )
       },
     }
   )
