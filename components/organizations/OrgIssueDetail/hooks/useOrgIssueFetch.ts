@@ -90,7 +90,7 @@ export function useOrgIssueFetch(params: UseOrgIssueFetchParams): void {
           setError(res.error || 'Issue not found')
         }
       })
-      .catch(err => {
+      .catch((err: unknown) => {
         setError(formatErr(err))
       })
       .finally(() => {

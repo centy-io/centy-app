@@ -26,7 +26,6 @@ export default [
       // Non-null assertions (!): banned by strictTypeChecked, all usages replaced with proper null checks
       '@typescript-eslint/no-non-null-assertion': 'error',
       // Miscellaneous stylistic rules from stylisticTypeChecked
-      '@typescript-eslint/use-unknown-in-catch-callback-variable': 'off',
       '@typescript-eslint/no-meaningless-void-operator': 'off',
       '@typescript-eslint/prefer-regexp-exec': 'off',
       '@typescript-eslint/no-unnecessary-type-parameters': 'off',

@@ -31,7 +31,7 @@ export function useProjectTitle(projectPath: string) {
       .then(project => {
         if (project) updateFromResponse(project)
       })
-      .catch(err => {
+      .catch((err: unknown) => {
         console.error('Failed to fetch project info:', err)
       })
   }, [projectPath, updateFromResponse])
