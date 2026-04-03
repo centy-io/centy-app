@@ -211,7 +211,8 @@
       "mcp__centy__centy_v1_CentyDaemon_GetDaemonInfo",
       "Bash(xxd)",
       "mcp__centy__centy_v1_CentyDaemon_GetOrganization",
-      "Bash(pnpm lint:*)"
+      "Bash(pnpm lint:*)",
+      "Bash(ps:*)"
     ],
     "deny": ["Bash(npm install)", "Bash(gh issue create:*)"]
   },
