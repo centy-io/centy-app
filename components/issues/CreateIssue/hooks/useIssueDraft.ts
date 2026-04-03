@@ -39,7 +39,7 @@ export function useIssueDraft(projectPath: string): IssueDraftState {
 
   useEffect(() => {
     if (!draftKey || !draftLoaded) return
-    saveFormDraft<IssueDraft>(draftKey, { title, description, priority })
+    saveFormDraft(draftKey, { title, description, priority })
   }, [draftKey, title, description, priority, draftLoaded])
 
   const clearDraft = useCallback(() => {
