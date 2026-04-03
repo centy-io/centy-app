@@ -1,13 +1,13 @@
 'use client'
 
 import type { ReactElement } from 'react'
-import type { Issue, Asset } from '@/gen/centy_pb'
+import type { GenericItem, Asset } from '@/gen/centy_pb'
 import { TextEditor } from '@/components/shared/TextEditor'
 import { AssetUploader } from '@/components/assets/AssetUploader'
 import { CommentThread } from '@/components/comments/CommentThread'
 
 interface ViewContentProps {
-  issue: Issue
+  issue: GenericItem
   projectPath: string
   issueNumber: string
   assets: Asset[]
@@ -24,7 +24,7 @@ export function ViewContent({
   return (
     <>
       <TextEditor
-        value={issue.description}
+        value={issue.body}
         format="md"
         mode="display"
         className="generic-item-body"

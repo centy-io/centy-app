@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { route } from 'nextjs-routes'
-import type { Issue } from '@/gen/centy_pb'
+import type { GenericItem } from '@/gen/centy_pb'
 
 function priorityLabel(priority: number): string {
   if (priority === 1) return 'High'
@@ -18,7 +18,7 @@ function priorityClass(priority: number): string {
 
 interface OrgIssuesTableProps {
   orgSlug: string
-  issues: Issue[]
+  issues: GenericItem[]
 }
 
 export function OrgIssuesTable({ orgSlug, issues }: OrgIssuesTableProps) {
@@ -37,7 +37,10 @@ export function OrgIssuesTable({ orgSlug, issues }: OrgIssuesTableProps) {
         <tbody className="org-issues-tbody">
           {issues.map(issue => {
             const meta = issue.metadata
-            const orgNum = meta ? meta.orgDisplayNumber : issue.displayNumber
+            const cfOrgNum = meta
+              ? parseInt(meta.customFields.org_display_number || '0', 10)
+              : 0
+            const orgNum = cfOrgNum || (meta ? meta.displayNumber : 0)
             const status = (meta && meta.status) || '—'
             const priority = meta ? meta.priority : 2
             const createdAt =

@@ -2,13 +2,13 @@ import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { buildContextMenuItems } from './buildContextMenuItems'
 import { useIssueMoveActions } from './useIssueMoveActions'
-import type { Issue } from '@/gen/centy_pb'
+import type { GenericItem } from '@/gen/centy_pb'
 import { usePinnedItems } from '@/hooks/usePinnedItems'
 
 interface ContextMenuState {
   x: number
   y: number
-  issue: Issue
+  issue: GenericItem
 }
 
 export function useIssueContextMenu(
@@ -26,12 +26,15 @@ export function useIssueContextMenu(
   const [showMoveModal, setShowMoveModal] = useState(false)
   const [showDuplicateModal, setShowDuplicateModal] = useState(false)
   const [showStandaloneModal, setShowStandaloneModal] = useState(false)
-  const [selectedIssue, setSelectedIssue] = useState<Issue | null>(null)
+  const [selectedIssue, setSelectedIssue] = useState<GenericItem | null>(null)
 
-  const handleContextMenu = useCallback((e: React.MouseEvent, issue: Issue) => {
-    e.preventDefault()
-    setContextMenu({ x: e.clientX, y: e.clientY, issue })
-  }, [])
+  const handleContextMenu = useCallback(
+    (e: React.MouseEvent, issue: GenericItem) => {
+      e.preventDefault()
+      setContextMenu({ x: e.clientX, y: e.clientY, issue })
+    },
+    []
+  )
 
   const onDuplicated = useCallback(
     async (newIssueId: string, targetProjectPath: string) => {

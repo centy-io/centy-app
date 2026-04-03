@@ -53,7 +53,6 @@ export function GenericItemEditForm({
           />
         )}
       {config &&
-        config.customFields &&
         config.customFields.map(field => (
           <CustomFieldEditor
             key={field.name}

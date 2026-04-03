@@ -7,7 +7,7 @@ import {
   MultiSelect,
   type MultiSelectOption,
 } from '@/components/shared/MultiSelect'
-import type { Issue } from '@/gen/centy_pb'
+import type { GenericItem } from '@/gen/centy_pb'
 
 export function getFilterValue(column: {
   getFilterValue: () => unknown
@@ -32,7 +32,7 @@ export function getTextFilterValue(column: {
 }
 
 interface IssuesColumnFilterProps {
-  column: Column<Issue>
+  column: Column<GenericItem>
   statusOptions: MultiSelectOption[]
 }
 

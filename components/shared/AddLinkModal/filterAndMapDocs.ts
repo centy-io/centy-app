@@ -1,30 +1,30 @@
 import type { EntityItem } from './EntityItem'
-import type { Doc, Link as LinkType } from '@/gen/centy_pb'
+import type { GenericItem, Link as LinkType } from '@/gen/centy_pb'
 
 export function filterAndMapDocs(
-  docs: Doc[],
+  docs: GenericItem[],
   entityId: string,
   existingLinks: LinkType[],
   selectedLinkType: string,
   searchQuery: string
 ): EntityItem[] {
   return docs
-    .filter((d: Doc) => d.slug !== entityId)
+    .filter((d: GenericItem) => d.id !== entityId)
     .filter(
-      (d: Doc) =>
+      (d: GenericItem) =>
         !existingLinks.some(
           (l: LinkType) =>
-            l.targetId === d.slug && l.linkType === selectedLinkType
+            l.targetId === d.id && l.linkType === selectedLinkType
         )
     )
     .filter(
-      (d: Doc) =>
+      (d: GenericItem) =>
         !searchQuery ||
         d.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        d.slug.toLowerCase().includes(searchQuery.toLowerCase())
+        d.id.toLowerCase().includes(searchQuery.toLowerCase())
     )
-    .map((d: Doc) => ({
-      id: d.slug,
+    .map((d: GenericItem) => ({
+      id: d.id,
       title: d.title,
       type: 'doc' as const,
     }))

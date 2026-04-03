@@ -23,7 +23,7 @@ export function CommentItem({
   const [isEditing, setIsEditing] = useState(false)
   const [editBody, setEditBody] = useState(comment.body)
   const meta = comment.metadata
-  const customFields = meta && meta.customFields ? meta.customFields : {}
+  const customFields = meta ? meta.customFields : {}
   const author = customFields.author || ''
   const createdAt =
     meta && meta.createdAt ? new Date(meta.createdAt).toLocaleString() : ''

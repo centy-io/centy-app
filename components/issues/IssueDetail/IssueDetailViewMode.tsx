@@ -46,7 +46,7 @@ export function IssueDetailViewMode({
                 onClick={onBadgeClick}
                 title="Click to copy UUID"
               >
-                #{issue.displayNumber}
+                #{issue.metadata ? issue.metadata.displayNumber : 0}
               </button>
             }
           >

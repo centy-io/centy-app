@@ -24,8 +24,7 @@ export function useUpdateComment(
       if (!projectPath || !body.trim()) return
       const existing = comments.find(c => c.id === commentId)
       const meta = existing ? existing.metadata : null
-      const existingFields =
-        meta && meta.customFields ? { ...meta.customFields } : {}
+      const existingFields = meta ? { ...meta.customFields } : {}
       const res = await callItemApi(
         () =>
           centyClient.updateItem(
