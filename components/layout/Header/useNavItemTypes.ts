@@ -46,6 +46,7 @@ export function useNavItemTypes(
         if (cancelled) return
         setItemTypes(
           res.itemTypes
+            .filter(t => t.listed)
             .map(t => ({
               name: t.plural.charAt(0).toUpperCase() + t.plural.slice(1),
               plural: t.plural,
