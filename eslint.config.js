@@ -28,7 +28,6 @@ export default [
       // Miscellaneous stylistic rules from stylisticTypeChecked
       // Disabled: conflicts with no-confusing-void-expression + ignoreVoidOperator pattern
       '@typescript-eslint/no-meaningless-void-operator': 'off',
-      '@typescript-eslint/prefer-regexp-exec': 'off',
       '@typescript-eslint/no-unnecessary-type-parameters': 'off',
     },
   },
