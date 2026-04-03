@@ -24,7 +24,7 @@ export default [
       // Type-unsafe operations involving any
       '@typescript-eslint/no-unsafe-return': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
-      '@typescript-eslint/no-unsafe-argument': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-unsafe-call': 'off',
       // Unnecessary conditions - enabled; false positives suppressed inline
       // Empty functions (e.g. no-op callbacks)
