@@ -32,7 +32,7 @@ export default [
       '@typescript-eslint/no-empty-function': 'off',
       // Miscellaneous stylistic rules from stylisticTypeChecked
       '@typescript-eslint/no-base-to-string': 'off',
-      '@typescript-eslint/use-unknown-in-catch-callback-variable': 'off',
+      '@typescript-eslint/prefer-regexp-exec': 'off',
       '@typescript-eslint/prefer-find': 'off',
       '@typescript-eslint/no-unnecessary-type-parameters': 'off',
       '@typescript-eslint/consistent-generic-constructors': 'off',
