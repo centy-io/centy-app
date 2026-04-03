@@ -26,9 +26,7 @@ export class StateManager {
   constructor(config?: Config | null, itemTypeStatuses?: string[]) {
     this.config = config !== undefined ? config : null
     this.itemTypeStatuses =
-      itemTypeStatuses !== undefined && itemTypeStatuses !== null
-        ? itemTypeStatuses
-        : []
+      itemTypeStatuses !== undefined ? itemTypeStatuses : []
   }
 
   /**
@@ -36,7 +34,7 @@ export class StateManager {
    * Returns config states if available, otherwise defaults.
    */
   getAllowedStates(): string[] {
-    if (this.config && this.config.stateColors) {
+    if (this.config) {
       const states = Object.keys(this.config.stateColors)
       if (states.length > 0) {
         return states
@@ -54,7 +52,7 @@ export class StateManager {
    */
   getDefaultState(): string {
     return (
-      (this.config && this.config.defaults && this.config.defaults.status) ||
+      (this.config && this.config.defaults.status) ||
       StateManager.DEFAULT_STATE
     )
   }
