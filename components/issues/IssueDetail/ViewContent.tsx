@@ -4,7 +4,6 @@ import type { ReactElement } from 'react'
 import type { Issue, Asset } from '@/gen/centy_pb'
 import { TextEditor } from '@/components/shared/TextEditor'
 import { AssetUploader } from '@/components/assets/AssetUploader'
-import { LinkSection } from '@/components/shared/LinkSection'
 import { CommentThread } from '@/components/comments/CommentThread'
 
 interface ViewContentProps {
@@ -45,8 +44,6 @@ export function ViewContent({
           <p className="no-assets">No attachments</p>
         )}
       </div>
-
-      <LinkSection entityId={issue.id} entityType="issue" editable={true} />
 
       <CommentThread
         projectPath={projectPath}

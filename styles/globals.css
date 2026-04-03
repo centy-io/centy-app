@@ -27,6 +27,7 @@
 @import './components/TextEditor/TextEditor.css';
 @import './components/ThemeToggle.css';
 @import './components/ItemView.css';
+@import './components/DetailLayout.css';
 
 /* Page styles */
 @import './pages/HomePage.css';

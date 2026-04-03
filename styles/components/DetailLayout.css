@@ -1,0 +1,61 @@
+/* Two-column detail layout */
+.detail-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 28px;
+  align-items: start;
+}
+
+.detail-layout-sidebar {
+  position: sticky;
+  top: 24px;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+/* Sidebar section headers */
+.sidebar-section-title {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--color-gray-500);
+  margin: 0 0 var(--space-3);
+}
+
+/* Override item-metadata to flow vertically in sidebar */
+.detail-layout-sidebar .item-metadata {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+/* Tighten assignees section spacing inside sidebar */
+.detail-layout-sidebar .issue-assignees {
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+}
+
+/* Responsive: collapse to single column at ≤900px */
+@media (max-width: 900px) {
+  .detail-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-layout-sidebar {
+    position: static;
+    max-height: none;
+    overflow-y: visible;
+    order: 1;
+  }
+
+  .detail-layout-main {
+    order: 0;
+  }
+}

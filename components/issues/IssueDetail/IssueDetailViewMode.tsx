@@ -1,10 +1,11 @@
 'use client'
 
 import type { ReactElement } from 'react'
-import { Metadata } from './Metadata'
 import { ViewContent } from './ViewContent'
+import { IssueSidebar } from './IssueSidebar'
 import type { IssueDetailBodyProps } from './IssueDetailBody.types'
 import { ItemTitleWithBadge } from '@/components/shared/ItemView'
+import { DetailLayout } from '@/components/shared/DetailLayout/DetailLayout'
 
 interface IssueDetailViewModeProps {
   issue: IssueDetailBodyProps['issue']
@@ -34,42 +35,44 @@ export function IssueDetailViewMode({
   onBadgeClick,
 }: IssueDetailViewModeProps): ReactElement {
   return (
-    <>
-      <ItemTitleWithBadge
-        badge={
-          <button
-            type="button"
-            className="issue-number-badge"
-            onClick={onBadgeClick}
-            title="Click to copy UUID"
+    <DetailLayout
+      main={
+        <>
+          <ItemTitleWithBadge
+            badge={
+              <button
+                type="button"
+                className="issue-number-badge"
+                onClick={onBadgeClick}
+                title="Click to copy UUID"
+              >
+                #{issue.displayNumber}
+              </button>
+            }
           >
-            #{issue.displayNumber}
-          </button>
-        }
-      >
-        {issue.title}
-      </ItemTitleWithBadge>
-      <Metadata
-        issue={issue}
-        projectPath={projectPath}
-        issueNumber={issueNumber}
-        stateManager={stateManager}
-        stateOptions={stateOptions}
-        showStatusDropdown={statusChange.showStatusDropdown}
-        updatingStatus={statusChange.updatingStatus}
-        statusDropdownRef={statusChange.statusDropdownRef}
-        assignees={editState.assignees}
-        setAssignees={editState.setAssignees}
-        onToggleDropdown={onToggleDropdown}
-        onStatusChange={statusChange.handleStatusChange}
-      />
-      <ViewContent
-        issue={issue}
-        projectPath={projectPath}
-        issueNumber={issueNumber}
-        assets={assets}
-        setAssets={setAssets}
-      />
-    </>
+            {issue.title}
+          </ItemTitleWithBadge>
+          <ViewContent
+            issue={issue}
+            projectPath={projectPath}
+            issueNumber={issueNumber}
+            assets={assets}
+            setAssets={setAssets}
+          />
+        </>
+      }
+      sidebar={
+        <IssueSidebar
+          issue={issue}
+          projectPath={projectPath}
+          issueNumber={issueNumber}
+          stateManager={stateManager}
+          stateOptions={stateOptions}
+          statusChange={statusChange}
+          editState={editState}
+          onToggleDropdown={onToggleDropdown}
+        />
+      }
+    />
   )
 }
