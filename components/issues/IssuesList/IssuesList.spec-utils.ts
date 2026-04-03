@@ -10,24 +10,24 @@ export const createMockGenericItem = (overrides?: {
   priorityLabel?: string
   hasMetadata?: boolean
 }): GenericItem => {
-  const o = overrides || {}
+  const o = overrides ?? {}
   return {
-    id: o.id || '0001',
+    id: o.id ?? '0001',
     itemType: 'issues',
-    title: o.title || 'Test Issue',
-    body: o.body || 'Test description',
+    title: o.title ?? 'Test Issue',
+    body: o.body ?? 'Test description',
     metadata:
       o.hasMetadata === false
         ? undefined
         : {
-            displayNumber: o.displayNumber || 1,
-            status: o.status || 'open',
-            priority: o.priority || 2,
+            displayNumber: o.displayNumber ?? 1,
+            status: o.status ?? 'open',
+            priority: o.priority ?? 2,
             createdAt: '2024-01-15T10:00:00Z',
             updatedAt: '2024-01-15T10:00:00Z',
             deletedAt: '',
             customFields: {
-              priority_label: o.priorityLabel || 'medium',
+              priority_label: o.priorityLabel ?? 'medium',
             },
             $typeName: 'centy.v1.GenericItemMetadata' as const,
             $unknown: undefined,

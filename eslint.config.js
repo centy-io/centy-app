@@ -1,13 +1,26 @@
 import config from 'eslint-config-agent'
 
+// Remove the nullish coalescing ban from no-restricted-syntax — the project now
+// embraces ?? via @typescript-eslint/prefer-nullish-coalescing.
+const baseConfig = config.map(c => {
+  if (!c.rules || !c.rules['no-restricted-syntax']) return c
+  const [severity, ...restrictions] = c.rules['no-restricted-syntax']
+  const filtered = restrictions.filter(
+    r => !r.selector || !r.selector.includes('??')
+  )
+  if (filtered.length === restrictions.length) return c
+  return {
+    ...c,
+    rules: { ...c.rules, 'no-restricted-syntax': [severity, ...filtered] },
+  }
+})
+
 export default [
-  ...config,
+  ...baseConfig,
   {
     // Disable rules from strictTypeChecked that conflict with project philosophy or require
     // large-scale refactoring. These should be addressed in separate issues.
     rules: {
-      // Conflicts with project's ban on nullish coalescing (??) and optional chaining (?.)
-      '@typescript-eslint/prefer-nullish-coalescing': 'off',
       '@typescript-eslint/prefer-optional-chain': 'off',
       // Next.js requires generateStaticParams to be async even without await
       '@typescript-eslint/require-await': 'off',

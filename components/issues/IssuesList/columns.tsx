@@ -49,7 +49,7 @@ export function createBaseColumns(
       filterFn: 'includesString',
     }),
     columnHelper.accessor(
-      row => (row.metadata && row.metadata.status) || 'unknown',
+      row => (row.metadata && row.metadata.status) ?? 'unknown',
       {
         id: 'status',
         header: 'Status',

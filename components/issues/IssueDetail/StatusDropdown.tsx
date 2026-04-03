@@ -31,7 +31,7 @@ export function StatusDropdown({
   onToggleDropdown,
   onStatusChange,
 }: StatusDropdownProps): ReactElement {
-  const currentStatus = (issue.metadata && issue.metadata.status) || ''
+  const currentStatus = (issue.metadata && issue.metadata.status) ?? ''
   return (
     <div className="status-selector" ref={statusDropdownRef}>
       <button

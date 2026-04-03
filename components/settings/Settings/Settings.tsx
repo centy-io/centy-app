@@ -17,8 +17,8 @@ export function Settings(): ReactElement {
   const daemon = useDaemonActions()
   const settings = useSettingsData(projectPath, isInitialized)
 
-  const error = settings.error || daemon.error
-  const success = settings.success || daemon.success
+  const error = settings.error ?? daemon.error
+  const success = settings.success ?? daemon.success
 
   return (
     <div className="settings-page">

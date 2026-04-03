@@ -27,9 +27,9 @@ export function useProjectContext() {
     return false
   }, [org, project, pathSegments])
 
-  const effectiveOrg = org || (hasProjectContext ? pathSegments[0] : undefined)
+  const effectiveOrg = org ?? (hasProjectContext ? pathSegments[0] : undefined)
   const effectiveProject =
-    project || (hasProjectContext ? pathSegments[1] : undefined)
+    project ?? (hasProjectContext ? pathSegments[1] : undefined)
 
   return { pathname, hasProjectContext, effectiveOrg, effectiveProject }
 }

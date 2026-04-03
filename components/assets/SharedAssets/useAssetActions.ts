@@ -29,7 +29,7 @@ export function useAssetActions(
           setAssets(prev => prev.filter(a => a.filename !== filename))
           setDeleteConfirm(null)
         } else {
-          setError(result.error || 'Failed to delete asset')
+          setError(result.error ?? 'Failed to delete asset')
         }
       } catch (err) {
         setError(

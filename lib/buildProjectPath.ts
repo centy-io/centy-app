@@ -9,6 +9,6 @@ export function buildProjectPath(
   orgSlug: string | null,
   projectName: string
 ): string {
-  const org = orgSlug || UNGROUPED_ORG_MARKER
+  const org = orgSlug ?? UNGROUPED_ORG_MARKER
   return `/${org}/${projectName}`
 }

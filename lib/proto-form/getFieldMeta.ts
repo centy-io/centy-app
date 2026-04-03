@@ -14,10 +14,7 @@ export function getFieldMeta(
       ? override.description
       : undefined
   return {
-    label:
-      overrideLabel !== null && overrideLabel !== undefined
-        ? overrideLabel
-        : protoNameToLabel(field.name),
+    label: overrideLabel ?? protoNameToLabel(field.name),
     description: overrideDescription,
   }
 }

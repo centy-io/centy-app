@@ -12,8 +12,8 @@ export function EditorSelector({
   disabled,
   loading,
 }: EditorSelectorProps) {
-  const resolvedDisabled = disabled !== undefined ? disabled : false
-  const resolvedLoading = loading !== undefined ? loading : false
+  const resolvedDisabled = disabled ?? false
+  const resolvedLoading = loading ?? false
   const state = useEditorSelector(
     onOpenInVscode,
     onOpenInTerminal,

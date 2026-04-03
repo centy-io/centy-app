@@ -11,13 +11,8 @@ export function buildPendingContext(
   navigateToProject: NavigateFn
 ): PathContextType {
   return {
-    orgSlug:
-      urlOrg === UNGROUPED_ORG_MARKER
-        ? null
-        : urlOrg !== undefined
-          ? urlOrg
-          : null,
-    projectName: urlProject !== undefined ? urlProject : null,
+    orgSlug: urlOrg === UNGROUPED_ORG_MARKER ? null : (urlOrg ?? null),
+    projectName: urlProject ?? null,
     projectPath: '',
     isInitialized: null,
     displayPath: '',

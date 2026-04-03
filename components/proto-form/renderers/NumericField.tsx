@@ -15,11 +15,7 @@ export function NumericField({
   is64bit,
   onChange,
 }: NumericFieldProps) {
-  const displayValue = is64bit
-    ? String(value !== null && value !== undefined ? value : '')
-    : value !== null && value !== undefined
-      ? value
-      : ''
+  const displayValue = is64bit ? String(value ?? '') : (value ?? '')
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value
     if (is64bit) {

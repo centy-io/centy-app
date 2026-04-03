@@ -7,9 +7,8 @@ const FIXED_DATE = '2024-01-15T10:30:00.000Z'
  * Creates a mock doc with default values that can be overridden.
  */
 export function createMockDoc(overrides?: Partial<Doc>): Doc {
-  const resolvedOverrides = overrides !== undefined ? overrides : {}
-  const slug =
-    resolvedOverrides.slug !== undefined ? resolvedOverrides.slug : 'test-doc'
+  const resolvedOverrides = overrides ?? {}
+  const slug = resolvedOverrides.slug ?? 'test-doc'
   const now = FIXED_DATE
 
   const defaultMetadata: DocMetadata = {
@@ -23,14 +22,9 @@ export function createMockDoc(overrides?: Partial<Doc>): Doc {
 
   return {
     slug,
-    title:
-      resolvedOverrides.title !== undefined
-        ? resolvedOverrides.title
-        : `Test Document`,
+    title: resolvedOverrides.title ?? `Test Document`,
     content:
-      resolvedOverrides.content !== undefined
-        ? resolvedOverrides.content
-        : `# Test Document\n\nThis is test content.`,
+      resolvedOverrides.content ?? `# Test Document\n\nThis is test content.`,
     metadata: {
       ...defaultMetadata,
       ...resolvedOverrides.metadata,
@@ -45,28 +39,15 @@ export function createMockDoc(overrides?: Partial<Doc>): Doc {
 export function createMockDocMetadata(
   overrides?: Partial<DocMetadata>
 ): DocMetadata {
-  const resolvedOverrides = overrides !== undefined ? overrides : {}
+  const resolvedOverrides = overrides ?? {}
   const now = FIXED_DATE
 
   return {
-    createdAt:
-      resolvedOverrides.createdAt !== undefined
-        ? resolvedOverrides.createdAt
-        : now,
-    updatedAt:
-      resolvedOverrides.updatedAt !== undefined
-        ? resolvedOverrides.updatedAt
-        : now,
-    deletedAt:
-      resolvedOverrides.deletedAt !== undefined
-        ? resolvedOverrides.deletedAt
-        : '',
-    isOrgDoc:
-      resolvedOverrides.isOrgDoc !== undefined
-        ? resolvedOverrides.isOrgDoc
-        : false,
-    orgSlug:
-      resolvedOverrides.orgSlug !== undefined ? resolvedOverrides.orgSlug : '',
+    createdAt: resolvedOverrides.createdAt ?? now,
+    updatedAt: resolvedOverrides.updatedAt ?? now,
+    deletedAt: resolvedOverrides.deletedAt ?? '',
+    isOrgDoc: resolvedOverrides.isOrgDoc ?? false,
+    orgSlug: resolvedOverrides.orgSlug ?? '',
     $typeName: 'centy.v1.DocMetadata',
   }
 }
@@ -79,9 +60,7 @@ export const createDocScenario = {
   empty: (): Doc[] => [],
 
   /** Returns a single doc */
-  single: (overrides?: Partial<Doc>): Doc[] => [
-    createMockDoc(overrides !== undefined ? overrides : {}),
-  ],
+  single: (overrides?: Partial<Doc>): Doc[] => [createMockDoc(overrides ?? {})],
 
   /** Returns multiple docs */
   many: (count: number): Doc[] =>

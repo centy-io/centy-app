@@ -28,7 +28,7 @@ export function MapEntriesTable({
               <input
                 type="text"
                 className="proto-form-input proto-form-map-value-input"
-                value={String(v !== null && v !== undefined ? v : '')}
+                value={String(v ?? '')}
                 onChange={e => onValueChange(k, e.target.value)}
               />
             </td>

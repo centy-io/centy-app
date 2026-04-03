@@ -38,7 +38,7 @@ export function OrgIssuesTable({ orgSlug, issues }: OrgIssuesTableProps) {
           {issues.map(issue => {
             const meta = issue.metadata
             const orgNum = meta ? meta.orgDisplayNumber : issue.displayNumber
-            const status = (meta && meta.status) || '—'
+            const status = (meta && meta.status) ?? '—'
             const priority = meta ? meta.priority : 2
             const createdAt =
               meta && meta.createdAt

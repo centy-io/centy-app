@@ -13,7 +13,7 @@ interface OrgIssueReadViewProps {
 export function OrgIssueReadView({ issue }: OrgIssueReadViewProps) {
   const meta = issue.metadata
   const displayNum = meta ? meta.orgDisplayNumber : issue.displayNumber
-  const status = (meta && meta.status) || undefined
+  const status = (meta && meta.status) ?? undefined
   const priority = meta ? meta.priority : undefined
 
   return (

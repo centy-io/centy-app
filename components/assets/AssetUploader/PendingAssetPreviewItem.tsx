@@ -39,7 +39,7 @@ export function PendingAssetPreviewItem({
 
       {pending.status === 'error' && (
         <div className="asset-error-badge">
-          {pending.error || 'Upload failed'}
+          {pending.error ?? 'Upload failed'}
         </div>
       )}
 

@@ -12,8 +12,8 @@ export function createIssueMetadata(
   customFields?: Record<string, string>,
   draft?: boolean
 ): IssueMetadata {
-  const resolvedCustomFields = customFields !== undefined ? customFields : {}
-  const resolvedDraft = draft !== undefined ? draft : false
+  const resolvedCustomFields = customFields ?? {}
+  const resolvedDraft = draft ?? false
   return {
     $typeName: 'centy.v1.IssueMetadata',
     displayNumber,

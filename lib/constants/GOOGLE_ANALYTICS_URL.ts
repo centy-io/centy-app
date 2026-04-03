@@ -3,4 +3,4 @@ import urlDefaults from './url-defaults.json'
 const { NEXT_PUBLIC_GOOGLE_ANALYTICS_URL } = process.env
 
 export const GOOGLE_ANALYTICS_URL =
-  NEXT_PUBLIC_GOOGLE_ANALYTICS_URL || urlDefaults.GOOGLE_ANALYTICS_URL
+  NEXT_PUBLIC_GOOGLE_ANALYTICS_URL ?? urlDefaults.GOOGLE_ANALYTICS_URL

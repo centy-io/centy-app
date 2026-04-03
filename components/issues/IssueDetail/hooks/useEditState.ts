@@ -13,8 +13,8 @@ export function useEditState(issue: Issue | null) {
     if (!issue) return
     setEditTitle(issue.title)
     setEditDescription(issue.description)
-    setEditStatus((issue.metadata && issue.metadata.status) || 'open')
-    setEditPriority((issue.metadata && issue.metadata.priority) || 2)
+    setEditStatus((issue.metadata && issue.metadata.status) ?? 'open')
+    setEditPriority((issue.metadata && issue.metadata.priority) ?? 2)
   }, [issue])
 
   const handleCancelEdit = () => {
@@ -22,8 +22,8 @@ export function useEditState(issue: Issue | null) {
     if (!issue) return
     setEditTitle(issue.title)
     setEditDescription(issue.description)
-    setEditStatus((issue.metadata && issue.metadata.status) || 'open')
-    setEditPriority((issue.metadata && issue.metadata.priority) || 2)
+    setEditStatus((issue.metadata && issue.metadata.status) ?? 'open')
+    setEditPriority((issue.metadata && issue.metadata.priority) ?? 2)
   }
 
   return {

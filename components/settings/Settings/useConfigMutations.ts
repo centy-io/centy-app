@@ -37,7 +37,7 @@ export function useConfigMutations(projectPath: string, state: ConfigState) {
         setConfig(result.config)
         setOriginalConfig(structuredClone(result.config))
       } else {
-        setError(result.error || 'Failed to save configuration')
+        setError(result.error ?? 'Failed to save configuration')
       }
     } catch (err) {
       setError(

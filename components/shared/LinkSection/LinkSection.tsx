@@ -13,7 +13,7 @@ export function LinkSection({
   entityType,
   editable,
 }: LinkSectionProps): ReactNode {
-  const resolvedEditable = editable !== undefined ? editable : true
+  const resolvedEditable = editable ?? true
   const state = useLinkSection(entityId, entityType)
   const groupedLinks = groupLinksByType(state.links)
 

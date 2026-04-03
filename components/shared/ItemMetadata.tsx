@@ -48,7 +48,7 @@ export function ItemMetadata({
   children,
 }: ItemMetadataProps) {
   const resolvedPriorityLabel =
-    priorityLabel || (priority ? derivePriorityLabel(priority) : '')
+    priorityLabel ?? (priority ? derivePriorityLabel(priority) : '')
 
   return (
     <div className="item-metadata">

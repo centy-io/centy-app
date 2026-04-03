@@ -11,7 +11,7 @@ export function markdownToHtml(markdown: string): string {
   // Code blocks (before other transformations)
   html = html.replace(/```(\w*)\n([\s\S]*?)```/g, (_match, lang, code) => {
     const escapedCode = code.trim()
-    return `<pre><code class="language-${lang || 'plaintext'}">${escapedCode}</code></pre>`
+    return `<pre><code class="language-${lang ?? 'plaintext'}">${escapedCode}</code></pre>`
   })
 
   // Inline code

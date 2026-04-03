@@ -7,26 +7,26 @@ import type { Issue } from '@/gen/centy_pb'
  */
 export function genericItemToIssue(item: GenericItem): Issue {
   const meta = item.metadata
-  const cf = (meta && meta.customFields) || {}
+  const cf = (meta && meta.customFields) ?? {}
 
   return {
     $typeName: 'centy.v1.Issue',
     id: item.id,
-    displayNumber: (meta && meta.displayNumber) || 0,
+    displayNumber: (meta && meta.displayNumber) ?? 0,
     issueNumber: item.id,
     title: item.title,
     description: item.body,
     metadata: {
       $typeName: 'centy.v1.IssueMetadata',
-      displayNumber: (meta && meta.displayNumber) || 0,
-      status: (meta && meta.status) || '',
-      priority: (meta && meta.priority) || 0,
-      createdAt: (meta && meta.createdAt) || '',
-      updatedAt: (meta && meta.updatedAt) || '',
+      displayNumber: (meta && meta.displayNumber) ?? 0,
+      status: (meta && meta.status) ?? '',
+      priority: (meta && meta.priority) ?? 0,
+      createdAt: (meta && meta.createdAt) ?? '',
+      updatedAt: (meta && meta.updatedAt) ?? '',
       customFields: {},
       priorityLabel: cf['priority_label'] || '',
       draft: cf['draft'] === 'true',
-      deletedAt: (meta && meta.deletedAt) || '',
+      deletedAt: (meta && meta.deletedAt) ?? '',
       isOrgIssue: cf['is_org_issue'] === 'true',
       orgSlug: cf['org_slug'] || '',
       orgDisplayNumber: cf['org_display_number']

@@ -89,7 +89,7 @@ export function createConfigStore(): ConfigStore {
   ): Promise<void> {
     if (!projectPath) return
     const cache = getOrCreate(projectPath)
-    const resolvedForce = force !== undefined ? force : false
+    const resolvedForce = force ?? false
     if (cache.loading || (cache.config && !resolvedForce)) return
     await runFetchConfig(cache, projectPath, notify)
   }

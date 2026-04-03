@@ -8,7 +8,7 @@ export function createPriorityColumn(stateManager: {
   getStateClass: (status: string) => string
 }) {
   return columnHelper.accessor(
-    row => (row.metadata && row.metadata.priorityLabel) || 'unknown',
+    row => (row.metadata && row.metadata.priorityLabel) ?? 'unknown',
     {
       id: 'priority',
       header: 'Priority',
@@ -41,7 +41,7 @@ export function createPriorityColumn(stateManager: {
         ])
         const a = String(rowA.getValue('priority')).toLowerCase()
         const b = String(rowB.getValue('priority')).toLowerCase()
-        return (priorityOrder.get(a) || 4) - (priorityOrder.get(b) || 4)
+        return (priorityOrder.get(a) ?? 4) - (priorityOrder.get(b) ?? 4)
       },
     }
   )
@@ -49,7 +49,7 @@ export function createPriorityColumn(stateManager: {
 
 export function createCreatedAtColumn() {
   return columnHelper.accessor(
-    row => (row.metadata && row.metadata.createdAt) || '',
+    row => (row.metadata && row.metadata.createdAt) ?? '',
     {
       id: 'createdAt',
       header: 'Created',

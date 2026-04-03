@@ -26,5 +26,5 @@ export function ClientRouteHandler({ children }: ClientRouteHandlerProps) {
   }, [pathname])
 
   // If we have a specific route to handle, render it; otherwise render children
-  return <>{routeContent || children}</>
+  return <>{routeContent ?? children}</>
 }
