@@ -10,7 +10,6 @@ type CreateProjectLink = (
   projectName: string,
   path: string
 ) => RouteLiteral
-
 interface StateManager {
   getStateClass: (status: string) => string
 }
@@ -84,25 +83,27 @@ function makeStatusColumn(stateManager: StateManager) {
   )
 }
 
+function makeDisplayNumberColumn() {
+  return columnHelper.accessor(
+    row => (row.metadata ? row.metadata.displayNumber : 0),
+    {
+      id: 'displayNumber',
+      header: '#',
+      cell: info => `#${info.getValue()}`,
+      enableColumnFilter: true,
+      filterFn: (row, columnId, filterValue) =>
+        String(row.getValue(columnId)).includes(filterValue),
+    }
+  )
+}
+
 export function createAggregateColumns(
   stateManager: StateManager,
   createProjectLink: CreateProjectLink
 ) {
   return [
     makeProjectColumn(createProjectLink),
-    columnHelper.accessor(
-      row => (row.metadata ? row.metadata.displayNumber : 0),
-      {
-        id: 'displayNumber',
-        header: '#',
-        cell: info => `#${info.getValue()}`,
-        enableColumnFilter: true,
-        filterFn: (row, columnId, filterValue) => {
-          const value = row.getValue(columnId)
-          return String(value).includes(filterValue)
-        },
-      }
-    ),
+    makeDisplayNumberColumn(),
     makeTitleColumn(createProjectLink),
     makeStatusColumn(stateManager),
   ]
