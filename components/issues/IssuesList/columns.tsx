@@ -21,7 +21,7 @@ export function createBaseColumns(
             className="issue-number-copy-btn"
             onClick={e => {
               e.stopPropagation()
-              void copyToClipboard(issueId, `issue #${info.getValue()}`)
+              copyToClipboard(issueId, `issue #${info.getValue()}`)
             }}
             title="Click to copy UUID"
           >
