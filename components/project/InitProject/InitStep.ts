@@ -1,1 +1,1 @@
-export type InitStep = 'input' | 'plan' | 'executing' | 'success' | 'error'
+export type InitStep = 'input' | 'success' | 'error'

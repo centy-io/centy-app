@@ -7,7 +7,6 @@ interface InputStepProps {
   loading: boolean
   handleSelectFolder: () => Promise<void>
   handleQuickInit: () => Promise<void>
-  handleGetPlan: () => Promise<void>
 }
 
 export function InputStep({
@@ -17,7 +16,6 @@ export function InputStep({
   loading,
   handleSelectFolder,
   handleQuickInit,
-  handleGetPlan,
 }: InputStepProps) {
   return (
     <div className="input-step">
@@ -61,16 +59,7 @@ export function InputStep({
           disabled={!projectPath.trim() || loading}
           className="primary"
         >
-          {loading ? 'Initializing...' : 'Quick Init'}
-        </button>
-        <button
-          onClick={() => {
-            void handleGetPlan()
-          }}
-          disabled={!projectPath.trim() || loading}
-          className="secondary"
-        >
-          {loading ? 'Loading...' : 'Review Changes'}
+          {loading ? 'Initializing...' : 'Initialize'}
         </button>
       </div>
     </div>

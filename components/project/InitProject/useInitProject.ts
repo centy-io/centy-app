@@ -4,14 +4,7 @@ import { useState, useCallback, useEffect } from 'react'
 import { open } from '@tauri-apps/plugin-dialog'
 import { useInitSteps } from './useInitSteps'
 import type { InitStep } from './InitProject.types'
-import type { ReconciliationPlan, InitResponse } from '@/gen/centy_pb'
-
-function toggleSetItem(prev: Set<string>, path: string): Set<string> {
-  const next = new Set(prev)
-  if (next.has(path)) next.delete(path)
-  else next.add(path)
-  return next
-}
+import type { InitResponse } from '@/gen/centy_pb'
 
 async function selectFolder(
   isTauri: boolean,
@@ -34,11 +27,8 @@ async function selectFolder(
 export function useInitProject() {
   const [projectPath, setProjectPath] = useState('')
   const [step, setStep] = useState<InitStep>('input')
-  const [plan, setPlan] = useState<ReconciliationPlan | null>(null)
   const [result, setResult] = useState<InitResponse | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [selectedRestore, setSelectedRestore] = useState<Set<string>>(new Set())
-  const [selectedReset, setSelectedReset] = useState<Set<string>>(new Set())
   const [isTauri, setIsTauri] = useState(false)
 
   useEffect(() => {
@@ -57,49 +47,24 @@ export function useInitProject() {
     setResult: r => {
       setResult(r)
     },
-    setPlan: p => {
-      setPlan(p)
-    },
-    setSelectedRestore,
-    setSelectedReset,
-    selectedRestore,
-    selectedReset,
   })
-
-  const toggleRestore = useCallback((path: string) => {
-    setSelectedRestore(prev => toggleSetItem(prev, path))
-  }, [])
-
-  const toggleReset = useCallback((path: string) => {
-    setSelectedReset(prev => toggleSetItem(prev, path))
-  }, [])
 
   const handleReset = useCallback(() => {
     setStep('input')
-    setPlan(null)
     setResult(null)
     setError(null)
-    setSelectedRestore(new Set())
-    setSelectedReset(new Set())
   }, [])
 
   return {
     projectPath,
     step,
-    plan,
     result,
     error,
-    selectedRestore,
-    selectedReset,
     loading: steps.loading,
     isTauri,
     setProjectPath,
     handleSelectFolder,
     handleQuickInit: steps.handleQuickInit,
-    handleGetPlan: steps.handleGetPlan,
-    handleExecutePlan: steps.handleExecutePlan,
-    toggleRestore,
-    toggleReset,
     handleReset,
   }
 }

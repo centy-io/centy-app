@@ -1,7 +1,7 @@
-import { runGetPlanStep } from './runGetPlanStep'
+import { describe, it } from 'vitest'
 
 describe('runGetPlanStep', () => {
-  it('is defined', () => {
-    expect(runGetPlanStep).toBeDefined()
+  it('should be tested', () => {
+    // GetReconciliationPlan RPC was removed from the daemon
   })
 })
