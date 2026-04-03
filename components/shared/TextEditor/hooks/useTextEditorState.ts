@@ -35,17 +35,13 @@ export function useTextEditorState({
   onModeChange,
   placeholder,
 }: TextEditorProps) {
-  const resolvedFormat = format !== undefined ? format : 'md'
-  const resolvedMode = mode !== undefined ? mode : 'edit'
-  const resolvedPlaceholder =
-    placeholder !== undefined ? placeholder : 'Write your content...'
+  const resolvedFormat = format ?? 'md'
+  const resolvedMode = mode ?? 'edit'
+  const resolvedPlaceholder = placeholder ?? 'Write your content...'
   const [currentMode, setCurrentMode] = useState<EditorMode>(resolvedMode)
   const [isRawMode, setIsRawMode] = useState(false)
 
-  const markdownContent = useAsciidocConverter(
-    value !== undefined ? value : '',
-    resolvedFormat
-  )
+  const markdownContent = useAsciidocConverter(value ?? '', resolvedFormat)
   const [rawValue, setRawValue] = useState(markdownContent)
 
   const isEditable = currentMode === 'edit'

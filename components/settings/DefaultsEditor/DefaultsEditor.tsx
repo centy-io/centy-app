@@ -15,7 +15,7 @@ export function DefaultsEditor({
   onChange,
   suggestedKeys,
 }: DefaultsEditorProps) {
-  const resolvedSuggestedKeys = suggestedKeys !== undefined ? suggestedKeys : []
+  const resolvedSuggestedKeys = suggestedKeys ?? []
   const [newKey, setNewKey] = useState('')
   const [newValue, setNewValue] = useState('')
 

@@ -10,7 +10,7 @@ function getDisplayNumber(row: GenericItem): number {
 }
 
 function getStatus(row: GenericItem): string {
-  return (row.metadata && row.metadata.status) || 'unknown'
+  return (row.metadata && row.metadata.status) ?? 'unknown'
 }
 
 export function createBaseColumns(

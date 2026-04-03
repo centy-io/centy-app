@@ -24,7 +24,7 @@ export async function runQuickInitStep(
       p.setResult(outcome.result)
       p.setStep('success')
     } else {
-      p.setError(outcome.error || 'Initialization failed')
+      p.setError(outcome.error ?? 'Initialization failed')
       p.setStep('error')
     }
   } catch (err) {

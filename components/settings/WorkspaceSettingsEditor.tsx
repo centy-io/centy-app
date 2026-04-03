@@ -11,7 +11,7 @@ export function WorkspaceSettingsEditor({
   value,
   onChange,
 }: WorkspaceSettingsEditorProps) {
-  const config: WorkspaceConfig = value || {
+  const config: WorkspaceConfig = value ?? {
     $typeName: 'centy.v1.WorkspaceConfig',
   }
 
@@ -21,7 +21,7 @@ export function WorkspaceSettingsEditor({
         <input
           className="workspace-settings-input"
           type="checkbox"
-          checked={config.updateStatusOnOpen || false}
+          checked={config.updateStatusOnOpen ?? false}
           onChange={e =>
             onChange({
               ...config,

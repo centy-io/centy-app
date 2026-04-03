@@ -8,5 +8,5 @@ export function getDaemonUrl(): string {
   if (typeof window === 'undefined') {
     return DEFAULT_DAEMON_URL
   }
-  return localStorage.getItem(DAEMON_URL_STORAGE_KEY) || DEFAULT_DAEMON_URL
+  return localStorage.getItem(DAEMON_URL_STORAGE_KEY) ?? DEFAULT_DAEMON_URL
 }

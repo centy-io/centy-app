@@ -41,7 +41,7 @@ export function createPriorityColumn() {
       sortingFn: (rowA, rowB) => {
         const a = String(rowA.getValue('priority')).toLowerCase()
         const b = String(rowB.getValue('priority')).toLowerCase()
-        return (PRIORITY_ORDER.get(a) || 4) - (PRIORITY_ORDER.get(b) || 4)
+        return (PRIORITY_ORDER.get(a) ?? 4) - (PRIORITY_ORDER.get(b) ?? 4)
       },
     }
   )

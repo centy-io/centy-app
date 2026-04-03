@@ -55,7 +55,7 @@ export function useLinkSection(entityId: string, entityType: 'issue' | 'doc') {
         if (result.success) {
           setLinks(prev => removeLinkFromList(prev, link))
         } else {
-          setError(result.error || 'Failed to delete link')
+          setError(result.error ?? 'Failed to delete link')
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to delete link')

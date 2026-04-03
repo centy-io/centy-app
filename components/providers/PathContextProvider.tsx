@@ -40,8 +40,8 @@ export function PathContextProvider({ children }: { children: ReactNode }) {
 
   const navigateToProject = useMemo(() => {
     return (orgSlug: string | null, projectName: string, page?: string) => {
-      const resolvedPage = page !== undefined ? page : 'issues'
-      const o = orgSlug !== null ? orgSlug : UNGROUPED_ORG_MARKER
+      const resolvedPage = page ?? 'issues'
+      const o = orgSlug ?? UNGROUPED_ORG_MARKER
       router.push(
         route({
           pathname: '/[...path]',

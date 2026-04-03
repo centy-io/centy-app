@@ -30,7 +30,7 @@ export function useArchivedProjectMutations({
   const [confirmRemoveAll, setConfirmRemoveAll] = useState(false)
   const [removingAll, setRemovingAll] = useState(false)
 
-  const error = mutationError || fetchError
+  const error = mutationError ?? fetchError
 
   const handleRemove = async (projectPath: string): Promise<void> => {
     setRemovingPath(projectPath)

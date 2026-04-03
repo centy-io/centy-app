@@ -35,22 +35,16 @@ export async function setupMockedPage(
   page: Page,
   options?: SetupOptions
 ): Promise<GrpcMocker> {
-  const resolvedOptions = options !== undefined ? options : {}
+  const resolvedOptions = options ?? {}
   const mocker = new GrpcMocker(page)
 
   // Add handlers
   addProjectHandlers(mocker, {
     projects: resolvedOptions.projects,
-    isInitialized:
-      resolvedOptions.isInitialized !== undefined
-        ? resolvedOptions.isInitialized
-        : true,
+    isInitialized: resolvedOptions.isInitialized ?? true,
   })
   addDaemonHandlers(mocker, {
-    vscodeAvailable:
-      resolvedOptions.vscodeAvailable !== undefined
-        ? resolvedOptions.vscodeAvailable
-        : true,
+    vscodeAvailable: resolvedOptions.vscodeAvailable ?? true,
   })
 
   // Setup route interception

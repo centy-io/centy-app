@@ -11,7 +11,7 @@ export function ListFieldRenderer({
   value,
   onChange,
 }: ListFieldProps) {
-  const rawItems = value !== null && value !== undefined ? value : []
+  const rawItems = value ?? []
   const items = Array.isArray(rawItems) ? rawItems : []
   const [newItem, setNewItem] = useState('')
 

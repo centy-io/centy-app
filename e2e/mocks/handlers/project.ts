@@ -34,7 +34,7 @@ export function addProjectHandlers(
   mocker: GrpcMocker,
   options?: ProjectHandlerOptions
 ): GrpcMocker {
-  const resolvedOptions = options !== undefined ? options : {}
+  const resolvedOptions = options ?? {}
   const {
     projects = [mockProjectInfo],
     isInitialized = true,

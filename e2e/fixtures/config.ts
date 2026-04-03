@@ -31,7 +31,7 @@ export const createProjectScenario = {
 
   /** Returns a single project */
   single: (overrides?: Partial<ProjectInfo>): ProjectInfo[] => [
-    createMockProjectInfo(overrides !== undefined ? overrides : {}),
+    createMockProjectInfo(overrides ?? {}),
   ],
 
   /** Returns multiple projects */

@@ -11,7 +11,7 @@ export const createIssueScenario = {
 
   /** Returns a single issue */
   single: (overrides?: Partial<Issue>): Issue[] => [
-    createMockIssue(overrides !== undefined ? overrides : {}),
+    createMockIssue(overrides ?? {}),
   ],
 
   /** Returns multiple issues */

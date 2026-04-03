@@ -51,7 +51,7 @@ function makeTitleColumn(createProjectLink: CreateProjectLink) {
 
 function makeStatusColumn(stateManager: StateManager) {
   return columnHelper.accessor(
-    row => (row.metadata && row.metadata.status) || 'unknown',
+    row => (row.metadata && row.metadata.status) ?? 'unknown',
     {
       id: 'status',
       header: 'Status',

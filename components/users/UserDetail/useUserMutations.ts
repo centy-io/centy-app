@@ -35,7 +35,7 @@ export function useUserMutations(
         setIsEditing(false)
       } else {
         setError(
-          formatUserError(new OperationError(res.error || 'Failed to update'))
+          formatUserError(new OperationError(res.error ?? 'Failed to update'))
         )
       }
     } catch (err) {
@@ -55,7 +55,7 @@ export function useUserMutations(
         router.push(usersListUrl)
       } else {
         setError(
-          formatUserError(new OperationError(res.error || 'Failed to delete'))
+          formatUserError(new OperationError(res.error ?? 'Failed to delete'))
         )
         setShowDeleteConfirm(false)
       }

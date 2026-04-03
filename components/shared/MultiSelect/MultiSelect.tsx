@@ -11,9 +11,8 @@ export function MultiSelect({
   placeholder,
   className,
 }: MultiSelectProps) {
-  const resolvedPlaceholder =
-    placeholder !== undefined ? placeholder : 'Select...'
-  const resolvedClassName = className !== undefined ? className : ''
+  const resolvedPlaceholder = placeholder ?? 'Select...'
+  const resolvedClassName = className ?? ''
   const {
     isOpen,
     refs,

@@ -15,8 +15,8 @@ export function useStateListHandlers(
 
   const getColor = (state: string) => {
     return (
-      new Map(Object.entries(stateColors)).get(state) ||
-      new Map(Object.entries(DEFAULT_STATE_COLORS)).get(state) ||
+      new Map(Object.entries(stateColors)).get(state) ??
+      new Map(Object.entries(DEFAULT_STATE_COLORS)).get(state) ??
       'var(--color-fallback)'
     )
   }

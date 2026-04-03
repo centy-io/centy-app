@@ -8,5 +8,5 @@ export async function fetchProjectByPath(
   const request = create(ListProjectsRequestSchema, {})
   const response = await centyClient.listProjects(request)
   const project = response.projects.find(p => p.path === projectPath)
-  return project || null
+  return project ?? null
 }

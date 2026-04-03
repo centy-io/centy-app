@@ -10,7 +10,7 @@ function useIsActive(
   hasProjectContext: boolean
 ): (href: string, checkPrefix?: boolean) => boolean {
   return (href: string, checkPrefix?: boolean) => {
-    const resolvedCheckPrefix = checkPrefix !== undefined ? checkPrefix : true
+    const resolvedCheckPrefix = checkPrefix ?? true
     if (resolvedCheckPrefix) {
       if (hasProjectContext) {
         const page = href.split('/').slice(3).join('/')

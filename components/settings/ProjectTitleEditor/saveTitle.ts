@@ -27,7 +27,7 @@ export async function saveTitle(
     }
     return {
       success: true,
-      project: response.project || undefined,
+      project: response.project ?? undefined,
       message: 'User title saved successfully',
     }
   }
@@ -45,7 +45,7 @@ export async function saveTitle(
   }
   return {
     success: true,
-    project: response.project || undefined,
+    project: response.project ?? undefined,
     message: 'Project title saved successfully',
   }
 }

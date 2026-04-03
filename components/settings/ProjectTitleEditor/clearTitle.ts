@@ -25,7 +25,7 @@ export async function clearTitle(
     }
     return {
       success: true,
-      project: response.project || undefined,
+      project: response.project ?? undefined,
       message: 'User title cleared',
     }
   }
@@ -43,7 +43,7 @@ export async function clearTitle(
   }
   return {
     success: true,
-    project: response.project || undefined,
+    project: response.project ?? undefined,
     message: 'Project title cleared',
   }
 }

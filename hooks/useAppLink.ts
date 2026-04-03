@@ -85,7 +85,7 @@ export function useAppLink() {
       projectName: string,
       path: string
     ): RouteLiteral => {
-      const orgPart = orgSlug || UNGROUPED_ORG_MARKER
+      const orgPart = orgSlug ?? UNGROUPED_ORG_MARKER
       const normalizedPath = path.startsWith('/') ? path.slice(1) : path
       return route({
         pathname: '/[...path]',

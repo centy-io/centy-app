@@ -25,8 +25,7 @@ export class StateManager {
 
   constructor(config?: Config | null, itemTypeStatuses?: string[]) {
     this.config = config !== undefined ? config : null
-    this.itemTypeStatuses =
-      itemTypeStatuses !== undefined ? itemTypeStatuses : []
+    this.itemTypeStatuses = itemTypeStatuses ?? []
   }
 
   /**
@@ -52,7 +51,7 @@ export class StateManager {
    */
   getDefaultState(): string {
     return (
-      (this.config && this.config.defaults.status) || StateManager.DEFAULT_STATE
+      (this.config && this.config.defaults.status) ?? StateManager.DEFAULT_STATE
     )
   }
 
@@ -67,7 +66,7 @@ export class StateManager {
       : undefined
     if (configColor) return configColor
     return (
-      new Map(Object.entries(StateManager.DEFAULT_COLORS)).get(state) ||
+      new Map(Object.entries(StateManager.DEFAULT_COLORS)).get(state) ??
       'var(--color-fallback)'
     )
   }
