@@ -42,7 +42,6 @@ export default [
       '@typescript-eslint/no-unnecessary-type-parameters': 'off',
       '@typescript-eslint/no-meaningless-void-operator': 'off',
       '@typescript-eslint/consistent-generic-constructors': 'off',
-      '@typescript-eslint/no-deprecated': 'off',
     },
   },
   {
