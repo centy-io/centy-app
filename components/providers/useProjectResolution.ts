@@ -19,12 +19,15 @@ export function useProjectResolution(
       setError(null)
       return
     }
+    if (!urlOrg || !urlProject) return
+    const org = urlOrg
+    const project = urlProject
     let cancelled = false
     async function resolve() {
       setIsLoading(true)
       setError(null)
       try {
-        const result = await resolveProject(urlOrg!, urlProject!)
+        const result = await resolveProject(org, project)
         if (cancelled) return
         if (result) {
           setResolution(result)

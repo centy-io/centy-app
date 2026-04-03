@@ -45,11 +45,12 @@ export function LegacyUrlRedirect() {
       }
     }
 
+    const path = projectPath
     async function redirect() {
       setIsRedirecting(true)
 
       try {
-        const result = await resolveProjectPath(projectPath!)
+        const result = await resolveProjectPath(path)
 
         if (result) {
           const orgPart = result.orgSlug || UNGROUPED_ORG_MARKER

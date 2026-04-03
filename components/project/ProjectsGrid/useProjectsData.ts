@@ -63,9 +63,8 @@ export function useProjectsData() {
       })
       const response = await centyClient.setProjectFavorite(request)
       if (response.success && response.project) {
-        setProjects(prev =>
-          prev.map(p => (p.path === project.path ? response.project! : p))
-        )
+        const next = response.project
+        setProjects(prev => prev.map(p => (p.path === project.path ? next : p)))
       }
     } catch (err) {
       console.error('Failed to toggle favorite:', err)

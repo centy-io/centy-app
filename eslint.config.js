@@ -17,8 +17,8 @@ export default [
       '@typescript-eslint/no-misused-promises': 'off',
       // Template literal with non-string types (stylistic strictness)
       '@typescript-eslint/restrict-template-expressions': 'off',
-      // Non-null assertions (!): banned by strictTypeChecked, used across codebase
-      '@typescript-eslint/no-non-null-assertion': 'off',
+      // Non-null assertions (!): banned by strictTypeChecked, all usages replaced with proper null checks
+      '@typescript-eslint/no-non-null-assertion': 'error',
       // Type-unsafe operations involving any
       '@typescript-eslint/no-unsafe-assignment': 'off',
       '@typescript-eslint/no-unsafe-member-access': 'off',
@@ -27,6 +27,7 @@ export default [
       // Empty functions (e.g. no-op callbacks)
       '@typescript-eslint/no-empty-function': 'off',
       // Miscellaneous stylistic rules from stylisticTypeChecked
+      '@typescript-eslint/no-base-to-string': 'off',
       '@typescript-eslint/use-unknown-in-catch-callback-variable': 'off',
       '@typescript-eslint/no-meaningless-void-operator': 'off',
       '@typescript-eslint/prefer-regexp-exec': 'off',

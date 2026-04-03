@@ -30,13 +30,12 @@ const storeMap = new Map<string, StoreEntry>()
 
 export const pinnedItemsStoreState = {
   getOrCreate(projectPath: string): StoreEntry {
-    if (!storeMap.has(projectPath)) {
-      storeMap.set(projectPath, {
-        state: loadFromStorage(projectPath),
-        listeners: new Set(),
-      })
+    let entry = storeMap.get(projectPath)
+    if (!entry) {
+      entry = { state: loadFromStorage(projectPath), listeners: new Set() }
+      storeMap.set(projectPath, entry)
     }
-    return storeMap.get(projectPath)!
+    return entry
   },
   save(projectPath: string, state: PinnedItemsState): void {
     if (typeof window === 'undefined' || !projectPath) return

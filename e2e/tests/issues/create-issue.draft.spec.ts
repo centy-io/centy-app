@@ -25,7 +25,8 @@ test.describe('Create Issue Form - Draft persistence', () => {
     }, DRAFT_STORAGE_KEY)
 
     expect(draft).not.toBeNull()
-    expect(draft!.title).toBe('Draft issue title')
+    if (!draft) return
+    expect(draft.title).toBe('Draft issue title')
   })
 
   test('should restore draft title from localStorage on mount', async ({
@@ -80,6 +81,7 @@ test.describe('Create Issue Form - Draft persistence', () => {
     }, DRAFT_STORAGE_KEY)
 
     expect(draft).not.toBeNull()
-    expect(draft!.priority).toBe(3)
+    if (!draft) return
+    expect(draft.priority).toBe(3)
   })
 })

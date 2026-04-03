@@ -38,8 +38,8 @@ describe('updateState', () => {
 
     updateState(path, () => ({ items: [newItem] }))
 
-    const stored: PinnedItemsState = JSON.parse(
-      localStorage.getItem(`centy-pinned-items-${path}`)!
+    const stored = JSON.parse(
+      localStorage.getItem(`centy-pinned-items-${path}`) || '{}'
     )
     expect(stored.items).toContainEqual(newItem)
   })

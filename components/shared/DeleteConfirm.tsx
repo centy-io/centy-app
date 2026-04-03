@@ -40,7 +40,7 @@ export function DeleteConfirm({
 
   function handleSoftDelete() {
     setPendingAction('soft')
-    onSoftDelete!()
+    if (onSoftDelete) onSoftDelete()
   }
 
   function handleConfirm() {

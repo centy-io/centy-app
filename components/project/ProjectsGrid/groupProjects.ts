@@ -14,14 +14,13 @@ export function groupProjects(
 
   for (const project of projects) {
     const orgSlug = project.organizationSlug || ''
-    if (!groups.has(orgSlug)) {
+    let group = groups.get(orgSlug)
+    if (!group) {
       const org = organizations.find(o => o.slug === orgSlug)
-      groups.set(orgSlug, {
-        name: (org ? org.name : '') || orgSlug,
-        projects: [],
-      })
+      group = { name: (org ? org.name : '') || orgSlug, projects: [] }
+      groups.set(orgSlug, group)
     }
-    groups.get(orgSlug)!.projects.push(project)
+    group.projects.push(project)
   }
 
   const sortedGroups = Array.from(groups.entries())
