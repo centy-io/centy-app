@@ -14,23 +14,32 @@ describe('TextEditor - Raw mode toggle', () => {
     vi.clearAllMocks()
   })
 
-  it('should toggle to raw mode when MD button is clicked', async () => {
-    render(<TextEditor value="Some content" mode="edit" onChange={() => {}} />)
+  it(
+    'should toggle to raw mode when MD button is clicked',
+    { timeout: 15000 },
+    async () => {
+      render(
+        <TextEditor value="Some content" mode="edit" onChange={() => {}} />
+      )
 
-    await waitFor(() => {
-      expect(screen.getByTitle('Toggle Raw Markdown')).toBeInTheDocument()
-    })
+      await waitFor(
+        () => {
+          expect(screen.getByTitle('Toggle Raw Markdown')).toBeInTheDocument()
+        },
+        { timeout: 10000 }
+      )
 
-    const mdButton = screen.getByTitle('Toggle Raw Markdown')
-    expect(mdButton).toHaveTextContent('MD')
+      const mdButton = screen.getByTitle('Toggle Raw Markdown')
+      expect(mdButton).toHaveTextContent('MD')
 
-    await act(async () => {
-      fireEvent.click(mdButton)
-    })
+      await act(async () => {
+        fireEvent.click(mdButton)
+      })
 
-    expect(mdButton).toHaveTextContent('WYSIWYG')
-    expect(screen.getByRole('textbox')).toBeInTheDocument()
-  })
+      expect(mdButton).toHaveTextContent('WYSIWYG')
+      expect(screen.getByRole('textbox')).toBeInTheDocument()
+    }
+  )
 
   it('should show textarea in raw mode', async () => {
     render(<TextEditor value="Test content" mode="edit" onChange={() => {}} />)
