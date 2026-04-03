@@ -42,6 +42,7 @@ export function markdownToHtml(markdown: string): string {
       if (line.startsWith('<li>') && line.endsWith('</li>')) {
         const last = acc[acc.length - 1]
         if (
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           last !== undefined &&
           last.startsWith('<ul>') &&
           last.endsWith('</ul>')

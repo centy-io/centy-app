@@ -43,7 +43,7 @@ export function useTextEditorState({
   const [isRawMode, setIsRawMode] = useState(false)
 
   const markdownContent = useAsciidocConverter(
-    value !== undefined && value !== null ? value : '',
+    value !== undefined ? value : '',
     resolvedFormat
   )
   const [rawValue, setRawValue] = useState(markdownContent)
