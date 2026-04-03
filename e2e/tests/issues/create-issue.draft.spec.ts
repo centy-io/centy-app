@@ -1,6 +1,12 @@
 import { test, expect } from '@playwright/test'
 import { setupDemoMode, navigateToDemoProject } from '../../utils/test-helpers'
 
+interface IssueDraft {
+  title: string
+  description: string
+  priority: number
+}
+
 const DRAFT_STORAGE_KEY = 'centy-draft-issue-/demo/centy-showcase'
 
 test.describe('Create Issue Form - Draft persistence', () => {
@@ -11,12 +17,13 @@ test.describe('Create Issue Form - Draft persistence', () => {
     await page.locator('input#title').fill('Draft issue title')
     await page.waitForTimeout(100)
 
-    const draft = await page.evaluate((key: string) => {
+    const draft = await page.evaluate<IssueDraft | null>((key: string) => {
       const raw = localStorage.getItem(key)
       return raw ? JSON.parse(raw) : null
     }, DRAFT_STORAGE_KEY)
 
     expect(draft).not.toBeNull()
+    if (!draft) return
     expect(draft.title).toBe('Draft issue title')
   })
 
@@ -64,12 +71,13 @@ test.describe('Create Issue Form - Draft persistence', () => {
     await page.locator('select#priority').selectOption('3')
     await page.waitForTimeout(100)
 
-    const draft = await page.evaluate((key: string) => {
+    const draft = await page.evaluate<IssueDraft | null>((key: string) => {
       const raw = localStorage.getItem(key)
       return raw ? JSON.parse(raw) : null
     }, DRAFT_STORAGE_KEY)
 
     expect(draft).not.toBeNull()
+    if (!draft) return
     expect(draft.priority).toBe(3)
   })
 })

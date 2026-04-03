@@ -5,14 +5,17 @@ import type { FieldRenderProps } from '@/lib/proto-form/FieldRenderProps.types'
 
 type ListFieldProps = Omit<FieldRenderProps, 'field'>
 
+function toUnknownArray(val: unknown): unknown[] {
+  return Array.isArray(val) ? val : []
+}
+
 export function ListFieldRenderer({
   label,
   description,
   value,
   onChange,
 }: ListFieldProps) {
-  const rawItems = value !== null && value !== undefined ? value : []
-  const items = Array.isArray(rawItems) ? rawItems : []
+  const items = toUnknownArray(value)
   const [newItem, setNewItem] = useState('')
 
   const handleAdd = () => {

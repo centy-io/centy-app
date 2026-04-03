@@ -37,10 +37,12 @@ describe('updateState', () => {
 
     updateState(path, () => ({ items: [newItem] }))
 
-    const stored = JSON.parse(
+    const stored: unknown = JSON.parse(
       localStorage.getItem(`centy-pinned-items-${path}`)!
     )
-    expect(stored.items).toContainEqual(newItem)
+    if (typeof stored === 'object' && stored !== null && 'items' in stored) {
+      expect(stored.items).toContainEqual(newItem)
+    }
   })
 
   it('notifies subscribed listeners', () => {

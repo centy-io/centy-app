@@ -1,4 +1,4 @@
-import type { PinnedItemsState } from './usePinnedItems.types'
+import type { PinnedItem, PinnedItemsState } from './usePinnedItems.types'
 import { DEFAULT_STATE } from './usePinnedItems.types'
 
 const STORAGE_KEY_PREFIX = 'centy-pinned-items'
@@ -7,15 +7,21 @@ function getStorageKey(projectPath: string): string {
   return `${STORAGE_KEY_PREFIX}-${projectPath}`
 }
 
+function toPinnedItemArray(val: unknown): PinnedItem[] {
+  return Array.isArray(val) ? val : []
+}
+
 function loadFromStorage(projectPath: string): PinnedItemsState {
   if (typeof window === 'undefined' || !projectPath) return DEFAULT_STATE
   try {
     const stored = localStorage.getItem(getStorageKey(projectPath))
     if (!stored) return DEFAULT_STATE
-    const parsed: PinnedItemsState = JSON.parse(stored)
-    return {
-      items: Array.isArray(parsed.items) ? parsed.items : DEFAULT_STATE.items,
-    }
+    const parsed: unknown = JSON.parse(stored)
+    const rawItems =
+      typeof parsed === 'object' && parsed !== null && 'items' in parsed
+        ? parsed.items
+        : undefined
+    return { items: toPinnedItemArray(rawItems) }
   } catch {
     return DEFAULT_STATE
   }
