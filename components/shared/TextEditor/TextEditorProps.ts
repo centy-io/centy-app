@@ -3,7 +3,7 @@ import type { EditorMode } from './EditorMode'
 
 export interface TextEditorProps {
   /** Content value in original format (md or adoc) */
-  value: string
+  value?: string
 
   /** Callback fired when content changes (only in edit mode) */
   onChange?: (value: string) => void

@@ -21,6 +21,10 @@ export function TextEditor(props: TextEditorProps) {
     return null
   }
 
+  if (!props.value && props.mode === 'display') {
+    return null
+  }
+
   const editorClassName = [
     'text-editor',
     `text-editor--${state.currentMode}`,
