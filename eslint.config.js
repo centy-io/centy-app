@@ -27,8 +27,6 @@ export default [
       '@typescript-eslint/no-non-null-assertion': 'error',
       // Miscellaneous stylistic rules from stylisticTypeChecked
       '@typescript-eslint/no-meaningless-void-operator': 'off',
-      '@typescript-eslint/prefer-regexp-exec': 'off',
-      '@typescript-eslint/no-unnecessary-type-parameters': 'off',
     },
   },
   {
