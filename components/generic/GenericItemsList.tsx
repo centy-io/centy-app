@@ -30,7 +30,9 @@ export function GenericItemsList({ itemType }: GenericItemsListProps) {
         singularName={singularName}
         loading={data.loading}
         createNewUrl={createLink(`/${itemType}/new`)}
-        onRefresh={data.fetchItems}
+        onRefresh={() => {
+          void data.fetchItems()
+        }}
       />
       <GenericListContent
         projectPath={projectPath}
@@ -44,14 +46,14 @@ export function GenericItemsList({ itemType }: GenericItemsListProps) {
         displayName={displayName}
         deleteConfirm={data.deleteConfirm}
         deleting={data.deleting}
-        onDeleteRequest={id => {
-          data.setDeleteConfirm(id)
+        onDeleteRequest={id => data.setDeleteConfirm(id)}
+        onDeleteCancel={() => data.setDeleteConfirm(null)}
+        onSoftDeleteConfirm={id => {
+          void data.handleSoftDelete(id)
         }}
-        onDeleteCancel={() => {
-          data.setDeleteConfirm(null)
+        onHardDeleteConfirm={id => {
+          void data.handleDelete(id)
         }}
-        onSoftDeleteConfirm={data.handleSoftDelete}
-        onHardDeleteConfirm={data.handleDelete}
       />
     </div>
   )

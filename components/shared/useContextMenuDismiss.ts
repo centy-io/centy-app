@@ -32,9 +32,7 @@ export function useContextMenuDismiss(onClose: () => void) {
     }
 
     document.addEventListener('keydown', handleEscape)
-    return () => {
-      document.removeEventListener('keydown', handleEscape)
-    }
+    return () => document.removeEventListener('keydown', handleEscape)
   }, [onClose])
 
   useEffect(() => {
@@ -43,9 +41,7 @@ export function useContextMenuDismiss(onClose: () => void) {
     }
 
     window.addEventListener('scroll', handleScroll, true)
-    return () => {
-      window.removeEventListener('scroll', handleScroll, true)
-    }
+    return () => window.removeEventListener('scroll', handleScroll, true)
   }, [onClose])
 
   return menuRef

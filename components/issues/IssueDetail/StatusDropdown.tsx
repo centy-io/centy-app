@@ -59,9 +59,7 @@ export function StatusDropdown({
               role="option"
               aria-selected={option.value === currentStatus}
               className={`status-option ${stateManager.getStateClass(option.value)} ${option.value === currentStatus ? 'selected' : ''}`}
-              onClick={() => {
-                onStatusChange(option.value)
-              }}
+              onClick={() => onStatusChange(option.value)}
             >
               {option.label}
             </li>

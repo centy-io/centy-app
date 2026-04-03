@@ -48,7 +48,9 @@ export function useDaemonStatusState() {
   const exitDemoMode = useCallback(() => {
     disableDemoMode()
     setStatus('checking')
-    setTimeout(() => checkDaemonStatus(), 100)
+    setTimeout(() => {
+      void checkDaemonStatus()
+    }, 100)
   }, [checkDaemonStatus])
 
   useEffect(() => {
@@ -56,15 +58,17 @@ export function useDaemonStatusState() {
       initializeDemoFromUrl(setStatus, setEditors, setEditorsLoaded)
       setHasMounted(true)
     }, 0)
-    return () => {
-      clearTimeout(timeoutId)
-    }
+    return () => clearTimeout(timeoutId)
   }, [setEditors, setEditorsLoaded])
 
   useEffect(() => {
     if (!hasMounted || isDemoMode()) return
-    const timeoutId = setTimeout(checkDaemonStatus, 0)
-    const interval = setInterval(checkDaemonStatus, CHECK_INTERVAL_MS)
+    const timeoutId = setTimeout(() => {
+      void checkDaemonStatus()
+    }, 0)
+    const interval = setInterval(() => {
+      void checkDaemonStatus()
+    }, CHECK_INTERVAL_MS)
     return () => {
       clearTimeout(timeoutId)
       clearInterval(interval)

@@ -19,7 +19,9 @@ export function SharedAssets(): ReactElement {
         <div className="header-actions">
           {projectPath && isInitialized === true && (
             <button
-              onClick={shared.fetchAssets}
+              onClick={() => {
+                void shared.fetchAssets()
+              }}
               disabled={shared.loading}
               className="refresh-btn"
             >

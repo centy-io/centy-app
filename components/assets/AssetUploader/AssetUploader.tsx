@@ -52,16 +52,16 @@ export const AssetUploader = forwardRef<
     <div className="asset-uploader">
       <DropZone
         fileInputRef={uploader.fileInputRef}
-        onFilesSelected={handleFiles}
+        onFilesSelected={files => {
+          void handleFiles(files)
+        }}
       />
       {uploader.error && (
         <div className="asset-error">
           {uploader.error}
           <button
             className="asset-dismiss-btn"
-            onClick={() => {
-              uploader.setError(null)
-            }}
+            onClick={() => uploader.setError(null)}
           >
             Dismiss
           </button>
@@ -72,7 +72,9 @@ export const AssetUploader = forwardRef<
         pendingAssets={uploader.pendingAssets}
         projectPath={projectPath}
         issueId={issueId}
-        onRemoveAsset={removeAsset}
+        onRemoveAsset={filename => {
+          void removeAsset(filename)
+        }}
         onRemovePending={removePending}
       />
     </div>

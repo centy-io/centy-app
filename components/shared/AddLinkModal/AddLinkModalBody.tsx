@@ -26,17 +26,13 @@ export function AddLinkModalBody({ state }: AddLinkModalBodyProps) {
         <div className="link-modal-tabs">
           <button
             className={`link-modal-tab ${state.targetTypeFilter === 'issue' ? 'active' : ''}`}
-            onClick={() => {
-              state.setTargetTypeFilter('issue')
-            }}
+            onClick={() => state.setTargetTypeFilter('issue')}
           >
             Issues
           </button>
           <button
             className={`link-modal-tab ${state.targetTypeFilter === 'doc' ? 'active' : ''}`}
-            onClick={() => {
-              state.setTargetTypeFilter('doc')
-            }}
+            onClick={() => state.setTargetTypeFilter('doc')}
           >
             Docs
           </button>
@@ -47,9 +43,7 @@ export function AddLinkModalBody({ state }: AddLinkModalBodyProps) {
         <input
           type="text"
           value={state.searchQuery}
-          onChange={e => {
-            state.setSearchQuery(e.target.value)
-          }}
+          onChange={e => state.setSearchQuery(e.target.value)}
           placeholder="Search by title or number..."
           className="link-modal-input"
         />

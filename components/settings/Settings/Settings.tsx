@@ -38,8 +38,12 @@ export function Settings(): ReactElement {
         showShutdownConfirm={daemon.showShutdownConfirm}
         onShowRestartConfirm={daemon.setShowRestartConfirm}
         onShowShutdownConfirm={daemon.setShowShutdownConfirm}
-        onRestart={daemon.handleRestart}
-        onShutdown={daemon.handleShutdown}
+        onRestart={() => {
+          void daemon.handleRestart()
+        }}
+        onShutdown={() => {
+          void daemon.handleShutdown()
+        }}
       />
       <section className="settings-section">
         <h3 className="settings-section-title">Daemon Connection</h3>

@@ -44,7 +44,7 @@ export function ProjectsGrid() {
     return (
       <div className="projects-grid-error">
         <p className="projects-grid-error-text">Error: {error}</p>
-        <button onClick={fetchData} className="retry-btn">
+        <button onClick={() => void fetchData()} className="retry-btn">
           Retry
         </button>
       </div>
@@ -71,10 +71,10 @@ export function ProjectsGrid() {
 
   return (
     <ProjectsGridContent
-      fetchData={fetchData}
+      fetchData={() => void fetchData()}
       groupedProjects={groupedProjects}
       onProjectClick={handleProjectClick}
-      onToggleFavorite={handleToggleFavorite}
+      onToggleFavorite={(e, project) => void handleToggleFavorite(e, project)}
     />
   )
 }

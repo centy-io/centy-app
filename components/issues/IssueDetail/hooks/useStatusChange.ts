@@ -39,9 +39,7 @@ export function useStatusChange(
   const [updatingStatus, setUpdatingStatus] = useState(false)
   const statusDropdownRef = useRef<HTMLDivElement>(null)
 
-  const closeDropdown = useCallback(() => {
-    setShowStatusDropdown(false)
-  }, [])
+  const closeDropdown = useCallback(() => setShowStatusDropdown(false), [])
   useClickOutside(statusDropdownRef, showStatusDropdown, closeDropdown)
 
   const handleStatusChange = useCallback(

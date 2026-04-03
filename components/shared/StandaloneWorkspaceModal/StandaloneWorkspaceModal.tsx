@@ -43,7 +43,9 @@ export function StandaloneWorkspaceModal(props: StandaloneWorkspaceModalProps) {
           </button>
           <button
             className="standalone-modal-submit"
-            onClick={state.handleCreate}
+            onClick={() => {
+              void state.handleCreate()
+            }}
             disabled={state.loading || !state.hasAvailableEditor}
           >
             {state.loading ? 'Creating...' : 'Create Workspace'}

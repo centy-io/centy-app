@@ -30,17 +30,13 @@ export function ArchivedStaleItem({
             <span className="confirm-text">Remove permanently?</span>
             <button
               className="confirm-yes-btn"
-              onClick={() => {
-                onRemoveStale(path)
-              }}
+              onClick={() => onRemoveStale(path)}
             >
               Yes
             </button>
             <button
               className="confirm-no-btn"
-              onClick={() => {
-                onSetConfirmRemove(null)
-              }}
+              onClick={() => onSetConfirmRemove(null)}
             >
               No
             </button>
@@ -48,9 +44,7 @@ export function ArchivedStaleItem({
         ) : (
           <button
             className="remove-btn"
-            onClick={() => {
-              onSetConfirmRemove(path)
-            }}
+            onClick={() => onSetConfirmRemove(path)}
           >
             Remove
           </button>

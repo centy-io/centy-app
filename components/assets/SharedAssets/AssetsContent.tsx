@@ -39,9 +39,13 @@ export function AssetsContent({ shared }: AssetsContentProps): ReactElement {
               asset={asset}
               deleteConfirm={shared.deleteConfirm}
               deleting={shared.deleting}
-              onPreview={shared.handlePreview}
+              onPreview={asset => {
+                void shared.handlePreview(asset)
+              }}
               onDeleteConfirm={shared.setDeleteConfirm}
-              onDelete={shared.handleDelete}
+              onDelete={filename => {
+                void shared.handleDelete(filename)
+              }}
               formatFileSize={formatFileSize}
             />
           ))}

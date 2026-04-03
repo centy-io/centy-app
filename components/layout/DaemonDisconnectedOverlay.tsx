@@ -19,9 +19,7 @@ export function DaemonDisconnectedOverlay() {
   const handleCopy = async () => {
     await navigator.clipboard.writeText(INSTALL_COMMAND)
     setCopied(true)
-    setTimeout(() => {
-      setCopied(false)
-    }, 2000)
+    setTimeout(() => setCopied(false), 2000)
   }
 
   return (
@@ -40,12 +38,22 @@ export function DaemonDisconnectedOverlay() {
           </p>
           <div className="daemon-code-block">
             <code className="daemon-install-command">{INSTALL_COMMAND}</code>
-            <CopyButton copied={copied} onCopy={handleCopy} />
+            <CopyButton
+              copied={copied}
+              onCopy={() => {
+                void handleCopy()
+              }}
+            />
           </div>
           <p className="daemon-instruction-text">Then start the daemon:</p>
           <code className="daemon-start-command">pnpm dlx centy start</code>
         </div>
-        <button className="daemon-retry-button" onClick={checkNow}>
+        <button
+          className="daemon-retry-button"
+          onClick={() => {
+            void checkNow()
+          }}
+        >
           Retry Connection
         </button>
         <div className="daemon-disconnected-demo-section">

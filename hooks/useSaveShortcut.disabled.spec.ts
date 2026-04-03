@@ -20,9 +20,7 @@ describe('useSaveShortcut - disabled state', () => {
   })
 
   it('should not call onSave when disabled', () => {
-    renderHook(() => {
-      useSaveShortcut({ onSave: mockOnSave, enabled: false })
-    })
+    renderHook(() => useSaveShortcut({ onSave: mockOnSave, enabled: false }))
 
     fireKeyboardEvent({ key: 's', ctrlKey: true })
 
@@ -31,9 +29,7 @@ describe('useSaveShortcut - disabled state', () => {
 
   it('should re-enable when enabled changes from false to true', () => {
     const { rerender } = renderHook(
-      ({ enabled }) => {
-        useSaveShortcut({ onSave: mockOnSave, enabled })
-      },
+      ({ enabled }) => useSaveShortcut({ onSave: mockOnSave, enabled }),
       { initialProps: { enabled: false } }
     )
 
@@ -53,9 +49,7 @@ describe('useSaveShortcut - preventDefault behavior', () => {
   })
 
   it('should prevent default browser behavior', () => {
-    renderHook(() => {
-      useSaveShortcut({ onSave: mockOnSave })
-    })
+    renderHook(() => useSaveShortcut({ onSave: mockOnSave }))
 
     const preventDefaultSpy = vi.fn()
     const event = new KeyboardEvent('keydown', {
@@ -71,9 +65,7 @@ describe('useSaveShortcut - preventDefault behavior', () => {
   })
 
   it('should prevent default even when disabled (to block browser save)', () => {
-    renderHook(() => {
-      useSaveShortcut({ onSave: mockOnSave, enabled: false })
-    })
+    renderHook(() => useSaveShortcut({ onSave: mockOnSave, enabled: false }))
 
     const preventDefaultSpy = vi.fn()
     const event = new KeyboardEvent('keydown', {
@@ -94,9 +86,7 @@ describe('useSaveShortcut - preventDefault behavior', () => {
     const secondCallback = vi.fn()
 
     const { rerender } = renderHook(
-      ({ onSave }) => {
-        useSaveShortcut({ onSave })
-      },
+      ({ onSave }) => useSaveShortcut({ onSave }),
       { initialProps: { onSave: firstCallback } }
     )
 

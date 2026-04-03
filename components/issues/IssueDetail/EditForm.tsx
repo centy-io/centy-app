@@ -33,9 +33,7 @@ export function EditForm({
           id="edit-title"
           type="text"
           value={editTitle}
-          onChange={e => {
-            setEditTitle(e.target.value)
-          }}
+          onChange={e => setEditTitle(e.target.value)}
         />
       </div>
       <div className="form-row">

@@ -37,7 +37,13 @@ export function useIssuesTable(
 
   const columns = useMemo(
     () => [
-      ...createBaseColumns(copyToClipboard, createLink, stateManager),
+      ...createBaseColumns(
+        (text, label) => {
+          void copyToClipboard(text, label)
+        },
+        createLink,
+        stateManager
+      ),
       createPriorityColumn(),
       createCreatedAtColumn(),
       createLastSeenColumn(lastSeenMap),

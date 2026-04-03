@@ -22,9 +22,7 @@ export function AddStateRow({
       <input
         type="text"
         value={newState}
-        onChange={e => {
-          onChange(e.target.value)
-        }}
+        onChange={e => onChange(e.target.value)}
         onKeyDown={onKeyDown}
         placeholder="New state name..."
         className="state-add-input"

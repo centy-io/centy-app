@@ -25,18 +25,16 @@ export function GitUsernamesField({
               className="form-input"
               type="text"
               value={username}
-              onChange={e => {
-                handleGitUsernameChange(index, e.target.value)
-              }}
+              onChange={e => handleGitUsernameChange(index, e.target.value)}
               placeholder="Git username"
             />
             <button
               type="button"
-              onClick={() => {
+              onClick={() =>
                 setEditGitUsernames(
                   editGitUsernames.filter((_, i) => i !== index)
                 )
-              }}
+              }
               className="remove-git-username-btn"
               title="Remove"
             >
@@ -46,9 +44,7 @@ export function GitUsernamesField({
         ))}
         <button
           type="button"
-          onClick={() => {
-            setEditGitUsernames([...editGitUsernames, ''])
-          }}
+          onClick={() => setEditGitUsernames([...editGitUsernames, ''])}
           className="add-git-username-btn"
         >
           + Add Git Username

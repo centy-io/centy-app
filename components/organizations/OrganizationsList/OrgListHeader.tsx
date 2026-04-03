@@ -52,9 +52,7 @@ export function OrgListHeader({
             id="orgs-sort-select"
             className="sort-select"
             value={sortPreset}
-            onChange={e => {
-              onSortChange(e.target.value)
-            }}
+            onChange={e => onSortChange(e.target.value)}
           >
             {SORT_OPTIONS.map(opt => (
               <option key={opt.value} value={opt.value} className="sort-option">

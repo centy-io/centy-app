@@ -51,8 +51,12 @@ export function CommentThread({
               comment={comment}
               savingId={savingId}
               deletingId={deletingId}
-              onUpdate={updateComment}
-              onDelete={deleteComment}
+              onUpdate={(id, body) => {
+                void updateComment(id, body)
+              }}
+              onDelete={id => {
+                void deleteComment(id)
+              }}
             />
           ))}
         </div>

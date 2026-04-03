@@ -35,15 +35,15 @@ export function InputStep({
             id="project-path"
             type="text"
             value={projectPath}
-            onChange={e => {
-              setProjectPath(e.target.value)
-            }}
+            onChange={e => setProjectPath(e.target.value)}
             placeholder="/path/to/your/project"
           />
           {isTauri && (
             <button
               type="button"
-              onClick={handleSelectFolder}
+              onClick={() => {
+                void handleSelectFolder()
+              }}
               className="browse-btn"
             >
               Browse...
@@ -53,14 +53,18 @@ export function InputStep({
       </div>
       <div className="actions">
         <button
-          onClick={handleQuickInit}
+          onClick={() => {
+            void handleQuickInit()
+          }}
           disabled={!projectPath.trim() || loading}
           className="primary"
         >
           {loading ? 'Initializing...' : 'Quick Init'}
         </button>
         <button
-          onClick={handleGetPlan}
+          onClick={() => {
+            void handleGetPlan()
+          }}
           disabled={!projectPath.trim() || loading}
           className="secondary"
         >

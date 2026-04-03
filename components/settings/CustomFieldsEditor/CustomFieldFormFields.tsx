@@ -24,9 +24,7 @@ export function CustomFieldFormFields({
         <input
           type="text"
           value={name}
-          onChange={e => {
-            onNameChange(e.target.value)
-          }}
+          onChange={e => onNameChange(e.target.value)}
           placeholder="field_name"
           className="custom-field-form-input"
         />
@@ -36,9 +34,7 @@ export function CustomFieldFormFields({
         <label className="form-label">Type</label>
         <select
           value={fieldType}
-          onChange={e => {
-            onFieldTypeChange(e.target.value)
-          }}
+          onChange={e => onFieldTypeChange(e.target.value)}
           className="custom-field-form-select"
         >
           {FIELD_TYPES.map(t => (
@@ -55,9 +51,7 @@ export function CustomFieldFormFields({
             className="form-checkbox"
             type="checkbox"
             checked={required}
-            onChange={e => {
-              onRequiredChange(e.target.checked)
-            }}
+            onChange={e => onRequiredChange(e.target.checked)}
           />
           Required
         </label>

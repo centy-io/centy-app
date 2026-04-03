@@ -55,7 +55,9 @@ export function ProjectSelector() {
             setIsOpen={state.setIsOpen}
             handleSelectProject={state.handleSelectProject}
             handleManualSubmit={state.handleManualSubmit}
-            handleToggleFavorite={state.handleToggleFavorite}
+            handleToggleFavorite={(e, project) => {
+              void state.handleToggleFavorite(e, project)
+            }}
             handleArchiveProject={state.handleArchiveProject}
             toggleOrgCollapse={state.toggleOrgCollapse}
           />

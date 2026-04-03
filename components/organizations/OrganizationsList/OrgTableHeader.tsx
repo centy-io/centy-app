@@ -38,9 +38,7 @@ export function OrgTableHeader({
                     className="column-filter"
                     placeholder="Filter..."
                     value={getColumnFilterValue(header)}
-                    onChange={e => {
-                      header.column.setFilterValue(e.target.value)
-                    }}
+                    onChange={e => header.column.setFilterValue(e.target.value)}
                   />
                 )}
               </div>

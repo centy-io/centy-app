@@ -32,9 +32,7 @@ export function CreateOrgIssueForm({
           id="org-issue-title"
           type="text"
           value={title}
-          onChange={e => {
-            setTitle(e.target.value)
-          }}
+          onChange={e => setTitle(e.target.value)}
           placeholder="Issue title"
           required
         />

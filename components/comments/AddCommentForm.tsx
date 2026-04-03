@@ -30,7 +30,7 @@ export function AddCommentForm({
       <button
         type="button"
         className="comment-add-toggle"
-        onClick={() => void setExpanded(true)}
+        onClick={() => setExpanded(true)}
       >
         + Add comment
       </button>
@@ -38,13 +38,13 @@ export function AddCommentForm({
   }
 
   return (
-    <form className="comment-add-form" onSubmit={handleSubmit}>
+    <form className="comment-add-form" onSubmit={e => void handleSubmit(e)}>
       <div className="comment-add-author">
         <input
           className="comment-author-input"
           placeholder="Your name (optional)"
           value={author}
-          onChange={e => void setAuthor(e.target.value)}
+          onChange={e => setAuthor(e.target.value)}
           disabled={adding}
         />
       </div>

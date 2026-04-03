@@ -34,7 +34,9 @@ export function ProjectSettingsContent({
           saving={settings.saving}
           isDirty={settings.isDirty}
           updateConfig={settings.updateConfig}
-          onSave={settings.handleSaveConfig}
+          onSave={() => {
+            void settings.handleSaveConfig()
+          }}
           onReset={settings.handleResetConfig}
         />
       )}

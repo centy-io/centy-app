@@ -36,9 +36,7 @@ export function useUpdateComment(
               customFields: existingFields,
             })
           ),
-        (v: boolean) => {
-          setSavingId(v ? commentId : null)
-        },
+        (v: boolean) => setSavingId(v ? commentId : null),
         setError
       )
       if (res && res.success && res.item) {
@@ -76,9 +74,7 @@ export function useDeleteComment(
               itemId: commentId,
             })
           ),
-        (v: boolean) => {
-          setDeletingId(v ? commentId : null)
-        },
+        (v: boolean) => setDeletingId(v ? commentId : null),
         setError
       )
       if (res && res.success) {

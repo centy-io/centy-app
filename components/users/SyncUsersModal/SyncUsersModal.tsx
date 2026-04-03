@@ -26,19 +26,12 @@ export function SyncUsersModal({ onClose, onSynced }: SyncUsersModalProps) {
       if (e.key === 'Escape') handleClose()
     }
     document.addEventListener('keydown', handleKeyDown)
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown)
-    }
+    return () => document.removeEventListener('keydown', handleKeyDown)
   }, [handleClose])
 
   return (
     <div className="sync-modal-overlay" onClick={handleClose}>
-      <div
-        className="sync-modal"
-        onClick={e => {
-          e.stopPropagation()
-        }}
-      >
+      <div className="sync-modal" onClick={e => e.stopPropagation()}>
         <div className="sync-modal-header">
           <h3 className="sync-modal-title">Sync Users from Git</h3>
           <button className="close-btn" onClick={handleClose}>
@@ -53,13 +46,17 @@ export function SyncUsersModal({ onClose, onSynced }: SyncUsersModalProps) {
           created={sync.created}
           skipped={sync.skipped}
           syncErrors={sync.syncErrors}
-          fetchPreview={sync.fetchPreview}
+          fetchPreview={() => {
+            void sync.fetchPreview()
+          }}
         />
         <SyncModalActions
           state={sync.state}
           wouldCreateCount={sync.wouldCreate.length}
           handleClose={handleClose}
-          handleSync={sync.handleSync}
+          handleSync={() => {
+            void sync.handleSync()
+          }}
         />
       </div>
     </div>

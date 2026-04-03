@@ -56,7 +56,9 @@ export function PlanStep({
           Cancel
         </button>
         <button
-          onClick={handleExecutePlan}
+          onClick={() => {
+            void handleExecutePlan()
+          }}
           disabled={loading}
           className="primary"
         >

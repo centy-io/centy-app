@@ -44,30 +44,25 @@ export function GenericItemContent({
         listUrl={listUrl}
         isEditing={isEditing}
         saving={saving}
-        onEdit={() => {
-          setIsEditing(true)
-        }}
-        onCancelEdit={() => {
-          setIsEditing(false)
-        }}
-        onSave={handleSave}
-        onDeleteRequest={() => {
-          setShowDeleteConfirm(true)
-        }}
+        onEdit={() => setIsEditing(true)}
+        onCancelEdit={() => setIsEditing(false)}
+        onSave={() => void handleSave()}
+        onDeleteRequest={() => setShowDeleteConfirm(true)}
       />
       {fetch.error && <DaemonErrorMessage error={fetch.error} />}
       {isArchived && (
-        <ArchivedBanner restoring={restoring} onRestore={handleRestore} />
+        <ArchivedBanner
+          restoring={restoring}
+          onRestore={() => void handleRestore()}
+        />
       )}
       {showDeleteConfirm && (
         <DeleteConfirm
           message={`Delete "${item.title || item.id}"?`}
           deleting={deleting}
-          onCancel={() => {
-            setShowDeleteConfirm(false)
-          }}
-          onSoftDelete={handleSoftDelete}
-          onConfirm={handleDelete}
+          onCancel={() => setShowDeleteConfirm(false)}
+          onSoftDelete={() => void handleSoftDelete()}
+          onConfirm={() => void handleDelete()}
         />
       )}
       <ItemContent>

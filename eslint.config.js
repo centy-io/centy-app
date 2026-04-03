@@ -18,26 +18,16 @@ const baseConfig = config.map(c => {
 export default [
   ...baseConfig,
   {
-    // Scoped to TypeScript files: rules that require type information can only run with TS parser
-    files: ['**/*.{ts,tsx}'],
-    rules: {
-      // Allow () => void fn() for void-returning event handlers (avoids block-body boilerplate)
-      '@typescript-eslint/no-confusing-void-expression': [
-        'error',
-        { ignoreVoidOperator: true },
-      ],
-      '@typescript-eslint/no-meaningless-void-operator': 'off',
-    },
-  },
-  {
     // Disable rules from strictTypeChecked that conflict with project philosophy or require
     // large-scale refactoring. These should be addressed in separate issues.
     rules: {
       '@typescript-eslint/prefer-optional-chain': 'off',
       // Next.js requires generateStaticParams to be async even without await
       '@typescript-eslint/require-await': 'off',
+      // Common React event handler pattern: onClick={() => handler()}
+      '@typescript-eslint/no-confusing-void-expression': 'off',
       // Promise-returning functions in React event handlers (e.g. onClick={asyncFn})
-      '@typescript-eslint/no-misused-promises': 'off',
+      // '@typescript-eslint/no-misused-promises': 'off',
       // Template literal with non-string types (stylistic strictness)
       '@typescript-eslint/restrict-template-expressions': 'off',
       // Non-null assertions (!): banned by strictTypeChecked, all usages replaced with proper null checks

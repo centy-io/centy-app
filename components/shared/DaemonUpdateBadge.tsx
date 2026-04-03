@@ -37,17 +37,13 @@ export function DaemonUpdateBadge() {
   const handleCopy = async () => {
     await navigator.clipboard.writeText(INSTALL_COMMAND)
     setCopied(true)
-    setTimeout(() => {
-      setCopied(false)
-    }, 2000)
+    setTimeout(() => setCopied(false), 2000)
   }
 
   const handleRestartCopy = async () => {
     await navigator.clipboard.writeText(RESTART_COMMAND)
     setRestartCopied(true)
-    setTimeout(() => {
-      setRestartCopied(false)
-    }, 2000)
+    setTimeout(() => setRestartCopied(false), 2000)
   }
 
   const handleRestart = async () => {
@@ -71,7 +67,7 @@ export function DaemonUpdateBadge() {
     <>
       <button
         className="daemon-update-badge"
-        onClick={() => void setDialogOpen(true)}
+        onClick={() => setDialogOpen(true)}
         title="Daemon update available"
       >
         <span className="daemon-update-dot" />
@@ -85,10 +81,16 @@ export function DaemonUpdateBadge() {
           restartResult={restartResult}
           installCommand={INSTALL_COMMAND}
           restartCommand={RESTART_COMMAND}
-          onClose={() => void setDialogOpen(false)}
-          onCopy={handleCopy}
-          onRestartCopy={handleRestartCopy}
-          onRestart={handleRestart}
+          onClose={() => setDialogOpen(false)}
+          onCopy={() => {
+            void handleCopy()
+          }}
+          onRestartCopy={() => {
+            void handleRestartCopy()
+          }}
+          onRestart={() => {
+            void handleRestart()
+          }}
         />
       )}
     </>

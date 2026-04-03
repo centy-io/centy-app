@@ -55,16 +55,10 @@ export function PinnedItemsSection({
               key={item.id}
               item={item}
               isDragging={draggedIndex === index}
-              onDragStart={() => {
-                handleDragStart(index)
-              }}
-              onDragOver={e => {
-                handleDragOver(e, index)
-              }}
+              onDragStart={() => handleDragStart(index)}
+              onDragOver={e => handleDragOver(e, index)}
               onDragEnd={handleDragEnd}
-              onUnpin={() => {
-                onUnpin(item.id)
-              }}
+              onUnpin={() => onUnpin(item.id)}
             />
           ))}
         </div>

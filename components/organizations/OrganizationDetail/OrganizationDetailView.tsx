@@ -52,7 +52,7 @@ export function OrganizationDetailView(
             setShowDeleteConfirm(false)
             setDeleteError(null)
           }}
-          onConfirm={handleDelete}
+          onConfirm={() => void handleDelete()}
           error={deleteError}
         >
           {projects.length > 0 && (

@@ -51,11 +51,8 @@ export function ProjectSelectorDropdown(props: ProjectSelectorDropdownProps) {
     handleArchiveProject,
     toggleOrgCollapse,
   } = props
-
-  const focusSearch = () => {
-    if (searchInputRef.current) searchInputRef.current.focus()
-  }
-
+  const focusSearch = () =>
+    searchInputRef.current && searchInputRef.current.focus()
   return (
     <>
       <ProjectSelectorHeader loading={loading} onRefresh={fetchProjects} />

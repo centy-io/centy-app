@@ -31,9 +31,7 @@ export function OrgEditForm(props: OrgEditFormProps): React.JSX.Element {
           id="edit-name"
           type="text"
           value={editName}
-          onChange={e => {
-            setEditName(e.target.value)
-          }}
+          onChange={e => setEditName(e.target.value)}
           placeholder="Organization name"
         />
       </div>
@@ -46,9 +44,7 @@ export function OrgEditForm(props: OrgEditFormProps): React.JSX.Element {
           id="edit-slug"
           type="text"
           value={editSlug}
-          onChange={e => {
-            setEditSlug(e.target.value)
-          }}
+          onChange={e => setEditSlug(e.target.value)}
           placeholder="organization-slug"
         />
         {editSlug !== currentSlug && (
@@ -66,9 +62,7 @@ export function OrgEditForm(props: OrgEditFormProps): React.JSX.Element {
           className="form-textarea"
           id="edit-description"
           value={editDescription}
-          onChange={e => {
-            setEditDescription(e.target.value)
-          }}
+          onChange={e => setEditDescription(e.target.value)}
           placeholder="Description (optional)"
           rows={3}
         />

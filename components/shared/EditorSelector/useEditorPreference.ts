@@ -15,9 +15,7 @@ export function useEditorPreference() {
       if (!saved) return
       setPreferredEditor(saved)
     }, 0)
-    return () => {
-      clearTimeout(timeoutId)
-    }
+    return () => clearTimeout(timeoutId)
   }, [])
 
   const savePreference = useCallback((editorId: string) => {

@@ -23,9 +23,7 @@ export function EditStatusSelect({
         className="form-select"
         id="edit-status"
         value={editStatus}
-        onChange={e => {
-          setEditStatus(e.target.value)
-        }}
+        onChange={e => setEditStatus(e.target.value)}
       >
         {stateOptions.map(option => (
           <option

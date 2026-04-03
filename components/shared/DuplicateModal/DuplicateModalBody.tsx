@@ -38,9 +38,7 @@ export function DuplicateModalBody({ props, state }: DuplicateModalBodyProps) {
         <input
           type="text"
           value={state.newTitle}
-          onChange={e => {
-            state.setNewTitle(e.target.value)
-          }}
+          onChange={e => state.setNewTitle(e.target.value)}
           placeholder={`Copy of ${props.entityTitle}`}
           className="move-modal-input"
         />
@@ -52,9 +50,7 @@ export function DuplicateModalBody({ props, state }: DuplicateModalBodyProps) {
           <input
             type="text"
             value={state.newSlug}
-            onChange={e => {
-              state.setNewSlug(e.target.value)
-            }}
+            onChange={e => state.setNewSlug(e.target.value)}
             placeholder={`${props.entitySlug}-copy`}
             className="move-modal-input"
           />

@@ -31,9 +31,7 @@ export function OrgSection({
             <select
               id="project-org"
               value={projectOrgSlug}
-              onChange={e => {
-                onOrgChange(e.target.value)
-              }}
+              onChange={e => onOrgChange(e.target.value)}
               disabled={savingOrg}
               className="org-select"
             >

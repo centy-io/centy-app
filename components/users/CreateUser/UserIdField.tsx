@@ -16,9 +16,7 @@ export function UserIdField({ userId, onUserIdChange }: UserIdFieldProps) {
         id="userId"
         type="text"
         value={userId}
-        onChange={e => {
-          onUserIdChange(e.target.value)
-        }}
+        onChange={e => onUserIdChange(e.target.value)}
         placeholder="Auto-generated from name"
       />
       <span className="form-hint">

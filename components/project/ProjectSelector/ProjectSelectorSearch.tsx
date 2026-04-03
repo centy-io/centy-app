@@ -33,9 +33,7 @@ export function ProjectSelectorSearch({
         aria-label="Search projects"
         type="text"
         value={searchQuery}
-        onChange={e => {
-          setSearchQuery(e.target.value)
-        }}
+        onChange={e => setSearchQuery(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder="Search projects..."
         className="search-input"
@@ -43,9 +41,7 @@ export function ProjectSelectorSearch({
       {searchQuery && (
         <button
           className="search-clear-btn"
-          onClick={() => {
-            setSearchQuery('')
-          }}
+          onClick={() => setSearchQuery('')}
           title="Clear search"
         >
           {'\u00D7'}

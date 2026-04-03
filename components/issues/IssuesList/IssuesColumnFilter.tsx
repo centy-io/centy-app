@@ -72,9 +72,7 @@ export function IssuesColumnFilter({
       className="column-filter"
       placeholder="Filter..."
       value={getTextFilterValue(column)}
-      onChange={e => {
-        column.setFilterValue(e.target.value)
-      }}
+      onChange={e => column.setFilterValue(e.target.value)}
     />
   )
 }

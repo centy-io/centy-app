@@ -71,7 +71,7 @@ export function CreateOrgIssue({ orgSlug }: CreateOrgIssueProps) {
           loading={loading}
           error={error}
           stateOptions={stateOptions}
-          onSubmit={handleSubmit}
+          onSubmit={e => void handleSubmit(e)}
           onCancel={handleCancel}
         />
       )}

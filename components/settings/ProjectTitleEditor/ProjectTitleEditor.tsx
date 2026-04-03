@@ -48,9 +48,7 @@ export function ProjectTitleEditor({
           id="project-title"
           type="text"
           value={currentTitle}
-          onChange={e => {
-            setCurrentTitle(e.target.value)
-          }}
+          onChange={e => setCurrentTitle(e.target.value)}
           placeholder={projectInfo.name || 'Project name'}
           className="title-input"
         />
@@ -59,14 +57,18 @@ export function ProjectTitleEditor({
       {success && <div className="title-success">{success}</div>}
       <div className="title-actions">
         <button
-          onClick={handleSave}
+          onClick={() => {
+            void handleSave()
+          }}
           disabled={saving || !hasChanges}
           className="title-save-btn"
         >
           {saving ? 'Saving...' : 'Save Title'}
         </button>
         <button
-          onClick={handleClear}
+          onClick={() => {
+            void handleClear()
+          }}
           disabled={saving || !currentTitle}
           className="title-clear-btn"
         >

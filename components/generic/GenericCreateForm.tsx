@@ -46,9 +46,7 @@ export function GenericCreateForm({
             id="title"
             type="text"
             value={title}
-            onChange={e => {
-              setTitle(e.target.value)
-            }}
+            onChange={e => setTitle(e.target.value)}
             placeholder={`${displayName} title`}
             required
           />

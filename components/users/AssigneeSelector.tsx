@@ -50,7 +50,12 @@ export function AssigneeSelector({
       <div className="assignee-selector error">
         <span className="error-text">{error}</span>
         {!isUnimplemented && (
-          <button onClick={fetchUsers} className="retry-btn">
+          <button
+            onClick={() => {
+              void fetchUsers()
+            }}
+            className="retry-btn"
+          >
             Retry
           </button>
         )}
@@ -71,7 +76,9 @@ export function AssigneeSelector({
       <MultiSelect
         options={options}
         value={currentAssignees}
-        onChange={handleChange}
+        onChange={() => {
+          void handleChange()
+        }}
         placeholder="Unassigned"
         className="assignee-multi-select"
       />
