@@ -6,6 +6,11 @@ const turndownService = new TurndownService({
   bulletListMarker: '-',
 })
 
+// Don't escape markdown characters in text content — this is a WYSIWYG editor
+// where all structure is represented as HTML elements, so TurndownService's
+// default escaping only causes double-escaping on every save.
+turndownService.escape = (string: string) => string
+
 // Custom rules for better markdown conversion
 turndownService.addRule('codeBlock', {
   filter: ['pre'],
