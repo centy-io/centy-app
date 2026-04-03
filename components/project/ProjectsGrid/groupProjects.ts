@@ -8,8 +8,7 @@ export function groupProjects(
   projects: ProjectInfo[],
   organizations: Organization[]
 ): GroupedProject[] {
-  const groups: Map<string, { name: string; projects: ProjectInfo[] }> =
-    new Map()
+  const groups = new Map<string, { name: string; projects: ProjectInfo[] }>()
 
   groups.set('', { name: 'Ungrouped', projects: [] })
 

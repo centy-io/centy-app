@@ -8,14 +8,14 @@ import { centyClient } from '@/lib/grpc/client'
 import {
   DeleteItemRequestSchema,
   SoftDeleteItemRequestSchema,
-  type Issue,
+  type GenericItem,
 } from '@/gen/centy_pb'
 
 interface UseIssueActionsParams {
   projectPath: string
   issueNumber: string
   issuesListUrl: RouteLiteral
-  setIssue: (issue: Issue) => void
+  setIssue: (issue: GenericItem) => void
   setError: (error: string | null) => void
 }
 

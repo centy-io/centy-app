@@ -1,6 +1,12 @@
 import { test, expect } from '@playwright/test'
 import { setupDemoMode, navigateToDemoProject } from '../../utils/test-helpers'
 
+interface DraftIssue {
+  title: string
+  description: string
+  priority: number
+}
+
 const DRAFT_STORAGE_KEY = 'centy-draft-issue-/demo/centy-showcase'
 
 test.describe('Create Issue Form - Draft persistence', () => {
@@ -14,12 +20,12 @@ test.describe('Create Issue Form - Draft persistence', () => {
     const draft = await page.evaluate((key: string) => {
       const raw = localStorage.getItem(key)
       if (!raw) return null
-      const parsed: Record<string, unknown> = JSON.parse(raw)
-      return parsed
+      const data: DraftIssue = JSON.parse(raw)
+      return data
     }, DRAFT_STORAGE_KEY)
 
     expect(draft).not.toBeNull()
-    expect(draft.title).toBe('Draft issue title')
+    expect(draft!.title).toBe('Draft issue title')
   })
 
   test('should restore draft title from localStorage on mount', async ({
@@ -69,11 +75,11 @@ test.describe('Create Issue Form - Draft persistence', () => {
     const draft = await page.evaluate((key: string) => {
       const raw = localStorage.getItem(key)
       if (!raw) return null
-      const parsed: Record<string, unknown> = JSON.parse(raw)
-      return parsed
+      const data: DraftIssue = JSON.parse(raw)
+      return data
     }, DRAFT_STORAGE_KEY)
 
     expect(draft).not.toBeNull()
-    expect(draft.priority).toBe(3)
+    expect(draft!.priority).toBe(3)
   })
 })

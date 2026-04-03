@@ -87,6 +87,7 @@ export function resolveRoute(pathname: string): RouteResult {
 
   const [org, project, pageType, ...rest] = segments
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (pageType === undefined) {
     // Just org/project - redirect to issues
     return {

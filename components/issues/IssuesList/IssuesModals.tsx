@@ -1,7 +1,7 @@
 'use client'
 
 import type { ReactElement } from 'react'
-import type { Issue } from '@/gen/centy_pb'
+import type { GenericItem } from '@/gen/centy_pb'
 import { ContextMenu } from '@/components/shared/ContextMenu'
 import type { ContextMenuItem } from '@/components/shared/ContextMenuItem'
 import { MoveModal } from '@/components/shared/MoveModal'
@@ -10,13 +10,13 @@ import { StandaloneWorkspaceModal } from '@/components/shared/StandaloneWorkspac
 
 interface IssuesModalsProps {
   projectPath: string
-  contextMenu: { x: number; y: number; issue: Issue } | null
+  contextMenu: { x: number; y: number; issue: GenericItem } | null
   contextMenuItems: ContextMenuItem[]
   onCloseContextMenu: () => void
   showMoveModal: boolean
   showDuplicateModal: boolean
   showStandaloneModal: boolean
-  selectedIssue: Issue | null
+  selectedIssue: GenericItem | null
   onCloseMoveModal: () => void
   onCloseDuplicateModal: () => void
   onCloseStandaloneModal: () => void

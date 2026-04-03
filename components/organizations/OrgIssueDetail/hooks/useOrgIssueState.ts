@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { StateManager } from '@/lib/state'
-import type { Issue } from '@/gen/centy_pb'
+import type { GenericItem } from '@/gen/centy_pb'
 
 export function useOrgIssueState() {
   const [itemTypeStatuses, setItemTypeStatuses] = useState<string[]>([])
@@ -9,7 +9,7 @@ export function useOrgIssueState() {
     [itemTypeStatuses]
   )
   const [orgProjectPath, setOrgProjectPath] = useState<string | null>(null)
-  const [issue, setIssue] = useState<Issue | null>(null)
+  const [issue, setIssue] = useState<GenericItem | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [isEditing, setIsEditing] = useState(false)

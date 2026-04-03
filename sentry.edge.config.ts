@@ -11,6 +11,7 @@ init({
   dsn: 'https://98aef6a0676becdbe5b6a8a8ee14b8d3@o4510682522976256.ingest.de.sentry.io/4510682527367248',
 
   // Set environment for filtering in Sentry dashboard
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   environment: NODE_ENV || 'development',
 
   // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.

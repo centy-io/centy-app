@@ -1,7 +1,7 @@
 import { createColumnHelper } from '@tanstack/react-table'
-import type { Issue } from '@/gen/centy_pb'
+import type { GenericItem } from '@/gen/centy_pb'
 
-const columnHelper = createColumnHelper<Issue>()
+const columnHelper = createColumnHelper<GenericItem>()
 
 export function createCreatedAtColumn() {
   return columnHelper.accessor(
