@@ -1,6 +1,12 @@
 import { test, expect } from '@playwright/test'
 import { setupDemoMode, navigateToDemoProject } from '../../utils/test-helpers'
 
+interface DraftIssue {
+  title: string
+  description: string
+  priority: number
+}
+
 const DRAFT_STORAGE_KEY = 'centy-draft-issue-/demo/centy-showcase'
 
 test.describe('Create Issue Form - Draft persistence', () => {
@@ -13,10 +19,13 @@ test.describe('Create Issue Form - Draft persistence', () => {
 
     const draft = await page.evaluate((key: string) => {
       const raw = localStorage.getItem(key)
-      return raw ? JSON.parse(raw) : null
+      if (!raw) return null
+      const data: DraftIssue = JSON.parse(raw)
+      return data
     }, DRAFT_STORAGE_KEY)
 
     expect(draft).not.toBeNull()
+    if (!draft) return
     expect(draft.title).toBe('Draft issue title')
   })
 
@@ -66,10 +75,13 @@ test.describe('Create Issue Form - Draft persistence', () => {
 
     const draft = await page.evaluate((key: string) => {
       const raw = localStorage.getItem(key)
-      return raw ? JSON.parse(raw) : null
+      if (!raw) return null
+      const data: DraftIssue = JSON.parse(raw)
+      return data
     }, DRAFT_STORAGE_KEY)
 
     expect(draft).not.toBeNull()
+    if (!draft) return
     expect(draft.priority).toBe(3)
   })
 })

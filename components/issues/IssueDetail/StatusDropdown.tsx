@@ -1,7 +1,7 @@
 'use client'
 
 import type { ReactElement, RefObject } from 'react'
-import type { Issue } from '@/gen/centy_pb'
+import type { GenericItem } from '@/gen/centy_pb'
 
 interface StateOption {
   value: string
@@ -9,7 +9,7 @@ interface StateOption {
 }
 
 interface StatusDropdownProps {
-  issue: Issue
+  issue: GenericItem
   stateManager: {
     getStateClass: (status: string) => string
   }

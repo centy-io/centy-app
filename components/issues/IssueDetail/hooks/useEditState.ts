@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
-import type { Issue } from '@/gen/centy_pb'
+import type { GenericItem } from '@/gen/centy_pb'
 
-export function useEditState(issue: Issue | null) {
+export function useEditState(issue: GenericItem | null) {
   const [isEditing, setIsEditing] = useState(false)
   const [editTitle, setEditTitle] = useState('')
   const [editDescription, setEditDescription] = useState('')
@@ -12,7 +12,7 @@ export function useEditState(issue: Issue | null) {
   useEffect(() => {
     if (!issue) return
     setEditTitle(issue.title)
-    setEditDescription(issue.description)
+    setEditDescription(issue.body)
     setEditStatus((issue.metadata && issue.metadata.status) || 'open')
     setEditPriority((issue.metadata && issue.metadata.priority) || 2)
   }, [issue])
@@ -21,7 +21,7 @@ export function useEditState(issue: Issue | null) {
     setIsEditing(false)
     if (!issue) return
     setEditTitle(issue.title)
-    setEditDescription(issue.description)
+    setEditDescription(issue.body)
     setEditStatus((issue.metadata && issue.metadata.status) || 'open')
     setEditPriority((issue.metadata && issue.metadata.priority) || 2)
   }

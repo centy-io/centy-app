@@ -3,8 +3,8 @@ import { create } from '@bufbuild/protobuf'
 import { getEditFieldsFromIssue } from './getEditFieldsFromIssue'
 import { fetchOrgProjectPathAndStatuses } from './fetchOrgProjectPathAndStatuses'
 import { centyClient } from '@/lib/grpc/client'
-import { GetItemRequestSchema, type Issue } from '@/gen/centy_pb'
-import { genericItemToIssue } from '@/lib/genericItemToIssue'
+import { GetItemRequestSchema } from '@/gen/centy_pb'
+import type { GenericItem } from '@/gen/centy_pb'
 
 function formatErr(err: unknown): string {
   return err instanceof Error ? err.message : 'Failed to connect to daemon'
@@ -17,7 +17,7 @@ interface ApplyIssueParams {
   setEditStatus: (v: string) => void
 }
 
-function applyIssueToState(issue: Issue, p: ApplyIssueParams): void {
+function applyIssueToState(issue: GenericItem, p: ApplyIssueParams): void {
   const f = getEditFieldsFromIssue(issue)
   p.setEditTitle(f.title)
   p.setEditDescription(f.description)
@@ -32,7 +32,7 @@ interface UseOrgIssueFetchParams {
   setError: (v: string | null) => void
   setOrgProjectPath: (v: string | null) => void
   setItemTypeStatuses: (v: string[]) => void
-  setIssue: (v: Issue | null) => void
+  setIssue: (v: GenericItem | null) => void
   setEditTitle: (v: string) => void
   setEditDescription: (v: string) => void
   setEditPriority: (v: number) => void
@@ -78,7 +78,7 @@ export function useOrgIssueFetch(params: UseOrgIssueFetchParams): void {
       .then(res => {
         if (!res) return
         if (res.item) {
-          const found = genericItemToIssue(res.item)
+          const found = res.item
           setIssue(found)
           applyIssueToState(found, {
             setEditTitle,

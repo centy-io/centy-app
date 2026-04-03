@@ -12,6 +12,7 @@ export async function loadAssetPreview(
     isShared: true,
   })
   const response = await centyClient.getAsset(request)
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (response.success && response.data) {
     const bytes = new Uint8Array(response.data)
     const blob = new Blob([bytes], { type: asset.mimeType })

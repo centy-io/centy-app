@@ -35,9 +35,7 @@ export function useGenericItemFetch(
         setEditBody(response.item.body)
         const meta = response.item.metadata
         setEditStatus(meta ? meta.status : '')
-        setEditCustomFields(
-          meta && meta.customFields ? { ...meta.customFields } : {}
-        )
+        setEditCustomFields(meta ? { ...meta.customFields } : {})
       }
     } catch (err) {
       setError(

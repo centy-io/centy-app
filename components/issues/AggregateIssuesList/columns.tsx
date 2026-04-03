@@ -10,7 +10,6 @@ type CreateProjectLink = (
   projectName: string,
   path: string
 ) => RouteLiteral
-
 interface StateManager {
   getStateClass: (status: string) => string
 }
@@ -20,11 +19,9 @@ function makeProjectColumn(createProjectLink: CreateProjectLink) {
     header: 'Project',
     cell: info => {
       const issue = info.row.original
+      const href = createProjectLink(issue.orgSlug, issue.projectName, 'issues')
       return (
-        <Link
-          href={createProjectLink(issue.orgSlug, issue.projectName, 'issues')}
-          className="project-link"
-        >
+        <Link href={href} className="project-link">
           {info.getValue()}
         </Link>
       )
@@ -39,15 +36,10 @@ function makeTitleColumn(createProjectLink: CreateProjectLink) {
     header: 'Title',
     cell: info => {
       const issue = info.row.original
+      const path = `issues/${issue.id}`
+      const href = createProjectLink(issue.orgSlug, issue.projectName, path)
       return (
-        <Link
-          href={createProjectLink(
-            issue.orgSlug,
-            issue.projectName,
-            `issues/${issue.issueNumber}`
-          )}
-          className="issue-title-link"
-        >
+        <Link href={href} className="issue-title-link">
           {info.getValue()}
         </Link>
       )
@@ -74,12 +66,27 @@ function makeStatusColumn(stateManager: StateManager) {
         )
       },
       enableColumnFilter: true,
-      filterFn: (row, columnId, filterValue) => {
-        const status = String(row.getValue(columnId))
+      filterFn: (row, columnId, filterValue: string[]) => {
         const selectedValues = Array.isArray(filterValue) ? filterValue : []
-        if (selectedValues.length === 0) return true
-        return selectedValues.includes(status)
+        return (
+          selectedValues.length === 0 ||
+          selectedValues.includes(String(row.getValue(columnId)))
+        )
       },
+    }
+  )
+}
+
+function makeDisplayNumberColumn() {
+  return columnHelper.accessor(
+    row => (row.metadata ? row.metadata.displayNumber : 0),
+    {
+      id: 'displayNumber',
+      header: '#',
+      cell: info => `#${info.getValue()}`,
+      enableColumnFilter: true,
+      filterFn: (row, columnId, filterValue: string) =>
+        String(row.getValue(columnId)).includes(filterValue),
     }
   )
 }
@@ -90,15 +97,7 @@ export function createAggregateColumns(
 ) {
   return [
     makeProjectColumn(createProjectLink),
-    columnHelper.accessor('displayNumber', {
-      header: '#',
-      cell: info => `#${info.getValue()}`,
-      enableColumnFilter: true,
-      filterFn: (row, columnId, filterValue) => {
-        const value = row.getValue(columnId)
-        return String(value).includes(filterValue)
-      },
-    }),
+    makeDisplayNumberColumn(),
     makeTitleColumn(createProjectLink),
     makeStatusColumn(stateManager),
   ]

@@ -45,7 +45,6 @@ export function GenericCreateFormFields({
         )}
 
       {config &&
-        config.customFields &&
         config.customFields.map(field => (
           <div key={field.name} className="form-group">
             <label className="form-label" htmlFor={`field-${field.name}`}>

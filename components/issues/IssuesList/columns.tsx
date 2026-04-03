@@ -1,9 +1,17 @@
 import Link from 'next/link'
 import { createColumnHelper } from '@tanstack/react-table'
 import type { RouteLiteral } from 'nextjs-routes'
-import type { Issue } from '@/gen/centy_pb'
+import type { GenericItem } from '@/gen/centy_pb'
 
-const columnHelper = createColumnHelper<Issue>()
+const columnHelper = createColumnHelper<GenericItem>()
+
+function getDisplayNumber(row: GenericItem): number {
+  return row.metadata ? row.metadata.displayNumber : 0
+}
+
+function getStatus(row: GenericItem): string {
+  return (row.metadata && row.metadata.status) || 'unknown'
+}
 
 export function createBaseColumns(
   copyToClipboard: (text: string, label: string) => void,
@@ -11,10 +19,11 @@ export function createBaseColumns(
   stateManager: { getStateClass: (status: string) => string }
 ) {
   return [
-    columnHelper.accessor('displayNumber', {
+    columnHelper.accessor(getDisplayNumber, {
+      id: 'displayNumber',
       header: '#',
       cell: info => {
-        const issueId = info.row.original.issueNumber
+        const issueId = info.row.original.id
         return (
           <button
             type="button"
@@ -30,7 +39,7 @@ export function createBaseColumns(
         )
       },
       enableColumnFilter: true,
-      filterFn: (row, columnId, filterValue) => {
+      filterFn: (row, columnId, filterValue: string) => {
         const value = row.getValue(columnId)
         return String(value).includes(filterValue)
       },
@@ -39,7 +48,7 @@ export function createBaseColumns(
       header: 'Title',
       cell: info => (
         <Link
-          href={createLink(`/issues/${info.row.original.issueNumber}`)}
+          href={createLink(`/issues/${info.row.original.id}`)}
           className="issue-title-link"
         >
           {info.getValue()}
@@ -48,29 +57,26 @@ export function createBaseColumns(
       enableColumnFilter: true,
       filterFn: 'includesString',
     }),
-    columnHelper.accessor(
-      row => (row.metadata && row.metadata.status) || 'unknown',
-      {
-        id: 'status',
-        header: 'Status',
-        cell: info => {
-          const status = info.getValue()
-          return (
-            <span
-              className={`status-badge ${stateManager.getStateClass(status)}`}
-            >
-              {status}
-            </span>
-          )
-        },
-        enableColumnFilter: true,
-        filterFn: (row, columnId, filterValue) => {
-          const status = String(row.getValue(columnId))
-          const selectedValues = Array.isArray(filterValue) ? filterValue : []
-          if (selectedValues.length === 0) return true
-          return selectedValues.includes(status)
-        },
-      }
-    ),
+    columnHelper.accessor(getStatus, {
+      id: 'status',
+      header: 'Status',
+      cell: info => {
+        const status = info.getValue()
+        return (
+          <span
+            className={`status-badge ${stateManager.getStateClass(status)}`}
+          >
+            {status}
+          </span>
+        )
+      },
+      enableColumnFilter: true,
+      filterFn: (row, columnId, filterValue) => {
+        const status = String(row.getValue(columnId))
+        const selectedValues = Array.isArray(filterValue) ? filterValue : []
+        if (selectedValues.length === 0) return true
+        return selectedValues.includes(status)
+      },
+    }),
   ]
 }

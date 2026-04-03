@@ -6,10 +6,10 @@ import { Header } from './Header'
 import { IssueDetailBody } from './IssueDetailBody'
 import { DeleteConfirm } from '@/components/shared/DeleteConfirm'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
-import type { Issue, Asset } from '@/gen/centy_pb'
+import type { GenericItem, Asset } from '@/gen/centy_pb'
 
 interface IssueDetailContentProps {
-  issue: Issue
+  issue: GenericItem
   projectPath: string
   issueNumber: string
   error: string | null

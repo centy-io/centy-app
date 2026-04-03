@@ -18,5 +18,5 @@ vi.mock('next/navigation', () => ({
 
 // Mock next/link - use a simple passthrough component
 vi.mock('next/link', () => ({
-  default: vi.fn(({ children }) => children),
+  default: vi.fn(({ children }: { children: unknown }) => children),
 }))
