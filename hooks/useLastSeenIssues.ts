@@ -11,6 +11,7 @@ function getInitialLastSeenMap(): LastSeenMap {
   try {
     const stored = localStorage.getItem(STORAGE_KEY)
     if (!stored) return {}
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const map: LastSeenMap = JSON.parse(stored)
     return map
   } catch {

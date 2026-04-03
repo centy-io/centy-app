@@ -33,7 +33,6 @@ export default [
       // Non-null assertions (!): banned by strictTypeChecked, all usages replaced with proper null checks
       '@typescript-eslint/no-non-null-assertion': 'error',
       // Type-unsafe operations involving any
-      '@typescript-eslint/no-unsafe-assignment': 'off',
       '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-unsafe-call': 'off',
       // Unnecessary conditions - enabled; false positives suppressed inline

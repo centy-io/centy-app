@@ -1,5 +1,6 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
+import type { AddLinkModalProps } from '../AddLinkModal'
 import { LinkSection } from '.'
 import { centyClient } from '@/lib/grpc/client'
 
@@ -16,7 +17,7 @@ vi.mock('@/components/providers/PathContextProvider', () => ({
 }))
 
 vi.mock('../AddLinkModal/index', () => ({
-  AddLinkModal: vi.fn(({ onClose, onLinkCreated }) => (
+  AddLinkModal: vi.fn(({ onClose, onLinkCreated }: AddLinkModalProps) => (
     <div className="mock-add-link-modal" data-testid="add-link-modal">
       <button className="mock-close-btn" onClick={onClose}>
         Close Modal

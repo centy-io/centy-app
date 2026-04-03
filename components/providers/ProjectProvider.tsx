@@ -60,8 +60,11 @@ export function useArchivedProjects() {
   useEffect(() => {
     const stored = localStorage.getItem(ARCHIVED_STORAGE_KEY)
     if (!stored) return
-    const parsed: string[] = JSON.parse(stored)
-    setArchivedPathsState(parsed)
+    const parsed: unknown = JSON.parse(stored)
+    if (!Array.isArray(parsed)) return
+    setArchivedPathsState(
+      parsed.filter((item): item is string => typeof item === 'string')
+    )
   }, [])
 
   const archiveProject = useCallback((path: string) => {

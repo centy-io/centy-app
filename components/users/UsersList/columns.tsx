@@ -11,6 +11,10 @@ declare module '@tanstack/react-table' {
 
 const columnHelper = createColumnHelper<User>()
 
+function toUnknownArray(val: unknown): unknown[] {
+  return Array.isArray(val) ? val : []
+}
+
 export function createUserColumns() {
   return [
     columnHelper.accessor('name', {
@@ -47,10 +51,12 @@ export function createUserColumns() {
       },
       enableColumnFilter: true,
       filterFn: (row, columnId, filterValue: string) => {
-        const val = row.getValue(columnId)
-        const usernames: string[] = Array.isArray(val) ? val : []
-        return usernames.some(u =>
-          u.toLowerCase().includes(filterValue.toLowerCase())
+        const val: unknown = row.getValue(columnId)
+        const usernames = toUnknownArray(val)
+        return usernames.some(
+          u =>
+            typeof u === 'string' &&
+            u.toLowerCase().includes(filterValue.toLowerCase())
         )
       },
     }),

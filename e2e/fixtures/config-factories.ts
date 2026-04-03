@@ -75,7 +75,6 @@ export function createMockManifest(overrides?: Partial<Manifest>): Manifest {
     schemaVersion: resolvedOverrides.schemaVersion ?? 1,
     centyVersion: resolvedOverrides.centyVersion ?? '1.0.0',
     createdAt: resolvedOverrides.createdAt ?? now,
-    updatedAt: resolvedOverrides.updatedAt ?? now,
     $typeName: 'centy.v1.Manifest',
   }
 }

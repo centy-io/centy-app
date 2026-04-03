@@ -9,9 +9,9 @@ export function isNewerVersion(versionA: string, versionB: string): boolean {
 
   while (aQueue.length > 0 || bQueue.length > 0) {
     const aShifted = aQueue.shift()
-    const a = aShifted !== undefined ? aShifted : 0
+    const a = aShifted ?? 0
     const bShifted = bQueue.shift()
-    const b = bShifted !== undefined ? bShifted : 0
+    const b = bShifted ?? 0
     if (b > a) return true
     if (b < a) return false
   }
