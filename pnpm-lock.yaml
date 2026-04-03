@@ -142,8 +142,8 @@ importers:
         specifier: 9.39.1
         version: 9.39.1(jiti@2.6.1)
       eslint-config-agent:
-        specifier: ^3.0.0
-        version: 3.0.0(eslint-import-resolver-typescript@4.4.4)(jiti@2.6.1)(storybook@9.1.17(@testing-library/dom@10.4.1)(msw@2.12.4(@types/node@24.10.1)(typescript@5.9.3))(prettier@3.7.4)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(terser@5.46.0)(yaml@2.8.2)))(typescript@5.9.3)
+        specifier: ^3.0.1
+        version: 3.0.1(eslint-import-resolver-typescript@4.4.4)(jiti@2.6.1)(storybook@9.1.17(@testing-library/dom@10.4.1)(msw@2.12.4(@types/node@24.10.1)(typescript@5.9.3))(prettier@3.7.4)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(terser@5.46.0)(yaml@2.8.2)))(typescript@5.9.3)
       eslint-import-resolver-typescript:
         specifier: ^4.4.4
         version: 4.4.4(eslint-plugin-import@2.32.0)(eslint@9.39.1(jiti@2.6.1))
@@ -3552,8 +3552,8 @@ packages:
     peerDependencies:
       eslint: '>=6.0.0'
 
-  eslint-config-agent@3.0.0:
-    resolution: {integrity: sha512-1Pprjd6vvTFjb2dwHmwsHxDITT3cWH4dv4rWDdGNAs1mp/Fisl9/l0vS18kuBdQHkUpgVIUrTG8Ypy3ajY19eA==}
+  eslint-config-agent@3.0.1:
+    resolution: {integrity: sha512-kC7Ctq4kjirGLvin3OCR6/ZR0WMsahQf5qi9cL1IRSXo2fPuya0+GoXY2vLdz3Ir2KiYSHrnJsRdu+Iay8wLQw==}
     engines: {node: '>=20.0.0'}
 
   eslint-config-developit@1.2.0:
@@ -3682,12 +3682,6 @@ packages:
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       eslint: '>=8.23.0'
-
-  eslint-plugin-no-optional-chaining@1.0.0:
-    resolution: {integrity: sha512-OTLboTT1vI7uniId9yBc++rCORrSrCwy1DA/nwtluP07RjFOtTct93Bc3f+Y4L2wpJPw13WLEtTfO019TtzSvA==}
-    engines: {node: '>=18.0.0'}
-    peerDependencies:
-      eslint: '>=9.0.0'
 
   eslint-plugin-preact@0.1.0:
     resolution: {integrity: sha512-/ZNTjrTLhDOkZmW8cY6W91lfrGEhyF5i0KFRhjlvCAPcWENxeXlx1TKbKgzjyvGtei8c2WlvWCgxO5PdyXe0EA==}
@@ -9393,7 +9387,7 @@ snapshots:
       eslint: 9.39.1(jiti@2.6.1)
       semver: 7.7.3
 
-  eslint-config-agent@3.0.0(eslint-import-resolver-typescript@4.4.4)(jiti@2.6.1)(storybook@9.1.17(@testing-library/dom@10.4.1)(msw@2.12.4(@types/node@24.10.1)(typescript@5.9.3))(prettier@3.7.4)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(terser@5.46.0)(yaml@2.8.2)))(typescript@5.9.3):
+  eslint-config-agent@3.0.1(eslint-import-resolver-typescript@4.4.4)(jiti@2.6.1)(storybook@9.1.17(@testing-library/dom@10.4.1)(msw@2.12.4(@types/node@24.10.1)(typescript@5.9.3))(prettier@3.7.4)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(terser@5.46.0)(yaml@2.8.2)))(typescript@5.9.3):
     dependencies:
       '@eslint/eslintrc': 3.3.3
       '@eslint/js': 9.39.1
@@ -9408,7 +9402,6 @@ snapshots:
       eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.48.1(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-typescript@4.4.4)(eslint@9.39.1(jiti@2.6.1))
       eslint-plugin-jsx-classname: 1.0.1(eslint@9.39.1(jiti@2.6.1))
       eslint-plugin-n: 17.24.0(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3)
-      eslint-plugin-no-optional-chaining: 1.0.0(eslint@9.39.1(jiti@2.6.1))
       eslint-plugin-preact: 0.1.0(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3)
       eslint-plugin-react: 7.37.5(eslint@9.39.1(jiti@2.6.1))
       eslint-plugin-react-hooks: 5.2.0(eslint@9.39.1(jiti@2.6.1))
@@ -9581,10 +9574,6 @@ snapshots:
       ts-declaration-location: 1.0.7(typescript@5.9.3)
     transitivePeerDependencies:
       - typescript
-
-  eslint-plugin-no-optional-chaining@1.0.0(eslint@9.39.1(jiti@2.6.1)):
-    dependencies:
-      eslint: 9.39.1(jiti@2.6.1)
 
   eslint-plugin-preact@0.1.0(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3):
     dependencies:

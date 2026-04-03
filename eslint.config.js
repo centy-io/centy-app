@@ -23,8 +23,6 @@ export default [
     rules: {
       // Optional chaining (?.) is fully supported in all target browsers and consistent with ?? usage
       'no-optional-chaining/no-optional-chaining': 'off',
-      // Template literal with non-string types (stylistic strictness)
-      '@typescript-eslint/restrict-template-expressions': 'off',
       // Non-null assertions (!): banned by strictTypeChecked, all usages replaced with proper null checks
       '@typescript-eslint/no-non-null-assertion': 'error',
       // Type-unsafe operations involving any
@@ -47,6 +45,11 @@ export default [
       '@typescript-eslint/no-confusing-void-expression': [
         'error',
         { ignoreVoidOperator: true },
+      ],
+      // Numbers are safe and common in template literals
+      '@typescript-eslint/restrict-template-expressions': [
+        'error',
+        { allowNumber: true },
       ],
     },
   },
