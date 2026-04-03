@@ -42,6 +42,5 @@ export const DEMO_CONFIG: Config = {
   },
   customLinkTypes: [],
   defaultEditor: '',
-  hooks: [],
   userValues: {},
 }

@@ -2,13 +2,13 @@ import type { LinkTypeInfo, GenericItem } from '@/gen/centy_pb'
 
 export const createMockLinkTypeInfo = (
   name: string,
-  inverse: string,
-  description?: string
+  description?: string,
+  isBuiltin?: boolean
 ): LinkTypeInfo =>
   ({
     name,
-    inverse,
     description: description ?? '',
+    isBuiltin: isBuiltin ?? false,
     $typeName: 'centy.v1.LinkTypeInfo' as const,
     $unknown: undefined,
   }) as LinkTypeInfo

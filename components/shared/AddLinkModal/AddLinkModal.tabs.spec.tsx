@@ -35,8 +35,8 @@ function setupAddLinkModalMocks() {
 
   vi.mocked(centyClient.getAvailableLinkTypes).mockResolvedValue({
     linkTypes: [
-      createMockLinkTypeInfo('blocks', 'blocked-by', 'Blocks another'),
-      createMockLinkTypeInfo('related-to', 'related-to', 'Related items'),
+      createMockLinkTypeInfo('blocks', 'Blocks another'),
+      createMockLinkTypeInfo('related-to', 'Related items'),
     ],
     $typeName: 'centy.v1.GetAvailableLinkTypesResponse',
     $unknown: undefined,
