@@ -6,9 +6,11 @@ import { type Link } from '@/gen/centy_pb'
 export const DEMO_LINKS: Link[] = [
   {
     $typeName: 'centy.v1.Link',
+    id: 'demo-link-1',
     targetId: 'demo-issue-4',
     targetItemType: 'issue',
     linkType: 'blocks',
     createdAt: '2024-12-15T16:00:00Z',
+    direction: 'source',
   },
 ]
