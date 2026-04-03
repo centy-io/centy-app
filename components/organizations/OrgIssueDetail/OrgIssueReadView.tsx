@@ -1,18 +1,21 @@
 'use client'
 
-import type { Issue } from '@/gen/centy_pb'
+import type { GenericItem } from '@/gen/centy_pb'
 import { TextEditor } from '@/components/shared/TextEditor'
 import { ItemMetadata } from '@/components/shared/ItemMetadata'
 import { ItemTitle } from '@/components/shared/ItemView'
 import { DetailLayout } from '@/components/shared/DetailLayout/DetailLayout'
 
 interface OrgIssueReadViewProps {
-  issue: Issue
+  issue: GenericItem
 }
 
 export function OrgIssueReadView({ issue }: OrgIssueReadViewProps) {
   const meta = issue.metadata
-  const displayNum = meta ? meta.orgDisplayNumber : issue.displayNumber
+  const displayNum = parseInt(
+    meta ? meta.customFields.org_display_number || '0' : '0',
+    10
+  )
   const status = (meta && meta.status) || undefined
   const priority = meta ? meta.priority : undefined
 
@@ -23,7 +26,7 @@ export function OrgIssueReadView({ issue }: OrgIssueReadViewProps) {
           <ItemTitle>{issue.title}</ItemTitle>
           <div className="issue-body">
             <TextEditor
-              value={issue.description}
+              value={issue.body}
               onChange={() => undefined}
               format="md"
               mode="display"

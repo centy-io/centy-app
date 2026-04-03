@@ -9,7 +9,7 @@ import type { RouteLiteral } from 'nextjs-routes'
 import { createBaseColumns } from '../columns'
 import { createPriorityColumn } from '../priorityColumn'
 import { createCreatedAtColumn, createLastSeenColumn } from '../dateColumns'
-import type { Issue } from '@/gen/centy_pb'
+import type { GenericItem } from '@/gen/centy_pb'
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard'
 import { useLastSeenIssues } from '@/hooks/useLastSeenIssues'
 import { useIssueTableSettings } from '@/hooks/useIssueTableSettings'
@@ -17,7 +17,7 @@ import { useStateManager } from '@/lib/state'
 import type { MultiSelectOption } from '@/components/shared/MultiSelect'
 
 export function useIssuesTable(
-  issues: Issue[],
+  issues: GenericItem[],
   createLink: (path: string) => RouteLiteral
 ) {
   const stateManager = useStateManager()

@@ -4,13 +4,12 @@ import { centyClient } from '@/lib/grpc/client'
 import {
   ListProjectsRequestSchema,
   ListItemsRequestSchema,
-  type Issue,
+  type GenericItem,
 } from '@/gen/centy_pb'
-import { genericItemToIssue } from '@/lib/genericItemToIssue'
 
 async function fetchOrgIssuesFromProjects(
   orgSlug: string
-): Promise<{ issues: Issue[]; firstProjectPath: string | null }> {
+): Promise<{ issues: GenericItem[]; firstProjectPath: string | null }> {
   const projectsRes = await centyClient.listProjects(
     create(ListProjectsRequestSchema, { organizationSlug: orgSlug })
   )
@@ -18,7 +17,7 @@ async function fetchOrgIssuesFromProjects(
   const firstProjectPath = orgProjects.length > 0 ? orgProjects[0].path : null
 
   const seen = new Set<string>()
-  const orgIssues: Issue[] = []
+  const orgIssues: GenericItem[] = []
 
   await Promise.all(
     orgProjects.map(async project => {
@@ -29,9 +28,11 @@ async function fetchOrgIssuesFromProjects(
             itemType: 'issues',
           })
         )
-        for (const issue of res.items.map(genericItemToIssue)) {
+        for (const issue of res.items) {
           const meta = issue.metadata
-          if (!meta || !meta.isOrgIssue || meta.orgSlug !== orgSlug) continue
+          const cf = meta ? meta.customFields : {}
+          if (!meta || cf.is_org_issue !== 'true' || cf.org_slug !== orgSlug)
+            continue
           if (seen.has(issue.id)) continue
           seen.add(issue.id)
           orgIssues.push(issue)
@@ -43,15 +44,17 @@ async function fetchOrgIssuesFromProjects(
   )
 
   orgIssues.sort((a, b) => {
-    const aNum = a.metadata ? a.metadata.orgDisplayNumber : 0
-    const bNum = b.metadata ? b.metadata.orgDisplayNumber : 0
+    const aCf = a.metadata ? a.metadata.customFields : {}
+    const bCf = b.metadata ? b.metadata.customFields : {}
+    const aNum = parseInt(aCf.org_display_number || '0', 10)
+    const bNum = parseInt(bCf.org_display_number || '0', 10)
     return aNum - bNum
   })
   return { issues: orgIssues, firstProjectPath }
 }
 
 export function useOrgIssues(orgSlug: string) {
-  const [issues, setIssues] = useState<Issue[]>([])
+  const [issues, setIssues] = useState<GenericItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [orgProjectPath, setOrgProjectPath] = useState<string | null>(null)

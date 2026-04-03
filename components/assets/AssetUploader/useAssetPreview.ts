@@ -30,6 +30,7 @@ export function useAssetPreview(
             filename: asset.filename,
           })
           const response = await centyClient.getAsset(request)
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           if (mounted && response.data) {
             const bytes = new Uint8Array(response.data)
             const blob = new Blob([bytes], { type: asset.mimeType })

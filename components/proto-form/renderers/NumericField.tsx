@@ -16,8 +16,10 @@ export function NumericField({
   onChange,
 }: NumericFieldProps) {
   const displayValue = is64bit
-    ? String(value !== null && value !== undefined ? value : '')
-    : value !== null && value !== undefined
+    ? typeof value === 'bigint'
+      ? String(value)
+      : ''
+    : typeof value === 'number'
       ? value
       : ''
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

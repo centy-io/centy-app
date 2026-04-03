@@ -4,14 +4,14 @@ import type { ReactElement } from 'react'
 import Link from 'next/link'
 import type { RouteLiteral } from 'nextjs-routes'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
-import type { Issue } from '@/gen/centy_pb'
+import type { GenericItem } from '@/gen/centy_pb'
 
 interface LoadingCheckProps {
   projectPath: string
   pathLoading: boolean
   loading: boolean
   error: string | null
-  issue: Issue | null
+  issue: GenericItem | null
   issuesListUrl: RouteLiteral
 }
 

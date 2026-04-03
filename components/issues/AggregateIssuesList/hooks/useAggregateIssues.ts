@@ -4,7 +4,6 @@ import type { AggregateIssue } from '../AggregateIssuesList.types'
 import { useOrgDisplayText } from './useOrgDisplayText'
 import { centyClient } from '@/lib/grpc/client'
 import { ListItemsRequestSchema } from '@/gen/centy_pb'
-import { genericItemToIssue } from '@/lib/genericItemToIssue'
 import { getProjects } from '@/lib/project-resolver'
 import { useAggregateTableSettings } from '@/hooks/useAggregateTableSettings'
 
@@ -41,7 +40,7 @@ export function useAggregateIssues() {
           })
           const response = await centyClient.listItems(request)
           return response.items.map(item => ({
-            ...genericItemToIssue(item),
+            ...item,
             projectName: project.name,
             orgSlug: project.organizationSlug || null,
             projectPath: project.path,

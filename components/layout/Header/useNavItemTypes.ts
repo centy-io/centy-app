@@ -43,6 +43,7 @@ export function useNavItemTypes(
           projectPath: resolution.projectPath,
         })
         const res = await centyClient.listItemTypes(req)
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (cancelled) return
         setItemTypes(
           res.itemTypes

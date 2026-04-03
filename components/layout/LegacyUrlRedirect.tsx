@@ -55,7 +55,7 @@ export function LegacyUrlRedirect() {
           const orgPart = result.orgSlug || UNGROUPED_ORG_MARKER
 
           // Extract the page from pathname (e.g., /issues -> issues)
-          const page = pathname.split('/').filter(Boolean)[0] || 'issues'
+          const page = pathname.split('/').find(Boolean) || 'issues'
 
           // Build new URL and redirect
           router.replace(

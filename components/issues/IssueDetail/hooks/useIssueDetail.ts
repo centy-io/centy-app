@@ -4,15 +4,14 @@ import { centyClient } from '@/lib/grpc/client'
 import {
   GetItemRequestSchema,
   ListAssetsRequestSchema,
-  type Issue,
+  type GenericItem,
   type Asset,
 } from '@/gen/centy_pb'
-import { genericItemToIssue } from '@/lib/genericItemToIssue'
 import { useLastSeenIssues } from '@/hooks/useLastSeenIssues'
 
 export function useIssueDetail(projectPath: string, issueNumber: string) {
   const { recordLastSeen } = useLastSeenIssues()
-  const [issue, setIssue] = useState<Issue | null>(null)
+  const [issue, setIssue] = useState<GenericItem | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [assets, setAssets] = useState<Asset[]>([])
@@ -34,7 +33,7 @@ export function useIssueDetail(projectPath: string, issueNumber: string) {
       })
       const response = await centyClient.getItem(request)
       if (response.item) {
-        setIssue(genericItemToIssue(response.item))
+        setIssue(response.item)
       } else {
         setError(response.error || 'Issue not found')
       }
