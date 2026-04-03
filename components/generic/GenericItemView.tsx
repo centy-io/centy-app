@@ -29,11 +29,12 @@ export function GenericItemView({ item, config }: GenericItemViewProps) {
           <span className="field-label">ID:</span> {item.id}
         </span>
       </ItemMetadata>
-      {item.body && (
-        <div className="generic-item-body">
-          <TextEditor value={item.body} format="md" mode="display" />
-        </div>
-      )}
+      <TextEditor
+        value={item.body}
+        format="md"
+        mode="display"
+        className="generic-item-body"
+      />
     </div>
   )
 }

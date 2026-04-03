@@ -24,14 +24,12 @@ export function ViewContent({
 }: ViewContentProps): ReactElement {
   return (
     <>
-      <div className="issue-description">
-        <h3 className="section-title">Description</h3>
-        {issue.description ? (
-          <TextEditor value={issue.description} format="md" mode="display" />
-        ) : (
-          <p className="no-description">No description provided</p>
-        )}
-      </div>
+      <TextEditor
+        value={issue.description}
+        format="md"
+        mode="display"
+        className="generic-item-body"
+      />
 
       <div className="issue-assets">
         <h3 className="section-title">Attachments</h3>
