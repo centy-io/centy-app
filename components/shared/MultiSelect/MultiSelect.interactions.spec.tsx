@@ -79,7 +79,7 @@ describe('MultiSelect - Interactions', () => {
       <MultiSelect
         options={mockOptions}
         value={[]}
-        onChange={() => {}}
+        onChange={vi.fn()}
         className="custom-class"
       />
     )

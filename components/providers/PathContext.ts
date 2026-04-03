@@ -12,6 +12,7 @@ const DEFAULT_PATH_CONTEXT: PathContextType = {
   isAggregateView: false,
   isLoading: false,
   error: null,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   navigateToProject: () => {},
 }
 

@@ -18,9 +18,7 @@ describe('TextEditor - Raw mode toggle', () => {
     'should toggle to raw mode when MD button is clicked',
     { timeout: 15000 },
     async () => {
-      render(
-        <TextEditor value="Some content" mode="edit" onChange={() => {}} />
-      )
+      render(<TextEditor value="Some content" mode="edit" onChange={vi.fn()} />)
 
       await waitFor(
         () => {
@@ -42,7 +40,7 @@ describe('TextEditor - Raw mode toggle', () => {
   )
 
   it('should show textarea in raw mode', async () => {
-    render(<TextEditor value="Test content" mode="edit" onChange={() => {}} />)
+    render(<TextEditor value="Test content" mode="edit" onChange={vi.fn()} />)
 
     await waitFor(() => {
       expect(screen.getByTitle('Toggle Raw Markdown')).toBeInTheDocument()

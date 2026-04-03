@@ -25,9 +25,6 @@ export default [
       'no-optional-chaining/no-optional-chaining': 'off',
       // Non-null assertions (!): banned by strictTypeChecked, all usages replaced with proper null checks
       '@typescript-eslint/no-non-null-assertion': 'error',
-      // Unnecessary conditions - enabled; false positives suppressed inline
-      // Empty functions (e.g. no-op callbacks)
-      '@typescript-eslint/no-empty-function': 'off',
       // Miscellaneous stylistic rules from stylisticTypeChecked
       '@typescript-eslint/use-unknown-in-catch-callback-variable': 'off',
       '@typescript-eslint/no-meaningless-void-operator': 'off',

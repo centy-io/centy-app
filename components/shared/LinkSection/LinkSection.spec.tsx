@@ -39,7 +39,7 @@ describe('LinkSection - Initial state', () => {
 
   it('should show loading state initially', () => {
     vi.mocked(centyClient.listLinks).mockImplementation(
-      () => new Promise(() => {})
+      () => new Promise(() => undefined)
     )
 
     render(<LinkSection entityId="entity-1" entityType="issue" />)

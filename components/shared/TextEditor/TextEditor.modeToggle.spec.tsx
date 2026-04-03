@@ -61,7 +61,7 @@ describe('TextEditor - Mode Toggle', () => {
     render(
       <TextEditor
         value="Content"
-        onChange={() => {}}
+        onChange={vi.fn()}
         mode="edit"
         allowModeToggle={true}
       />

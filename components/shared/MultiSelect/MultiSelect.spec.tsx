@@ -14,7 +14,7 @@ describe('MultiSelect - Display', () => {
       <MultiSelect
         options={mockOptions}
         value={[]}
-        onChange={() => {}}
+        onChange={vi.fn()}
         placeholder="Select..."
       />
     )
@@ -27,7 +27,7 @@ describe('MultiSelect - Display', () => {
       <MultiSelect
         options={mockOptions}
         value={['option1']}
-        onChange={() => {}}
+        onChange={vi.fn()}
       />
     )
 
@@ -39,7 +39,7 @@ describe('MultiSelect - Display', () => {
       <MultiSelect
         options={mockOptions}
         value={['option1', 'option2']}
-        onChange={() => {}}
+        onChange={vi.fn()}
       />
     )
 
@@ -51,7 +51,7 @@ describe('MultiSelect - Display', () => {
       <MultiSelect
         options={mockOptions}
         value={['option1', 'option2', 'option3']}
-        onChange={() => {}}
+        onChange={vi.fn()}
       />
     )
 
@@ -59,7 +59,7 @@ describe('MultiSelect - Display', () => {
   })
 
   it('should open dropdown on click', () => {
-    render(<MultiSelect options={mockOptions} value={[]} onChange={() => {}} />)
+    render(<MultiSelect options={mockOptions} value={[]} onChange={vi.fn()} />)
 
     const trigger = screen.getByRole('button')
     fireEvent.click(trigger)

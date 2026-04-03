@@ -90,7 +90,7 @@ describe('AddLinkModal - Display and loading', () => {
 
   it('should show loading state while fetching link types', () => {
     vi.mocked(centyClient.getAvailableLinkTypes).mockImplementation(
-      () => new Promise(() => {})
+      () => new Promise(() => undefined)
     )
 
     render(<AddLinkModal {...defaultProps} />)
