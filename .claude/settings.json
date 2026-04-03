@@ -209,7 +209,8 @@
       "Bash(pnpm format:*)",
       "Bash(gh api:*)",
       "mcp__centy__centy_v1_CentyDaemon_GetDaemonInfo",
-      "Bash(xxd)"
+      "Bash(xxd)",
+      "mcp__centy__centy_v1_CentyDaemon_GetOrganization"
     ],
     "deny": ["Bash(npm install)", "Bash(gh issue create:*)"]
   },
