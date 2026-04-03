@@ -9,3 +9,4 @@ features:
   orgSync: true
   move: true
   duplicate: true
+listed: true

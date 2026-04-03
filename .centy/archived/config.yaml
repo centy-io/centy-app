@@ -13,3 +13,4 @@ customFields:
 - name: original_item_type
   type: string
   required: false
+listed: true

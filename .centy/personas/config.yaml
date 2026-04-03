@@ -22,3 +22,4 @@ customFields:
 - name: pain-points
   type: string
   required: false
+listed: true

@@ -20,3 +20,4 @@ customFields:
 - name: author
   type: string
   required: false
+listed: true

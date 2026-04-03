@@ -1,7 +1,6 @@
 'use client'
 
-// eslint-disable-next-line @typescript-eslint/require-await
-export async function listItemTypes(): Promise<{
+export function listItemTypes(): Promise<{
   success: boolean
   error: string
   itemTypes: {
@@ -9,10 +8,11 @@ export async function listItemTypes(): Promise<{
     plural: string
     identifier: string
     statuses: string[]
+    listed: boolean
   }[]
   totalCount: number
 }> {
-  return {
+  return Promise.resolve({
     success: true,
     error: '',
     itemTypes: [
@@ -21,9 +21,16 @@ export async function listItemTypes(): Promise<{
         plural: 'issues',
         identifier: 'uuid',
         statuses: ['open', 'in-progress', 'for-validation', 'closed'],
+        listed: true,
       },
-      { name: 'Docs', plural: 'docs', identifier: 'slug', statuses: [] },
+      {
+        name: 'Docs',
+        plural: 'docs',
+        identifier: 'slug',
+        statuses: [],
+        listed: true,
+      },
     ],
     totalCount: 2,
-  }
+  })
 }
