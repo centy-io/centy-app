@@ -35,7 +35,7 @@ export function useIssuesData() {
 
   useEffect(() => {
     if (isInitialized === true) {
-      fetchIssues()
+      void fetchIssues()
     }
   }, [isInitialized, projectPath])
 

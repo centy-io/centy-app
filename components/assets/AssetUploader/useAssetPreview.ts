@@ -41,7 +41,7 @@ export function useAssetPreview(
       }
       if (mounted) setLoading(false)
     }
-    loadPreview()
+    void loadPreview()
 
     return () => {
       mounted = false

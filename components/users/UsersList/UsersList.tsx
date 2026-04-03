@@ -45,7 +45,7 @@ export function UsersList() {
 
   const handleSynced = useCallback(
     (createdCount: number) => {
-      if (createdCount > 0) data.fetchUsers()
+      if (createdCount > 0) void data.fetchUsers()
       setShowSyncModal(false)
     },
     [data]

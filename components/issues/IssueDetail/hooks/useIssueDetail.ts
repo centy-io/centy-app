@@ -62,8 +62,8 @@ export function useIssueDetail(projectPath: string, issueNumber: string) {
   }, [projectPath, issueNumber])
 
   useEffect(() => {
-    fetchIssue()
-    fetchAssets()
+    void fetchIssue()
+    void fetchAssets()
   }, [projectPath, issueNumber])
 
   useEffect(() => {

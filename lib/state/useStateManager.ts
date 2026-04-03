@@ -37,7 +37,7 @@ export function useStateManager(): StateManager {
       }
     }
 
-    fetchItemTypeStatuses()
+    void fetchItemTypeStatuses()
     return () => {
       cancelled = true
     }

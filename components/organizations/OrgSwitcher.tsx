@@ -32,7 +32,7 @@ export function OrgSwitcher(): React.JSX.Element {
 
   useEffect(() => {
     if (isOpen) {
-      refreshOrganizations()
+      void refreshOrganizations()
     }
   }, [isOpen])
 

@@ -61,7 +61,7 @@ export function useNavItemTypes(
         // silently fall back to empty
       }
     }
-    fetchItemTypes()
+    void fetchItemTypes()
     return () => {
       cancelled = true
     }

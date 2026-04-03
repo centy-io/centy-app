@@ -47,7 +47,7 @@ export function useProjectsData() {
   }, [])
 
   useEffect(() => {
-    fetchData()
+    void fetchData()
   }, [])
 
   const handleToggleFavorite = async (

@@ -45,7 +45,7 @@ export function useProjectUsers(projectPath: string): ProjectUsersState {
   }, [projectPath])
 
   useEffect(() => {
-    fetchUsers()
+    void fetchUsers()
   }, [fetchUsers])
 
   return { users, loading, error, setError, fetchUsers }

@@ -37,7 +37,7 @@ export function useLinkSection(entityId: string, entityType: 'issue' | 'doc') {
   }, [projectPath, entityId, entityType])
 
   useEffect(() => {
-    fetchLinks()
+    void fetchLinks()
   }, [fetchLinks])
 
   const handleDeleteLink = useCallback(
@@ -67,7 +67,7 @@ export function useLinkSection(entityId: string, entityType: 'issue' | 'doc') {
   )
 
   const handleLinkCreated = useCallback(() => {
-    fetchLinks()
+    void fetchLinks()
     setShowAddModal(false)
   }, [fetchLinks])
 

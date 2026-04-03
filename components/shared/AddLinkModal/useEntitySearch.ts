@@ -57,7 +57,7 @@ export function useEntitySearch(
   ])
 
   useEffect(() => {
-    searchEntities()
+    void searchEntities()
   }, [searchEntities])
 
   return {

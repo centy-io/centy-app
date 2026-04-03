@@ -49,7 +49,7 @@ export function useGenericItemFetch(
   }, [projectPath, itemType, itemId])
 
   useEffect(() => {
-    fetchItem()
+    void fetchItem()
   }, [fetchItem])
 
   return {

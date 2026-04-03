@@ -61,7 +61,7 @@ export function useGenericItemsData(
 
   useEffect(() => {
     if (isInitialized !== true) return
-    fetchItems()
+    void fetchItems()
   }, [isInitialized, fetchItems])
 
   return {

@@ -63,7 +63,7 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
 
   // Load organizations on mount
   useEffect(() => {
-    refreshOrganizations()
+    void refreshOrganizations()
   }, [])
 
   const setSelectedOrgSlug = useCallback((slug: string | null | undefined) => {

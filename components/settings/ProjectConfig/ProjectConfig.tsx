@@ -29,8 +29,8 @@ export function ProjectConfig(): ReactElement {
 
   useEffect(() => {
     if (isInitialized !== true) return
-    doFetchProjectData()
-    fetchProjectOrg()
+    void doFetchProjectData()
+    void fetchProjectOrg()
   }, [isInitialized, doFetchProjectData, fetchProjectOrg])
 
   return (
