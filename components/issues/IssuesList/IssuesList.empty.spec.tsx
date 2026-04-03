@@ -11,17 +11,11 @@ vi.mock('@/lib/grpc/client', () => ({
   },
 }))
 
-const mockUsePathContext = vi.fn()
-const mockUseProjectPathToUrl = vi.fn()
+const mockUsePathContext = vi.fn<() => unknown>()
+const mockUseProjectPathToUrl = vi.fn<() => unknown>()
 vi.mock('@/components/providers/PathContextProvider', () => ({
-  usePathContext: () => {
-    const v: unknown = mockUsePathContext()
-    return v
-  },
-  useProjectPathToUrl: () => {
-    const v: unknown = mockUseProjectPathToUrl()
-    return v
-  },
+  usePathContext: () => mockUsePathContext(),
+  useProjectPathToUrl: () => mockUseProjectPathToUrl(),
 }))
 
 vi.mock('@/components/providers/ProjectProvider', () => ({
