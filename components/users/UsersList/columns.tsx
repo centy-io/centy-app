@@ -50,7 +50,7 @@ export function createUserColumns() {
         return usernames.length > 0 ? usernames.join(', ') : '-'
       },
       enableColumnFilter: true,
-      filterFn: (row, columnId, filterValue) => {
+      filterFn: (row, columnId, filterValue: string) => {
         const val: unknown = row.getValue(columnId)
         const usernames = toUnknownArray(val)
         return usernames.some(
