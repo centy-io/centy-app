@@ -40,7 +40,7 @@ export function useComments(
   )
 
   useEffect(() => {
-    fetchComments()
+    void fetchComments()
   }, [fetchComments])
 
   return {

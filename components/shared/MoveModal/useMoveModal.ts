@@ -53,7 +53,7 @@ export function useMoveModal({
         setLoadingProjects(false)
       }
     }
-    loadProjects()
+    void loadProjects()
   }, [currentProjectPath])
 
   const selectedProjectInfo = projects.find(p => p.path === selectedProject)

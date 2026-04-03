@@ -61,7 +61,7 @@ export function useAggregateIssues() {
   }, [])
 
   useEffect(() => {
-    fetchAllIssues()
+    void fetchAllIssues()
   }, [])
 
   return {

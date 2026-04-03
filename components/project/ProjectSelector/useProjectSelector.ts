@@ -51,7 +51,7 @@ export function useProjectSelector() {
   }, [selectedOrgSlug])
 
   useEffect(() => {
-    if (isOpen) fetchProjects()
+    if (isOpen) void fetchProjects()
   }, [isOpen])
 
   const toggleOrgCollapse = (orgSlug: string): void => {

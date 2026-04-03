@@ -60,7 +60,7 @@ export function useIssueDetailPage(issueNumber: string) {
 
   const handleStatusConfigured = useCallback(() => {
     setShowStatusConfigDialog(false)
-    editor.handleOpenInVscode()
+    void editor.handleOpenInVscode()
   }, [editor])
 
   return {

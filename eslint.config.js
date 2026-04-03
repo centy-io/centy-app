@@ -17,8 +17,6 @@ export default [
       '@typescript-eslint/no-misused-promises': 'off',
       // Template literal with non-string types (stylistic strictness)
       '@typescript-eslint/restrict-template-expressions': 'off',
-      // Unhandled floating promises
-      '@typescript-eslint/no-floating-promises': 'off',
       // Non-null assertions (!): banned by strictTypeChecked, all usages replaced with proper null checks
       '@typescript-eslint/no-non-null-assertion': 'error',
       // Type-unsafe operations involving any

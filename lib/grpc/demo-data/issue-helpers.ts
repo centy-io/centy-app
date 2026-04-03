@@ -1,6 +1,7 @@
 'use client'
 
 import { type IssueMetadata } from '@/gen/centy_pb'
+import { getPriorityLabel } from '@/components/shared/getPriorityLabel'
 
 // Helper to create issue metadata
 export function createIssueMetadata(
@@ -19,7 +20,7 @@ export function createIssueMetadata(
     displayNumber,
     status,
     priority,
-    priorityLabel: priority === 1 ? 'high' : priority === 2 ? 'medium' : 'low',
+    priorityLabel: getPriorityLabel(priority).toLowerCase(),
     createdAt,
     updatedAt,
     customFields: resolvedCustomFields,

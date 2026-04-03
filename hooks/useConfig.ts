@@ -32,7 +32,7 @@ export function useConfig() {
 
   useEffect(() => {
     if (isInitialized === true && projectPath) {
-      configStore.fetchConfig(projectPath)
+      void configStore.fetchConfig(projectPath)
     }
   }, [projectPath, isInitialized])
 

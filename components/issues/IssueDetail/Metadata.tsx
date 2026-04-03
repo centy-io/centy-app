@@ -51,11 +51,6 @@ export function Metadata({
           />
         }
         priority={issue.metadata ? issue.metadata.priority : undefined}
-        priorityLabel={
-          issue.metadata
-            ? issue.metadata.customFields.priority_label || undefined
-            : undefined
-        }
         createdAt={issue.metadata ? issue.metadata.createdAt : undefined}
         updatedAt={issue.metadata ? issue.metadata.updatedAt : undefined}
       />

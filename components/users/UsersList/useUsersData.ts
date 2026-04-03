@@ -45,7 +45,7 @@ export function useUsersData() {
   }, [projectPath, isInitialized])
 
   useEffect(() => {
-    if (isInitialized === true) fetchUsers()
+    if (isInitialized === true) void fetchUsers()
   }, [isInitialized, fetchUsers])
 
   const handleDelete = useCallback(
