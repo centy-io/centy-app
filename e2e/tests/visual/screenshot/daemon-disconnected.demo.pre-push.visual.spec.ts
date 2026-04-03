@@ -26,7 +26,7 @@ test.describe('Daemon Disconnected Overlay - Demo mode section @visual', () => {
     await expect(demoButton).toHaveText('Try Demo Mode')
 
     const boundingBox = await demoButton.boundingBox()
-    expect(boundingBox && boundingBox.height).toBeGreaterThanOrEqual(36)
+    expect(boundingBox?.height).toBeGreaterThanOrEqual(36)
 
     await expect(demoSection).toHaveScreenshot(
       `daemon-demo-section-${platform}.png`,
@@ -47,7 +47,7 @@ test.describe('Daemon Disconnected Overlay - Demo mode section @visual', () => {
     await expect(demoButton).toBeVisible()
 
     const boundingBox = await demoButton.boundingBox()
-    expect(boundingBox && boundingBox.height).toBeGreaterThanOrEqual(44)
+    expect(boundingBox?.height).toBeGreaterThanOrEqual(44)
 
     await expect(demoButton).toHaveScreenshot(
       `daemon-demo-button-mobile-${platform}.png`,

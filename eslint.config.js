@@ -21,7 +21,8 @@ export default [
     // Disable rules from strictTypeChecked that conflict with project philosophy or require
     // large-scale refactoring. These should be addressed in separate issues.
     rules: {
-      '@typescript-eslint/prefer-optional-chain': 'off',
+      // Optional chaining (?.) is fully supported in all target browsers and consistent with ?? usage
+      'no-optional-chaining/no-optional-chaining': 'off',
       // Next.js requires generateStaticParams to be async even without await
       '@typescript-eslint/require-await': 'off',
       // Template literal with non-string types (stylistic strictness)

@@ -8,7 +8,7 @@ export async function fetchLatestDaemonVersion(): Promise<string | null> {
     if (!response.ok) return null
     const text = await response.text()
     const matched = /"tag_name"\s*:\s*"(?<tag>[^"]+)"/.exec(text)
-    if (!matched || !matched.groups) return null
+    if (!matched?.groups) return null
     const { tag } = matched.groups
     if (typeof tag !== 'string' || tag === '') return null
     return tag.replace(/^v/, '')

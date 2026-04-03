@@ -56,14 +56,13 @@ export function useAssetActions(
   )
 
   const closePreview = useCallback(() => {
-    if (previewAsset && previewAsset.url) URL.revokeObjectURL(previewAsset.url)
+    if (previewAsset?.url) URL.revokeObjectURL(previewAsset.url)
     setPreviewAsset(null)
   }, [previewAsset])
 
   useEffect(() => {
     return () => {
-      if (previewAsset && previewAsset.url)
-        URL.revokeObjectURL(previewAsset.url)
+      if (previewAsset?.url) URL.revokeObjectURL(previewAsset.url)
     }
   }, [previewAsset])
 

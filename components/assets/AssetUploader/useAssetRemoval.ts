@@ -55,7 +55,7 @@ export function useAssetRemoval({
   const removePending = useCallback(
     (pendingId: string) => {
       const pending = uploader.pendingAssets.find(p => p.id === pendingId)
-      if (pending && pending.preview) URL.revokeObjectURL(pending.preview)
+      if (pending?.preview) URL.revokeObjectURL(pending.preview)
       uploader.setPendingAssets(prev => {
         const updated = prev.filter(p => p.id !== pendingId)
         if (onPendingChange) onPendingChange(updated)

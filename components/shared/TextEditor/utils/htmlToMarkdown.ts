@@ -17,10 +17,9 @@ turndownService.addRule('codeBlock', {
   replacement: function (content, node) {
     const codeNode =
       node instanceof HTMLElement ? node.querySelector('code') : null
-    const classMatch =
-      codeNode && codeNode.className
-        ? /language-(\w+)/.exec(codeNode.className)
-        : null
+    const classMatch = codeNode?.className
+      ? /language-(\w+)/.exec(codeNode.className)
+      : null
     const language = (classMatch ? classMatch[1] : '') || ''
     return `\n\`\`\`${language}\n${content}\n\`\`\`\n`
   },

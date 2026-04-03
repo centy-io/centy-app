@@ -56,17 +56,16 @@ export function ItemMetadata({
           {resolvedPriorityLabel}
         </span>
       )}
-      {customFieldsConfig &&
-        customFieldsConfig.map(field => {
-          const value = customFields && customFields[field.name]
-          if (!value) return null
-          return (
-            <span key={field.name} className="item-field">
-              <span className="field-label">{toDisplayLabel(field.name)}:</span>
-              <span className="field-value">{value}</span>
-            </span>
-          )
-        })}
+      {customFieldsConfig?.map(field => {
+        const value = customFields?.[field.name]
+        if (!value) return null
+        return (
+          <span key={field.name} className="item-field">
+            <span className="field-label">{toDisplayLabel(field.name)}:</span>
+            <span className="field-value">{value}</span>
+          </span>
+        )
+      })}
       {createdAt && (
         <span className="item-date">
           Created: {new Date(createdAt).toLocaleString()}
