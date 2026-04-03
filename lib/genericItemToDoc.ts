@@ -7,7 +7,7 @@ import type { Doc } from '@/gen/centy_pb'
  */
 export function genericItemToDoc(item: GenericItem): Doc {
   const meta = item.metadata
-  const cf = (meta && meta.customFields) || {}
+  const cf = meta ? meta.customFields : {}
 
   return {
     $typeName: 'centy.v1.Doc',

@@ -7,7 +7,7 @@ import type { Issue } from '@/gen/centy_pb'
  */
 export function genericItemToIssue(item: GenericItem): Issue {
   const meta = item.metadata
-  const cf = (meta && meta.customFields) || {}
+  const cf = meta ? meta.customFields : {}
 
   return {
     $typeName: 'centy.v1.Issue',

@@ -27,8 +27,7 @@ export default [
       '@typescript-eslint/no-unsafe-argument': 'off',
       '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-unsafe-call': 'off',
-      // Unnecessary conditions (can produce false positives)
-      '@typescript-eslint/no-unnecessary-condition': 'off',
+      // Unnecessary conditions - enabled; false positives suppressed inline
       // Empty functions (e.g. no-op callbacks)
       '@typescript-eslint/no-empty-function': 'off',
       // Miscellaneous stylistic rules from stylisticTypeChecked

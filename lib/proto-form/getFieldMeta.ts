@@ -7,15 +7,12 @@ export function getFieldMeta(
   field: DescField,
   override?: FieldOverride
 ): FieldMeta {
-  const overrideLabel =
-    override !== null && override !== undefined ? override.label : undefined
+  const overrideLabel = override !== undefined ? override.label : undefined
   const overrideDescription =
-    override !== null && override !== undefined
-      ? override.description
-      : undefined
+    override !== undefined ? override.description : undefined
   return {
     label:
-      overrideLabel !== null && overrideLabel !== undefined
+      overrideLabel !== undefined
         ? overrideLabel
         : protoNameToLabel(field.name),
     description: overrideDescription,
