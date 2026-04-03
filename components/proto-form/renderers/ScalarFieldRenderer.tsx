@@ -73,7 +73,7 @@ export function ScalarFieldRenderer({
       <input
         type="text"
         className="proto-form-input"
-        value={String(value ?? '')}
+        value={typeof value === 'string' ? value : ''}
         onChange={e => onChange(e.target.value)}
       />
     </div>

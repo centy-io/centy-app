@@ -1,15 +1,9 @@
 import type { ReactNode } from 'react'
 import { getPriorityClass } from './getPriorityClass'
+import { getPriorityLabel } from './getPriorityLabel'
 
 function toDisplayLabel(name: string): string {
   return name.charAt(0).toUpperCase() + name.slice(1).replace(/-/g, ' ')
-}
-
-function derivePriorityLabel(priority: number): string {
-  if (priority === 1) return 'High'
-  if (priority === 2) return 'Medium'
-  if (priority === 3) return 'Low'
-  return ''
 }
 
 interface ItemMetadataProps {
@@ -28,7 +22,7 @@ interface ItemMetadataProps {
   /** Custom field values keyed by field name. */
   customFields?: Record<string, string>
   /** Config entries that define which custom fields to display and in what order. */
-  customFieldsConfig?: Array<{ name: string }>
+  customFieldsConfig?: { name: string }[]
   /**
    * Content rendered first inside the metadata strip — useful for
    * item-type-specific leading badges (e.g., "Org Issue #5", "ID: abc").
@@ -48,7 +42,7 @@ export function ItemMetadata({
   children,
 }: ItemMetadataProps) {
   const resolvedPriorityLabel =
-    priorityLabel ?? (priority ? derivePriorityLabel(priority) : '')
+    priorityLabel ?? (priority ? getPriorityLabel(priority) : '')
 
   return (
     <div className="item-metadata">

@@ -1,10 +1,10 @@
 ---
 # This file is managed by Centy. Use the Centy CLI to modify it.
 displayNumber: 221
-status: open
+status: closed
 priority: 2
 createdAt: 2026-04-03T08:14:44.295566+00:00
-updatedAt: 2026-04-03T08:14:44.295566+00:00
+updatedAt: 2026-04-03T09:47:47.053443+00:00
 ---
 
 # Enable @typescript-eslint/restrict-template-expressions

@@ -32,7 +32,7 @@ export function useEntitySearch(
           selectedLinkType,
           debouncedSearchQuery
         )
-      } else if (targetTypeFilter === 'doc') {
+      } else {
         results = await fetchDocEntities(
           projectPath,
           entityId,

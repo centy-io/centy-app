@@ -4,7 +4,8 @@ import type { Editor } from '@tiptap/react'
 export function useEditorLink(editor: Editor | null) {
   const setLink = useCallback(() => {
     if (!editor) return
-    const previousUrl = editor.getAttributes('customLink').href
+    const previousUrl: string | undefined =
+      editor.getAttributes('customLink').href
     const url = window.prompt('URL', previousUrl)
 
     if (url === null) return

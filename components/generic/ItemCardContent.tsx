@@ -16,7 +16,7 @@ export function ItemCardContent({
   createLink,
 }: ItemCardContentProps): React.JSX.Element {
   const meta = item.metadata
-  const customFields = meta && meta.customFields ? meta.customFields : {}
+  const customFields = meta ? meta.customFields : {}
   return (
     <div className="generic-item-card-content">
       <Link
@@ -35,7 +35,7 @@ export function ItemCardContent({
         meta.status && (
           <span className="generic-item-status">{meta.status}</span>
         )}
-      {config && config.customFields && config.customFields.length > 0 && (
+      {config && config.customFields.length > 0 && (
         <div className="generic-item-custom-fields">
           {config.customFields.slice(0, 2).map(field => {
             const value = customFields[field.name]

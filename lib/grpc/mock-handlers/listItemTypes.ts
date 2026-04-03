@@ -3,12 +3,12 @@
 export async function listItemTypes(): Promise<{
   success: boolean
   error: string
-  itemTypes: Array<{
+  itemTypes: {
     name: string
     plural: string
     identifier: string
     statuses: string[]
-  }>
+  }[]
   totalCount: number
 }> {
   return {

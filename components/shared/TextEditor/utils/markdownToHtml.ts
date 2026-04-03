@@ -9,10 +9,13 @@ export function markdownToHtml(markdown: string): string {
     .replace(/>/g, '&gt;')
 
   // Code blocks (before other transformations)
-  html = html.replace(/```(\w*)\n([\s\S]*?)```/g, (_match, lang, code) => {
-    const escapedCode = code.trim()
-    return `<pre><code class="language-${lang ?? 'plaintext'}">${escapedCode}</code></pre>`
-  })
+  html = html.replace(
+    /```(\w*)\n([\s\S]*?)```/g,
+    (_match: string, lang: string, code: string) => {
+      const escapedCode = code.trim()
+      return `<pre><code class="language-${lang || 'plaintext'}">${escapedCode}</code></pre>`
+    }
+  )
 
   // Inline code
   html = html.replace(/`([^`]+)`/g, '<code>$1</code>')
@@ -42,6 +45,7 @@ export function markdownToHtml(markdown: string): string {
       if (line.startsWith('<li>') && line.endsWith('</li>')) {
         const last = acc[acc.length - 1]
         if (
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           last !== undefined &&
           last.startsWith('<ul>') &&
           last.endsWith('</ul>')

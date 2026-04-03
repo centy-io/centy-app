@@ -15,6 +15,7 @@ init({
   dsn: SENTRY_DSN,
 
   // Set environment for filtering in Sentry dashboard
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   environment: NODE_ENV || 'development',
 
   // Add optional integrations for additional features

@@ -28,7 +28,9 @@ function loadCollapsedOrgs(): Set<string> {
   if (typeof window === 'undefined') return new Set()
   try {
     const s = localStorage.getItem(COLLAPSED_ORGS_KEY)
-    return s ? new Set(JSON.parse(s)) : new Set()
+    if (!s) return new Set()
+    const parsed: string[] = JSON.parse(s)
+    return new Set(parsed)
   } catch {
     return new Set()
   }
@@ -66,7 +68,7 @@ function filterAndSortProjects(
 function buildGroupedProjects(
   visibleProjects: ProjectInfo[],
   selectedOrgSlug: string | null | undefined,
-  organizations: Array<{ slug: string; name: string }>
+  organizations: { slug: string; name: string }[]
 ): GroupedProjects {
   if (selectedOrgSlug !== null && selectedOrgSlug !== undefined) return null
   const groups = new Map<string, { name: string; projects: ProjectInfo[] }>()

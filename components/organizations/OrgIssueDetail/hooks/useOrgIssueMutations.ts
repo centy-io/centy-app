@@ -4,7 +4,7 @@ import { route } from 'nextjs-routes'
 import { performSaveIssue } from './performSaveIssue'
 import { performDeleteIssue } from './performDeleteIssue'
 import { getEditFieldsFromIssue } from './getEditFieldsFromIssue'
-import type { Issue } from '@/gen/centy_pb'
+import type { GenericItem } from '@/gen/centy_pb'
 
 function formatErr(err: unknown): string {
   return err instanceof Error ? err.message : 'Failed to connect to daemon'
@@ -14,12 +14,12 @@ interface MutationParams {
   orgSlug: string
   issueId: string
   orgProjectPath: string | null
-  issue: Issue | null
+  issue: GenericItem | null
   editTitle: string
   editDescription: string
   editPriority: number
   editStatus: string
-  setIssue: (v: Issue) => void
+  setIssue: (v: GenericItem) => void
   setIsEditing: (v: boolean) => void
   setError: (v: string | null) => void
   setSaving: (v: boolean) => void

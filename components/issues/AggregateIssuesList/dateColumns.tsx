@@ -1,6 +1,6 @@
 import { createColumnHelper } from '@tanstack/react-table'
 import type { AggregateIssue } from './AggregateIssuesList.types'
-import { getPriorityClass } from './utils'
+import { getPriorityClass, getPriorityLabel } from './utils'
 
 const columnHelper = createColumnHelper<AggregateIssue>()
 
@@ -8,7 +8,8 @@ export function createPriorityColumn(stateManager: {
   getStateClass: (status: string) => string
 }) {
   return columnHelper.accessor(
-    row => (row.metadata && row.metadata.priorityLabel) ?? 'unknown',
+    row =>
+      getPriorityLabel(row.metadata ? row.metadata.priority : 0) || 'Unknown',
     {
       id: 'priority',
       header: 'Priority',

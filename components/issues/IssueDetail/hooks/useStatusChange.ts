@@ -1,8 +1,8 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
-import { UpdateItemRequestSchema, type Issue } from '@/gen/centy_pb'
-import { genericItemToIssue } from '@/lib/genericItemToIssue'
+import { UpdateItemRequestSchema } from '@/gen/centy_pb'
+import type { GenericItem } from '@/gen/centy_pb'
 
 function useClickOutside(
   ref: React.RefObject<HTMLDivElement | null>,
@@ -30,8 +30,8 @@ function useClickOutside(
 export function useStatusChange(
   projectPath: string,
   issueNumber: string,
-  issue: Issue | null,
-  setIssue: (issue: Issue) => void,
+  issue: GenericItem | null,
+  setIssue: (issue: GenericItem) => void,
   setError: (error: string | null) => void,
   setEditStatus: (status: string) => void
 ) {
@@ -60,7 +60,7 @@ export function useStatusChange(
         })
         const response = await centyClient.updateItem(request)
         if (response.success && response.item) {
-          const updated = genericItemToIssue(response.item)
+          const updated = response.item
           setIssue(updated)
           setEditStatus((updated.metadata && updated.metadata.status) ?? 'open')
         } else {

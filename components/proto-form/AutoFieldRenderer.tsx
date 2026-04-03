@@ -81,7 +81,11 @@ export function AutoFieldRenderer({
       <input
         type="text"
         className="proto-form-input"
-        value={String(value ?? '')}
+        value={
+          typeof value === 'number' || typeof value === 'string'
+            ? String(value)
+            : ''
+        }
         onChange={e => onChange(e.target.value)}
       />
     </div>

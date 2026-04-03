@@ -3,7 +3,6 @@ import type { EntityItem } from './AddLinkModal.types'
 import { filterAndMapDocs } from './filterAndMapDocs'
 import { centyClient } from '@/lib/grpc/client'
 import { ListItemsRequestSchema, type Link as LinkType } from '@/gen/centy_pb'
-import { genericItemToDoc } from '@/lib/genericItemToDoc'
 
 export async function fetchDocEntities(
   projectPath: string,
@@ -18,7 +17,7 @@ export async function fetchDocEntities(
   })
   const response = await centyClient.listItems(request)
   return filterAndMapDocs(
-    response.items.map(genericItemToDoc),
+    response.items,
     entityId,
     existingLinks,
     selectedLinkType,

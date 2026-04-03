@@ -28,7 +28,14 @@ export function MapEntriesTable({
               <input
                 type="text"
                 className="proto-form-input proto-form-map-value-input"
-                value={String(v ?? '')}
+                value={
+                  typeof v === 'string' ||
+                  typeof v === 'number' ||
+                  typeof v === 'bigint' ||
+                  typeof v === 'boolean'
+                    ? String(v)
+                    : ''
+                }
                 onChange={e => onValueChange(k, e.target.value)}
               />
             </td>
