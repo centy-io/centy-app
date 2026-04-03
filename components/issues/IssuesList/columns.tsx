@@ -39,7 +39,7 @@ export function createBaseColumns(
         )
       },
       enableColumnFilter: true,
-      filterFn: (row, columnId, filterValue) => {
+      filterFn: (row, columnId, filterValue: string) => {
         const value = row.getValue(columnId)
         return String(value).includes(filterValue)
       },

@@ -59,9 +59,9 @@ export function useArchivedProjects() {
   // Load from localStorage after mount to avoid hydration mismatch
   useEffect(() => {
     const stored = localStorage.getItem(ARCHIVED_STORAGE_KEY)
-    if (stored) {
-      setArchivedPathsState(JSON.parse(stored))
-    }
+    if (!stored) return
+    const parsed: string[] = JSON.parse(stored)
+    setArchivedPathsState(parsed)
   }, [])
 
   const archiveProject = useCallback((path: string) => {
