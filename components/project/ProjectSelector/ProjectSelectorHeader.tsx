@@ -2,7 +2,7 @@
 
 interface ProjectSelectorHeaderProps {
   loading: boolean
-  onRefresh: () => void
+  onRefresh: () => Promise<void>
 }
 
 export function ProjectSelectorHeader({
@@ -14,7 +14,7 @@ export function ProjectSelectorHeader({
       <h3 className="project-selector-title">Select Project</h3>
       <button
         className="refresh-btn"
-        onClick={onRefresh}
+        onClick={() => void onRefresh()}
         disabled={loading}
         title="Refresh project list"
       >

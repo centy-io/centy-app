@@ -36,18 +36,14 @@ export function MapEntriesTable({
                     ? String(v)
                     : ''
                 }
-                onChange={e => {
-                  onValueChange(k, e.target.value)
-                }}
+                onChange={e => onValueChange(k, e.target.value)}
               />
             </td>
             <td className="proto-form-map-action-cell">
               <button
                 type="button"
                 className="proto-form-remove-btn"
-                onClick={() => {
-                  onRemove(k)
-                }}
+                onClick={() => onRemove(k)}
                 aria-label={`Remove ${k}`}
               >
                 ×

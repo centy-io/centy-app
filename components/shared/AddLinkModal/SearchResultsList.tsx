@@ -27,9 +27,7 @@ export function SearchResultsList({
         <li
           key={item.id}
           className={`link-modal-item ${selectedTarget && selectedTarget.id === item.id ? 'selected' : ''}`}
-          onClick={() => {
-            setSelectedTarget(item)
-          }}
+          onClick={() => setSelectedTarget(item)}
         >
           <span className={`link-type-icon link-type-${item.type}`}>
             {item.type === 'issue' ? '!' : 'D'}

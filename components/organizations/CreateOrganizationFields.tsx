@@ -19,9 +19,7 @@ export function NameField({
         id="name"
         type="text"
         value={name}
-        onChange={e => {
-          setName(e.target.value)
-        }}
+        onChange={e => setName(e.target.value)}
         placeholder="Organization name"
         required
       />
@@ -48,9 +46,7 @@ export function SlugField({
         id="slug"
         type="text"
         value={slug}
-        onChange={e => {
-          onSlugChange(e.target.value)
-        }}
+        onChange={e => onSlugChange(e.target.value)}
         placeholder="Auto-generated from name"
       />
       <span className="form-hint">
@@ -78,9 +74,7 @@ export function DescriptionField({
         className="form-textarea"
         id="description"
         value={description}
-        onChange={e => {
-          setDescription(e.target.value)
-        }}
+        onChange={e => setDescription(e.target.value)}
         placeholder="Description (optional)"
         rows={3}
       />

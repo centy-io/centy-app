@@ -42,7 +42,9 @@ export function Modals({
           entityTitle={issue.title}
           currentProjectPath={projectPath}
           onClose={onCloseMoveModal}
-          onMoved={onMoved}
+          onMoved={targetProjectPath => {
+            void onMoved(targetProjectPath)
+          }}
         />
       )}
 
@@ -53,7 +55,9 @@ export function Modals({
           entityTitle={issue.title}
           currentProjectPath={projectPath}
           onClose={onCloseDuplicateModal}
-          onDuplicated={onDuplicated}
+          onDuplicated={(newIssueId, targetProjectPath) => {
+            void onDuplicated(newIssueId, targetProjectPath)
+          }}
         />
       )}
 

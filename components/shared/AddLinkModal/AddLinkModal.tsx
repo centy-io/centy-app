@@ -35,7 +35,9 @@ export function AddLinkModal(props: AddLinkModalProps) {
           </button>
           <button
             className="link-modal-submit"
-            onClick={state.handleCreateLink}
+            onClick={() => {
+              void state.handleCreateLink()
+            }}
             disabled={
               state.loading || !state.selectedTarget || !state.selectedLinkType
             }

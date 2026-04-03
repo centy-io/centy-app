@@ -28,9 +28,7 @@ export function ProjectItem({
       aria-selected={isSelected}
       tabIndex={0}
       className={`project-item ${isSelected ? 'selected' : ''}`}
-      onClick={() => {
-        onSelect(project)
-      }}
+      onClick={() => onSelect(project)}
       onKeyDown={e => {
         if (e.key !== 'Enter' && e.key !== ' ') return
         e.preventDefault()
@@ -40,9 +38,7 @@ export function ProjectItem({
       <div className="project-item-main">
         <button
           className={`favorite-btn ${project.isFavorite ? 'active' : ''}`}
-          onClick={e => {
-            onToggleFavorite(e, project)
-          }}
+          onClick={e => onToggleFavorite(e, project)}
           title={
             project.isFavorite ? 'Remove from favorites' : 'Add to favorites'
           }
@@ -55,9 +51,7 @@ export function ProjectItem({
         )}
         <button
           className="archive-btn"
-          onClick={e => {
-            onArchive(e, project)
-          }}
+          onClick={e => onArchive(e, project)}
           title="Archive project"
         >
           Archive

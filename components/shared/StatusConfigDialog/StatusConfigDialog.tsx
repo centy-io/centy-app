@@ -51,7 +51,9 @@ export function StatusConfigDialog({
           </button>
           <button
             className="status-config-dialog-submit"
-            onClick={state.handleSave}
+            onClick={() => {
+              void state.handleSave()
+            }}
             disabled={
               state.loading || state.saving || state.selectedOption === null
             }

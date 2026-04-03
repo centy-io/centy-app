@@ -23,9 +23,7 @@ export function EditorDropdown({
             role="option"
             aria-selected={editor.editorId === preferredEditor}
             className={`editor-option ${editor.editorId === preferredEditor ? 'selected' : ''}`}
-            onClick={() => {
-              onSelectEditor(editor.editorId)
-            }}
+            onClick={() => onSelectEditor(editor.editorId)}
             title={editor.description}
           >
             <div className="editor-option-content">

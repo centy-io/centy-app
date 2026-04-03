@@ -30,9 +30,7 @@ export function UserEditForm({
           id="edit-name"
           type="text"
           value={editName}
-          onChange={e => {
-            setEditName(e.target.value)
-          }}
+          onChange={e => setEditName(e.target.value)}
           placeholder="Display name"
         />
       </div>
@@ -46,9 +44,7 @@ export function UserEditForm({
           id="edit-email"
           type="email"
           value={editEmail}
-          onChange={e => {
-            setEditEmail(e.target.value)
-          }}
+          onChange={e => setEditEmail(e.target.value)}
           placeholder="Email address (optional)"
         />
       </div>

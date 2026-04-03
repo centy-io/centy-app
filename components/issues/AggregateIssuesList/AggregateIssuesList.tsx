@@ -69,7 +69,7 @@ export function AggregateIssuesList() {
         <h2 className="issues-title">{getOrgDisplayName()}</h2>
         <div className="header-actions">
           <button
-            onClick={fetchAllIssues}
+            onClick={() => void fetchAllIssues()}
             disabled={loading}
             className="refresh-btn"
           >

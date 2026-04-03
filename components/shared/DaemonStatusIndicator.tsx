@@ -36,7 +36,9 @@ export function DaemonStatusIndicator() {
   return (
     <button
       className={`daemon-status-indicator ${config.className}`}
-      onClick={checkNow}
+      onClick={() => {
+        void checkNow()
+      }}
       title={`${config.label} - Click to refresh`}
     >
       <span className="daemon-status-dot" />

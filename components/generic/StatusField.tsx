@@ -20,9 +20,7 @@ export function StatusField({
         className="form-input"
         id="edit-status"
         value={editStatus}
-        onChange={e => {
-          setEditStatus(e.target.value)
-        }}
+        onChange={e => setEditStatus(e.target.value)}
       >
         {config.statuses.map(s => (
           <option key={s} value={s} className="form-option">

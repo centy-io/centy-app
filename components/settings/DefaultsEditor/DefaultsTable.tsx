@@ -26,18 +26,14 @@ export function DefaultsTable({
               <input
                 type="text"
                 value={val}
-                onChange={e => {
-                  onValueChange(key, e.target.value)
-                }}
+                onChange={e => onValueChange(key, e.target.value)}
                 className="defaults-value-input"
               />
             </td>
             <td className="defaults-action-cell">
               <button
                 type="button"
-                onClick={() => {
-                  onRemove(key)
-                }}
+                onClick={() => onRemove(key)}
                 className="defaults-remove-btn"
                 title="Remove"
               >

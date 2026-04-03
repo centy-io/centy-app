@@ -33,9 +33,7 @@ export function LinkSection({
         {resolvedEditable && (
           <button
             className="link-add-btn"
-            onClick={() => {
-              state.setShowAddModal(true)
-            }}
+            onClick={() => state.setShowAddModal(true)}
             title="Add link"
           >
             + Add Link
@@ -58,7 +56,9 @@ export function LinkSection({
           editable={resolvedEditable}
           deletingLinkId={state.deletingLinkId}
           buildLinkRoute={state.buildLinkRoute}
-          onDeleteLink={state.handleDeleteLink}
+          onDeleteLink={link => {
+            void state.handleDeleteLink(link)
+          }}
         />
       )}
 
@@ -67,9 +67,7 @@ export function LinkSection({
           entityId={entityId}
           entityType={entityType}
           existingLinks={state.links}
-          onClose={() => {
-            state.setShowAddModal(false)
-          }}
+          onClose={() => state.setShowAddModal(false)}
           onLinkCreated={state.handleLinkCreated}
         />
       )}

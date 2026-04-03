@@ -38,9 +38,7 @@ export function WorkspaceFormBody({
           id="workspace-name"
           type="text"
           value={name}
-          onChange={e => {
-            setName(e.target.value)
-          }}
+          onChange={e => setName(e.target.value)}
           placeholder="e.g., Experiment with new API"
           className="standalone-modal-input"
         />
@@ -55,9 +53,7 @@ export function WorkspaceFormBody({
         <textarea
           id="workspace-description"
           value={description}
-          onChange={e => {
-            setDescription(e.target.value)
-          }}
+          onChange={e => setDescription(e.target.value)}
           placeholder="What would you like to work on in this workspace?"
           className="standalone-modal-textarea"
           rows={3}

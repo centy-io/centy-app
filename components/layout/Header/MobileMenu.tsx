@@ -30,9 +30,7 @@ export function MobileMenu({
     <>
       <div
         className={`mobile-menu-overlay ${mobileMenuOpen ? 'open' : ''}`}
-        onClick={() => {
-          setMobileMenuOpen(false)
-        }}
+        onClick={() => setMobileMenuOpen(false)}
         aria-hidden="true"
       />
       <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>

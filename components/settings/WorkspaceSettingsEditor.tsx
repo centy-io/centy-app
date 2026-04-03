@@ -22,12 +22,12 @@ export function WorkspaceSettingsEditor({
           className="workspace-settings-input"
           type="checkbox"
           checked={config.updateStatusOnOpen ?? false}
-          onChange={e => {
+          onChange={e =>
             onChange({
               ...config,
               updateStatusOnOpen: e.target.checked,
             })
-          }}
+          }
         />
         <span className="workspace-settings-checkbox-label">
           <strong className="workspace-settings-label-text">

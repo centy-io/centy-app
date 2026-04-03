@@ -64,9 +64,7 @@ export function ProtoFormRenderer({
                 label={meta.label}
                 description={meta.description}
                 value={fieldValue}
-                onChange={val => {
-                  onChange({ [field.localName]: val })
-                }}
+                onChange={val => onChange({ [field.localName]: val })}
                 ProtoFormRenderer={ProtoFormRenderer}
               />
             </div>

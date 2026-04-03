@@ -47,9 +47,7 @@ export function DaemonSettings() {
             id="daemon-url"
             type="text"
             value={url}
-            onChange={e => {
-              setUrl(e.target.value)
-            }}
+            onChange={e => setUrl(e.target.value)}
             placeholder={DEFAULT_DAEMON_URL}
           />
           <button
@@ -72,9 +70,7 @@ export function DaemonSettings() {
 
       <button
         className="help-toggle"
-        onClick={() => {
-          setShowHelp(!showHelp)
-        }}
+        onClick={() => setShowHelp(!showHelp)}
         type="button"
       >
         {showHelp ? 'Hide' : 'Show'} setup instructions

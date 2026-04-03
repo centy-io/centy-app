@@ -25,9 +25,7 @@ export function MapAddRow({
         type="text"
         className="proto-form-input proto-form-map-key-input"
         value={newKey}
-        onChange={e => {
-          onKeyChange(e.target.value)
-        }}
+        onChange={e => onKeyChange(e.target.value)}
         onKeyDown={onKeyDown}
         placeholder="Key"
       />
@@ -35,9 +33,7 @@ export function MapAddRow({
         type="text"
         className="proto-form-input proto-form-map-add-value-input"
         value={newValue}
-        onChange={e => {
-          onValueChange(e.target.value)
-        }}
+        onChange={e => onValueChange(e.target.value)}
         onKeyDown={onKeyDown}
         placeholder="Value"
       />

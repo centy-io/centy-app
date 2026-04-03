@@ -47,12 +47,12 @@ export function MessageFieldRenderer({
         <ProtoFormRenderer
           schema={messageDesc}
           value={msgValue}
-          onChange={updates => {
+          onChange={updates =>
             onChange({
               ...msgValue,
               ...updates,
             })
-          }}
+          }
         />
       </div>
     </div>

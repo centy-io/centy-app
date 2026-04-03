@@ -86,7 +86,9 @@ export function OrgIssueDetail({
             state.setShowDeleteConfirm(false)
             state.setDeleteError(null)
           }}
-          onConfirm={state.handleDelete}
+          onConfirm={() => {
+            void state.handleDelete()
+          }}
           error={state.deleteError}
         />
       )}

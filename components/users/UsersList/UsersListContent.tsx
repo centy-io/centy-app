@@ -69,9 +69,7 @@ export function UsersListContent(props: UsersListContentProps) {
           {showDeleteConfirm && (
             <DeleteConfirm
               message="Are you sure you want to delete this user?"
-              onCancel={() => {
-                setShowDeleteConfirm(null)
-              }}
+              onCancel={() => setShowDeleteConfirm(null)}
               onConfirm={() => {
                 handleDelete(showDeleteConfirm)
                 setShowDeleteConfirm(null)
@@ -84,9 +82,7 @@ export function UsersListContent(props: UsersListContentProps) {
           ) : users.length === 0 ? (
             <UsersEmptyState
               newUserRoute={newUserRoute}
-              onSync={() => {
-                props.setShowSyncModal(true)
-              }}
+              onSync={() => props.setShowSyncModal(true)}
             />
           ) : (
             <UsersTable

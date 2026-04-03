@@ -43,16 +43,18 @@ export function IssueDetail({
         statusChange={state.statusChange}
         assets={state.detail.assets}
         setAssets={state.detail.setAssets}
-        copyToClipboard={state.copyToClipboard}
+        copyToClipboard={(text, label) => {
+          void state.copyToClipboard(text, label)
+        }}
         onSave={state.onSave}
-        onDelete={state.actions.handleDelete}
-        onSoftDelete={state.actions.handleSoftDelete}
-        onMove={() => {
-          state.setShowMoveModal(true)
+        onDelete={() => {
+          void state.actions.handleDelete()
         }}
-        onDuplicate={() => {
-          state.setShowDuplicateModal(true)
+        onSoftDelete={() => {
+          void state.actions.handleSoftDelete()
         }}
+        onMove={() => state.setShowMoveModal(true)}
+        onDuplicate={() => state.setShowDuplicateModal(true)}
         onShowDeleteConfirm={state.actions.setShowDeleteConfirm}
         onOpenInVscode={state.editor.handleOpenInVscode}
         onOpenInTerminal={state.editor.handleOpenInTerminal}
@@ -63,15 +65,9 @@ export function IssueDetail({
         showMoveModal={state.showMoveModal}
         showDuplicateModal={state.showDuplicateModal}
         showStatusConfigDialog={state.showStatusConfigDialog}
-        onCloseMoveModal={() => {
-          state.setShowMoveModal(false)
-        }}
-        onCloseDuplicateModal={() => {
-          state.setShowDuplicateModal(false)
-        }}
-        onCloseStatusConfigDialog={() => {
-          state.setShowStatusConfigDialog(false)
-        }}
+        onCloseMoveModal={() => state.setShowMoveModal(false)}
+        onCloseDuplicateModal={() => state.setShowDuplicateModal(false)}
+        onCloseStatusConfigDialog={() => state.setShowStatusConfigDialog(false)}
         onMoved={state.nav.handleMoved}
         onDuplicated={state.nav.handleDuplicated}
         onStatusConfigured={state.handleStatusConfigured}

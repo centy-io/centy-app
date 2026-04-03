@@ -28,7 +28,12 @@ export function DaemonPage(): ReactElement {
     <div className="settings-page">
       <div className="settings-header">
         <h2 className="settings-title">Daemon</h2>
-        <button className="daemon-refresh-btn" onClick={checkNow}>
+        <button
+          className="daemon-refresh-btn"
+          onClick={() => {
+            void checkNow()
+          }}
+        >
           Refresh Status
         </button>
       </div>
@@ -36,7 +41,9 @@ export function DaemonPage(): ReactElement {
       <DaemonStatusSection
         status={status}
         lastChecked={lastChecked}
-        checkNow={checkNow}
+        checkNow={() => {
+          void checkNow()
+        }}
       />
 
       {error && <DaemonErrorMessage error={error} />}
@@ -50,8 +57,12 @@ export function DaemonPage(): ReactElement {
         showShutdownConfirm={showShutdownConfirm}
         onShowRestartConfirm={setShowRestartConfirm}
         onShowShutdownConfirm={setShowShutdownConfirm}
-        onRestart={handleRestart}
-        onShutdown={handleShutdown}
+        onRestart={() => {
+          void handleRestart()
+        }}
+        onShutdown={() => {
+          void handleShutdown()
+        }}
       />
 
       <section className="settings-section">

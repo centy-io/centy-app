@@ -22,30 +22,29 @@ export function ProjectSelectorFooter({
         <Link
           href={route({ pathname: '/' })}
           className="init-project-btn"
-          onClick={() => {
-            setIsOpen(false)
-          }}
+          onClick={() => setIsOpen(false)}
         >
           {'\u2728'} Init Project
         </Link>
         <Link
           href={route({ pathname: '/archived' })}
           className="view-archived-link"
-          onClick={() => {
-            setIsOpen(false)
-          }}
+          onClick={() => setIsOpen(false)}
         >
           View Archived Projects
         </Link>
       </div>
       <div className="project-selector-manual">
-        <form className="manual-path-form" onSubmit={onManualSubmit}>
+        <form
+          className="manual-path-form"
+          onSubmit={e => {
+            void onManualSubmit(e)
+          }}
+        >
           <input
             type="text"
             value={manualPath}
-            onChange={e => {
-              setManualPath(e.target.value)
-            }}
+            onChange={e => setManualPath(e.target.value)}
             placeholder="Or enter path manually..."
             className="manual-path-input"
           />

@@ -21,7 +21,7 @@ export function OrganizationsList(): React.JSX.Element {
     <div className="organizations-list">
       <OrgListHeader
         loading={state.loading}
-        onRefresh={state.fetchOrganizations}
+        onRefresh={() => void state.fetchOrganizations()}
         sortPreset={state.sortPreset}
         onSortChange={state.setSortPreset}
       />
@@ -35,7 +35,7 @@ export function OrganizationsList(): React.JSX.Element {
             state.setShowDeleteConfirm(null)
             state.setDeleteError(null)
           }}
-          onConfirm={() => state.handleDelete(deleteConfirmSlug)}
+          onConfirm={() => void state.handleDelete(deleteConfirmSlug)}
           error={state.deleteError}
         />
       )}
@@ -48,7 +48,7 @@ export function OrganizationsList(): React.JSX.Element {
             state.setShowCascadeConfirm(null)
             state.setDeleteError(null)
           }}
-          onConfirm={() => state.handleDeleteCascade(cascadeConfirmSlug)}
+          onConfirm={() => void state.handleDeleteCascade(cascadeConfirmSlug)}
           error={state.deleteError}
         />
       )}
@@ -58,9 +58,7 @@ export function OrganizationsList(): React.JSX.Element {
           items={state.contextMenuItems}
           x={state.contextMenu.x}
           y={state.contextMenu.y}
-          onClose={() => {
-            state.setContextMenu(null)
-          }}
+          onClose={() => state.setContextMenu(null)}
         />
       )}
     </div>

@@ -16,9 +16,7 @@ export function useModalDismiss(
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
+    return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [modalRef, onClose])
 
   // Close on escape
@@ -29,8 +27,6 @@ export function useModalDismiss(
       }
     }
     document.addEventListener('keydown', handleEscape)
-    return () => {
-      document.removeEventListener('keydown', handleEscape)
-    }
+    return () => document.removeEventListener('keydown', handleEscape)
   }, [onClose])
 }

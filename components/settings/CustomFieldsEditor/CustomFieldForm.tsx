@@ -51,9 +51,7 @@ export function CustomFieldForm({
       {fieldType === 'enum' && (
         <EnumValuesEditor
           enumValues={enumValues}
-          onAdd={value => {
-            state.setEnumValues([...enumValues, value])
-          }}
+          onAdd={value => state.setEnumValues([...enumValues, value])}
           onRemove={state.handleRemoveEnumValue}
         />
       )}

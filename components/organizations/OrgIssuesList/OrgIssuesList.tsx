@@ -28,7 +28,9 @@ export function OrgIssuesList({ orgSlug }: OrgIssuesListProps) {
         </div>
         <div className="header-actions">
           <button
-            onClick={fetchIssues}
+            onClick={() => {
+              void fetchIssues()
+            }}
             disabled={loading}
             className="refresh-btn"
           >

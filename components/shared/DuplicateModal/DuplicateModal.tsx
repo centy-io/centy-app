@@ -28,7 +28,9 @@ export function DuplicateModal(props: DuplicateModalProps) {
           </button>
           <button
             className="move-modal-submit"
-            onClick={state.handleDuplicate}
+            onClick={() => {
+              void state.handleDuplicate()
+            }}
             disabled={
               state.loading ||
               !state.selectedProject ||

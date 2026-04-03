@@ -53,12 +53,8 @@ export function GenericItemCard({
           message={`Delete "${item.title || item.id}"?`}
           deleting={deleting}
           onCancel={onDeleteCancel}
-          onSoftDelete={() => {
-            onSoftDeleteConfirm(item.id)
-          }}
-          onConfirm={() => {
-            onHardDeleteConfirm(item.id)
-          }}
+          onSoftDelete={() => onSoftDeleteConfirm(item.id)}
+          onConfirm={() => onHardDeleteConfirm(item.id)}
         />
       )}
     </div>

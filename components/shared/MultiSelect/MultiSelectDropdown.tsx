@@ -48,9 +48,7 @@ export function MultiSelectDropdown({
               className="multi-select-checkbox"
               type="checkbox"
               checked={value.includes(option.value)}
-              onChange={() => {
-                handleOptionToggle(option.value)
-              }}
+              onChange={() => handleOptionToggle(option.value)}
             />
             <span className="multi-select-option-label">{option.label}</span>
           </label>

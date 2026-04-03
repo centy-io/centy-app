@@ -55,7 +55,9 @@ export function CreateUser() {
         onRemoveGitUsername={state.onRemoveGitUsername}
         onGitUsernameChange={state.onGitUsernameChange}
         saving={state.saving}
-        onSubmit={state.handleSubmit}
+        onSubmit={() => {
+          void state.handleSubmit()
+        }}
         usersListUrl={state.usersListUrl}
       />
     </div>

@@ -19,7 +19,9 @@ export function ProjectConfig(): ReactElement {
 
   const org = useProjectOrg(
     projectPath,
-    refreshOrganizations,
+    () => {
+      void refreshOrganizations()
+    },
     data.setError,
     data.setSuccess
   )

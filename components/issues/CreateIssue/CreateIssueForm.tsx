@@ -29,7 +29,12 @@ export function CreateIssueForm(props: CreateIssueFormProps): ReactElement {
     onCancel,
   } = props
   return (
-    <form className="create-issue-form" onSubmit={onSubmit}>
+    <form
+      className="create-issue-form"
+      onSubmit={e => {
+        void onSubmit(e)
+      }}
+    >
       <CreateIssueTitleField title={title} setTitle={setTitle} />
       <div className="form-group">
         <label className="form-label" htmlFor="description">

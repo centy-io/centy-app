@@ -61,6 +61,8 @@ export function useCreateIssue() {
     draft,
     s,
     handleSubmit,
-    handleCancel,
+    handleCancel: () => {
+      void handleCancel()
+    },
   })
 }

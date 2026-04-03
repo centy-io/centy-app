@@ -28,16 +28,16 @@ export function ArchivedProjectItemActions({
         <span className="confirm-text">Remove permanently?</span>
         <button
           className="confirm-yes-btn"
-          onClick={() => onRemove(project.path)}
+          onClick={() => {
+            void onRemove(project.path)
+          }}
           disabled={removingPath === project.path}
         >
           {removingPath === project.path ? 'Removing...' : 'Yes'}
         </button>
         <button
           className="confirm-no-btn"
-          onClick={() => {
-            onSetConfirmRemove(null)
-          }}
+          onClick={() => onSetConfirmRemove(null)}
           disabled={removingPath === project.path}
         >
           No
@@ -47,27 +47,18 @@ export function ArchivedProjectItemActions({
   }
   return (
     <>
-      <button
-        className="restore-btn"
-        onClick={() => {
-          onRestore(project.path)
-        }}
-      >
+      <button className="restore-btn" onClick={() => onRestore(project.path)}>
         Restore
       </button>
       <button
         className="restore-select-btn"
-        onClick={() => {
-          onRestoreAndSelect(project)
-        }}
+        onClick={() => onRestoreAndSelect(project)}
       >
         Restore & Select
       </button>
       <button
         className="remove-btn"
-        onClick={() => {
-          onSetConfirmRemove(project.path)
-        }}
+        onClick={() => onSetConfirmRemove(project.path)}
       >
         Remove
       </button>

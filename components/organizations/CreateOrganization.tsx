@@ -61,7 +61,9 @@ export function CreateOrganization() {
         description={description}
         setDescription={setDescription}
         saving={saving}
-        onSubmit={handleSubmit}
+        onSubmit={() => {
+          void handleSubmit()
+        }}
       />
     </div>
   )

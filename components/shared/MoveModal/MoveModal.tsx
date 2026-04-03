@@ -26,7 +26,9 @@ export function MoveModal(props: MoveModalProps) {
           </button>
           <button
             className="move-modal-submit"
-            onClick={state.handleMove}
+            onClick={() => {
+              void state.handleMove()
+            }}
             disabled={
               state.loading ||
               !state.selectedProject ||

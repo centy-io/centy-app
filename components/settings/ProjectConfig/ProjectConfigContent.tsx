@@ -34,7 +34,9 @@ export function ProjectConfigContent({
         organizations={organizations}
         projectOrgSlug={org.projectOrgSlug}
         savingOrg={org.savingOrg}
-        onOrgChange={org.handleOrgChange}
+        onOrgChange={slug => {
+          void org.handleOrgChange(slug)
+        }}
       />
       <section className="settings-section">
         <h3 className="settings-section-title">Project Title</h3>
@@ -48,7 +50,9 @@ export function ProjectConfigContent({
           saving={data.saving}
           isDirty={data.isDirty}
           updateConfig={data.updateConfig}
-          onSave={data.handleSaveConfig}
+          onSave={() => {
+            void data.handleSaveConfig()
+          }}
           onReset={data.handleResetConfig}
         />
       )}
