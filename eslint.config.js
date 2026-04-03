@@ -39,7 +39,6 @@ export default [
       // Empty functions (e.g. no-op callbacks)
       '@typescript-eslint/no-empty-function': 'off',
       // Miscellaneous stylistic rules from stylisticTypeChecked
-      '@typescript-eslint/no-base-to-string': 'off',
       '@typescript-eslint/use-unknown-in-catch-callback-variable': 'off',
       '@typescript-eslint/no-meaningless-void-operator': 'off',
       '@typescript-eslint/prefer-regexp-exec': 'off',
