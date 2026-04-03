@@ -36,7 +36,6 @@ export default [
       '@typescript-eslint/use-unknown-in-catch-callback-variable': 'off',
       '@typescript-eslint/prefer-find': 'off',
       '@typescript-eslint/no-unnecessary-type-parameters': 'off',
-      '@typescript-eslint/no-meaningless-void-operator': 'off',
     },
   },
   {
