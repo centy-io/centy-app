@@ -3,12 +3,12 @@ import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
 import {
   OpenInTempWorkspaceWithEditorRequestSchema,
-  type Issue,
+  type GenericItem,
 } from '@/gen/centy_pb'
 
 interface OpenWorkspaceParams {
   projectPath: string
-  issue: Issue
+  issue: GenericItem
   editorId: string
   failureMessage: string
   setOpening: (v: boolean) => void
@@ -58,7 +58,7 @@ async function openInWorkspace({
 
 export function useEditorActions(
   projectPath: string,
-  issue: Issue | null,
+  issue: GenericItem | null,
   setError: (error: string | null) => void,
   setShowStatusConfigDialog: (show: boolean) => void
 ) {

@@ -2,12 +2,12 @@
 
 import type { ReactElement, RefObject } from 'react'
 import { StatusDropdown } from './StatusDropdown'
-import type { Issue } from '@/gen/centy_pb'
+import type { GenericItem } from '@/gen/centy_pb'
 import { AssigneeSelector } from '@/components/users/AssigneeSelector'
 import { ItemMetadata } from '@/components/shared/ItemMetadata'
 
 interface MetadataProps {
-  issue: Issue
+  issue: GenericItem
   projectPath: string
   issueNumber: string
   stateManager: { getStateClass: (status: string) => string }
@@ -52,7 +52,9 @@ export function Metadata({
         }
         priority={issue.metadata ? issue.metadata.priority : undefined}
         priorityLabel={
-          issue.metadata ? issue.metadata.priorityLabel : undefined
+          issue.metadata
+            ? issue.metadata.customFields.priority_label || undefined
+            : undefined
         }
         createdAt={issue.metadata ? issue.metadata.createdAt : undefined}
         updatedAt={issue.metadata ? issue.metadata.updatedAt : undefined}

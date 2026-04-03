@@ -1,6 +1,6 @@
 'use client'
 
-export function saveFormDraft<T>(storageKey: string, values: T): void {
+export function saveFormDraft(storageKey: string, values: unknown): void {
   if (typeof window === 'undefined') return
   try {
     localStorage.setItem(storageKey, JSON.stringify(values))

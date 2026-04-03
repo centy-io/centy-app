@@ -4,13 +4,13 @@ import type { ReactElement } from 'react'
 import type { Table as TanstackTable } from '@tanstack/react-table'
 import { flexRender } from '@tanstack/react-table'
 import { IssuesTableHeader } from './IssuesTableHeader'
-import type { Issue } from '@/gen/centy_pb'
+import type { GenericItem } from '@/gen/centy_pb'
 import type { MultiSelectOption } from '@/components/shared/MultiSelect'
 
 interface IssuesTableProps {
-  table: TanstackTable<Issue>
+  table: TanstackTable<GenericItem>
   statusOptions: MultiSelectOption[]
-  onContextMenu: (e: React.MouseEvent, issue: Issue) => void
+  onContextMenu: (e: React.MouseEvent, issue: GenericItem) => void
 }
 
 function getCellClassName(columnId: string): string {
@@ -35,7 +35,7 @@ export function IssuesTable({
         <tbody className="issues-tbody">
           {table.getRowModel().rows.map(row => (
             <tr
-              key={row.original.issueNumber}
+              key={row.original.id}
               onContextMenu={e => onContextMenu(e, row.original)}
               className="context-menu-row"
             >
