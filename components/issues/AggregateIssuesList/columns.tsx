@@ -19,11 +19,9 @@ function makeProjectColumn(createProjectLink: CreateProjectLink) {
     header: 'Project',
     cell: info => {
       const issue = info.row.original
+      const href = createProjectLink(issue.orgSlug, issue.projectName, 'issues')
       return (
-        <Link
-          href={createProjectLink(issue.orgSlug, issue.projectName, 'issues')}
-          className="project-link"
-        >
+        <Link href={href} className="project-link">
           {info.getValue()}
         </Link>
       )
@@ -38,15 +36,10 @@ function makeTitleColumn(createProjectLink: CreateProjectLink) {
     header: 'Title',
     cell: info => {
       const issue = info.row.original
+      const path = `issues/${issue.id}`
+      const href = createProjectLink(issue.orgSlug, issue.projectName, path)
       return (
-        <Link
-          href={createProjectLink(
-            issue.orgSlug,
-            issue.projectName,
-            `issues/${issue.id}`
-          )}
-          className="issue-title-link"
-        >
+        <Link href={href} className="issue-title-link">
           {info.getValue()}
         </Link>
       )
