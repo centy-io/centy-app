@@ -97,12 +97,13 @@ export function useAppLink() {
 
   const hasProjectContext = Boolean(org && project)
 
-  const currentContext = hasProjectContext
-    ? {
-        orgSlug: org === UNGROUPED_ORG_MARKER ? null : org,
-        projectName: project!,
-      }
-    : null
+  const currentContext =
+    org && project
+      ? {
+          orgSlug: org === UNGROUPED_ORG_MARKER ? null : org,
+          projectName: project,
+        }
+      : null
 
   return {
     createLink,
