@@ -37,27 +37,17 @@ export function CustomFieldsEditor({
                     actions.handleUpdate(index, f)
                     setEditingIndex(null)
                   }}
-                  onCancel={() => {
-                    setEditingIndex(null)
-                  }}
+                  onCancel={() => void setEditingIndex(null)}
                 />
               ) : (
                 <CustomFieldDisplay
                   field={field}
                   index={index}
                   totalCount={fields.length}
-                  onEdit={() => {
-                    setEditingIndex(index)
-                  }}
-                  onRemove={() => {
-                    actions.handleRemove(index)
-                  }}
-                  onMoveUp={() => {
-                    actions.handleMoveUp(index)
-                  }}
-                  onMoveDown={() => {
-                    actions.handleMoveDown(index)
-                  }}
+                  onEdit={() => void setEditingIndex(index)}
+                  onRemove={() => void actions.handleRemove(index)}
+                  onMoveUp={() => void actions.handleMoveUp(index)}
+                  onMoveDown={() => void actions.handleMoveDown(index)}
                 />
               )}
             </div>
@@ -72,17 +62,13 @@ export function CustomFieldsEditor({
               actions.handleAdd(f)
               setIsAdding(false)
             }}
-            onCancel={() => {
-              setIsAdding(false)
-            }}
+            onCancel={() => void setIsAdding(false)}
           />
         </div>
       ) : (
         <button
           type="button"
-          onClick={() => {
-            setIsAdding(true)
-          }}
+          onClick={() => void setIsAdding(true)}
           className="custom-field-add-btn"
         >
           + Add Custom Field

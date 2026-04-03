@@ -66,16 +66,12 @@ export function IssueDetailContent(
         isEditing={editState.isEditing}
         saving={props.saving}
         openingInVscode={props.openingInVscode}
-        onEdit={() => {
-          editState.setIsEditing(true)
-        }}
+        onEdit={() => void editState.setIsEditing(true)}
         onCancelEdit={editState.handleCancelEdit}
         onSave={props.onSave}
         onMove={props.onMove}
         onDuplicate={props.onDuplicate}
-        onDelete={() => {
-          props.onShowDeleteConfirm(true)
-        }}
+        onDelete={() => void props.onShowDeleteConfirm(true)}
         onOpenInVscode={props.onOpenInVscode}
         onOpenInTerminal={props.onOpenInTerminal}
       />
@@ -84,9 +80,7 @@ export function IssueDetailContent(
         <DeleteConfirm
           message={`Delete "${props.issue.title || props.issueNumber}"?`}
           deleting={props.deleting}
-          onCancel={() => {
-            props.onShowDeleteConfirm(false)
-          }}
+          onCancel={() => void props.onShowDeleteConfirm(false)}
           onSoftDelete={props.onSoftDelete}
           onConfirm={props.onDelete}
         />
