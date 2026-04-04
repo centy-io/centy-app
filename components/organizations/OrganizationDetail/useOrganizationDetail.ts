@@ -22,7 +22,7 @@ function buildCancelEdit(st: OrgDetailState): () => void {
 }
 
 export function useOrganizationDetail() {
-  const { orgSlug } = useParams<{ orgSlug: string }>()
+  const orgSlug = String(useParams()?.orgSlug ?? '')
   const router = useRouter()
   const st = useOrgDetailState()
 
