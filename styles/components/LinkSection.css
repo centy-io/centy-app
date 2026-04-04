@@ -102,6 +102,7 @@
   color: var(--color-gray-700);
   font-size: 0.8125rem;
   flex: 1;
+  min-width: 0;
 }
 
 .link-item-link:hover {
@@ -133,6 +134,9 @@
 .link-target-id {
   font-family: var(--font-mono);
   font-size: 0.75rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .link-edit-btn {
