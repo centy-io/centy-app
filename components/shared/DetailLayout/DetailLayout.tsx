@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useCallback, useRef, useState, type ReactNode } from 'react'
+import { MovableDivider } from './MovableDivider'
 
 interface DetailLayoutProps {
   main: ReactNode
@@ -64,10 +65,7 @@ export function DetailLayout({
   return (
     <div className="detail-layout" style={style} ref={containerRef}>
       <div className="detail-layout-main">{main}</div>
-      <div
-        className={`detail-layout-resize-handle${isDragging ? ' is-dragging' : ''}`}
-        onMouseDown={handleMouseDown}
-      />
+      <MovableDivider onMouseDown={handleMouseDown} isDragging={isDragging} />
       <aside className="detail-layout-sidebar">{sidebar}</aside>
     </div>
   )
