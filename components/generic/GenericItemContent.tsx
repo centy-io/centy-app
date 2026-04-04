@@ -32,8 +32,6 @@ export function GenericItemContent({
     showMoveModal,
     setShowMoveModal,
     handleMoved,
-  } = state
-  const {
     listUrl,
     fetch,
     saving,
@@ -41,8 +39,9 @@ export function GenericItemContent({
     deleting,
     restoring,
     handleDelete,
+    handleSoftDelete,
+    handleRestore,
   } = state
-  const { handleSoftDelete, handleRestore } = state
   const isArchived = Boolean(item.metadata && item.metadata.deletedAt)
   return (
     <div className="generic-item-detail">

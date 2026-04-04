@@ -10,6 +10,29 @@ import {
 } from '@/gen/centy_pb'
 import { usePathContext } from '@/components/providers/PathContextProvider'
 
+async function fetchLinkTitles(
+  projectPath: string,
+  links: LinkType[]
+): Promise<Record<string, string>> {
+  const entries = await Promise.all(
+    links.map(async link => {
+      try {
+        const res = await centyClient.getItem(
+          create(GetItemRequestSchema, {
+            projectPath,
+            itemType: link.targetItemType,
+            itemId: link.targetId,
+          })
+        )
+        return [link.targetId, res.item?.title ?? ''] as const
+      } catch {
+        return [link.targetId, ''] as const
+      }
+    })
+  )
+  return Object.fromEntries(entries)
+}
+
 export function useLinkFetch(entityId: string, entityType: 'issue' | 'doc') {
   const { projectPath } = usePathContext()
   const [links, setLinks] = useState<LinkType[]>([])
@@ -29,23 +52,7 @@ export function useLinkFetch(entityId: string, entityType: 'issue' | 'doc') {
       })
       const response = await centyClient.listLinks(request)
       setLinks(response.links)
-      const titleEntries = await Promise.all(
-        response.links.map(async link => {
-          try {
-            const itemResponse = await centyClient.getItem(
-              create(GetItemRequestSchema, {
-                projectPath,
-                itemType: link.targetItemType,
-                itemId: link.targetId,
-              })
-            )
-            return [link.targetId, itemResponse.item?.title ?? ''] as const
-          } catch {
-            return [link.targetId, ''] as const
-          }
-        })
-      )
-      setLinkTitles(Object.fromEntries(titleEntries))
+      setLinkTitles(await fetchLinkTitles(projectPath, response.links))
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load links')
     } finally {
