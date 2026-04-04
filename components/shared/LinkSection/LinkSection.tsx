@@ -49,6 +49,7 @@ export function LinkSection({
       ) : (
         <LinkGroupList
           groupedLinks={groupedLinks}
+          linkTitles={state.linkTitles}
           editable={resolvedEditable}
           deletingLinkId={state.deletingLinkId}
           buildLinkRoute={state.buildLinkRoute}

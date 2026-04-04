@@ -1,11 +1,13 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import type { RouteLiteral } from 'nextjs-routes'
+import { useRouter } from 'next/navigation'
 import { useGenericItemFetch } from './useGenericItemFetch'
 import { useGenericItemSave } from './useGenericItemSave'
 import { useGenericItemDelete } from './useGenericItemDelete'
 import { useItemTypeConfig } from './useItemTypeConfig'
 import type { ItemTypeConfigProto } from '@/gen/centy_pb'
 import { useAppLink } from '@/hooks/useAppLink'
+import { useProjectPathToUrl } from '@/components/providers/useProjectPathToUrl'
 
 interface UseGenericItemDetailStateResult {
   config: ItemTypeConfigProto | null
@@ -13,6 +15,9 @@ interface UseGenericItemDetailStateResult {
   setIsEditing: (v: boolean) => void
   showDeleteConfirm: boolean
   setShowDeleteConfirm: (v: boolean) => void
+  showMoveModal: boolean
+  setShowMoveModal: (v: boolean) => void
+  handleMoved: (targetProjectPath: string) => Promise<void>
   listUrl: RouteLiteral
   fetch: ReturnType<typeof useGenericItemFetch>
   saving: boolean
@@ -29,11 +34,28 @@ export function useGenericItemDetailState(
   itemType: string,
   itemId: string
 ): UseGenericItemDetailStateResult {
-  const { createLink } = useAppLink()
+  const router = useRouter()
+  const resolvePathToUrl = useProjectPathToUrl()
+  const { createLink, createProjectLink } = useAppLink()
   const { config } = useItemTypeConfig(projectPath, true, itemType)
   const [isEditing, setIsEditing] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [showMoveModal, setShowMoveModal] = useState(false)
   const listUrl = createLink(`/${itemType}`)
+
+  const handleMoved = useCallback(
+    async (targetProjectPath: string) => {
+      const result = await resolvePathToUrl(targetProjectPath)
+      if (result) {
+        router.push(
+          createProjectLink(result.orgSlug, result.projectName, itemType)
+        )
+      } else {
+        router.push(listUrl)
+      }
+    },
+    [resolvePathToUrl, createProjectLink, router, itemType, listUrl]
+  )
   const fetch = useGenericItemFetch(projectPath, itemType, itemId)
   const { saving, handleSave } = useGenericItemSave({
     projectPath,
@@ -62,6 +84,9 @@ export function useGenericItemDetailState(
     setIsEditing,
     showDeleteConfirm,
     setShowDeleteConfirm,
+    showMoveModal,
+    setShowMoveModal,
+    handleMoved,
     listUrl,
     fetch,
     saving,

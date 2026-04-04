@@ -3,9 +3,9 @@
 import { ArchivedBanner } from './ArchivedBanner'
 import { DetailBody } from './DetailBody'
 import { GenericItemDetailHeader } from './GenericItemDetailHeader'
+import { GenericItemModals } from './GenericItemModals'
 import { buildItemDisplayName } from './buildItemDisplayName'
 import type { useGenericItemDetailState } from './useGenericItemDetailState'
-import { DeleteConfirm } from '@/components/shared/DeleteConfirm'
 import { CommentThread } from '@/components/comments/CommentThread'
 import type { GenericItem } from '@/gen/centy_pb'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
@@ -24,53 +24,46 @@ export function GenericItemContent({
   itemType,
   projectPath,
 }: ContentProps): React.JSX.Element {
-  const { isEditing, setIsEditing, showDeleteConfirm, setShowDeleteConfirm } =
-    state
-  const {
-    listUrl,
-    fetch,
-    saving,
-    handleSave,
-    deleting,
-    restoring,
-    handleDelete,
-  } = state
-  const { handleSoftDelete, handleRestore } = state
   const isArchived = Boolean(item.metadata && item.metadata.deletedAt)
   return (
     <div className="generic-item-detail">
       <GenericItemDetailHeader
         displayName={buildItemDisplayName(state.config, itemType)}
-        listUrl={listUrl}
-        isEditing={isEditing}
-        saving={saving}
-        onEdit={() => void setIsEditing(true)}
-        onCancelEdit={() => void setIsEditing(false)}
-        onSave={() => void handleSave()}
-        onDeleteRequest={() => void setShowDeleteConfirm(true)}
+        listUrl={state.listUrl}
+        isEditing={state.isEditing}
+        saving={state.saving}
+        onEdit={() => void state.setIsEditing(true)}
+        onCancelEdit={() => void state.setIsEditing(false)}
+        onSave={() => void state.handleSave()}
+        onDeleteRequest={() => void state.setShowDeleteConfirm(true)}
+        onMove={() => void state.setShowMoveModal(true)}
       />
-      {fetch.error && <DaemonErrorMessage error={fetch.error} />}
+      {state.fetch.error && <DaemonErrorMessage error={state.fetch.error} />}
       {isArchived && (
         <ArchivedBanner
-          restoring={restoring}
-          onRestore={() => void handleRestore()}
+          restoring={state.restoring}
+          onRestore={() => void state.handleRestore()}
         />
       )}
-      {showDeleteConfirm && (
-        <DeleteConfirm
-          message={`Delete "${item.title || item.id}"?`}
-          deleting={deleting}
-          onCancel={() => void setShowDeleteConfirm(false)}
-          onSoftDelete={() => void handleSoftDelete()}
-          onConfirm={() => void handleDelete()}
-        />
-      )}
+      <GenericItemModals
+        item={item}
+        itemType={itemType}
+        projectPath={projectPath}
+        showDeleteConfirm={state.showDeleteConfirm}
+        showMoveModal={state.showMoveModal}
+        deleting={state.deleting}
+        onCancelDelete={() => void state.setShowDeleteConfirm(false)}
+        onSoftDelete={() => void state.handleSoftDelete()}
+        onConfirmDelete={() => void state.handleDelete()}
+        onCloseMoveModal={() => void state.setShowMoveModal(false)}
+        onMoved={targetProjectPath => void state.handleMoved(targetProjectPath)}
+      />
       <ItemContent>
         <DetailBody
           item={item}
           config={state.config}
-          isEditing={isEditing}
-          fetch={fetch}
+          isEditing={state.isEditing}
+          fetch={state.fetch}
         />
       </ItemContent>
       {itemType !== 'comments' && (

@@ -12,9 +12,7 @@ export function MoveModal(props: MoveModalProps) {
     <div className="move-modal-overlay">
       <div className="move-modal" ref={state.modalRef}>
         <div className="move-modal-header">
-          <h3 className="move-modal-title">
-            Move {props.entityType === 'issue' ? 'Issue' : 'Document'}
-          </h3>
+          <h3 className="move-modal-title">Move Item</h3>
           <button className="move-modal-close" onClick={props.onClose}>
             x
           </button>

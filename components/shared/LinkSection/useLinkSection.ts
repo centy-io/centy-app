@@ -7,6 +7,7 @@ export function useLinkSection(entityId: string, entityType: 'issue' | 'doc') {
   const { buildLinkRoute } = useLinkRoutes()
   const {
     links,
+    linkTitles,
     loading,
     error,
     deletingLinkId,
@@ -25,6 +26,7 @@ export function useLinkSection(entityId: string, entityType: 'issue' | 'doc') {
   }, [fetchLinks])
   return {
     links,
+    linkTitles,
     loading,
     error,
     showAddModal,

@@ -1,5 +1,5 @@
 export interface MoveModalProps {
-  entityType: 'issue' | 'doc'
+  entityType: string
   entityId: string
   entityTitle: string
   currentProjectPath: string
