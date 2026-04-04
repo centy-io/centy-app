@@ -5,6 +5,7 @@ import {
   createMockGenericItem,
   makeListItemsResponse,
   makeListItemTypesResponse,
+  makeCreateLinkResponse,
 } from './AddLinkModal.spec-utils'
 import { AddLinkModal } from '.'
 import { centyClient } from '@/lib/grpc/client'
@@ -69,15 +70,13 @@ describe('AddLinkModal - Link creation', () => {
   beforeEach(setupAddLinkModalMocks)
 
   it('should create link when clicking Create Link button', async () => {
-    vi.mocked(centyClient.createLink).mockResolvedValue({
-      success: true,
-      error: '',
-      $typeName: 'centy.v1.CreateLinkResponse',
-      $unknown: undefined,
-    })
+    vi.mocked(centyClient.createLink).mockResolvedValue(
+      makeCreateLinkResponse(true)
+    )
 
     render(<AddLinkModal {...defaultProps} />)
 
+    fireEvent.focus(screen.getByPlaceholderText('Search by title or number...'))
     await waitFor(() => {
       expect(screen.getByText('#1 - First Issue')).toBeInTheDocument()
     })
@@ -95,15 +94,13 @@ describe('AddLinkModal - Link creation', () => {
   })
 
   it('should show error when link creation fails', async () => {
-    vi.mocked(centyClient.createLink).mockResolvedValue({
-      success: false,
-      error: 'Link already exists',
-      $typeName: 'centy.v1.CreateLinkResponse',
-      $unknown: undefined,
-    })
+    vi.mocked(centyClient.createLink).mockResolvedValue(
+      makeCreateLinkResponse(false, 'Link already exists')
+    )
 
     render(<AddLinkModal {...defaultProps} />)
 
+    fireEvent.focus(screen.getByPlaceholderText('Search by title or number...'))
     await waitFor(() => {
       expect(screen.getByText('#1 - First Issue')).toBeInTheDocument()
     })

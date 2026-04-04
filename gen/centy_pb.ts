@@ -119,3 +119,20 @@ export interface CreateDocResponse {
   syncResults: OrgDocSyncResult[]
 }
 
+export interface UpdateDocRequest {
+  $typeName: 'centy.v1.UpdateDocRequest'
+  projectPath: string
+  slug: string
+  title: string
+  content: string
+  newSlug: string
+}
+
+export interface UpdateDocResponse {
+  $typeName: 'centy.v1.UpdateDocResponse'
+  success: boolean
+  error: string
+  doc?: Doc
+  manifest?: Manifest
+  syncResults: OrgDocSyncResult[]
+}

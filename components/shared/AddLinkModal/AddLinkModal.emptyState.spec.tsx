@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import {
   createMockLinkTypeInfo,
@@ -75,6 +75,7 @@ describe('AddLinkModal - Empty state and exclusions', () => {
 
     render(<AddLinkModal {...defaultProps} />)
 
+    fireEvent.focus(screen.getByPlaceholderText('Search by title or number...'))
     await waitFor(() => {
       expect(screen.getByText('No items found')).toBeInTheDocument()
     })
@@ -94,6 +95,7 @@ describe('AddLinkModal - Empty state and exclusions', () => {
 
     render(<AddLinkModal {...defaultProps} existingLinks={existingLinks} />)
 
+    fireEvent.focus(screen.getByPlaceholderText('Search by title or number...'))
     await waitFor(() => {
       expect(screen.queryByText('#1 - First Issue')).not.toBeInTheDocument()
       expect(screen.getByText('#2 - Second Issue')).toBeInTheDocument()
