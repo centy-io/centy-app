@@ -4,17 +4,15 @@ import type { AddLinkModalProps, EntityItem } from './AddLinkModal.types'
 import { useEntitySearch } from './useEntitySearch'
 import { useModalDismiss } from './useModalDismiss'
 import { useCreateLink } from './useCreateLink'
-import { usePathContext } from '@/components/providers/PathContextProvider'
+import { useUpdateLink } from './useUpdateLink'
 import {
   GetAvailableLinkTypesRequestSchema,
   type LinkTypeInfo,
 } from '@/gen/centy_pb'
+import { usePathContext } from '@/components/providers/PathContextProvider'
 import { centyClient } from '@/lib/grpc/client'
 
-function getInverseLinkTypeName(
-  _linkTypes: LinkTypeInfo[],
-  linkType: string
-): string {
+function getInverseLinkTypeName(_: LinkTypeInfo[], linkType: string): string {
   return linkType
 }
 
@@ -25,20 +23,39 @@ function getEntityLabel(item: EntityItem): string {
   return `${item.id} - ${item.title}`
 }
 
+function buildInitialTarget(
+  editingLink: AddLinkModalProps['editingLink'],
+  editingLinkTitle: string | undefined
+): EntityItem | null {
+  if (!editingLink) return null
+  return {
+    id: editingLink.targetId,
+    type: editingLink.targetItemType,
+    title: editingLinkTitle ?? editingLink.targetId,
+  }
+}
+
 export function useAddLinkModal({
   entityId,
   entityType,
   existingLinks,
   onClose,
   onLinkCreated,
+  editingLink,
+  editingLinkTitle,
+  onLinkUpdated,
 }: AddLinkModalProps) {
+  const isEditMode = !!editingLink
   const { projectPath } = usePathContext()
   const modalRef = useRef<HTMLDivElement>(null)
-
   const [linkTypes, setLinkTypes] = useState<LinkTypeInfo[]>([])
-  const [selectedLinkType, setSelectedLinkType] = useState('')
-  const [selectedTarget, setSelectedTarget] = useState<EntityItem | null>(null)
   const [loadingTypes, setLoadingTypes] = useState(true)
+  const [selectedLinkType, setSelectedLinkType] = useState(
+    editingLink ? editingLink.linkType : ''
+  )
+  const [selectedTarget, setSelectedTarget] = useState<EntityItem | null>(
+    buildInitialTarget(editingLink, editingLinkTitle)
+  )
 
   const search = useEntitySearch(
     projectPath,
@@ -46,8 +63,11 @@ export function useAddLinkModal({
     existingLinks,
     selectedLinkType
   )
-
-  const { loading, error, handleCreateLink } = useCreateLink(
+  const {
+    loading: createLoading,
+    error: createError,
+    handleCreateLink,
+  } = useCreateLink(
     projectPath,
     entityId,
     entityType,
@@ -55,6 +75,11 @@ export function useAddLinkModal({
     selectedLinkType,
     onLinkCreated
   )
+  const {
+    loading: updateLoading,
+    error: updateError,
+    handleUpdateLink,
+  } = useUpdateLink(projectPath, editingLink, selectedLinkType, onLinkUpdated)
 
   useModalDismiss(modalRef, onClose)
 
@@ -67,7 +92,7 @@ export function useAddLinkModal({
         })
         const response = await centyClient.getAvailableLinkTypes(request)
         setLinkTypes(response.linkTypes)
-        if (response.linkTypes.length > 0) {
+        if (!isEditMode && response.linkTypes.length > 0) {
           setSelectedLinkType(response.linkTypes[0].name)
         }
       } catch (err) {
@@ -77,7 +102,7 @@ export function useAddLinkModal({
       }
     }
     void loadLinkTypes()
-  }, [projectPath])
+  }, [projectPath, isEditMode])
 
   return {
     modalRef,
@@ -86,10 +111,12 @@ export function useAddLinkModal({
     setSelectedLinkType,
     selectedTarget,
     setSelectedTarget,
-    loading,
+    loading: isEditMode ? updateLoading : createLoading,
     loadingTypes,
-    error,
-    handleCreateLink,
+    error: isEditMode ? updateError : createError,
+    isEditMode,
+    originalLinkType: editingLink?.linkType,
+    handleCreateLink: isEditMode ? handleUpdateLink : handleCreateLink,
     getInverseLinkType: (linkType: string) =>
       getInverseLinkTypeName(linkTypes, linkType),
     getEntityLabel,

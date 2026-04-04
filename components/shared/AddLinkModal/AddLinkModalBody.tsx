@@ -31,6 +31,7 @@ export function AddLinkModalBody({ state }: AddLinkModalBodyProps) {
           selectedTarget={state.selectedTarget}
           setSelectedTarget={state.setSelectedTarget}
           getEntityLabel={state.getEntityLabel}
+          locked={state.isEditMode}
         />
       </div>
       {state.selectedTarget && state.selectedLinkType && (

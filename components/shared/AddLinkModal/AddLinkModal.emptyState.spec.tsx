@@ -4,6 +4,7 @@ import {
   createMockLinkTypeInfo,
   createMockGenericItem,
   makeListItemsResponse,
+  makeListItemTypesResponse,
 } from './AddLinkModal.spec-utils'
 import { AddLinkModal } from '.'
 import type { Link as LinkType } from '@/gen/centy_pb'
@@ -12,6 +13,7 @@ import { centyClient } from '@/lib/grpc/client'
 vi.mock('@/lib/grpc/client', () => ({
   centyClient: {
     getAvailableLinkTypes: vi.fn(),
+    listItemTypes: vi.fn(),
     listItems: vi.fn(),
     createLink: vi.fn(),
   },
@@ -42,6 +44,10 @@ function setupAddLinkModalMocks() {
     $typeName: 'centy.v1.GetAvailableLinkTypesResponse',
     $unknown: undefined,
   })
+
+  vi.mocked(centyClient.listItemTypes).mockResolvedValue(
+    makeListItemTypesResponse()
+  )
 
   vi.mocked(centyClient.listItems).mockResolvedValue(
     makeListItemsResponse([

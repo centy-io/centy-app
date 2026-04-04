@@ -1,7 +1,6 @@
 'use client'
 
 import { AddLinkModal } from '../AddLinkModal/index'
-import { EditLinkModal } from './EditLinkModal'
 import type { useLinkSection } from './useLinkSection'
 
 interface LinkSectionModalsProps {
@@ -27,9 +26,14 @@ export function LinkSectionModals({
         />
       )}
       {state.editingLink && (
-        <EditLinkModal
-          link={state.editingLink}
+        <AddLinkModal
+          entityId={entityId}
+          entityType={entityType}
+          existingLinks={state.links}
           onClose={() => void state.setEditingLink(null)}
+          onLinkCreated={state.handleLinkCreated}
+          editingLink={state.editingLink}
+          editingLinkTitle={state.linkTitles[state.editingLink.targetId]}
           onLinkUpdated={state.handleLinkUpdated}
         />
       )}
