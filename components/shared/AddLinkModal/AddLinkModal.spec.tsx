@@ -94,12 +94,13 @@ describe('AddLinkModal - Display and loading', () => {
     expect(screen.getByText('Loading...')).toBeInTheDocument()
   })
 
-  it('should display target type tabs', async () => {
+  it('should display search results without type filter', async () => {
     render(<AddLinkModal {...defaultProps} />)
 
     await waitFor(() => {
-      expect(screen.getByText('Issues')).toBeInTheDocument()
-      expect(screen.getByText('Docs')).toBeInTheDocument()
+      expect(screen.getByText('#1 - First Issue')).toBeInTheDocument()
     })
+    expect(screen.queryByText('Issues')).not.toBeInTheDocument()
+    expect(screen.queryByText('Docs')).not.toBeInTheDocument()
   })
 })

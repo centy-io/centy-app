@@ -1,10 +1,10 @@
 import { create } from '@bufbuild/protobuf'
 import type { EntityItem } from './AddLinkModal.types'
-import { filterAndMapIssues } from './filterAndMapIssues'
+import { filterAndMap } from './filterAndMap'
 import { centyClient } from '@/lib/grpc/client'
 import { ListItemsRequestSchema, type Link as LinkType } from '@/gen/centy_pb'
 
-export async function fetchIssueEntities(
+export async function fetchEntities(
   projectPath: string,
   entityId: string,
   existingLinks: LinkType[],
@@ -13,10 +13,10 @@ export async function fetchIssueEntities(
 ): Promise<EntityItem[]> {
   const request = create(ListItemsRequestSchema, {
     projectPath,
-    itemType: 'issues',
+    itemType: '',
   })
   const response = await centyClient.listItems(request)
-  return filterAndMapIssues(
+  return filterAndMap(
     response.items,
     entityId,
     existingLinks,

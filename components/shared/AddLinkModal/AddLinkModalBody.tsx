@@ -22,27 +22,6 @@ export function AddLinkModalBody({ state }: AddLinkModalBodyProps) {
         />
       </div>
       <div className="link-modal-field">
-        <label className="link-modal-label">Target Type</label>
-        <div className="link-modal-tabs">
-          <button
-            className={`link-modal-tab ${state.targetTypeFilter === 'issue' ? 'active' : ''}`}
-            onClick={() => {
-              state.setTargetTypeFilter('issue')
-            }}
-          >
-            Issues
-          </button>
-          <button
-            className={`link-modal-tab ${state.targetTypeFilter === 'doc' ? 'active' : ''}`}
-            onClick={() => {
-              state.setTargetTypeFilter('doc')
-            }}
-          >
-            Docs
-          </button>
-        </div>
-      </div>
-      <div className="link-modal-field">
         <label className="link-modal-label">Search</label>
         <input
           type="text"

@@ -1,8 +1,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useDebounce } from 'use-debounce'
 import type { EntityItem } from './AddLinkModal.types'
-import { fetchIssueEntities } from './fetchIssueEntities'
-import { fetchDocEntities } from './fetchDocEntities'
+import { fetchEntities } from './fetchEntities'
 import type { Link as LinkType } from '@/gen/centy_pb'
 
 export function useEntitySearch(
@@ -11,9 +10,6 @@ export function useEntitySearch(
   existingLinks: LinkType[],
   selectedLinkType: string
 ) {
-  const [targetTypeFilter, setTargetTypeFilter] = useState<'issue' | 'doc'>(
-    'issue'
-  )
   const [searchQuery, setSearchQuery] = useState('')
   const [debouncedSearchQuery] = useDebounce(searchQuery, 400)
   const [searchResults, setSearchResults] = useState<EntityItem[]>([])
@@ -23,24 +19,13 @@ export function useEntitySearch(
     if (!projectPath) return
     setLoadingSearch(true)
     try {
-      let results: EntityItem[] = []
-      if (targetTypeFilter === 'issue') {
-        results = await fetchIssueEntities(
-          projectPath,
-          entityId,
-          existingLinks,
-          selectedLinkType,
-          debouncedSearchQuery
-        )
-      } else {
-        results = await fetchDocEntities(
-          projectPath,
-          entityId,
-          existingLinks,
-          selectedLinkType,
-          debouncedSearchQuery
-        )
-      }
+      const results = await fetchEntities(
+        projectPath,
+        entityId,
+        existingLinks,
+        selectedLinkType,
+        debouncedSearchQuery
+      )
       setSearchResults(results)
     } catch (err) {
       console.error('Failed to search entities:', err)
@@ -49,7 +34,6 @@ export function useEntitySearch(
     }
   }, [
     projectPath,
-    targetTypeFilter,
     debouncedSearchQuery,
     entityId,
     existingLinks,
@@ -61,8 +45,6 @@ export function useEntitySearch(
   }, [searchEntities])
 
   return {
-    targetTypeFilter,
-    setTargetTypeFilter,
     searchQuery,
     setSearchQuery,
     searchResults,
