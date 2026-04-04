@@ -1,3 +1,1 @@
-export interface CreateOrgIssueProps {
-  orgSlug: string
-}
+export type CreateOrgIssueProps = Record<string, never>
