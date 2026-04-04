@@ -52,11 +52,6 @@ function setupMocks() {
         displayNumber: 1,
         title: 'First Issue',
       }),
-      createMockGenericItem({
-        id: 'issue-2',
-        displayNumber: 2,
-        title: 'Second Issue',
-      }),
     ])
   )
 }

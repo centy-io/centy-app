@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { route } from 'nextjs-routes'
 import { useOrgDetailState } from './useOrgDetailState'
 import { fetchOrgAndProjects } from './fetchOrgAndProjects'
@@ -21,16 +21,12 @@ function buildCancelEdit(st: OrgDetailState): () => void {
   }
 }
 
-export function useOrganizationDetail(orgSlug: string) {
+export function useOrganizationDetail() {
+  const orgSlug = String(useParams()?.orgSlug ?? '')
   const router = useRouter()
   const st = useOrgDetailState()
 
   const fetchOrganization = useCallback(async () => {
-    if (!orgSlug) {
-      st.setError('Missing organization slug')
-      st.setLoading(false)
-      return
-    }
     st.setLoading(true)
     st.setError(null)
     try {
