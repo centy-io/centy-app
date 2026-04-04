@@ -61,13 +61,13 @@ function setupMocks() {
   )
 }
 
-describe('AddLinkModal - Link creation', () => {
+describe('AddLinkModal - Link creation error', () => {
   beforeEach(setupMocks)
 
-  it('should create link when clicking Create Link button', async () => {
+  it('should show error when link creation fails', async () => {
     vi.mocked(centyClient.createLink).mockResolvedValue({
-      success: true,
-      error: '',
+      success: false,
+      error: 'Link already exists',
       $typeName: 'centy.v1.CreateLinkResponse',
       $unknown: undefined,
     })
@@ -80,14 +80,10 @@ describe('AddLinkModal - Link creation', () => {
     })
 
     fireEvent.click(screen.getByText('#1 - First Issue'))
-
-    const createButton = screen.getByText('Create Link')
-    expect(createButton).not.toBeDisabled()
-    fireEvent.click(createButton)
+    fireEvent.click(screen.getByText('Create Link'))
 
     await waitFor(() => {
-      expect(centyClient.createLink).toHaveBeenCalled()
-      expect(defaultProps.onLinkCreated).toHaveBeenCalled()
+      expect(screen.getByText('Link already exists')).toBeInTheDocument()
     })
   })
 })
