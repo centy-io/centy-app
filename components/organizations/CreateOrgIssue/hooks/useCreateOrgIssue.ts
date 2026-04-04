@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 import { route } from 'nextjs-routes'
 import { create } from '@bufbuild/protobuf'
 import { useOrgProjectPath } from './useOrgProjectPath'
@@ -11,7 +11,10 @@ function formatSubmitErr(err: unknown): string {
   return err instanceof Error ? err.message : 'Failed to connect to daemon'
 }
 
-export function useCreateOrgIssue(orgSlug: string) {
+export function useCreateOrgIssue() {
+  const params = useParams()
+  const orgSlugParam = params ? params.orgSlug : undefined
+  const orgSlug = typeof orgSlugParam === 'string' ? orgSlugParam : ''
   const router = useRouter()
   const stateManager = useStateManager()
   const stateOptions = stateManager.getStateOptions()
