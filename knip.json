@@ -12,7 +12,8 @@
     "components/**/*.{ts,tsx}",
     "lib/**/*.{ts,tsx}",
     "hooks/**/*.{ts,tsx}",
-    "e2e/**/*.{ts,tsx}"
+    "e2e/**/*.{ts,tsx}",
+    "gen/*.ts"
   ],
   "ignore": [
     "**/*.spec.ts",
@@ -21,7 +22,7 @@
     "**/*.test.tsx",
     "dist/**",
     "coverage/**",
-    "gen/**",
+    "gen/centy/v1/**",
     "types/**/*.d.ts",
     "__tests__/**"
   ],
