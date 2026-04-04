@@ -7,8 +7,13 @@ async function callCreateItem(
   itemType: string,
   title: string,
   status: string,
-  customFields: Record<string, string>
+  customFields: Record<string, string>,
+  additionalProjects: string[]
 ) {
+  const projects =
+    additionalProjects.length > 0
+      ? [projectPath.trim(), ...additionalProjects]
+      : []
   return centyClient.createItem(
     create(CreateItemRequestSchema, {
       projectPath: projectPath.trim(),
@@ -16,6 +21,7 @@ async function callCreateItem(
       title: title.trim(),
       status,
       customFields,
+      projects,
     })
   )
 }
@@ -26,6 +32,7 @@ export async function submitCreate(
   title: string,
   status: string,
   customFields: Record<string, string>,
+  additionalProjects: string[],
   displayName: string,
   setLoading: (v: boolean) => void,
   setError: (v: string | null) => void,
@@ -40,7 +47,8 @@ export async function submitCreate(
       itemType,
       title,
       status,
-      customFields
+      customFields,
+      additionalProjects
     )
     if (response.success && response.item) {
       onSuccess(response.item.id)

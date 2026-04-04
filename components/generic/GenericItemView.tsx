@@ -36,6 +36,7 @@ export function GenericItemView({ item, config }: GenericItemViewProps) {
             status={showStatus && meta ? meta.status : undefined}
             customFields={customFields}
             customFieldsConfig={config ? config.customFields : undefined}
+            projects={meta ? meta.projects : undefined}
             createdAt={meta ? meta.createdAt : undefined}
             updatedAt={meta ? meta.updatedAt : undefined}
           >

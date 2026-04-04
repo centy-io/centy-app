@@ -1,3 +1,5 @@
+import { ProjectCheckboxes } from './ProjectCheckboxes'
+import { StatusSelect } from './StatusSelect'
 import type { ItemTypeConfigProto } from '@/gen/centy_pb'
 
 interface GenericCreateFormFieldsProps {
@@ -6,6 +8,9 @@ interface GenericCreateFormFieldsProps {
   setStatus: (v: string) => void
   customFields: Record<string, string>
   setCustomFields: (v: Record<string, string>) => void
+  currentProjectPath: string
+  additionalProjects: string[]
+  setAdditionalProjects: (v: string[]) => void
 }
 
 function toDisplayLabel(name: string): string {
@@ -18,33 +23,33 @@ export function GenericCreateFormFields({
   setStatus,
   customFields,
   setCustomFields,
+  currentProjectPath,
+  additionalProjects,
+  setAdditionalProjects,
 }: GenericCreateFormFieldsProps) {
+  function toggleProject(path: string) {
+    if (additionalProjects.includes(path)) {
+      setAdditionalProjects(additionalProjects.filter(p => p !== path))
+    } else {
+      setAdditionalProjects([...additionalProjects, path])
+    }
+  }
+
+  const showStatus =
+    config &&
+    config.features &&
+    config.features.status &&
+    config.statuses.length > 0
+
   return (
     <>
-      {config &&
-        config.features &&
-        config.features.status &&
-        config.statuses.length > 0 && (
-          <div className="form-group">
-            <label className="form-label" htmlFor="status">
-              Status:
-            </label>
-            <select
-              className="form-input"
-              id="status"
-              value={status}
-              onChange={e => {
-                setStatus(e.target.value)
-              }}
-            >
-              {config.statuses.map(s => (
-                <option key={s} value={s} className="form-option">
-                  {s}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
+      {showStatus && (
+        <StatusSelect
+          statuses={config.statuses}
+          status={status}
+          setStatus={setStatus}
+        />
+      )}
 
       {config &&
         config.customFields.map(field => (
@@ -69,6 +74,12 @@ export function GenericCreateFormFields({
             />
           </div>
         ))}
+
+      <ProjectCheckboxes
+        currentProjectPath={currentProjectPath}
+        selectedProjects={additionalProjects}
+        onToggle={toggleProject}
+      />
     </>
   )
 }
