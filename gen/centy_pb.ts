@@ -107,15 +107,4 @@ export interface GetIssueByDisplayNumberRequest {
   displayNumber: number
 }
 
-// --- Doc request/response types ---
-
-export interface CreateDocResponse {
-  $typeName: 'centy.v1.CreateDocResponse'
-  success: boolean
-  error: string
-  slug: string
-  createdFile: string
-  manifest?: Manifest
-  syncResults: OrgDocSyncResult[]
-}
 
