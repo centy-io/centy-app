@@ -1,16 +1,12 @@
-import { useState, useEffect, useRef } from 'react'
-import { create } from '@bufbuild/protobuf'
+import { useRef, useState } from 'react'
 import type { AddLinkModalProps, EntityItem } from './AddLinkModal.types'
 import { useEntitySearch } from './useEntitySearch'
 import { useModalDismiss } from './useModalDismiss'
 import { useCreateLink } from './useCreateLink'
 import { useUpdateLink } from './useUpdateLink'
-import {
-  GetAvailableLinkTypesRequestSchema,
-  type LinkTypeInfo,
-} from '@/gen/centy_pb'
+import { useLinkTypes } from './useLinkTypes'
+import type { LinkTypeInfo } from '@/gen/centy_pb'
 import { usePathContext } from '@/components/providers/PathContextProvider'
-import { centyClient } from '@/lib/grpc/client'
 
 function getInverseLinkTypeName(_: LinkTypeInfo[], linkType: string): string {
   return linkType
@@ -48,14 +44,16 @@ export function useAddLinkModal({
   const isEditMode = !!editingLink
   const { projectPath } = usePathContext()
   const modalRef = useRef<HTMLDivElement>(null)
-  const [linkTypes, setLinkTypes] = useState<LinkTypeInfo[]>([])
-  const [loadingTypes, setLoadingTypes] = useState(true)
-  const [selectedLinkType, setSelectedLinkType] = useState(
-    editingLink ? editingLink.linkType : ''
-  )
   const [selectedTarget, setSelectedTarget] = useState<EntityItem | null>(
     buildInitialTarget(editingLink, editingLinkTitle)
   )
+
+  const { linkTypes, loadingTypes, selectedLinkType, setSelectedLinkType } =
+    useLinkTypes(
+      projectPath,
+      isEditMode,
+      editingLink ? editingLink.linkType : ''
+    )
 
   const search = useEntitySearch(
     projectPath,
@@ -82,27 +80,6 @@ export function useAddLinkModal({
   } = useUpdateLink(projectPath, editingLink, selectedLinkType, onLinkUpdated)
 
   useModalDismiss(modalRef, onClose)
-
-  useEffect(() => {
-    async function loadLinkTypes() {
-      if (!projectPath) return
-      try {
-        const request = create(GetAvailableLinkTypesRequestSchema, {
-          projectPath,
-        })
-        const response = await centyClient.getAvailableLinkTypes(request)
-        setLinkTypes(response.linkTypes)
-        if (!isEditMode && response.linkTypes.length > 0) {
-          setSelectedLinkType(response.linkTypes[0].name)
-        }
-      } catch (err) {
-        console.error('Failed to load link types:', err)
-      } finally {
-        setLoadingTypes(false)
-      }
-    }
-    void loadLinkTypes()
-  }, [projectPath, isEditMode])
 
   return {
     modalRef,
