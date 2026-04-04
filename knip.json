@@ -13,7 +13,8 @@
     "lib/**/*.{ts,tsx}",
     "hooks/**/*.{ts,tsx}",
     "e2e/**/*.{ts,tsx}",
-    "gen/*.ts"
+    "gen/*.ts",
+    "scripts/**/*.js"
   ],
   "ignore": [
     "**/*.spec.ts",
