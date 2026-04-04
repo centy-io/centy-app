@@ -21,6 +21,8 @@ export function GenericItemCreate({
     setStatus,
     customFields,
     setCustomFields,
+    additionalProjects,
+    setAdditionalProjects,
     loading,
     error,
     listUrl,
@@ -69,6 +71,9 @@ export function GenericItemCreate({
       setStatus={setStatus}
       customFields={customFields}
       setCustomFields={setCustomFields}
+      currentProjectPath={projectPath}
+      additionalProjects={additionalProjects}
+      setAdditionalProjects={setAdditionalProjects}
       loading={loading}
       error={error}
       listUrl={listUrl}

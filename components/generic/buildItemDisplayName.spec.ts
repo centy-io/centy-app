@@ -18,6 +18,7 @@ describe('buildItemDisplayName', () => {
       customFields: [],
       icon: '',
       template: '',
+      listed: true,
     }
     expect(buildItemDisplayName(config, 'issues')).toBe('Bug')
   })

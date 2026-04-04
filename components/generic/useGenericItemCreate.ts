@@ -22,6 +22,7 @@ export function useGenericItemCreate(itemType: string) {
   )
   const { title, setTitle, status, setStatus, customFields, setCustomFields } =
     useGenericItemCreateForm(config)
+  const [additionalProjects, setAdditionalProjects] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const displayName = buildDisplayName(itemType, config ? config.name : null)
@@ -36,6 +37,7 @@ export function useGenericItemCreate(itemType: string) {
         title,
         status,
         customFields,
+        additionalProjects,
         displayName,
         setLoading,
         setError,
@@ -50,6 +52,7 @@ export function useGenericItemCreate(itemType: string) {
       title,
       status,
       customFields,
+      additionalProjects,
       displayName,
       router,
       createLink,
@@ -67,6 +70,8 @@ export function useGenericItemCreate(itemType: string) {
     setStatus,
     customFields,
     setCustomFields,
+    additionalProjects,
+    setAdditionalProjects,
     loading,
     error,
     listUrl,

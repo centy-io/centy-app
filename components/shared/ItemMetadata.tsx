@@ -23,6 +23,8 @@ interface ItemMetadataProps {
   customFields?: Record<string, string>
   /** Config entries that define which custom fields to display and in what order. */
   customFieldsConfig?: { name: string }[]
+  /** Project slugs this item belongs to (for org-wide items). */
+  projects?: string[]
   /**
    * Content rendered first inside the metadata strip — useful for
    * item-type-specific leading badges (e.g., "Org Issue #5", "ID: abc").
@@ -39,6 +41,7 @@ export function ItemMetadata({
   updatedAt,
   customFields,
   customFieldsConfig,
+  projects,
   children,
 }: ItemMetadataProps) {
   const resolvedPriorityLabel =
@@ -66,6 +69,12 @@ export function ItemMetadata({
           </span>
         )
       })}
+      {projects && projects.length > 1 && (
+        <span className="item-field">
+          <span className="field-label">Projects:</span>
+          <span className="field-value">{projects.join(', ')}</span>
+        </span>
+      )}
       {createdAt && (
         <span className="item-date">
           Created: {new Date(createdAt).toLocaleString()}
