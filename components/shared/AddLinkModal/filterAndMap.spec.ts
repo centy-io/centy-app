@@ -66,14 +66,14 @@ describe('filterAndMap', () => {
     expect(result.map(r => r.id)).toEqual(['a'])
   })
 
-  it('maps issues with type issue and docs with type doc', () => {
+  it('maps items preserving their itemType as type', () => {
     const items = [
       makeItem('i1', 'Issue One', 'issues', 1),
       makeItem('d1', 'Doc One', 'docs', 0),
     ]
     const result = filterAndMap(items, 'entity', [], 'blocks', '')
-    expect(result[0].type).toBe('issue')
-    expect(result[1].type).toBe('doc')
+    expect(result[0].type).toBe('issues')
+    expect(result[1].type).toBe('docs')
   })
 
   it('includes displayNumber for issues and omits it for items with no number', () => {
