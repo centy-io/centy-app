@@ -35,6 +35,7 @@ const mockItem = {
     deletedAt: '',
     customFields: {},
     tags: [],
+    projects: [],
   },
 }
 

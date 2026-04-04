@@ -13,6 +13,9 @@ interface GenericCreateFormProps {
   setStatus: (v: string) => void
   customFields: Record<string, string>
   setCustomFields: (v: Record<string, string>) => void
+  currentProjectPath: string
+  additionalProjects: string[]
+  setAdditionalProjects: (v: string[]) => void
   loading: boolean
   error: string | null
   listUrl: RouteLiteral
@@ -28,6 +31,9 @@ export function GenericCreateForm({
   setStatus,
   customFields,
   setCustomFields,
+  currentProjectPath,
+  additionalProjects,
+  setAdditionalProjects,
   loading,
   error,
   listUrl,
@@ -59,6 +65,9 @@ export function GenericCreateForm({
           setStatus={setStatus}
           customFields={customFields}
           setCustomFields={setCustomFields}
+          currentProjectPath={currentProjectPath}
+          additionalProjects={additionalProjects}
+          setAdditionalProjects={setAdditionalProjects}
         />
         {error && <DaemonErrorMessage error={error} />}
         <div className="actions">
