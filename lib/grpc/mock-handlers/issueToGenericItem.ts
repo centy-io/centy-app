@@ -10,7 +10,6 @@ export function issueToGenericItem(issue: Issue): GenericItem {
     itemType: 'issues',
     title: issue.title,
     body: issue.description,
-    source: '',
     metadata: {
       $typeName: 'centy.v1.GenericItemMetadata',
       displayNumber: meta?.displayNumber ?? 0,

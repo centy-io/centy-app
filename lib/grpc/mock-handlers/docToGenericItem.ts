@@ -10,7 +10,6 @@ export function docToGenericItem(doc: Doc): GenericItem {
     itemType: 'docs',
     title: doc.title,
     body: doc.content,
-    source: '',
     metadata: {
       $typeName: 'centy.v1.GenericItemMetadata',
       displayNumber: 0,
