@@ -1,4 +1,4 @@
-import { CreateIssue } from '@/components/issues/CreateIssue'
+import { GenericItemCreate } from '@/components/generic/GenericItemCreate'
 
 export const dynamic = 'force-static'
 
@@ -8,5 +8,5 @@ export async function generateStaticParams() {
 }
 
 export default function NewIssuePage() {
-  return <CreateIssue />
+  return <GenericItemCreate itemType="issues" />
 }
