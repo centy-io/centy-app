@@ -72,6 +72,7 @@ describe('AddLinkModal - Link creation', () => {
 
     render(<AddLinkModal {...defaultProps} />)
 
+    fireEvent.focus(screen.getByPlaceholderText('Search by title or number...'))
     await waitFor(() => {
       expect(screen.getByText('#1 - First Issue')).toBeInTheDocument()
     })
@@ -98,6 +99,7 @@ describe('AddLinkModal - Link creation', () => {
 
     render(<AddLinkModal {...defaultProps} />)
 
+    fireEvent.focus(screen.getByPlaceholderText('Search by title or number...'))
     await waitFor(() => {
       expect(screen.getByText('#1 - First Issue')).toBeInTheDocument()
     })
