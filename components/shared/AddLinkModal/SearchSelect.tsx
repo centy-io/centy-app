@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react'
 import type { EntityItem } from './AddLinkModal.types'
-import { SearchResultsList } from './SearchResultsList'
+import { Dropdown } from './SearchSelectDropdown'
 
 interface SearchSelectProps {
   searchQuery: string
@@ -12,6 +12,20 @@ interface SearchSelectProps {
   selectedTarget: EntityItem | null
   setSelectedTarget: (item: EntityItem | null) => void
   getEntityLabel: (item: EntityItem) => string
+}
+
+function ClearButton({ onClear }: { onClear: () => void }) {
+  return (
+    <button
+      className="search-select-clear"
+      type="button"
+      aria-label="Clear selection"
+      onMouseDown={e => void e.preventDefault()}
+      onClick={onClear}
+    >
+      ×
+    </button>
+  )
 }
 
 export function SearchSelect({
@@ -33,9 +47,13 @@ export function SearchSelect({
   }
 
   function handleBlur(e: React.FocusEvent) {
-    const related = e.relatedTarget
-    if (!(related instanceof Node) || !containerRef.current?.contains(related))
-      setIsOpen(false)
+    const { relatedTarget } = e
+    if (
+      relatedTarget instanceof Node &&
+      containerRef.current?.contains(relatedTarget)
+    )
+      return
+    setIsOpen(false)
   }
 
   function handleSelect(item: EntityItem) {
@@ -59,25 +77,17 @@ export function SearchSelect({
           className="link-modal-input search-select-input"
           value={selectedTarget ? getEntityLabel(selectedTarget) : searchQuery}
           onChange={handleInputChange}
-          onFocus={selectedTarget ? undefined : () => void setIsOpen(true)}
+          onFocus={() => {
+            if (!selectedTarget) setIsOpen(true)
+          }}
           placeholder="Search by title or number..."
           readOnly={!!selectedTarget}
         />
-        {selectedTarget && (
-          <button
-            className="search-select-clear"
-            type="button"
-            aria-label="Clear selection"
-            onMouseDown={e => void e.preventDefault()}
-            onClick={handleClear}
-          >
-            ×
-          </button>
-        )}
+        {selectedTarget && <ClearButton onClear={handleClear} />}
       </div>
       {isOpen && (
         <div className="search-select-dropdown">
-          <SearchResultsList
+          <Dropdown
             loadingSearch={loadingSearch}
             searchResults={searchResults}
             getEntityLabel={getEntityLabel}
