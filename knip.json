@@ -24,7 +24,6 @@
     "dist/**",
     "coverage/**",
     "gen/centy/v1/**",
-    "gen/centy_pb.ts",
     "types/**/*.d.ts",
     "__tests__/**"
   ],
