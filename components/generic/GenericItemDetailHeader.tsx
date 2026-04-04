@@ -10,6 +10,7 @@ interface GenericItemDetailHeaderProps {
   onCancelEdit: () => void
   onSave: () => void
   onDeleteRequest: () => void
+  onMove: () => void
 }
 
 export function GenericItemDetailHeader({
@@ -21,6 +22,7 @@ export function GenericItemDetailHeader({
   onCancelEdit,
   onSave,
   onDeleteRequest,
+  onMove,
 }: GenericItemDetailHeaderProps) {
   return (
     <div className="doc-header">
@@ -41,6 +43,9 @@ export function GenericItemDetailHeader({
           <>
             <button onClick={onEdit} className="secondary">
               Edit
+            </button>
+            <button onClick={onMove} className="secondary">
+              Move
             </button>
             <button onClick={onDeleteRequest} className="delete-btn">
               Delete

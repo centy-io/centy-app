@@ -3,8 +3,14 @@ import { create } from '@bufbuild/protobuf'
 import { centyClient } from '@/lib/grpc/client'
 import { MoveItemRequestSchema } from '@/gen/centy_pb'
 
+function resolveItemType(entityType: string): string {
+  if (entityType === 'issue') return 'issues'
+  if (entityType === 'doc') return 'docs'
+  return entityType
+}
+
 export function useMoveAction(
-  entityType: 'issue' | 'doc',
+  entityType: string,
   entityId: string,
   currentProjectPath: string,
   selectedProject: string,
@@ -18,34 +24,20 @@ export function useMoveAction(
     if (!selectedProject) return
     setLoading(true)
     setError(null)
+    const isDoc = entityType === 'doc' || entityType === 'docs'
     try {
-      if (entityType === 'issue') {
-        const request = create(MoveItemRequestSchema, {
-          sourceProjectPath: currentProjectPath,
-          itemType: 'issues',
-          itemId: entityId,
-          targetProjectPath: selectedProject,
-        })
-        const response = await centyClient.moveItem(request)
-        if (response.success) {
-          onMoved(selectedProject, response.item ? response.item.id : undefined)
-        } else {
-          setError(response.error || 'Failed to move issue')
-        }
+      const request = create(MoveItemRequestSchema, {
+        sourceProjectPath: currentProjectPath,
+        itemType: resolveItemType(entityType),
+        itemId: entityId,
+        targetProjectPath: selectedProject,
+        ...(isDoc && newSlug ? { newId: newSlug } : {}),
+      })
+      const response = await centyClient.moveItem(request)
+      if (response.success) {
+        onMoved(selectedProject, response.item ? response.item.id : undefined)
       } else {
-        const request = create(MoveItemRequestSchema, {
-          sourceProjectPath: currentProjectPath,
-          itemType: 'docs',
-          itemId: entityId,
-          targetProjectPath: selectedProject,
-          newId: newSlug || undefined,
-        })
-        const response = await centyClient.moveItem(request)
-        if (response.success) {
-          onMoved(selectedProject, response.item ? response.item.id : undefined)
-        } else {
-          setError(response.error || 'Failed to move document')
-        }
+        setError(response.error || 'Failed to move item')
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to move')

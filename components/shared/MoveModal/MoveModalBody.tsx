@@ -27,7 +27,7 @@ export function MoveModalBody({ props, state }: MoveModalBodyProps) {
           setSelectedProject={state.setSelectedProject}
         />
       </div>
-      {props.entityType === 'doc' && (
+      {(props.entityType === 'doc' || props.entityType === 'docs') && (
         <div className="move-modal-field">
           <label className="move-modal-label">
             New Slug (optional - leave empty to keep current)
@@ -49,7 +49,7 @@ export function MoveModalBody({ props, state }: MoveModalBodyProps) {
       {state.selectedProjectInfo && (
         <div className="move-modal-preview">
           <span className="move-modal-preview-label">
-            This {props.entityType} will be moved to:
+            This item will be moved to:
           </span>
           <span className="move-modal-preview-value">
             {state.selectedProjectInfo.name}

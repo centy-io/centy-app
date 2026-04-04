@@ -3,9 +3,9 @@
 import { ArchivedBanner } from './ArchivedBanner'
 import { DetailBody } from './DetailBody'
 import { GenericItemDetailHeader } from './GenericItemDetailHeader'
+import { GenericItemModals } from './GenericItemModals'
 import { buildItemDisplayName } from './buildItemDisplayName'
 import type { useGenericItemDetailState } from './useGenericItemDetailState'
-import { DeleteConfirm } from '@/components/shared/DeleteConfirm'
 import { CommentThread } from '@/components/comments/CommentThread'
 import type { GenericItem } from '@/gen/centy_pb'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
@@ -24,8 +24,15 @@ export function GenericItemContent({
   itemType,
   projectPath,
 }: ContentProps): React.JSX.Element {
-  const { isEditing, setIsEditing, showDeleteConfirm, setShowDeleteConfirm } =
-    state
+  const {
+    isEditing,
+    setIsEditing,
+    showDeleteConfirm,
+    setShowDeleteConfirm,
+    showMoveModal,
+    setShowMoveModal,
+    handleMoved,
+  } = state
   const {
     listUrl,
     fetch,
@@ -48,6 +55,7 @@ export function GenericItemContent({
         onCancelEdit={() => void setIsEditing(false)}
         onSave={() => void handleSave()}
         onDeleteRequest={() => void setShowDeleteConfirm(true)}
+        onMove={() => void setShowMoveModal(true)}
       />
       {fetch.error && <DaemonErrorMessage error={fetch.error} />}
       {isArchived && (
@@ -56,15 +64,19 @@ export function GenericItemContent({
           onRestore={() => void handleRestore()}
         />
       )}
-      {showDeleteConfirm && (
-        <DeleteConfirm
-          message={`Delete "${item.title || item.id}"?`}
-          deleting={deleting}
-          onCancel={() => void setShowDeleteConfirm(false)}
-          onSoftDelete={() => void handleSoftDelete()}
-          onConfirm={() => void handleDelete()}
-        />
-      )}
+      <GenericItemModals
+        item={item}
+        itemType={itemType}
+        projectPath={projectPath}
+        showDeleteConfirm={showDeleteConfirm}
+        showMoveModal={showMoveModal}
+        deleting={deleting}
+        onCancelDelete={() => void setShowDeleteConfirm(false)}
+        onSoftDelete={() => void handleSoftDelete()}
+        onConfirmDelete={() => void handleDelete()}
+        onCloseMoveModal={() => void setShowMoveModal(false)}
+        onMoved={targetProjectPath => void handleMoved(targetProjectPath)}
+      />
       <ItemContent>
         <DetailBody
           item={item}
