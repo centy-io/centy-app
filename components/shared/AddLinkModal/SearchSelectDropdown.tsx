@@ -1,3 +1,4 @@
+import { getTargetTypeIcon } from '../LinkSection/linkHelpers'
 import type { EntityItem } from './AddLinkModal.types'
 
 interface DropdownProps {
@@ -27,7 +28,7 @@ export function Dropdown({
           onClick={() => void onSelect(item)}
         >
           <span className={`link-type-icon link-type-${item.type}`}>
-            {item.type === 'issue' ? '!' : 'D'}
+            {getTargetTypeIcon(item.type)}
           </span>
           <span className="link-modal-item-label">{getEntityLabel(item)}</span>
         </li>

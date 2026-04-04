@@ -32,6 +32,6 @@ export function filterAndMap(
           ? i.metadata.displayNumber
           : undefined,
       title: i.title,
-      type: i.itemType === 'docs' ? ('doc' as const) : ('issue' as const),
+      type: i.itemType,
     }))
 }
