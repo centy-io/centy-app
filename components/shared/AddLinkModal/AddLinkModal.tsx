@@ -16,8 +16,13 @@ export function AddLinkModal(props: AddLinkModalProps) {
           <h3 className="link-modal-title">Add Link</h3>
           <div className="link-modal-header-actions">
             <InfoButton>
-              Links connect items to show relationships like blocking, fixing,
-              or duplicating.
+              Links connect items to express relationships. Use
+              &quot;blocks&quot; when this item must be resolved first,
+              &quot;fixes&quot; to reference the issue being resolved,
+              &quot;implements&quot; for features tied to a requirement,
+              &quot;duplicates&quot; for identical issues, or
+              &quot;relates-to&quot; for general associations. Both items get
+              the link — the inverse is created automatically.
             </InfoButton>
             <button className="link-modal-close" onClick={props.onClose}>
               x
