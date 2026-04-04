@@ -5,17 +5,15 @@ import type { EntityItem } from './AddLinkModal.types'
 interface SearchResultsListProps {
   loadingSearch: boolean
   searchResults: EntityItem[]
-  selectedTarget: EntityItem | null
   getEntityLabel: (item: EntityItem) => string
-  setSelectedTarget: (item: EntityItem) => void
+  onSelect: (item: EntityItem) => void
 }
 
 export function SearchResultsList({
   loadingSearch,
   searchResults,
-  selectedTarget,
   getEntityLabel,
-  setSelectedTarget,
+  onSelect,
 }: SearchResultsListProps) {
   if (loadingSearch)
     return <div className="link-modal-loading">Searching...</div>
@@ -26,10 +24,9 @@ export function SearchResultsList({
       {searchResults.slice(0, 10).map(item => (
         <li
           key={item.id}
-          className={`link-modal-item ${selectedTarget && selectedTarget.id === item.id ? 'selected' : ''}`}
-          onClick={() => {
-            setSelectedTarget(item)
-          }}
+          className="link-modal-item"
+          onMouseDown={e => void e.preventDefault()}
+          onClick={() => void onSelect(item)}
         >
           <span className={`link-type-icon link-type-${item.type}`}>
             {item.type === 'issue' ? '!' : 'D'}

@@ -97,6 +97,7 @@ describe('AddLinkModal - Display and loading', () => {
   it('should display search results without type filter', async () => {
     render(<AddLinkModal {...defaultProps} />)
 
+    fireEvent.focus(screen.getByPlaceholderText('Search by title or number...'))
     await waitFor(() => {
       expect(screen.getByText('#1 - First Issue')).toBeInTheDocument()
     })

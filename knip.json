@@ -12,7 +12,9 @@
     "components/**/*.{ts,tsx}",
     "lib/**/*.{ts,tsx}",
     "hooks/**/*.{ts,tsx}",
-    "e2e/**/*.{ts,tsx}"
+    "e2e/**/*.{ts,tsx}",
+    "gen/*.ts",
+    "scripts/**/*.js"
   ],
   "ignore": [
     "**/*.spec.ts",
@@ -21,11 +23,11 @@
     "**/*.test.tsx",
     "dist/**",
     "coverage/**",
-    "gen/**",
+    "gen/centy/v1/**",
+    "gen/centy_pb.ts",
     "types/**/*.d.ts",
     "__tests__/**"
   ],
-  "ignoreBinaries": ["serve"],
   "ignoreDependencies": [
     "@bufbuild/protoc-gen-es",
     "baseline-browser-mapping",
@@ -33,8 +35,7 @@
     "@cspell/dict-he",
     "import-in-the-middle",
     "msw",
-    "require-in-the-middle",
-    "serve"
+    "require-in-the-middle"
   ],
   "ignoreExportsUsedInFile": true,
   "ignoreWorkspaces": []
