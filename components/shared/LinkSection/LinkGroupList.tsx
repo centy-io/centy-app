@@ -7,6 +7,7 @@ import type { Link as LinkType } from '@/gen/centy_pb'
 
 interface LinkGroupListProps {
   groupedLinks: Record<string, LinkType[]>
+  linkTitles: Record<string, string>
   editable: boolean
   deletingLinkId: string | null
   buildLinkRoute: (targetItemType: string, targetId: string) => RouteLiteral
@@ -16,6 +17,7 @@ interface LinkGroupListProps {
 
 export function LinkGroupList({
   groupedLinks,
+  linkTitles,
   editable,
   deletingLinkId,
   buildLinkRoute,
@@ -45,7 +47,8 @@ export function LinkGroupList({
                       {getTargetTypeIcon(link.targetItemType)}
                     </span>
                     <span className="link-target-id">
-                      {link.targetId.slice(0, 8)}...
+                      {linkTitles[link.targetId] ||
+                        `${link.targetId.slice(0, 8)}...`}
                     </span>
                   </Link>
                   {editable && (
