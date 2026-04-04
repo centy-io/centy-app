@@ -220,7 +220,8 @@
       "mcp__plugin_playwright_playwright__browser_type",
       "mcp__plugin_playwright_playwright__browser_fill_form",
       "Bash(pnpm eslint:*)",
-      "Bash(pnpm vitest:*)"
+      "Bash(pnpm vitest:*)",
+      "mcp__ide__getDiagnostics"
     ],
     "deny": ["Bash(npm install)", "Bash(gh issue create:*)"]
   },

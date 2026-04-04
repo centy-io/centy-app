@@ -1,8 +1,9 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import type { EntityItem } from './AddLinkModal.types'
-import { SearchResultsList } from './SearchResultsList'
+import { Dropdown, useDropdownOpen } from './SearchSelectDropdown'
+import { SearchSelectClearButton } from './SearchSelectClearButton'
 
 interface SearchSelectProps {
   searchQuery: string
@@ -12,6 +13,7 @@ interface SearchSelectProps {
   selectedTarget: EntityItem | null
   setSelectedTarget: (item: EntityItem | null) => void
   getEntityLabel: (item: EntityItem) => string
+  locked?: boolean
 }
 
 export function SearchSelect({
@@ -22,20 +24,25 @@ export function SearchSelect({
   selectedTarget,
   setSelectedTarget,
   getEntityLabel,
+  locked,
 }: SearchSelectProps) {
-  const [isOpen, setIsOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  const { isOpen, setIsOpen } = useDropdownOpen(loadingSearch, selectedTarget)
 
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (locked === true) return
     if (selectedTarget) setSelectedTarget(null)
     setSearchQuery(e.target.value)
     setIsOpen(true)
   }
 
-  function handleBlur(e: React.FocusEvent) {
-    const related = e.relatedTarget
-    if (!(related instanceof Node) || !containerRef.current?.contains(related))
-      setIsOpen(false)
+  function handleBlur({ relatedTarget }: React.FocusEvent) {
+    if (
+      relatedTarget instanceof Node &&
+      containerRef.current?.contains(relatedTarget)
+    )
+      return
+    setIsOpen(false)
   }
 
   function handleSelect(item: EntityItem) {
@@ -59,25 +66,17 @@ export function SearchSelect({
           className="link-modal-input search-select-input"
           value={selectedTarget ? getEntityLabel(selectedTarget) : searchQuery}
           onChange={handleInputChange}
-          onFocus={selectedTarget ? undefined : () => void setIsOpen(true)}
+          onFocus={() => !selectedTarget && void setIsOpen(true)}
           placeholder="Search by title or number..."
           readOnly={!!selectedTarget}
         />
-        {selectedTarget && (
-          <button
-            className="search-select-clear"
-            type="button"
-            aria-label="Clear selection"
-            onMouseDown={e => void e.preventDefault()}
-            onClick={handleClear}
-          >
-            ×
-          </button>
+        {selectedTarget && locked !== true && (
+          <SearchSelectClearButton onClear={handleClear} />
         )}
       </div>
       {isOpen && (
         <div className="search-select-dropdown">
-          <SearchResultsList
+          <Dropdown
             loadingSearch={loadingSearch}
             searchResults={searchResults}
             getEntityLabel={getEntityLabel}

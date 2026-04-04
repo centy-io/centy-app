@@ -2,12 +2,14 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { fetchEntities } from './fetchEntities'
 import {
   makeListItemsResponse,
+  makeListItemTypesResponse,
   createMockGenericItem,
 } from './AddLinkModal.spec-utils'
 import { centyClient } from '@/lib/grpc/client'
 
 vi.mock('@/lib/grpc/client', () => ({
   centyClient: {
+    listItemTypes: vi.fn(),
     listItems: vi.fn(),
   },
 }))
@@ -15,16 +17,18 @@ vi.mock('@/lib/grpc/client', () => ({
 describe('fetchEntities', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-  })
-
-  it('calls listItems without an itemType filter', async () => {
+    vi.mocked(centyClient.listItemTypes).mockResolvedValue(
+      makeListItemTypesResponse(['issues'])
+    )
     vi.mocked(centyClient.listItems).mockResolvedValue(
       makeListItemsResponse([])
     )
+  })
+
+  it('calls listItemTypes then listItems for each item type', async () => {
     await fetchEntities('/project', 'entity-id', [], 'blocks', '')
+    expect(centyClient.listItemTypes).toHaveBeenCalledOnce()
     expect(centyClient.listItems).toHaveBeenCalledOnce()
-    const call = vi.mocked(centyClient.listItems).mock.calls[0][0]
-    expect(call.itemType).toBe('')
   })
 
   it('returns filtered and mapped entities', async () => {

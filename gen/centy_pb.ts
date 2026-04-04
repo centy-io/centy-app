@@ -58,24 +58,11 @@ export interface Doc {
 
 // --- Issue request/response types (used in legacy mock handlers / fixtures) ---
 
-export interface OrgDocSyncResult {
+interface OrgDocSyncResult {
   $typeName: 'centy.v1.OrgDocSyncResult'
   projectPath: string
   success: boolean
   error: string
-}
-
-export interface CreateIssueRequest {
-  $typeName: 'centy.v1.CreateIssueRequest'
-  projectPath: string
-  title: string
-  description: string
-  priority: number
-  status: string
-  customFields: { [key: string]: string }
-  template: string
-  draft: boolean
-  isOrgIssue: boolean
 }
 
 export interface CreateIssueResponse {
@@ -89,40 +76,6 @@ export interface CreateIssueResponse {
   manifest?: Manifest
   orgDisplayNumber: number
   syncResults: OrgDocSyncResult[]
-}
-
-export interface UpdateIssueRequest {
-  $typeName: 'centy.v1.UpdateIssueRequest'
-  projectPath: string
-  issueId: string
-  title: string
-  description: string
-  status: string
-  priority: number
-  customFields: { [key: string]: string }
-  draft?: boolean
-}
-
-export interface UpdateIssueResponse {
-  $typeName: 'centy.v1.UpdateIssueResponse'
-  success: boolean
-  error: string
-  issue?: Issue
-  manifest?: Manifest
-  syncResults: OrgDocSyncResult[]
-}
-
-export interface DeleteIssueRequest {
-  $typeName: 'centy.v1.DeleteIssueRequest'
-  projectPath: string
-  issueId: string
-}
-
-export interface DeleteIssueResponse {
-  $typeName: 'centy.v1.DeleteIssueResponse'
-  success: boolean
-  error: string
-  manifest?: Manifest
 }
 
 export interface ListIssuesRequest {
@@ -148,42 +101,13 @@ export interface GetIssueRequest {
   issueId: string
 }
 
-export interface GetIssueResponse {
-  $typeName: 'centy.v1.GetIssueResponse'
-  success: boolean
-  error: string
-  issue?: Issue
-}
-
 export interface GetIssueByDisplayNumberRequest {
   $typeName: 'centy.v1.GetIssueByDisplayNumberRequest'
   projectPath: string
   displayNumber: number
 }
 
-export interface GetNextIssueNumberRequest {
-  $typeName: 'centy.v1.GetNextIssueNumberRequest'
-  projectPath: string
-}
-
-export interface GetNextIssueNumberResponse {
-  $typeName: 'centy.v1.GetNextIssueNumberResponse'
-  issueNumber: string
-  success: boolean
-  error: string
-}
-
 // --- Doc request/response types ---
-
-export interface CreateDocRequest {
-  $typeName: 'centy.v1.CreateDocRequest'
-  projectPath: string
-  title: string
-  content: string
-  slug: string
-  template: string
-  isOrgDoc: boolean
-}
 
 export interface CreateDocResponse {
   $typeName: 'centy.v1.CreateDocResponse'
@@ -195,20 +119,3 @@ export interface CreateDocResponse {
   syncResults: OrgDocSyncResult[]
 }
 
-export interface UpdateDocRequest {
-  $typeName: 'centy.v1.UpdateDocRequest'
-  projectPath: string
-  slug: string
-  title: string
-  content: string
-  newSlug: string
-}
-
-export interface UpdateDocResponse {
-  $typeName: 'centy.v1.UpdateDocResponse'
-  success: boolean
-  error: string
-  doc?: Doc
-  manifest?: Manifest
-  syncResults: OrgDocSyncResult[]
-}

@@ -41,6 +41,32 @@ export const createMockGenericItem = (overrides: {
     $unknown: undefined,
   }) as GenericItem
 
+export const makeListItemTypesResponse = (plurals?: string[]) => {
+  const resolvedPlurals = plurals ?? ['issues', 'docs']
+  return {
+    success: true,
+    error: '',
+    itemTypes: resolvedPlurals.map(plural => ({
+      name: plural,
+      plural,
+      identifier: 'id',
+      statuses: [],
+      defaultStatus: '',
+      priorityLevels: 0,
+      customFields: [],
+      icon: '',
+      template: '',
+      listed: true,
+      features: undefined,
+      $typeName: 'centy.v1.ItemTypeConfigProto' as const,
+      $unknown: undefined,
+    })),
+    totalCount: resolvedPlurals.length,
+    $typeName: 'centy.v1.ListItemTypesResponse' as const,
+    $unknown: undefined,
+  }
+}
+
 export const makeListItemsResponse = (items: GenericItem[]) => ({
   items,
   totalCount: items.length,
