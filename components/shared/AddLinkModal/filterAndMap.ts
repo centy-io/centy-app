@@ -32,6 +32,6 @@ export function filterAndMap(
           ? i.metadata.displayNumber
           : undefined,
       title: i.title,
-      type: i.itemType,
+      type: i.itemType.endsWith('s') ? i.itemType.slice(0, -1) : i.itemType,
     }))
 }

@@ -12,6 +12,7 @@ interface SearchSelectProps {
   selectedTarget: EntityItem | null
   setSelectedTarget: (item: EntityItem | null) => void
   getEntityLabel: (item: EntityItem) => string
+  locked?: boolean
 }
 
 function ClearButton({ onClear }: { onClear: () => void }) {
@@ -36,11 +37,14 @@ export function SearchSelect({
   selectedTarget,
   setSelectedTarget,
   getEntityLabel,
+  locked,
 }: SearchSelectProps) {
+  const isLocked = locked === true
   const [isOpen, setIsOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (isLocked) return
     if (selectedTarget) setSelectedTarget(null)
     setSearchQuery(e.target.value)
     setIsOpen(true)
@@ -83,7 +87,7 @@ export function SearchSelect({
           placeholder="Search by title or number..."
           readOnly={!!selectedTarget}
         />
-        {selectedTarget && <ClearButton onClear={handleClear} />}
+        {selectedTarget && !isLocked && <ClearButton onClear={handleClear} />}
       </div>
       {isOpen && (
         <div className="search-select-dropdown">
