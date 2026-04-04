@@ -1,8 +1,9 @@
 'use client'
 
-import { useRef, useState, useEffect } from 'react'
+import { useRef } from 'react'
 import type { EntityItem } from './AddLinkModal.types'
-import { Dropdown } from './SearchSelectDropdown'
+import { Dropdown, useDropdownOpen } from './SearchSelectDropdown'
+import { SearchSelectClearButton } from './SearchSelectClearButton'
 
 interface SearchSelectProps {
   searchQuery: string
@@ -13,34 +14,6 @@ interface SearchSelectProps {
   setSelectedTarget: (item: EntityItem | null) => void
   getEntityLabel: (item: EntityItem) => string
   locked?: boolean
-}
-
-function ClearButton({ onClear }: { onClear: () => void }) {
-  return (
-    <button
-      className="search-select-clear"
-      type="button"
-      aria-label="Clear selection"
-      onMouseDown={e => void e.preventDefault()}
-      onClick={onClear}
-    >
-      ×
-    </button>
-  )
-}
-
-function useDropdownOpen(
-  loadingSearch: boolean,
-  selectedTarget: EntityItem | null
-) {
-  const [isOpen, setIsOpen] = useState(false)
-  const prevLoadingRef = useRef(false)
-  useEffect(() => {
-    if (prevLoadingRef.current && !loadingSearch && !selectedTarget)
-      setIsOpen(true)
-    prevLoadingRef.current = loadingSearch
-  }, [loadingSearch, selectedTarget])
-  return { isOpen, setIsOpen }
 }
 
 export function SearchSelect({
@@ -98,7 +71,7 @@ export function SearchSelect({
           readOnly={!!selectedTarget}
         />
         {selectedTarget && locked !== true && (
-          <ClearButton onClear={handleClear} />
+          <SearchSelectClearButton onClear={handleClear} />
         )}
       </div>
       {isOpen && (
