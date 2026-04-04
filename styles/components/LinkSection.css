@@ -201,8 +201,6 @@
   box-shadow: var(--shadow-xl);
   width: 100%;
   max-width: 500px;
-  max-height: 90vh;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
@@ -240,7 +238,6 @@
 
 .link-modal-body {
   padding: var(--space-4);
-  overflow-y: auto;
   flex: 1;
 }
 
