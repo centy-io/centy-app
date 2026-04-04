@@ -6,4 +6,7 @@ export interface AddLinkModalProps {
   existingLinks: LinkType[]
   onClose: () => void
   onLinkCreated: () => void
+  editingLink?: LinkType
+  editingLinkTitle?: string
+  onLinkUpdated?: () => void
 }

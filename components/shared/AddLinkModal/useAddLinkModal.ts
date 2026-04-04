@@ -1,28 +1,32 @@
-import { useState, useEffect, useRef } from 'react'
-import { create } from '@bufbuild/protobuf'
+import { useState, useRef } from 'react'
 import type { AddLinkModalProps, EntityItem } from './AddLinkModal.types'
 import { useEntitySearch } from './useEntitySearch'
 import { useModalDismiss } from './useModalDismiss'
 import { useCreateLink } from './useCreateLink'
+import { useUpdateLink } from './useUpdateLink'
+import { useLinkTypes } from './useLinkTypes'
+import type { LinkTypeInfo } from '@/gen/centy_pb'
 import { usePathContext } from '@/components/providers/PathContextProvider'
-import {
-  GetAvailableLinkTypesRequestSchema,
-  type LinkTypeInfo,
-} from '@/gen/centy_pb'
-import { centyClient } from '@/lib/grpc/client'
 
-function getInverseLinkTypeName(
-  _linkTypes: LinkTypeInfo[],
-  linkType: string
-): string {
+function getInverseLinkTypeName(_: LinkTypeInfo[], linkType: string): string {
   return linkType
 }
 
 function getEntityLabel(item: EntityItem): string {
-  if (item.displayNumber) {
-    return `#${item.displayNumber} - ${item.title}`
-  }
+  if (item.displayNumber) return `#${item.displayNumber} - ${item.title}`
   return `${item.id} - ${item.title}`
+}
+
+function buildInitialTarget(
+  editingLink: AddLinkModalProps['editingLink'],
+  title: string | undefined
+): EntityItem | null {
+  if (!editingLink) return null
+  return {
+    id: editingLink.targetId,
+    type: editingLink.targetItemType,
+    title: title ?? editingLink.targetId,
+  }
 }
 
 export function useAddLinkModal({
@@ -31,23 +35,34 @@ export function useAddLinkModal({
   existingLinks,
   onClose,
   onLinkCreated,
+  editingLink,
+  editingLinkTitle,
+  onLinkUpdated,
 }: AddLinkModalProps) {
+  const isEditMode = !!editingLink
   const { projectPath } = usePathContext()
   const modalRef = useRef<HTMLDivElement>(null)
+  const [selectedLinkType, setSelectedLinkType] = useState(
+    editingLink?.linkType ?? ''
+  )
+  const [selectedTarget, setSelectedTarget] = useState<EntityItem | null>(
+    buildInitialTarget(editingLink, editingLinkTitle)
+  )
 
-  const [linkTypes, setLinkTypes] = useState<LinkTypeInfo[]>([])
-  const [selectedLinkType, setSelectedLinkType] = useState('')
-  const [selectedTarget, setSelectedTarget] = useState<EntityItem | null>(null)
-  const [loadingTypes, setLoadingTypes] = useState(true)
-
+  const { linkTypes, loadingTypes } = useLinkTypes(
+    isEditMode ? undefined : setSelectedLinkType
+  )
   const search = useEntitySearch(
     projectPath,
     entityId,
     existingLinks,
     selectedLinkType
   )
-
-  const { loading, error, handleCreateLink } = useCreateLink(
+  const {
+    loading: createLoading,
+    error: createError,
+    handleCreateLink,
+  } = useCreateLink(
     projectPath,
     entityId,
     entityType,
@@ -55,29 +70,13 @@ export function useAddLinkModal({
     selectedLinkType,
     onLinkCreated
   )
+  const {
+    loading: updateLoading,
+    error: updateError,
+    handleUpdateLink,
+  } = useUpdateLink(projectPath, editingLink, selectedLinkType, onLinkUpdated)
 
   useModalDismiss(modalRef, onClose)
-
-  useEffect(() => {
-    async function loadLinkTypes() {
-      if (!projectPath) return
-      try {
-        const request = create(GetAvailableLinkTypesRequestSchema, {
-          projectPath,
-        })
-        const response = await centyClient.getAvailableLinkTypes(request)
-        setLinkTypes(response.linkTypes)
-        if (response.linkTypes.length > 0) {
-          setSelectedLinkType(response.linkTypes[0].name)
-        }
-      } catch (err) {
-        console.error('Failed to load link types:', err)
-      } finally {
-        setLoadingTypes(false)
-      }
-    }
-    void loadLinkTypes()
-  }, [projectPath])
 
   return {
     modalRef,
@@ -86,12 +85,13 @@ export function useAddLinkModal({
     setSelectedLinkType,
     selectedTarget,
     setSelectedTarget,
-    loading,
+    loading: isEditMode ? updateLoading : createLoading,
     loadingTypes,
-    error,
-    handleCreateLink,
-    getInverseLinkType: (linkType: string) =>
-      getInverseLinkTypeName(linkTypes, linkType),
+    error: isEditMode ? updateError : createError,
+    isEditMode,
+    originalLinkType: editingLink?.linkType,
+    handleCreateLink: isEditMode ? handleUpdateLink : handleCreateLink,
+    getInverseLinkType: (lt: string) => getInverseLinkTypeName(linkTypes, lt),
     getEntityLabel,
     entityType,
     ...search,

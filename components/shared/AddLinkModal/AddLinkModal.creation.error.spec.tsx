@@ -31,10 +31,9 @@ const defaultProps = {
   onLinkCreated: vi.fn(),
 }
 
-function setupAddLinkModalMocks() {
+function setupMocks() {
   vi.clearAllMocks()
   mockUsePathContext.mockReturnValue({ projectPath: '/test/project' })
-
   vi.mocked(centyClient.getAvailableLinkTypes).mockResolvedValue({
     linkTypes: [
       createMockLinkTypeInfo('blocks', 'This issue blocks another'),
@@ -43,11 +42,9 @@ function setupAddLinkModalMocks() {
     $typeName: 'centy.v1.GetAvailableLinkTypesResponse',
     $unknown: undefined,
   })
-
   vi.mocked(centyClient.listItemTypes).mockResolvedValue(
     makeListItemTypesResponse(['issues'])
   )
-
   vi.mocked(centyClient.listItems).mockResolvedValue(
     makeListItemsResponse([
       createMockGenericItem({
@@ -64,51 +61,29 @@ function setupAddLinkModalMocks() {
   )
 }
 
-describe('AddLinkModal - Search and filtering', () => {
-  beforeEach(setupAddLinkModalMocks)
+describe('AddLinkModal - Link creation error', () => {
+  beforeEach(setupMocks)
 
-  it('should filter search results based on search query', async () => {
-    render(<AddLinkModal {...defaultProps} />)
-
-    const searchInput = screen.getByPlaceholderText(
-      'Search by title or number...'
-    )
-    fireEvent.focus(searchInput)
-    await waitFor(() => {
-      expect(screen.getByText('#1 - First Issue')).toBeInTheDocument()
-      expect(screen.getByText('#2 - Second Issue')).toBeInTheDocument()
+  it('should show error when link creation fails', async () => {
+    vi.mocked(centyClient.createLink).mockResolvedValue({
+      success: false,
+      error: 'Link already exists',
+      $typeName: 'centy.v1.CreateLinkResponse',
+      $unknown: undefined,
     })
-
-    fireEvent.change(searchInput, { target: { value: 'First' } })
-
-    await waitFor(() => {
-      expect(screen.getByText('#1 - First Issue')).toBeInTheDocument()
-      expect(screen.queryByText('#2 - Second Issue')).not.toBeInTheDocument()
-    })
-  })
-
-  it('should exclude self from search results', async () => {
-    vi.mocked(centyClient.listItems).mockResolvedValue(
-      makeListItemsResponse([
-        createMockGenericItem({
-          id: 'entity-123',
-          displayNumber: 1,
-          title: 'Self Issue',
-        }),
-        createMockGenericItem({
-          id: 'other-issue',
-          displayNumber: 2,
-          title: 'Other Issue',
-        }),
-      ])
-    )
 
     render(<AddLinkModal {...defaultProps} />)
 
     fireEvent.focus(screen.getByPlaceholderText('Search by title or number...'))
     await waitFor(() => {
-      expect(screen.queryByText('#1 - Self Issue')).not.toBeInTheDocument()
-      expect(screen.getByText('#2 - Other Issue')).toBeInTheDocument()
+      expect(screen.getByText('#1 - First Issue')).toBeInTheDocument()
+    })
+
+    fireEvent.click(screen.getByText('#1 - First Issue'))
+    fireEvent.click(screen.getByText('Create Link'))
+
+    await waitFor(() => {
+      expect(screen.getByText('Link already exists')).toBeInTheDocument()
     })
   })
 })
