@@ -23,6 +23,7 @@ export function docToGenericItem(doc: Doc): GenericItem {
         org_slug: meta?.orgSlug ?? '',
       },
       tags: [],
+      projects: [],
     },
   }
 }
