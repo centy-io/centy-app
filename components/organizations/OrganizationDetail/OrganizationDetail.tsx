@@ -2,14 +2,13 @@
 
 import Link from 'next/link'
 import { route } from 'nextjs-routes'
-import type { OrganizationDetailProps } from './OrganizationDetail.types'
 import { useOrganizationDetail } from './useOrganizationDetail'
 import { OrganizationDetailView } from './OrganizationDetailView'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
 
-export function OrganizationDetail({ orgSlug }: OrganizationDetailProps) {
-  const state = useOrganizationDetail(orgSlug)
+export function OrganizationDetail() {
+  const state = useOrganizationDetail()
 
   useSaveShortcut({
     onSave: state.handleSave,
