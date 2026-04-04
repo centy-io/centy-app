@@ -1,9 +1,43 @@
-/* Two-column detail layout */
+/* Two-column detail layout with draggable resize handle */
 .detail-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 280px;
-  gap: 28px;
+  grid-template-columns: minmax(0, 1fr) 8px var(
+      --detail-layout-sidebar-width,
+      280px
+    );
+  column-gap: 10px;
   align-items: start;
+}
+
+.detail-layout-resize-handle {
+  cursor: col-resize;
+  align-self: stretch;
+  border-radius: 4px;
+  position: relative;
+  transition: background-color 150ms;
+}
+
+/* Wider invisible hit area */
+.detail-layout-resize-handle::before {
+  content: '';
+  position: absolute;
+  inset: 0 -8px;
+}
+
+/* Visible indicator on hover / drag */
+.detail-layout-resize-handle::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  background-color: transparent;
+  transition: background-color 150ms;
+}
+
+.detail-layout-resize-handle:hover::after,
+.detail-layout-resize-handle.is-dragging::after {
+  background-color: var(--color-primary);
+  opacity: 0.4;
 }
 
 .detail-layout-sidebar {
@@ -46,6 +80,10 @@
 @media (max-width: 900px) {
   .detail-layout {
     grid-template-columns: 1fr;
+  }
+
+  .detail-layout-resize-handle {
+    display: none;
   }
 
   .detail-layout-sidebar {
