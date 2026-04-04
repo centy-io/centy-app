@@ -47,7 +47,7 @@ function setupAddLinkModalMocks() {
   })
 
   vi.mocked(centyClient.listItemTypes).mockResolvedValue(
-    makeListItemTypesResponse()
+    makeListItemTypesResponse(['issues'])
   )
 
   vi.mocked(centyClient.listItems).mockResolvedValue(
