@@ -1,19 +1,20 @@
-import { getTargetTypeIcon } from '../LinkSection/linkHelpers'
+'use client'
+
 import type { EntityItem } from './AddLinkModal.types'
 
-interface DropdownProps {
+interface SearchResultsListProps {
   loadingSearch: boolean
   searchResults: EntityItem[]
   getEntityLabel: (item: EntityItem) => string
   onSelect: (item: EntityItem) => void
 }
 
-export function Dropdown({
+export function SearchResultsList({
   loadingSearch,
   searchResults,
   getEntityLabel,
   onSelect,
-}: DropdownProps) {
+}: SearchResultsListProps) {
   if (loadingSearch)
     return <div className="link-modal-loading">Searching...</div>
   if (searchResults.length === 0)
@@ -28,7 +29,7 @@ export function Dropdown({
           onClick={() => void onSelect(item)}
         >
           <span className={`link-type-icon link-type-${item.type}`}>
-            {getTargetTypeIcon(item.type)}
+            {item.type === 'issue' ? '!' : 'D'}
           </span>
           <span className="link-modal-item-label">{getEntityLabel(item)}</span>
         </li>
