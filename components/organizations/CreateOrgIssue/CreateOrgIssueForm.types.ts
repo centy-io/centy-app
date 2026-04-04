@@ -1,5 +1,4 @@
 export interface CreateOrgIssueFormProps {
-  orgSlug: string
   title: string
   setTitle: (v: string) => void
   description: string
