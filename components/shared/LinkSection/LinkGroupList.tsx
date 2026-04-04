@@ -11,6 +11,7 @@ interface LinkGroupListProps {
   deletingLinkId: string | null
   buildLinkRoute: (targetItemType: string, targetId: string) => RouteLiteral
   onDeleteLink: (link: LinkType) => void
+  onEditLink: (link: LinkType) => void
 }
 
 export function LinkGroupList({
@@ -19,6 +20,7 @@ export function LinkGroupList({
   deletingLinkId,
   buildLinkRoute,
   onDeleteLink,
+  onEditLink,
 }: LinkGroupListProps) {
   return (
     <div className="link-groups">
@@ -47,16 +49,28 @@ export function LinkGroupList({
                     </span>
                   </Link>
                   {editable && (
-                    <button
-                      className="link-delete-btn"
-                      onClick={() => {
-                        onDeleteLink(link)
-                      }}
-                      disabled={isDeleting}
-                      title="Remove link"
-                    >
-                      {isDeleting ? '...' : 'x'}
-                    </button>
+                    <>
+                      <button
+                        className="link-edit-btn"
+                        onClick={() => {
+                          onEditLink(link)
+                        }}
+                        disabled={isDeleting}
+                        title="Edit link"
+                      >
+                        ✎
+                      </button>
+                      <button
+                        className="link-delete-btn"
+                        onClick={() => {
+                          onDeleteLink(link)
+                        }}
+                        disabled={isDeleting}
+                        title="Remove link"
+                      >
+                        {isDeleting ? '...' : 'x'}
+                      </button>
+                    </>
                   )}
                 </li>
               )
