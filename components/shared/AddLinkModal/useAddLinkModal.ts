@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useState, useRef } from 'react'
 import type { AddLinkModalProps, EntityItem } from './AddLinkModal.types'
 import { useEntitySearch } from './useEntitySearch'
 import { useModalDismiss } from './useModalDismiss'
@@ -13,21 +13,19 @@ function getInverseLinkTypeName(_: LinkTypeInfo[], linkType: string): string {
 }
 
 function getEntityLabel(item: EntityItem): string {
-  if (item.displayNumber) {
-    return `#${item.displayNumber} - ${item.title}`
-  }
+  if (item.displayNumber) return `#${item.displayNumber} - ${item.title}`
   return `${item.id} - ${item.title}`
 }
 
 function buildInitialTarget(
   editingLink: AddLinkModalProps['editingLink'],
-  editingLinkTitle: string | undefined
+  title: string | undefined
 ): EntityItem | null {
   if (!editingLink) return null
   return {
     id: editingLink.targetId,
     type: editingLink.targetItemType,
-    title: editingLinkTitle ?? editingLink.targetId,
+    title: title ?? editingLink.targetId,
   }
 }
 
@@ -44,17 +42,16 @@ export function useAddLinkModal({
   const isEditMode = !!editingLink
   const { projectPath } = usePathContext()
   const modalRef = useRef<HTMLDivElement>(null)
+  const [selectedLinkType, setSelectedLinkType] = useState(
+    editingLink?.linkType ?? ''
+  )
   const [selectedTarget, setSelectedTarget] = useState<EntityItem | null>(
     buildInitialTarget(editingLink, editingLinkTitle)
   )
 
-  const { linkTypes, loadingTypes, selectedLinkType, setSelectedLinkType } =
-    useLinkTypes(
-      projectPath,
-      isEditMode,
-      editingLink ? editingLink.linkType : ''
-    )
-
+  const { linkTypes, loadingTypes } = useLinkTypes(
+    isEditMode ? undefined : setSelectedLinkType
+  )
   const search = useEntitySearch(
     projectPath,
     entityId,
@@ -94,8 +91,7 @@ export function useAddLinkModal({
     isEditMode,
     originalLinkType: editingLink?.linkType,
     handleCreateLink: isEditMode ? handleUpdateLink : handleCreateLink,
-    getInverseLinkType: (linkType: string) =>
-      getInverseLinkTypeName(linkTypes, linkType),
+    getInverseLinkType: (lt: string) => getInverseLinkTypeName(linkTypes, lt),
     getEntityLabel,
     entityType,
     ...search,

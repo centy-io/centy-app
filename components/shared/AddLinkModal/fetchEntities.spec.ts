@@ -20,13 +20,14 @@ describe('fetchEntities', () => {
     vi.mocked(centyClient.listItemTypes).mockResolvedValue(
       makeListItemTypesResponse(['issues'])
     )
-  })
-
-  it('calls listItems for each item type', async () => {
     vi.mocked(centyClient.listItems).mockResolvedValue(
       makeListItemsResponse([])
     )
+  })
+
+  it('calls listItemTypes then listItems for each item type', async () => {
     await fetchEntities('/project', 'entity-id', [], 'blocks', '')
+    expect(centyClient.listItemTypes).toHaveBeenCalledOnce()
     expect(centyClient.listItems).toHaveBeenCalledOnce()
   })
 

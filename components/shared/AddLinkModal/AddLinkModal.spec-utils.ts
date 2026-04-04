@@ -67,13 +67,6 @@ export const makeListItemTypesResponse = (plurals?: string[]) => {
   }
 }
 
-export const makeCreateLinkResponse = (success: boolean, error?: string) => ({
-  success,
-  error: error ?? '',
-  $typeName: 'centy.v1.CreateLinkResponse' as const,
-  $unknown: undefined,
-})
-
 export const makeListItemsResponse = (items: GenericItem[]) => ({
   items,
   totalCount: items.length,

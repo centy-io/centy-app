@@ -1,7 +1,0 @@
-export { moveIssue } from './moveIssue'
-export { duplicateIssue } from './duplicateIssue'
-export { moveDoc } from './moveDoc'
-export { duplicateDoc } from './duplicateDoc'
-export { advancedSearch } from './advancedSearch'
-export { getIssuesByUuid } from './getIssuesByUuid'
-export { getDocsBySlug } from './getDocsBySlug'

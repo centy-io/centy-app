@@ -1,3 +1,4 @@
+import { useState, useRef, useEffect } from 'react'
 import { getTargetTypeIcon } from '../LinkSection/linkHelpers'
 import type { EntityItem } from './AddLinkModal.types'
 
@@ -6,6 +7,20 @@ interface DropdownProps {
   searchResults: EntityItem[]
   getEntityLabel: (item: EntityItem) => string
   onSelect: (item: EntityItem) => void
+}
+
+export function useDropdownOpen(
+  loadingSearch: boolean,
+  selectedTarget: EntityItem | null
+) {
+  const [isOpen, setIsOpen] = useState(false)
+  const prevLoadingRef = useRef(false)
+  useEffect(() => {
+    if (prevLoadingRef.current && !loadingSearch && !selectedTarget)
+      setIsOpen(true)
+    prevLoadingRef.current = loadingSearch
+  }, [loadingSearch, selectedTarget])
+  return { isOpen, setIsOpen }
 }
 
 export function Dropdown({
