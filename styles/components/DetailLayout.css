@@ -44,6 +44,7 @@
   position: sticky;
   top: 24px;
   max-height: calc(100vh - 48px);
+  overflow-x: hidden;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
