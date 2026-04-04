@@ -91,8 +91,8 @@ describe('LinkSection - Target type icons', () => {
     render(<LinkSection entityId="entity-1" entityType="issue" />)
 
     await waitFor(() => {
-      expect(screen.getByText('!')).toBeInTheDocument()
-      expect(screen.getByText('D')).toBeInTheDocument()
+      expect(screen.getByText('issue')).toBeInTheDocument()
+      expect(screen.getByText('doc')).toBeInTheDocument()
     })
   })
 })
