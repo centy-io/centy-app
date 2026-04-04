@@ -26,6 +26,7 @@ export function issueToGenericItem(issue: Issue): GenericItem {
         org_display_number: String(meta?.orgDisplayNumber ?? 0),
       },
       tags: [],
+      projects: [],
     },
   }
 }
