@@ -437,6 +437,59 @@
   color: var(--color-primary);
 }
 
+/* Search Select Combobox */
+.search-select {
+  position: relative;
+}
+
+.search-select-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-select-input {
+  width: 100%;
+  padding-right: var(--space-8);
+}
+
+.search-select-clear {
+  position: absolute;
+  right: var(--space-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--color-gray-400);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  padding: 0;
+  transition: color var(--transition-fast);
+}
+
+.search-select-clear:hover {
+  color: var(--color-gray-700);
+}
+
+.search-select-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
 .link-modal-footer {
   display: flex;
   justify-content: flex-end;
