@@ -1,2 +1,1 @@
-export { filterAndMapIssues } from './filterAndMapIssues'
-export { filterAndMapDocs } from './filterAndMapDocs'
+export { filterAndMap } from './filterAndMap'
