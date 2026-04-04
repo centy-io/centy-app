@@ -58,7 +58,7 @@ export interface Doc {
 
 // --- Issue request/response types (used in legacy mock handlers / fixtures) ---
 
-export interface OrgDocSyncResult {
+interface OrgDocSyncResult {
   $typeName: 'centy.v1.OrgDocSyncResult'
   projectPath: string
   success: boolean
