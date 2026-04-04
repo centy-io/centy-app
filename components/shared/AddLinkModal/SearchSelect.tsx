@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import type { EntityItem } from './AddLinkModal.types'
 import { Dropdown } from './SearchSelectDropdown'
 
@@ -29,6 +29,20 @@ function ClearButton({ onClear }: { onClear: () => void }) {
   )
 }
 
+function useDropdownOpen(
+  loadingSearch: boolean,
+  selectedTarget: EntityItem | null
+) {
+  const [isOpen, setIsOpen] = useState(false)
+  const prevLoadingRef = useRef(false)
+  useEffect(() => {
+    if (prevLoadingRef.current && !loadingSearch && !selectedTarget)
+      setIsOpen(true)
+    prevLoadingRef.current = loadingSearch
+  }, [loadingSearch, selectedTarget])
+  return { isOpen, setIsOpen }
+}
+
 export function SearchSelect({
   searchQuery,
   setSearchQuery,
@@ -39,19 +53,17 @@ export function SearchSelect({
   getEntityLabel,
   locked,
 }: SearchSelectProps) {
-  const isLocked = locked === true
-  const [isOpen, setIsOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  const { isOpen, setIsOpen } = useDropdownOpen(loadingSearch, selectedTarget)
 
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
-    if (isLocked) return
+    if (locked === true) return
     if (selectedTarget) setSelectedTarget(null)
     setSearchQuery(e.target.value)
     setIsOpen(true)
   }
 
-  function handleBlur(e: React.FocusEvent) {
-    const { relatedTarget } = e
+  function handleBlur({ relatedTarget }: React.FocusEvent) {
     if (
       relatedTarget instanceof Node &&
       containerRef.current?.contains(relatedTarget)
@@ -81,13 +93,13 @@ export function SearchSelect({
           className="link-modal-input search-select-input"
           value={selectedTarget ? getEntityLabel(selectedTarget) : searchQuery}
           onChange={handleInputChange}
-          onFocus={() => {
-            if (!selectedTarget) setIsOpen(true)
-          }}
+          onFocus={() => !selectedTarget && void setIsOpen(true)}
           placeholder="Search by title or number..."
           readOnly={!!selectedTarget}
         />
-        {selectedTarget && !isLocked && <ClearButton onClear={handleClear} />}
+        {selectedTarget && locked !== true && (
+          <ClearButton onClear={handleClear} />
+        )}
       </div>
       {isOpen && (
         <div className="search-select-dropdown">
