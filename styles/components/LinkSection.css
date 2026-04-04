@@ -135,6 +135,29 @@
   font-size: 0.75rem;
 }
 
+.link-edit-btn {
+  padding: var(--space-1);
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--color-gray-400);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  line-height: 1;
+}
+
+.link-edit-btn:hover {
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+}
+
+.link-edit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .link-delete-btn {
   padding: var(--space-1);
   font-size: 0.625rem;

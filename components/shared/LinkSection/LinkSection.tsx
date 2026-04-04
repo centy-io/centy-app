@@ -1,11 +1,11 @@
 'use client'
 
 import { type ReactNode } from 'react'
-import { AddLinkModal } from '../AddLinkModal/index'
 import type { LinkSectionProps } from './LinkSection.types'
 import { useLinkSection } from './useLinkSection'
 import { groupLinksByType } from './linkHelpers'
 import { LinkGroupList } from './LinkGroupList'
+import { LinkSectionModals } from './LinkSectionModals'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 export function LinkSection({
@@ -16,7 +16,6 @@ export function LinkSection({
   const resolvedEditable = editable ?? true
   const state = useLinkSection(entityId, entityType)
   const groupedLinks = groupLinksByType(state.links)
-
   if (state.loading) {
     return (
       <div className="link-section">
@@ -25,7 +24,6 @@ export function LinkSection({
       </div>
     )
   }
-
   return (
     <div className="link-section">
       <div className="link-section-header">
@@ -33,23 +31,19 @@ export function LinkSection({
         {resolvedEditable && (
           <button
             className="link-add-btn"
-            onClick={() => {
-              state.setShowAddModal(true)
-            }}
+            onClick={() => void state.setShowAddModal(true)}
             title="Add link"
           >
             + Add Link
           </button>
         )}
       </div>
-
       {state.error && (
         <DaemonErrorMessage
           error={state.error}
           className="link-section-error"
         />
       )}
-
       {state.links.length === 0 ? (
         <p className="link-section-empty">No linked items</p>
       ) : (
@@ -58,23 +52,15 @@ export function LinkSection({
           editable={resolvedEditable}
           deletingLinkId={state.deletingLinkId}
           buildLinkRoute={state.buildLinkRoute}
-          onDeleteLink={link => {
-            void state.handleDeleteLink(link)
-          }}
+          onDeleteLink={link => void state.handleDeleteLink(link)}
+          onEditLink={state.setEditingLink}
         />
       )}
-
-      {state.showAddModal && (
-        <AddLinkModal
-          entityId={entityId}
-          entityType={entityType}
-          existingLinks={state.links}
-          onClose={() => {
-            state.setShowAddModal(false)
-          }}
-          onLinkCreated={state.handleLinkCreated}
-        />
-      )}
+      <LinkSectionModals
+        state={state}
+        entityId={entityId}
+        entityType={entityType}
+      />
     </div>
   )
 }
