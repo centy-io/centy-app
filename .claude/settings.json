@@ -213,7 +213,10 @@
       "mcp__centy__centy_v1_CentyDaemon_GetOrganization",
       "Bash(pnpm lint:*)",
       "Bash(ps:*)",
-      "mcp__centy__centy_v1_CentyDaemon_SearchItems"
+      "mcp__centy__centy_v1_CentyDaemon_SearchItems",
+      "mcp__centy__centy_v1_CentyDaemon_GetAvailableLinkTypes",
+      "mcp__centy__centy_v1_CentyDaemon_CreateLink",
+      "mcp__centy__centy_v1_CentyDaemon_ListLinks"
     ],
     "deny": ["Bash(npm install)", "Bash(gh issue create:*)"]
   },
