@@ -265,6 +265,45 @@
   margin-bottom: var(--space-1);
 }
 
+.link-modal-header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.link-modal-info-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.link-modal-info-btn {
+  color: var(--color-gray-400);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.link-modal-info-btn.is-pinned {
+  color: var(--color-primary);
+}
+
+.link-modal-info-tooltip {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  width: 220px;
+  padding: var(--space-2) var(--space-3);
+  font-size: 0.75rem;
+  color: var(--color-text-primary);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  pointer-events: none;
+  z-index: 10;
+  white-space: normal;
+}
+
 .link-modal-select,
 .link-modal-input {
   width: 100%;

@@ -3,6 +3,7 @@
 import type { AddLinkModalProps } from './AddLinkModal.types'
 import { useAddLinkModal } from './useAddLinkModal'
 import { AddLinkModalBody } from './AddLinkModalBody'
+import { InfoButton } from './InfoButton'
 import { DaemonErrorMessage } from '@/components/shared/DaemonErrorMessage'
 
 export function AddLinkModal(props: AddLinkModalProps) {
@@ -13,9 +14,15 @@ export function AddLinkModal(props: AddLinkModalProps) {
       <div className="link-modal" ref={state.modalRef}>
         <div className="link-modal-header">
           <h3 className="link-modal-title">Add Link</h3>
-          <button className="link-modal-close" onClick={props.onClose}>
-            x
-          </button>
+          <div className="link-modal-header-actions">
+            <InfoButton>
+              Links connect items to show relationships like blocking, fixing,
+              or duplicating.
+            </InfoButton>
+            <button className="link-modal-close" onClick={props.onClose}>
+              x
+            </button>
+          </div>
         </div>
 
         <div className="link-modal-body">
