@@ -1,12 +1,13 @@
 'use client'
 
 import Link from 'next/link'
+import { useParams } from 'next/navigation'
 import { route } from 'nextjs-routes'
-import type { CreateOrgIssueProps } from './CreateOrgIssue.types'
 import { useCreateOrgIssue } from './hooks/useCreateOrgIssue'
 import { CreateOrgIssueForm } from './CreateOrgIssueForm'
 
-export function CreateOrgIssue({ orgSlug }: CreateOrgIssueProps) {
+export function CreateOrgIssue() {
+  const orgSlug = String(useParams()?.orgSlug ?? '')
   const {
     orgProjectPath,
     initLoading,
@@ -23,7 +24,7 @@ export function CreateOrgIssue({ orgSlug }: CreateOrgIssueProps) {
     stateOptions,
     handleSubmit,
     handleCancel,
-  } = useCreateOrgIssue(orgSlug)
+  } = useCreateOrgIssue()
 
   return (
     <div className="create-issue">
@@ -59,7 +60,6 @@ export function CreateOrgIssue({ orgSlug }: CreateOrgIssueProps) {
         </div>
       ) : (
         <CreateOrgIssueForm
-          orgSlug={orgSlug}
           title={title}
           setTitle={setTitle}
           description={description}
