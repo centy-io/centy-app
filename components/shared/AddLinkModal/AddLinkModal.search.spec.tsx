@@ -64,14 +64,15 @@ describe('AddLinkModal - Search and filtering', () => {
   it('should filter search results based on search query', async () => {
     render(<AddLinkModal {...defaultProps} />)
 
+    const searchInput = screen.getByPlaceholderText(
+      'Search by title or number...'
+    )
+    fireEvent.focus(searchInput)
     await waitFor(() => {
       expect(screen.getByText('#1 - First Issue')).toBeInTheDocument()
       expect(screen.getByText('#2 - Second Issue')).toBeInTheDocument()
     })
 
-    const searchInput = screen.getByPlaceholderText(
-      'Search by title or number...'
-    )
     fireEvent.change(searchInput, { target: { value: 'First' } })
 
     await waitFor(() => {
@@ -98,6 +99,7 @@ describe('AddLinkModal - Search and filtering', () => {
 
     render(<AddLinkModal {...defaultProps} />)
 
+    fireEvent.focus(screen.getByPlaceholderText('Search by title or number...'))
     await waitFor(() => {
       expect(screen.queryByText('#1 - Self Issue')).not.toBeInTheDocument()
       expect(screen.getByText('#2 - Other Issue')).toBeInTheDocument()

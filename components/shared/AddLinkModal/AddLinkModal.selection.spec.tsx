@@ -64,6 +64,7 @@ describe('AddLinkModal - Item selection', () => {
   it('should select a target item when clicked', async () => {
     render(<AddLinkModal {...defaultProps} />)
 
+    fireEvent.focus(screen.getByPlaceholderText('Search by title or number...'))
     await waitFor(() => {
       expect(screen.getByText('#1 - First Issue')).toBeInTheDocument()
     })
@@ -87,6 +88,7 @@ describe('AddLinkModal - Item selection', () => {
   it('should show link preview with inverse link type', async () => {
     render(<AddLinkModal {...defaultProps} />)
 
+    fireEvent.focus(screen.getByPlaceholderText('Search by title or number...'))
     await waitFor(() => {
       expect(screen.getByText('#1 - First Issue')).toBeInTheDocument()
     })
