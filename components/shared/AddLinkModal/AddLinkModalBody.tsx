@@ -3,7 +3,7 @@
 import type { useAddLinkModal } from './useAddLinkModal'
 import { LinkPreview } from './LinkPreview'
 import { LinkTypeSelect } from './LinkTypeSelect'
-import { SearchResultsList } from './SearchResultsList'
+import { SearchSelect } from './SearchSelect'
 
 interface AddLinkModalBodyProps {
   state: ReturnType<typeof useAddLinkModal>
@@ -22,28 +22,16 @@ export function AddLinkModalBody({ state }: AddLinkModalBodyProps) {
         />
       </div>
       <div className="link-modal-field">
-        <label className="link-modal-label">Search</label>
-        <input
-          type="text"
-          value={state.searchQuery}
-          onChange={e => {
-            state.setSearchQuery(e.target.value)
-          }}
-          placeholder="Search by title or number..."
-          className="link-modal-input"
+        <label className="link-modal-label">Target Item</label>
+        <SearchSelect
+          searchQuery={state.searchQuery}
+          setSearchQuery={state.setSearchQuery}
+          loadingSearch={state.loadingSearch}
+          searchResults={state.searchResults}
+          selectedTarget={state.selectedTarget}
+          setSelectedTarget={state.setSelectedTarget}
+          getEntityLabel={state.getEntityLabel}
         />
-      </div>
-      <div className="link-modal-field">
-        <label className="link-modal-label">Select Target</label>
-        <div className="link-modal-results">
-          <SearchResultsList
-            loadingSearch={state.loadingSearch}
-            searchResults={state.searchResults}
-            selectedTarget={state.selectedTarget}
-            getEntityLabel={state.getEntityLabel}
-            setSelectedTarget={state.setSelectedTarget}
-          />
-        </div>
       </div>
       {state.selectedTarget && state.selectedLinkType && (
         <LinkPreview
