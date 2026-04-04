@@ -4,14 +4,12 @@ export * from './centy/v1/centy_pb'
 export * from './centy/v1/generic_item_pb'
 
 // ---------------------------------------------------------------------------
-// Legacy types — Issue, Doc and related request/response shapes.
+// Legacy types — Issue, Doc and related shapes.
 // These were removed from the canonical proto (centy-io/proto) as the API
 // migrated to the generic-item model. They are kept here as plain TypeScript
 // interfaces so that demo/test fixtures continue to compile. No protobuf
 // serialisation is needed for these types.
 // ---------------------------------------------------------------------------
-
-import type { Manifest } from './centy/v1/generic_item_pb'
 
 export interface IssueMetadata {
   $typeName: 'centy.v1.IssueMetadata'
@@ -55,56 +53,3 @@ export interface Doc {
   content: string
   metadata?: DocMetadata
 }
-
-// --- Issue request/response types (used in legacy mock handlers / fixtures) ---
-
-interface OrgDocSyncResult {
-  $typeName: 'centy.v1.OrgDocSyncResult'
-  projectPath: string
-  success: boolean
-  error: string
-}
-
-export interface CreateIssueResponse {
-  $typeName: 'centy.v1.CreateIssueResponse'
-  success: boolean
-  error: string
-  id: string
-  displayNumber: number
-  issueNumber: string
-  createdFiles: string[]
-  manifest?: Manifest
-  orgDisplayNumber: number
-  syncResults: OrgDocSyncResult[]
-}
-
-export interface ListIssuesRequest {
-  $typeName: 'centy.v1.ListIssuesRequest'
-  projectPath: string
-  status: string
-  priority: number
-  draft?: boolean
-  includeDeleted: boolean
-}
-
-export interface ListIssuesResponse {
-  $typeName: 'centy.v1.ListIssuesResponse'
-  issues: Issue[]
-  totalCount: number
-  success: boolean
-  error: string
-}
-
-export interface GetIssueRequest {
-  $typeName: 'centy.v1.GetIssueRequest'
-  projectPath: string
-  issueId: string
-}
-
-export interface GetIssueByDisplayNumberRequest {
-  $typeName: 'centy.v1.GetIssueByDisplayNumberRequest'
-  projectPath: string
-  displayNumber: number
-}
-
-

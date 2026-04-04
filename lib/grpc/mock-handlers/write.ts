@@ -1,8 +1,3 @@
-export { createIssue } from './createIssue'
-export { updateIssue } from './updateIssue'
-export { deleteIssue } from './deleteIssue'
-export { updateDoc } from './updateDoc'
-export { deleteDoc } from './deleteDoc'
 export { updateConfig } from './updateConfig'
 export { createUser } from './createUser'
 export { updateUser } from './updateUser'

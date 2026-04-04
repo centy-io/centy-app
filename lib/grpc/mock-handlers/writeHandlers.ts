@@ -1,16 +1,6 @@
 'use client'
 
-import {
-  createIssue,
-  updateIssue,
-  deleteIssue,
-  updateDoc,
-  deleteDoc,
-  updateConfig,
-  createUser,
-  updateUser,
-  deleteUser,
-} from './write'
+import { updateConfig, createUser, updateUser, deleteUser } from './write'
 import {
   shutdown,
   restart,
@@ -35,15 +25,8 @@ import {
   deleteAsset,
   getAsset,
 } from './org-write'
-import { openInTempVscode, openInTempTerminal } from './workspace'
-import { moveIssue, duplicateIssue, moveDoc, duplicateDoc } from './entity-ops'
 
 export const writeHandlers = {
-  createIssue,
-  updateIssue,
-  deleteIssue,
-  updateDoc,
-  deleteDoc,
   updateConfig,
   createUser,
   updateUser,
@@ -68,10 +51,4 @@ export const writeHandlers = {
   addAsset,
   deleteAsset,
   getAsset,
-  openInTempVscode,
-  openInTempTerminal,
-  moveIssue,
-  duplicateIssue,
-  moveDoc,
-  duplicateDoc,
 }
