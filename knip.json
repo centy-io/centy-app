@@ -13,7 +13,8 @@
     "lib/**/*.{ts,tsx}",
     "hooks/**/*.{ts,tsx}",
     "e2e/**/*.{ts,tsx}",
-    "gen/*.ts"
+    "gen/*.ts",
+    "scripts/**/*.js"
   ],
   "ignore": [
     "**/*.spec.ts",
@@ -26,7 +27,6 @@
     "types/**/*.d.ts",
     "__tests__/**"
   ],
-  "ignoreBinaries": ["serve"],
   "ignoreDependencies": [
     "@bufbuild/protoc-gen-es",
     "baseline-browser-mapping",
@@ -34,8 +34,7 @@
     "@cspell/dict-he",
     "import-in-the-middle",
     "msw",
-    "require-in-the-middle",
-    "serve"
+    "require-in-the-middle"
   ],
   "ignoreExportsUsedInFile": true,
   "ignoreWorkspaces": []
