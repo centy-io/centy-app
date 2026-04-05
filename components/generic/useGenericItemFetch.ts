@@ -17,6 +17,7 @@ export function useGenericItemFetch(
   const [editCustomFields, setEditCustomFields] = useState<
     Record<string, string>
   >({})
+  const [editProjects, setEditProjects] = useState<string[]>([])
 
   const fetchItem = useCallback(async () => {
     if (!projectPath) return
@@ -36,6 +37,12 @@ export function useGenericItemFetch(
         const meta = response.item.metadata
         setEditStatus(meta ? meta.status : '')
         setEditCustomFields(meta ? { ...meta.customFields } : {})
+        // Always seed with the current project so the list is never empty.
+        // meta.projects stores all project slugs (including this one) for
+        // org-wide items; an empty array means the item is project-local.
+        setEditProjects(
+          meta && meta.projects.length > 0 ? [...meta.projects] : [projectPath]
+        )
       }
     } catch (err) {
       setError(
@@ -64,5 +71,7 @@ export function useGenericItemFetch(
     setEditStatus,
     editCustomFields,
     setEditCustomFields,
+    editProjects,
+    setEditProjects,
   }
 }

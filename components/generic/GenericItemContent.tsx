@@ -63,6 +63,7 @@ export function GenericItemContent({
           item={item}
           config={state.config}
           isEditing={state.isEditing}
+          projectPath={projectPath}
           fetch={state.fetch}
         />
       </ItemContent>

@@ -51,44 +51,53 @@ function makeParams(
   }
 }
 
-describe('useGenericItemSave', () => {
+describe('useGenericItemSave - org-wide project changes', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
-  it('sends empty projects (no change) when project-local item is unchanged', async () => {
+  it('sends projects when an org-wide item has a project removed', async () => {
+    const orgItem = makeItem(['/my/project', '/other/project'])
     mockUpdateItem.mockResolvedValueOnce({
       $typeName: 'centy.v1.UpdateItemResponse',
       success: true,
       error: '',
-      item: makeItem(),
-    })
-    const { result } = renderHook(() => useGenericItemSave(makeParams()))
-    await act(async () => {
-      await result.current.handleSave()
-    })
-    expect(mockUpdateItem).toHaveBeenCalledWith(
-      expect.objectContaining({ projects: [] })
-    )
-  })
-
-  it('sends projects when an additional project is added', async () => {
-    mockUpdateItem.mockResolvedValueOnce({
-      $typeName: 'centy.v1.UpdateItemResponse',
-      success: true,
-      error: '',
-      item: makeItem(['/my/project', '/other/project']),
+      item: makeItem(['/my/project']),
     })
     const { result } = renderHook(() =>
       useGenericItemSave(
-        makeParams({ editProjects: ['/my/project', '/other/project'] })
+        makeParams({ item: orgItem, editProjects: ['/my/project'] })
       )
     )
     await act(async () => {
       await result.current.handleSave()
     })
     expect(mockUpdateItem).toHaveBeenCalledWith(
-      expect.objectContaining({ projects: ['/my/project', '/other/project'] })
+      expect.objectContaining({ projects: ['/my/project'] })
+    )
+  })
+
+  it('sends empty projects (no change) when org-wide item is unchanged', async () => {
+    const orgItem = makeItem(['/my/project', '/other/project'])
+    mockUpdateItem.mockResolvedValueOnce({
+      $typeName: 'centy.v1.UpdateItemResponse',
+      success: true,
+      error: '',
+      item: orgItem,
+    })
+    const { result } = renderHook(() =>
+      useGenericItemSave(
+        makeParams({
+          item: orgItem,
+          editProjects: ['/my/project', '/other/project'],
+        })
+      )
+    )
+    await act(async () => {
+      await result.current.handleSave()
+    })
+    expect(mockUpdateItem).toHaveBeenCalledWith(
+      expect.objectContaining({ projects: [] })
     )
   })
 })

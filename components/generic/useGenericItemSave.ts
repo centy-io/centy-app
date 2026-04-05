@@ -11,6 +11,7 @@ interface UseGenericItemSaveParams {
   editBody: string
   editStatus: string
   editCustomFields: Record<string, string>
+  editProjects: string[]
   setItem: (item: GenericItem) => void
   setIsEditing: (editing: boolean) => void
   setError: (error: string | null) => void
@@ -24,6 +25,7 @@ export function useGenericItemSave({
   editBody,
   editStatus,
   editCustomFields,
+  editProjects,
   setItem,
   setIsEditing,
   setError,
@@ -35,6 +37,14 @@ export function useGenericItemSave({
     setSaving(true)
     setError(null)
     try {
+      // Normalize: a project-local item (meta.projects = []) is treated as
+      // belonging to just the current project for comparison purposes.
+      const metaProjects = item.metadata?.projects ?? []
+      const normalizedOriginal =
+        metaProjects.length > 0 ? metaProjects : [projectPath]
+      const projectsChanged =
+        editProjects.length !== normalizedOriginal.length ||
+        editProjects.some(p => !normalizedOriginal.includes(p))
       const request = create(UpdateItemRequestSchema, {
         projectPath,
         itemType,
@@ -43,6 +53,7 @@ export function useGenericItemSave({
         body: editBody,
         status: editStatus,
         customFields: editCustomFields,
+        ...(projectsChanged ? { projects: editProjects } : {}),
       })
       const response = await centyClient.updateItem(request)
       if (response.success && response.item) {
@@ -66,6 +77,7 @@ export function useGenericItemSave({
     editBody,
     editStatus,
     editCustomFields,
+    editProjects,
     setItem,
     setIsEditing,
     setError,

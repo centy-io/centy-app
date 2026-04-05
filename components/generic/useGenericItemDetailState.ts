@@ -65,6 +65,7 @@ export function useGenericItemDetailState(
     editBody: fetch.editBody,
     editStatus: fetch.editStatus,
     editCustomFields: fetch.editCustomFields,
+    editProjects: fetch.editProjects,
     setItem: fetch.setItem,
     setIsEditing,
     setError: fetch.setError,

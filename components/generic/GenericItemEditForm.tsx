@@ -1,10 +1,12 @@
 import { BodyField } from './BodyField'
 import { CustomFieldEditor } from './CustomFieldEditor'
+import { EditProjectsField } from './EditProjectsField'
 import { StatusField } from './StatusField'
 import type { ItemTypeConfigProto } from '@/gen/centy_pb'
 
 interface GenericItemEditFormProps {
   config: ItemTypeConfigProto | null
+  projectPath: string
   editTitle: string
   setEditTitle: (v: string) => void
   editBody: string
@@ -13,11 +15,14 @@ interface GenericItemEditFormProps {
   setEditStatus: (v: string) => void
   editCustomFields: Record<string, string>
   setEditCustomFields: (v: Record<string, string>) => void
+  editProjects: string[]
+  setEditProjects: (v: string[]) => void
   hasBody: boolean
 }
 
 export function GenericItemEditForm({
   config,
+  projectPath,
   editTitle,
   setEditTitle,
   editBody,
@@ -26,6 +31,8 @@ export function GenericItemEditForm({
   setEditStatus,
   editCustomFields,
   setEditCustomFields,
+  editProjects,
+  setEditProjects,
   hasBody,
 }: GenericItemEditFormProps): React.JSX.Element {
   return (
@@ -65,6 +72,11 @@ export function GenericItemEditForm({
             }}
           />
         ))}
+      <EditProjectsField
+        projectPath={projectPath}
+        editProjects={editProjects}
+        setEditProjects={setEditProjects}
+      />
       {hasBody && <BodyField editBody={editBody} setEditBody={setEditBody} />}
     </div>
   )

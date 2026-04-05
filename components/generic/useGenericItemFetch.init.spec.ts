@@ -65,5 +65,35 @@ describe('useGenericItemFetch - init and edge cases', () => {
     expect(result.current.editTitle).toBe('Getting Started')
     expect(result.current.editBody).toBe('# Getting Started\n\nWelcome!')
     expect(result.current.editStatus).toBe('')
+    // project-local item (projects: []) seeds editProjects with current project
+    expect(result.current.editProjects).toEqual(['/test/project'])
+  })
+
+  it('initializes editProjects from meta.projects for org-wide items', async () => {
+    mockGetItem.mockResolvedValueOnce({
+      $typeName: 'centy.v1.GetItemResponse',
+      success: true,
+      error: '',
+      item: {
+        ...mockItem,
+        metadata: {
+          ...mockItem.metadata,
+          projects: ['/test/project', '/other/project'],
+        },
+      },
+    })
+
+    const { result } = renderHook(() =>
+      useGenericItemFetch('/test/project', 'docs', 'getting-started')
+    )
+
+    await act(async () => {
+      await Promise.resolve()
+    })
+
+    expect(result.current.editProjects).toEqual([
+      '/test/project',
+      '/other/project',
+    ])
   })
 })
