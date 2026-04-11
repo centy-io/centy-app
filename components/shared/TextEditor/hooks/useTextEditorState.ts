@@ -5,6 +5,7 @@ import type { TextEditorProps, EditorMode } from '../TextEditor.types'
 import { markdownToHtml, htmlToMarkdown } from '../utils/markdownParser'
 import { createEditorExtensions } from '../constants'
 import { useAsciidocConverter } from './useAsciidocConverter'
+import { useMermaidRenderer } from './useMermaidRenderer'
 
 function useEditorSync(
   editor: Editor | null,
@@ -65,6 +66,7 @@ export function useTextEditorState({
   }, [resolvedMode])
 
   useEditorSync(editor, currentMode, markdownContent, rawValue, setRawValue)
+  useMermaidRenderer(editor, isEditable, markdownContent)
 
   const handleRawChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {

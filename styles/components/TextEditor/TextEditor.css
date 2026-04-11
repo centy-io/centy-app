@@ -282,6 +282,19 @@
   color: var(--color-text-muted);
 }
 
+/* Mermaid Diagrams */
+.editor-content .mermaid-diagram {
+  margin: 1em 0;
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+}
+
+.editor-content .mermaid-diagram svg {
+  max-width: 100%;
+  height: auto;
+}
+
 /* Focus state for edit mode */
 .text-editor--edit:focus-within {
   border-color: var(--color-primary);
