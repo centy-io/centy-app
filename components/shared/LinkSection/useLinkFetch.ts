@@ -33,7 +33,7 @@ async function fetchLinkTitles(
   return Object.fromEntries(entries)
 }
 
-export function useLinkFetch(entityId: string, entityType: 'issue' | 'doc') {
+export function useLinkFetch(entityId: string, entityType: string) {
   const { projectPath } = usePathContext()
   const [links, setLinks] = useState<LinkType[]>([])
   const [linkTitles, setLinkTitles] = useState<Record<string, string>>({})

@@ -3,7 +3,7 @@ import { useLinkFetch } from './useLinkFetch'
 import { useLinkRoutes } from './useLinkRoutes'
 import type { Link as LinkType } from '@/gen/centy_pb'
 
-export function useLinkSection(entityId: string, entityType: 'issue' | 'doc') {
+export function useLinkSection(entityId: string, entityType: string) {
   const { buildLinkRoute } = useLinkRoutes()
   const {
     links,

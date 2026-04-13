@@ -104,6 +104,7 @@
     "coverage",
     "pnpm-lock.yaml",
     "*.min.js",
-    "gen/**"
+    "gen/**",
+    ".centy/**"
   ]
 }

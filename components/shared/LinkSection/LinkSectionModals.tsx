@@ -6,7 +6,7 @@ import type { useLinkSection } from './useLinkSection'
 interface LinkSectionModalsProps {
   state: ReturnType<typeof useLinkSection>
   entityId: string
-  entityType: 'issue' | 'doc'
+  entityType: string
 }
 
 export function LinkSectionModals({
