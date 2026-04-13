@@ -38,6 +38,12 @@ pnpm knip || {
   exit 1
 }
 
+echo "Checking types..."
+pnpm exec tsc --noEmit || {
+  echo "Type check failed. Please fix type errors before pushing."
+  exit 1
+}
+
 echo "Running tests..."
 pnpm test --run || {
   echo "Tests failed. Please fix failing tests before pushing."
