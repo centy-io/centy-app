@@ -2,7 +2,7 @@ import type { Link as LinkType } from '@/gen/centy_pb'
 
 export interface AddLinkModalProps {
   entityId: string
-  entityType: 'issue' | 'doc'
+  entityType: string
   existingLinks: LinkType[]
   onClose: () => void
   onLinkCreated: () => void

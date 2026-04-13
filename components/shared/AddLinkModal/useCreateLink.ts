@@ -7,7 +7,7 @@ import { CreateLinkRequestSchema } from '@/gen/centy_pb'
 export function useCreateLink(
   projectPath: string,
   entityId: string,
-  entityType: 'issue' | 'doc',
+  entityType: string,
   selectedTarget: EntityItem | null,
   selectedLinkType: string,
   onLinkCreated: () => void

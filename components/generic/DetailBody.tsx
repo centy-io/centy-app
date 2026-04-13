@@ -7,6 +7,7 @@ interface DetailBodyProps {
   item: GenericItem
   config: ItemTypeConfigProto | null
   isEditing: boolean
+  itemType: string
   projectPath: string
   fetch: ReturnType<typeof useGenericItemFetch>
 }
@@ -15,6 +16,7 @@ export function DetailBody({
   item,
   config,
   isEditing,
+  itemType,
   projectPath,
   fetch,
 }: DetailBodyProps): React.JSX.Element {
@@ -37,5 +39,5 @@ export function DetailBody({
       />
     )
   }
-  return <GenericItemView item={item} config={config} />
+  return <GenericItemView item={item} config={config} itemType={itemType} />
 }

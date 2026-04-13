@@ -3,7 +3,7 @@
 import type { EntityItem } from './AddLinkModal.types'
 
 interface LinkPreviewProps {
-  entityType: 'issue' | 'doc'
+  entityType: string
   selectedLinkType: string
   selectedTarget: EntityItem
   getInverseLinkType: (linkType: string) => string

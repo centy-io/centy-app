@@ -31,7 +31,10 @@ export function useLinkRoutes(): {
           query: { ...projectContext, slug: targetId },
         })
       }
-      return route({ pathname: '/' })
+      return route({
+        pathname: '/[organization]/[project]/[itemType]/[slug]',
+        query: { ...projectContext, itemType: targetItemType, slug: targetId },
+      })
     },
     [projectContext]
   )

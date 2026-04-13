@@ -1,6 +1,6 @@
 export interface LinkSectionProps {
   entityId: string
-  entityType: 'issue' | 'doc'
+  entityType: string
   /** Whether the user can add/remove links (edit mode) */
   editable?: boolean
 }

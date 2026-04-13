@@ -3,13 +3,19 @@ import { TextEditor } from '@/components/shared/TextEditor'
 import { ItemMetadata } from '@/components/shared/ItemMetadata'
 import { ItemTitle } from '@/components/shared/ItemView'
 import { DetailLayout } from '@/components/shared/DetailLayout/DetailLayout'
+import { LinkSection } from '@/components/shared/LinkSection'
 
 interface GenericItemViewProps {
   item: GenericItem
   config: ItemTypeConfigProto | null
+  itemType: string
 }
 
-export function GenericItemView({ item, config }: GenericItemViewProps) {
+export function GenericItemView({
+  item,
+  config,
+  itemType,
+}: GenericItemViewProps) {
   const meta = item.metadata
   const customFields = meta ? meta.customFields : {}
   const showStatus = Boolean(
@@ -30,21 +36,31 @@ export function GenericItemView({ item, config }: GenericItemViewProps) {
         </div>
       }
       sidebar={
-        <div className="sidebar-section">
-          <h3 className="sidebar-section-title">Properties</h3>
-          <ItemMetadata
-            status={showStatus && meta ? meta.status : undefined}
-            customFields={customFields}
-            customFieldsConfig={config ? config.customFields : undefined}
-            projects={meta ? meta.projects : undefined}
-            createdAt={meta ? meta.createdAt : undefined}
-            updatedAt={meta ? meta.updatedAt : undefined}
-          >
-            <span className="generic-item-id-display">
-              <span className="field-label">ID:</span> {item.id}
-            </span>
-          </ItemMetadata>
-        </div>
+        <>
+          <div className="sidebar-section">
+            <h3 className="sidebar-section-title">Properties</h3>
+            <ItemMetadata
+              status={showStatus && meta ? meta.status : undefined}
+              customFields={customFields}
+              customFieldsConfig={config ? config.customFields : undefined}
+              projects={meta ? meta.projects : undefined}
+              createdAt={meta ? meta.createdAt : undefined}
+              updatedAt={meta ? meta.updatedAt : undefined}
+            >
+              <span className="generic-item-id-display">
+                <span className="field-label">ID:</span> {item.id}
+              </span>
+            </ItemMetadata>
+          </div>
+          <div className="sidebar-section">
+            <h3 className="sidebar-section-title">Relations</h3>
+            <LinkSection
+              entityId={item.id}
+              entityType={itemType}
+              editable={true}
+            />
+          </div>
+        </>
       }
     />
   )
