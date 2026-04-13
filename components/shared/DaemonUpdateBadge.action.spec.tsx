@@ -49,7 +49,7 @@ describe('DaemonUpdateBadge — restart action', () => {
     vi.mocked(centyClient.restart).mockResolvedValue({
       success: true,
       message: 'Daemon is restarting...',
-      $typeName: 'centy.RestartResponse',
+      $typeName: 'centy.v1.RestartResponse',
     })
 
     render(<DaemonUpdateBadge />)

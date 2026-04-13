@@ -32,7 +32,10 @@ const makeLink = (targetId: string, linkType: string): LinkType =>
   ({
     targetId,
     linkType,
-    sourceId: 'source',
+    createdAt: '',
+    targetItemType: '',
+    id: '',
+    direction: 'source',
     $typeName: 'centy.v1.Link' as const,
     $unknown: undefined,
   }) as LinkType

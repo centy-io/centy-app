@@ -88,6 +88,8 @@ describe('AddLinkModal - Empty state and exclusions', () => {
         targetItemType: 'issue',
         linkType: 'blocks',
         createdAt: '2026-01-01T00:00:00Z',
+        id: 'link-1',
+        direction: 'source',
         $typeName: 'centy.v1.Link',
         $unknown: undefined,
       },

@@ -17,7 +17,7 @@ test.describe('Create Issue Form - Draft persistence', () => {
     await page.locator('input#title').fill('Draft issue title')
     await page.waitForTimeout(100)
 
-    const draft = await page.evaluate<DraftIssue | null>((key: string) => {
+    const draft = await page.evaluate<DraftIssue | null, string>(key => {
       const raw = localStorage.getItem(key)
       if (!raw) return null
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
@@ -73,7 +73,7 @@ test.describe('Create Issue Form - Draft persistence', () => {
     await page.locator('select#priority').selectOption('3')
     await page.waitForTimeout(100)
 
-    const draft = await page.evaluate<DraftIssue | null>((key: string) => {
+    const draft = await page.evaluate<DraftIssue | null, string>(key => {
       const raw = localStorage.getItem(key)
       if (!raw) return null
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
