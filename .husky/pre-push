@@ -1,5 +1,7 @@
 echo "Running pre-push checks..."
 
+pnpm install --frozen-lockfile
+
 echo "Checking proto submodule is up to date with main..."
 PROTO_PATH="proto"
 PROTO_CURRENT=$(git submodule status "$PROTO_PATH" | awk '{print $1}' | tr -d '+-')
