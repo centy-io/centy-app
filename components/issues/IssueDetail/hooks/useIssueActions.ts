@@ -5,6 +5,7 @@ import type { RouteLiteral } from 'nextjs-routes'
 import { performSave } from './performSave'
 import { callItemApi } from '@/lib/callItemApi'
 import { centyClient } from '@/lib/grpc/client'
+import { useWikiLinkSync } from '@/components/shared/TextEditor/hooks/useWikiLinkSync'
 import {
   DeleteItemRequestSchema,
   SoftDeleteItemRequestSchema,
@@ -38,20 +39,20 @@ export function useIssueActions({
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const { syncWikiLinks } = useWikiLinkSync(issueNumber, 'issue')
 
   const handleSave = useCallback(
-    async (editState: SaveEditState) => {
-      if (!projectPath || !issueNumber) return
-      await performSave(
+    (editState: SaveEditState) =>
+      performSave(
         projectPath,
         issueNumber,
         editState,
         setIssue,
         setError,
-        setSaving
-      )
-    },
-    [projectPath, issueNumber, setIssue, setError]
+        setSaving,
+        syncWikiLinks
+      ),
+    [projectPath, issueNumber, setIssue, setError, syncWikiLinks]
   )
 
   const handleDelete = useCallback(async () => {
