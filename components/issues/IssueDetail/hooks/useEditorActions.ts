@@ -1,98 +1,23 @@
-import { useState, useCallback } from 'react'
-import { create } from '@bufbuild/protobuf'
-import { centyClient } from '@/lib/grpc/client'
-import {
-  OpenInTempWorkspaceWithEditorRequestSchema,
-  type GenericItem,
-} from '@/gen/centy_pb'
-
-interface OpenWorkspaceParams {
-  projectPath: string
-  issue: GenericItem
-  editorId: string
-  failureMessage: string
-  setOpening: (v: boolean) => void
-  setError: (error: string | null) => void
-  setShowStatusConfigDialog: (show: boolean) => void
-}
-
-async function openInWorkspace({
-  projectPath,
-  issue,
-  editorId,
-  failureMessage,
-  setOpening,
-  setError,
-  setShowStatusConfigDialog,
-}: OpenWorkspaceParams): Promise<void> {
-  setOpening(true)
-  setError(null)
-  try {
-    const request = create(OpenInTempWorkspaceWithEditorRequestSchema, {
-      projectPath,
-      issueId: issue.id,
-      ttlHours: 0,
-      editorId,
-    })
-    const response = await centyClient.openInTempWorkspace(request)
-    if (response.success) {
-      if (!response.editorOpened) {
-        const actionWord = response.workspaceReused
-          ? 'Reopened workspace'
-          : 'Workspace created'
-        setError(
-          `${actionWord} at ${response.workspacePath} but ${failureMessage}`
-        )
-      }
-    } else if (response.requiresStatusConfig) {
-      setShowStatusConfigDialog(true)
-    } else {
-      setError(response.error || `Failed to open in ${editorId}`)
-    }
-  } catch (err) {
-    setError(err instanceof Error ? err.message : 'Failed to connect to daemon')
-  } finally {
-    setOpening(false)
-  }
-}
+import { useCallback } from 'react'
+import type { GenericItem } from '@/gen/centy_pb'
+import { WORKTREE_OPEN_URL } from '@/lib/constants/urls'
 
 export function useEditorActions(
-  projectPath: string,
-  issue: GenericItem | null,
-  setError: (error: string | null) => void,
-  setShowStatusConfigDialog: (show: boolean) => void
+  orgSlug: string | null,
+  projectName: string | null,
+  issue: GenericItem | null
 ) {
-  const [openingInVscode, setOpeningInVscode] = useState(false)
-
-  const handleOpenInVscode = useCallback(async () => {
-    if (!projectPath || !issue) return
-    await openInWorkspace({
-      projectPath,
-      issue,
-      editorId: 'vscode',
-      failureMessage: 'the editor could not be opened automatically',
-      setOpening: setOpeningInVscode,
-      setError,
-      setShowStatusConfigDialog,
+  const handleOpenInWorktree = useCallback(() => {
+    if (!orgSlug || !projectName || !issue) return
+    const displayNumber = issue.metadata?.displayNumber
+    if (!displayNumber) return
+    const params = new URLSearchParams({
+      owner: orgSlug,
+      repo: projectName,
+      issue: String(displayNumber),
     })
-  }, [projectPath, issue, setError, setShowStatusConfigDialog])
+    window.open(`${WORKTREE_OPEN_URL}?${params.toString()}`, '_blank')
+  }, [orgSlug, projectName, issue])
 
-  const handleOpenInTerminal = useCallback(async () => {
-    if (!projectPath || !issue) return
-    await openInWorkspace({
-      projectPath,
-      issue,
-      editorId: 'terminal',
-      failureMessage: 'terminal could not be opened automatically',
-      setOpening: setOpeningInVscode,
-      setError,
-      setShowStatusConfigDialog,
-    })
-  }, [projectPath, issue, setError, setShowStatusConfigDialog])
-
-  return {
-    openingInVscode,
-    handleOpenInVscode,
-    handleOpenInTerminal,
-  }
+  return { handleOpenInWorktree }
 }

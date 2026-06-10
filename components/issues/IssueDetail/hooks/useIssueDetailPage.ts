@@ -12,7 +12,12 @@ import { useDaemonStatus } from '@/components/providers/DaemonStatusProvider'
 import { usePathContext } from '@/components/providers/PathContextProvider'
 
 export function useIssueDetailPage(issueNumber: string) {
-  const { projectPath, isLoading: pathLoading } = usePathContext()
+  const {
+    projectPath,
+    orgSlug,
+    projectName,
+    isLoading: pathLoading,
+  } = usePathContext()
   useDaemonStatus()
   const { copyToClipboard } = useCopyToClipboard()
   const stateManager = useStateManager()
@@ -31,14 +36,8 @@ export function useIssueDetailPage(issueNumber: string) {
 
   const [showMoveModal, setShowMoveModal] = useState(false)
   const [showDuplicateModal, setShowDuplicateModal] = useState(false)
-  const [showStatusConfigDialog, setShowStatusConfigDialog] = useState(false)
 
-  const editor = useEditorActions(
-    projectPath,
-    detail.issue,
-    detail.setError,
-    setShowStatusConfigDialog
-  )
+  const editor = useEditorActions(orgSlug, projectName, detail.issue)
   const statusChange = useStatusChange(
     projectPath,
     issueNumber,
@@ -58,11 +57,6 @@ export function useIssueDetailPage(issueNumber: string) {
       editState.isEditing && !actions.saving && !!editState.editTitle.trim(),
   })
 
-  const handleStatusConfigured = useCallback(() => {
-    setShowStatusConfigDialog(false)
-    void editor.handleOpenInVscode()
-  }, [editor])
-
   return {
     projectPath,
     pathLoading,
@@ -79,9 +73,6 @@ export function useIssueDetailPage(issueNumber: string) {
     setShowMoveModal,
     showDuplicateModal,
     setShowDuplicateModal,
-    showStatusConfigDialog,
-    setShowStatusConfigDialog,
     onSave,
-    handleStatusConfigured,
   }
 }

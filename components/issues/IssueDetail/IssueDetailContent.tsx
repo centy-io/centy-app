@@ -32,7 +32,6 @@ interface IssueDetailContentProps {
   saving: boolean
   deleting: boolean
   showDeleteConfirm: boolean
-  openingInVscode: boolean
   stateManager: { getStateClass: (status: string) => string }
   stateOptions: { value: string; label: string }[]
   statusChange: {
@@ -51,8 +50,7 @@ interface IssueDetailContentProps {
   onMove: () => void
   onDuplicate: () => void
   onShowDeleteConfirm: (v: boolean) => void
-  onOpenInVscode: () => Promise<void>
-  onOpenInTerminal: () => Promise<void>
+  onOpenInWorktree: () => void
 }
 
 export function IssueDetailContent(
@@ -65,15 +63,13 @@ export function IssueDetailContent(
         issuesListUrl={props.issuesListUrl}
         isEditing={editState.isEditing}
         saving={props.saving}
-        openingInVscode={props.openingInVscode}
         onEdit={() => void editState.setIsEditing(true)}
         onCancelEdit={editState.handleCancelEdit}
         onSave={props.onSave}
         onMove={props.onMove}
         onDuplicate={props.onDuplicate}
         onDelete={() => void props.onShowDeleteConfirm(true)}
-        onOpenInVscode={props.onOpenInVscode}
-        onOpenInTerminal={props.onOpenInTerminal}
+        onOpenInWorktree={props.onOpenInWorktree}
       />
       {error && <DaemonErrorMessage error={error} />}
       {showDeleteConfirm && (
