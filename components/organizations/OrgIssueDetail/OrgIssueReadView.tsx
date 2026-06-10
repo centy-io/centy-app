@@ -43,7 +43,6 @@ export function OrgIssueReadView({ issue }: OrgIssueReadViewProps) {
               status={status}
               priority={priority}
               createdAt={meta ? meta.createdAt : undefined}
-              updatedAt={meta ? meta.updatedAt : undefined}
             >
               <span className="org-issue-badge">Org Issue #{displayNum}</span>
             </ItemMetadata>

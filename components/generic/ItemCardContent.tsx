@@ -51,13 +51,6 @@ export function ItemCardContent({
           })}
         </div>
       )}
-      {meta && meta.updatedAt && (
-        <div className="generic-item-meta">
-          <span className="generic-item-date">
-            Updated: {new Date(meta.updatedAt).toLocaleDateString()}
-          </span>
-        </div>
-      )}
     </div>
   )
 }
