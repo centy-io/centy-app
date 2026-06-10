@@ -16,7 +16,6 @@ export function issueToGenericItem(issue: Issue): GenericItem {
       status: meta?.status ?? '',
       priority: meta?.priority ?? 0,
       createdAt: meta?.createdAt ?? '',
-      updatedAt: meta?.updatedAt ?? '',
       deletedAt: meta?.deletedAt ?? '',
       customFields: {
         priority_label: meta?.priorityLabel ?? '',

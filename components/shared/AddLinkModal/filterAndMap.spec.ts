@@ -18,7 +18,6 @@ const makeItem = (
       status: 'open',
       priority: 2,
       createdAt: '',
-      updatedAt: '',
       deletedAt: '',
       customFields: {},
       $typeName: 'centy.v1.GenericItemMetadata' as const,

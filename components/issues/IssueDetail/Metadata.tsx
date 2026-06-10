@@ -52,7 +52,6 @@ export function Metadata({
         }
         priority={issue.metadata ? issue.metadata.priority : undefined}
         createdAt={issue.metadata ? issue.metadata.createdAt : undefined}
-        updatedAt={issue.metadata ? issue.metadata.updatedAt : undefined}
       />
       <div className="issue-assignees">
         <h4 className="assignees-title">Assignees</h4>

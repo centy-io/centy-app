@@ -16,7 +16,6 @@ export function docToGenericItem(doc: Doc): GenericItem {
       status: '',
       priority: 0,
       createdAt: meta?.createdAt ?? '',
-      updatedAt: meta?.updatedAt ?? '',
       deletedAt: meta?.deletedAt ?? '',
       customFields: {
         is_org_doc: String(meta?.isOrgDoc ?? false),
