@@ -37,7 +37,6 @@ export function IssueDetail({
         saving={state.actions.saving}
         deleting={state.actions.deleting}
         showDeleteConfirm={state.actions.showDeleteConfirm}
-        openingInVscode={state.editor.openingInVscode}
         stateManager={state.stateManager}
         stateOptions={state.stateOptions}
         statusChange={state.statusChange}
@@ -52,23 +51,17 @@ export function IssueDetail({
         onMove={() => void state.setShowMoveModal(true)}
         onDuplicate={() => void state.setShowDuplicateModal(true)}
         onShowDeleteConfirm={state.actions.setShowDeleteConfirm}
-        onOpenInVscode={state.editor.handleOpenInVscode}
-        onOpenInTerminal={state.editor.handleOpenInTerminal}
+        onOpenInWorktree={state.editor.handleOpenInWorktree}
       />
       <Modals
         projectPath={state.projectPath}
         issue={issue}
         showMoveModal={state.showMoveModal}
         showDuplicateModal={state.showDuplicateModal}
-        showStatusConfigDialog={state.showStatusConfigDialog}
         onCloseMoveModal={() => void state.setShowMoveModal(false)}
         onCloseDuplicateModal={() => void state.setShowDuplicateModal(false)}
-        onCloseStatusConfigDialog={() =>
-          void state.setShowStatusConfigDialog(false)
-        }
         onMoved={state.nav.handleMoved}
         onDuplicated={state.nav.handleDuplicated}
-        onStatusConfigured={state.handleStatusConfigured}
       />
     </>
   )

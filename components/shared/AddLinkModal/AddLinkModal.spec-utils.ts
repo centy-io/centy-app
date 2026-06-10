@@ -31,7 +31,6 @@ export const createMockGenericItem = (overrides: {
       status: overrides.status ?? 'open',
       priority: 2,
       createdAt: '2024-01-01T00:00:00Z',
-      updatedAt: '2024-01-01T00:00:00Z',
       deletedAt: '',
       customFields: {},
       $typeName: 'centy.v1.GenericItemMetadata' as const,
