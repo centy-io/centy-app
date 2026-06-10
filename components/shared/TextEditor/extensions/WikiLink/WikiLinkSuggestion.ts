@@ -6,13 +6,53 @@ import type { WikiLinkItem } from './WikiLinkItem'
 import { WikiLinkPopup } from './WikiLinkPopup'
 import type { WikiLinkPopupRef } from './WikiLinkPopup'
 
+function createWikiLinkRender(): NonNullable<
+  SuggestionOptions<WikiLinkItem>['render']
+> {
+  return () => {
+    let component: ReactRenderer<WikiLinkPopupRef> | null = null
+    let popupEl: HTMLElement | null = null
+
+    const cleanup = () => {
+      popupEl?.remove()
+      component?.destroy()
+      component = null
+      popupEl = null
+    }
+
+    return {
+      onStart: props => {
+        popupEl = document.createElement('div')
+        popupEl.style.position = 'absolute'
+        popupEl.style.zIndex = '9999'
+        document.body.appendChild(popupEl)
+        component = new ReactRenderer(WikiLinkPopup, {
+          props,
+          editor: props.editor,
+        })
+        popupEl.appendChild(component.element)
+      },
+      onUpdate: props => {
+        component?.updateProps(props)
+      },
+      onKeyDown: ({ event }) => {
+        if (event.key === 'Escape') {
+          cleanup()
+          return true
+        }
+        return component?.ref?.onKeyDown({ event }) ?? false
+      },
+      onExit: cleanup,
+    }
+  }
+}
+
 export function createWikiLinkSuggestion(
   fetchItems: (query: string) => Promise<WikiLinkItem[]>
 ): Omit<SuggestionOptions<WikiLinkItem>, 'editor'> {
   return {
     char: '[[',
     allowSpaces: true,
-
     items: async ({ query }) => {
       try {
         return await fetchItems(query)
@@ -20,7 +60,6 @@ export function createWikiLinkSuggestion(
         return []
       }
     },
-
     command: ({
       editor,
       range,
@@ -36,56 +75,11 @@ export function createWikiLinkSuggestion(
         .deleteRange(range)
         .insertContent({
           type: 'wikilink',
-          attrs: {
-            id: props.id,
-            label: props.label,
-            itemType: props.itemType,
-          },
+          attrs: { id: props.id, label: props.label, itemType: props.itemType },
         })
         .insertContent(' ')
         .run()
     },
-
-    render: () => {
-      let component: ReactRenderer<WikiLinkPopupRef> | null = null
-      let popupEl: HTMLElement | null = null
-
-      return {
-        onStart: props => {
-          popupEl = document.createElement('div')
-          popupEl.style.position = 'absolute'
-          popupEl.style.zIndex = '9999'
-          document.body.appendChild(popupEl)
-
-          component = new ReactRenderer(WikiLinkPopup, {
-            props,
-            editor: props.editor,
-          })
-          popupEl.appendChild(component.element)
-        },
-
-        onUpdate: props => {
-          component?.updateProps(props)
-        },
-
-        onKeyDown: ({ event }) => {
-          if (event.key === 'Escape') {
-            popupEl?.remove()
-            component?.destroy()
-            component = null
-            popupEl = null
-            return true
-          }
-          return component?.ref?.onKeyDown({ event }) ?? false
-        },
-
-        onExit: () => {
-          popupEl?.remove()
-          component?.destroy()
-          component = null
-          popupEl = null
-        },
-      }
-    },
+    render: createWikiLinkRender(),
   }
 }

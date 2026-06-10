@@ -45,7 +45,6 @@ export function GenericItemView({
               customFieldsConfig={config ? config.customFields : undefined}
               projects={meta ? meta.projects : undefined}
               createdAt={meta ? meta.createdAt : undefined}
-              updatedAt={meta ? meta.updatedAt : undefined}
             >
               <span className="generic-item-id-display">
                 <span className="field-label">ID:</span> {item.id}
