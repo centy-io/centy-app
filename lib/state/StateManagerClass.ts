@@ -10,8 +10,8 @@ export class StateManager {
   private static DEFAULT_COLORS: Record<string, string>
   private static DEFAULT_STATE: string
 
-  private config: Config | null
-  private itemTypeStatuses: string[]
+  private readonly config: Config | null
+  private readonly itemTypeStatuses: string[]
 
   static {
     StateManager.DEFAULT_STATES = ['open', 'in-progress', 'closed'] as const
