@@ -17,7 +17,8 @@ export async function performSave(
   editState: SaveEditState,
   setIssue: (issue: GenericItem) => void,
   setError: (error: string | null) => void,
-  setSaving: (v: boolean) => void
+  setSaving: (v: boolean) => void,
+  syncWikiLinks?: (body: string) => Promise<void>
 ): Promise<void> {
   setSaving(true)
   setError(null)
@@ -35,6 +36,13 @@ export async function performSave(
     if (response.success && response.item) {
       setIssue(response.item)
       editState.setIsEditing(false)
+      if (syncWikiLinks) {
+        await syncWikiLinks(editState.editDescription).catch(
+          (_error: unknown) => {
+            /* suppress */
+          }
+        )
+      }
     } else {
       setError(response.error || 'Failed to update issue')
     }

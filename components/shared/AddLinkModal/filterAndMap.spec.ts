@@ -20,6 +20,8 @@ const makeItem = (
       createdAt: '',
       deletedAt: '',
       customFields: {},
+      tags: [],
+      projects: [],
       $typeName: 'centy.v1.GenericItemMetadata' as const,
       $unknown: undefined,
     },

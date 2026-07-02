@@ -33,6 +33,8 @@ export const createMockGenericItem = (overrides: {
       createdAt: '2024-01-01T00:00:00Z',
       deletedAt: '',
       customFields: {},
+      tags: [],
+      projects: [],
       $typeName: 'centy.v1.GenericItemMetadata' as const,
       $unknown: undefined,
     },
