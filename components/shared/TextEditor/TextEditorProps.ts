@@ -1,5 +1,6 @@
 import type { TextFormat } from './TextFormat'
 import type { EditorMode } from './EditorMode'
+import type { WikiLinksConfig } from './WikiLinksConfig'
 
 export interface TextEditorProps {
   /** Content value in original format (md or adoc) */
@@ -28,4 +29,7 @@ export interface TextEditorProps {
 
   /** Additional CSS class */
   className?: string
+
+  /** Wikilink config — enables [[itemType/id]] autocomplete and rendering */
+  wikiLinks?: WikiLinksConfig
 }

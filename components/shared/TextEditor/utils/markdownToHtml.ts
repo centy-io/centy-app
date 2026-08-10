@@ -30,6 +30,12 @@ export function markdownToHtml(markdown: string): string {
   html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
   html = html.replace(/\*(.+?)\*/g, '<em>$1</em>')
 
+  // Wikilinks [[itemType/id]] → span parsed by WikiLinkExtension
+  html = html.replace(
+    /\[\[(\w+)\/([^\]]+)\]\]/g,
+    '<span data-wikilink="" data-item-type="$1" data-id="$2" data-label="">$2</span>'
+  )
+
   // Links
   html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
 

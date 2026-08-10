@@ -35,20 +35,22 @@ export function useTextEditorState({
   mode,
   onModeChange,
   placeholder,
+  wikiLinks,
 }: TextEditorProps) {
-  const resolvedFormat = format ?? 'md'
-  const resolvedMode = mode ?? 'edit'
-  const resolvedPlaceholder = placeholder ?? 'Write your content...'
-  const [currentMode, setCurrentMode] = useState<EditorMode>(resolvedMode)
+  const [currentMode, setCurrentMode] = useState<EditorMode>(mode ?? 'edit')
   const [isRawMode, setIsRawMode] = useState(false)
 
-  const markdownContent = useAsciidocConverter(value ?? '', resolvedFormat)
+  const markdownContent = useAsciidocConverter(value ?? '', format ?? 'md')
   const [rawValue, setRawValue] = useState(markdownContent)
 
   const isEditable = currentMode === 'edit'
 
   const editor = useEditor({
-    extensions: createEditorExtensions(isEditable, resolvedPlaceholder),
+    extensions: createEditorExtensions(
+      isEditable,
+      placeholder ?? 'Write your content...',
+      wikiLinks?.fetchItems
+    ),
     content: markdownToHtml(markdownContent),
     editable: isEditable,
     immediatelyRender: false,
@@ -62,8 +64,8 @@ export function useTextEditorState({
   })
 
   useEffect(() => {
-    setCurrentMode(resolvedMode)
-  }, [resolvedMode])
+    setCurrentMode(mode ?? 'edit')
+  }, [mode])
 
   useEditorSync(editor, currentMode, markdownContent, rawValue, setRawValue)
   useMermaidRenderer(editor, isEditable, markdownContent)
