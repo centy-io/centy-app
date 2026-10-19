@@ -4,6 +4,7 @@ import type { ReactElement } from 'react'
 import type { EditFormProps } from './IssueDetail.types'
 import { EditStatusSelect } from './EditStatusSelect'
 import { EditPrioritySelect } from './EditPrioritySelect'
+import { useWikiLinkFetch } from './hooks/useWikiLinkFetch'
 import { AssetUploader } from '@/components/assets/AssetUploader'
 import { TextEditor } from '@/components/shared/TextEditor'
 
@@ -22,6 +23,8 @@ export function EditForm({
   assets,
   setAssets,
 }: EditFormProps): ReactElement {
+  const { fetchItems } = useWikiLinkFetch(projectPath, issueNumber)
+
   return (
     <div className="edit-form">
       <div className="form-group">
@@ -60,6 +63,7 @@ export function EditForm({
           mode="edit"
           placeholder="Describe the issue..."
           minHeight={200}
+          wikiLinks={{ fetchItems }}
         />
       </div>
       <div className="form-group">

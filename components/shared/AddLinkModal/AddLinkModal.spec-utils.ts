@@ -32,12 +32,14 @@ export const createMockGenericItem = (overrides: {
       createdAt: '2024-01-01T00:00:00Z',
       deletedAt: '',
       customFields: {},
+      tags: [],
+      projects: [],
       $typeName: 'centy.v1.GenericItemMetadata' as const,
       $unknown: undefined,
     },
     $typeName: 'centy.v1.GenericItem' as const,
     $unknown: undefined,
-  }) as GenericItem
+  })
 
 export const makeListItemTypesResponse = (plurals?: string[]) => {
   const resolvedPlurals = plurals ?? ['issues', 'docs']

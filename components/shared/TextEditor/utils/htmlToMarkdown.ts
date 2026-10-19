@@ -11,6 +11,18 @@ const turndownService = new TurndownService({
 // default escaping only causes double-escaping on every save.
 turndownService.escape = (string: string) => string
 
+// Wikilinks: <span data-wikilink data-item-type="..." data-id="..."> → [[itemType/id]]
+turndownService.addRule('wikilink', {
+  filter: node =>
+    node.nodeName === 'SPAN' && node.hasAttribute('data-wikilink'),
+  replacement: (_content, node) => {
+    const el = node
+    const itemType = el.getAttribute('data-item-type') ?? 'issues'
+    const id = el.getAttribute('data-id') ?? ''
+    return `[[${itemType}/${id}]]`
+  },
+})
+
 // Custom rules for better markdown conversion
 turndownService.addRule('codeBlock', {
   filter: ['pre'],
