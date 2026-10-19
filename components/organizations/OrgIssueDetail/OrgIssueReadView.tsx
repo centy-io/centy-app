@@ -17,7 +17,7 @@ export function OrgIssueReadView({ issue }: OrgIssueReadViewProps) {
     meta ? meta.customFields.org_display_number || '0' : '0',
     10
   )
-  const status = (meta && meta.status) ?? undefined
+  const status = meta?.status ?? undefined
   const priority = meta ? meta.priority : undefined
 
   return (

@@ -51,8 +51,7 @@ export function GenericItemEditForm({
           }}
         />
       </div>
-      {config &&
-        config.features &&
+      {config?.features &&
         config.features.status &&
         config.statuses.length > 0 && (
           <StatusField
@@ -61,17 +60,16 @@ export function GenericItemEditForm({
             setEditStatus={setEditStatus}
           />
         )}
-      {config &&
-        config.customFields.map(field => (
-          <CustomFieldEditor
-            key={field.name}
-            fieldName={field.name}
-            value={editCustomFields[field.name] || ''}
-            onChange={value => {
-              setEditCustomFields({ ...editCustomFields, [field.name]: value })
-            }}
-          />
-        ))}
+      {config?.customFields.map(field => (
+        <CustomFieldEditor
+          key={field.name}
+          fieldName={field.name}
+          value={editCustomFields[field.name] || ''}
+          onChange={value => {
+            setEditCustomFields({ ...editCustomFields, [field.name]: value })
+          }}
+        />
+      ))}
       <EditProjectsField
         projectPath={projectPath}
         editProjects={editProjects}

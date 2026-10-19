@@ -14,7 +14,7 @@ interface BuildCreateIssueReturnParams {
     | 'setPriority'
   >
   s: ReturnType<typeof useCreateIssueState>
-  handleSubmit: (e?: React.FormEvent) => Promise<void>
+  handleSubmit: (e?: React.SyntheticEvent) => Promise<void>
   handleCancel: () => void
 }
 

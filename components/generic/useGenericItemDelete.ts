@@ -46,7 +46,7 @@ export function useGenericItemDelete({
       setDeleting,
       setError
     )
-    if (res && res.success) router.push(listUrl)
+    if (res?.success) router.push(listUrl)
     else if (res) setError(res.error || 'Failed to delete')
   }, [projectPath, itemType, item, router, listUrl, setError])
 
@@ -64,7 +64,7 @@ export function useGenericItemDelete({
       setDeleting,
       setError
     )
-    if (res && res.success) router.push(listUrl)
+    if (res?.success) router.push(listUrl)
     else if (res) setError(res.error || 'Failed to archive')
   }, [projectPath, itemType, item, router, listUrl, setError])
 
@@ -82,7 +82,7 @@ export function useGenericItemDelete({
       setRestoring,
       setError
     )
-    if (res && res.success && res.item) setItem(res.item)
+    if (res?.success && res.item) setItem(res.item)
     else if (res) setError(res.error || 'Failed to restore')
   }, [projectPath, itemType, item, setItem, setError])
 

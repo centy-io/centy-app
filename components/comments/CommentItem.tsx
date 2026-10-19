@@ -25,8 +25,9 @@ export function CommentItem({
   const meta = comment.metadata
   const customFields = meta ? meta.customFields : {}
   const author = customFields.author || ''
-  const createdAt =
-    meta && meta.createdAt ? new Date(meta.createdAt).toLocaleString() : ''
+  const createdAt = meta?.createdAt
+    ? new Date(meta.createdAt).toLocaleString()
+    : ''
   const isSaving = savingId === comment.id
   const isDeleting = deletingId === comment.id
 

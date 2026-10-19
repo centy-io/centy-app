@@ -47,7 +47,7 @@ export function useStatusChange(
   const handleStatusChange = useCallback(
     async (newStatus: string) => {
       if (!projectPath || !issueNumber || !issue) return
-      if (newStatus === (issue.metadata && issue.metadata.status)) {
+      if (newStatus === issue.metadata?.status) {
         setShowStatusDropdown(false)
         return
       }
@@ -64,7 +64,7 @@ export function useStatusChange(
         if (response.success && response.item) {
           const updated = response.item
           setIssue(updated)
-          setEditStatus((updated.metadata && updated.metadata.status) ?? 'open')
+          setEditStatus(updated.metadata?.status ?? 'open')
         } else {
           setError(response.error || 'Failed to update status')
         }

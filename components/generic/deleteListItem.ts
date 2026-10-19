@@ -18,7 +18,7 @@ export async function deleteListItem(
     setDeleting,
     setError
   )
-  if (res && res.success) return true
+  if (res?.success) return true
   if (res) setError(res.error || 'Failed to delete item')
   return false
 }

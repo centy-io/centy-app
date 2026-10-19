@@ -10,6 +10,6 @@ export interface CreateOrgIssueFormProps {
   loading: boolean
   error: string | null
   stateOptions: { value: string; label: string }[]
-  onSubmit: (e?: React.FormEvent) => void
+  onSubmit: (e?: React.SyntheticEvent) => void
   onCancel: () => void
 }

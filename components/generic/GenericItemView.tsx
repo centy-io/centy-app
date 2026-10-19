@@ -19,7 +19,7 @@ export function GenericItemView({
   const meta = item.metadata
   const customFields = meta ? meta.customFields : {}
   const showStatus = Boolean(
-    config && config.features && config.features.status && meta && meta.status
+    config?.features && config.features.status && meta?.status
   )
 
   return (

@@ -50,31 +50,26 @@ function makeTitleColumn(createProjectLink: CreateProjectLink) {
 }
 
 function makeStatusColumn(stateManager: StateManager) {
-  return columnHelper.accessor(
-    row => (row.metadata && row.metadata.status) ?? 'unknown',
-    {
-      id: 'status',
-      header: 'Status',
-      cell: info => {
-        const status = info.getValue()
-        return (
-          <span
-            className={`status-badge ${stateManager.getStateClass(status)}`}
-          >
-            {status}
-          </span>
-        )
-      },
-      enableColumnFilter: true,
-      filterFn: (row, columnId, filterValue: string[]) => {
-        const selectedValues = Array.isArray(filterValue) ? filterValue : []
-        return (
-          selectedValues.length === 0 ||
-          selectedValues.includes(String(row.getValue(columnId)))
-        )
-      },
-    }
-  )
+  return columnHelper.accessor(row => row.metadata?.status ?? 'unknown', {
+    id: 'status',
+    header: 'Status',
+    cell: info => {
+      const status = info.getValue()
+      return (
+        <span className={`status-badge ${stateManager.getStateClass(status)}`}>
+          {status}
+        </span>
+      )
+    },
+    enableColumnFilter: true,
+    filterFn: (row, columnId, filterValue: string[]) => {
+      const selectedValues = Array.isArray(filterValue) ? filterValue : []
+      return (
+        selectedValues.length === 0 ||
+        selectedValues.includes(String(row.getValue(columnId)))
+      )
+    },
+  })
 }
 
 function makeDisplayNumberColumn() {

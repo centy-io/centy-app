@@ -29,7 +29,7 @@ export function useGenericItemCreate(itemType: string) {
   const listUrl = createLink(`/${itemType}`)
 
   const handleSubmit = useCallback(
-    (e: React.FormEvent): void => {
+    (e: React.SyntheticEvent): void => {
       e.preventDefault()
       void submitCreate(
         projectPath,

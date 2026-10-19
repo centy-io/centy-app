@@ -24,7 +24,7 @@ interface ProjectSelectorDropdownProps {
   fetchProjects: () => Promise<void>
   setIsOpen: (v: boolean) => void
   handleSelectProject: (project: ProjectInfo) => void
-  handleManualSubmit: (e: React.FormEvent) => Promise<void>
+  handleManualSubmit: (e: React.SyntheticEvent) => Promise<void>
   handleToggleFavorite: (e: React.MouseEvent, project: ProjectInfo) => void
   handleArchiveProject: (e: React.MouseEvent, project: ProjectInfo) => void
   toggleOrgCollapse: (orgSlug: string) => void

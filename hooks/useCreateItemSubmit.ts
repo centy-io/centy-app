@@ -50,7 +50,10 @@ export function useCreateItemSubmit({
   }, [kind, router, getProjectContext])
 
   const submitItem = useCallback(
-    async (createFn: () => Promise<CreateItemResult>, e?: React.FormEvent) => {
+    async (
+      createFn: () => Promise<CreateItemResult>,
+      e?: React.SyntheticEvent
+    ) => {
       if (e) e.preventDefault()
       if (!projectPath.trim()) return
       setLoading(true)

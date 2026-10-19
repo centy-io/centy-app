@@ -6,7 +6,7 @@ import { route } from 'nextjs-routes'
 interface ProjectSelectorFooterProps {
   manualPath: string
   setManualPath: (v: string) => void
-  onManualSubmit: (e: React.FormEvent) => Promise<void>
+  onManualSubmit: (e: React.SyntheticEvent) => Promise<void>
   setIsOpen: (v: boolean) => void
 }
 

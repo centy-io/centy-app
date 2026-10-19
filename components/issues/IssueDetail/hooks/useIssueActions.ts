@@ -69,7 +69,7 @@ export function useIssueActions({
       setDeleting,
       setError
     )
-    if (res && res.success) router.push(issuesListUrl)
+    if (res?.success) router.push(issuesListUrl)
     else if (res) setError(res.error || 'Failed to delete issue')
   }, [projectPath, issueNumber, router, issuesListUrl, setError])
 
@@ -87,7 +87,7 @@ export function useIssueActions({
       setDeleting,
       setError
     )
-    if (res && res.success) router.push(issuesListUrl)
+    if (res?.success) router.push(issuesListUrl)
     else if (res) setError(res.error || 'Failed to archive issue')
   }, [projectPath, issueNumber, router, issuesListUrl, setError])
 
