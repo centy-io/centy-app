@@ -24,7 +24,7 @@ export function GenericItemContent({
   itemType,
   projectPath,
 }: ContentProps): React.JSX.Element {
-  const isArchived = Boolean(item.metadata && item.metadata.deletedAt)
+  const isArchived = Boolean(item.metadata?.deletedAt)
   return (
     <div className="generic-item-detail">
       <GenericItemDetailHeader

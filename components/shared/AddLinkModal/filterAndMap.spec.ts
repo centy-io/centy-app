@@ -27,17 +27,16 @@ const makeItem = (
     $unknown: undefined,
   }) as GenericItem
 
-const makeLink = (targetId: string, linkType: string): LinkType =>
-  ({
-    targetId,
-    linkType,
-    createdAt: '',
-    targetItemType: '',
-    id: '',
-    direction: 'source',
-    $typeName: 'centy.v1.Link' as const,
-    $unknown: undefined,
-  }) as LinkType
+const makeLink = (targetId: string, linkType: string): LinkType => ({
+  targetId,
+  linkType,
+  createdAt: '',
+  targetItemType: '',
+  id: '',
+  direction: 'source',
+  $typeName: 'centy.v1.Link' as const,
+  $unknown: undefined,
+})
 
 describe('filterAndMap', () => {
   it('excludes the current entity from results', () => {

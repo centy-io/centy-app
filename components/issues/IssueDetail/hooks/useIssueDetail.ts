@@ -66,10 +66,10 @@ export function useIssueDetail(projectPath: string, issueNumber: string) {
   }, [projectPath, issueNumber])
 
   useEffect(() => {
-    if (issue && issue.id) {
+    if (issue?.id) {
       recordLastSeen(issue.id)
     }
-  }, [issue && issue.id])
+  }, [issue?.id])
 
   return {
     issue,

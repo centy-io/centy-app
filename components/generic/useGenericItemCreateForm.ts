@@ -7,7 +7,7 @@ export function useGenericItemCreateForm(config: ItemTypeConfigProto | null) {
   const [customFields, setCustomFields] = useState<Record<string, string>>({})
 
   useEffect(() => {
-    if (config && config.defaultStatus && !status) {
+    if (config?.defaultStatus && !status) {
       setStatus(config.defaultStatus)
     }
   }, [config, status])

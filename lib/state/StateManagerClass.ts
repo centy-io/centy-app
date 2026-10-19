@@ -50,9 +50,7 @@ export class StateManager {
    * Returns config defaultState if available, otherwise 'open'.
    */
   getDefaultState(): string {
-    return (
-      (this.config && this.config.defaults.status) ?? StateManager.DEFAULT_STATE
-    )
+    return this.config?.defaults.status ?? StateManager.DEFAULT_STATE
   }
 
   /**
@@ -60,7 +58,7 @@ export class StateManager {
    * Returns config color if available, otherwise default color, or fallback.
    */
   getStateColor(state: string): string {
-    const stateColors = this.config && this.config.stateColors
+    const stateColors = this.config?.stateColors
     const configColor = stateColors
       ? new Map(Object.entries(stateColors)).get(state)
       : undefined
@@ -99,7 +97,7 @@ export class StateManager {
    * Returns 'status-custom' if config has custom color, otherwise status-{state}.
    */
   getStateClass(state: string): string {
-    const stateColors = this.config && this.config.stateColors
+    const stateColors = this.config?.stateColors
     if (stateColors && new Map(Object.entries(stateColors)).has(state)) {
       return 'status-custom'
     }

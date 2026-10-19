@@ -4,30 +4,27 @@ import type { GenericItem } from '@/gen/centy_pb'
 const columnHelper = createColumnHelper<GenericItem>()
 
 export function createCreatedAtColumn() {
-  return columnHelper.accessor(
-    row => (row.metadata && row.metadata.createdAt) ?? '',
-    {
-      id: 'createdAt',
-      header: 'Created',
-      cell: info => {
-        const date = info.getValue()
-        return (
-          <span className="issue-date-text">
-            {date ? new Date(date).toLocaleDateString() : '-'}
-          </span>
-        )
-      },
-      enableColumnFilter: false,
-      sortingFn: (rowA, rowB) => {
-        const a = String(rowA.getValue('createdAt'))
-        const b = String(rowB.getValue('createdAt'))
-        if (!a && !b) return 0
-        if (!a) return 1
-        if (!b) return -1
-        return new Date(a).getTime() - new Date(b).getTime()
-      },
-    }
-  )
+  return columnHelper.accessor(row => row.metadata?.createdAt ?? '', {
+    id: 'createdAt',
+    header: 'Created',
+    cell: info => {
+      const date = info.getValue()
+      return (
+        <span className="issue-date-text">
+          {date ? new Date(date).toLocaleDateString() : '-'}
+        </span>
+      )
+    },
+    enableColumnFilter: false,
+    sortingFn: (rowA, rowB) => {
+      const a = String(rowA.getValue('createdAt'))
+      const b = String(rowB.getValue('createdAt'))
+      if (!a && !b) return 0
+      if (!a) return 1
+      if (!b) return -1
+      return new Date(a).getTime() - new Date(b).getTime()
+    },
+  })
 }
 
 export function createLastSeenColumn(lastSeenMap: Record<string, number>) {

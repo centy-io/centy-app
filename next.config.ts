@@ -1,5 +1,5 @@
 import { execSync } from 'node:child_process'
-import { withSentryConfig } from '@sentry/nextjs'
+import { withSentryConfig } from '@sentry/nextjs/config'
 import type { NextConfig } from 'next'
 import withRoutes from 'nextjs-routes/config'
 import { MissingEnvVarsError } from './lib/MissingEnvVarsError'

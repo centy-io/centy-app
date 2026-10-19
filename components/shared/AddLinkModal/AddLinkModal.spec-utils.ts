@@ -4,14 +4,13 @@ export const createMockLinkTypeInfo = (
   name: string,
   description?: string,
   isBuiltin?: boolean
-): LinkTypeInfo =>
-  ({
-    name,
-    description: description ?? '',
-    isBuiltin: isBuiltin ?? false,
-    $typeName: 'centy.v1.LinkTypeInfo' as const,
-    $unknown: undefined,
-  }) as LinkTypeInfo
+): LinkTypeInfo => ({
+  name,
+  description: description ?? '',
+  isBuiltin: isBuiltin ?? false,
+  $typeName: 'centy.v1.LinkTypeInfo' as const,
+  $unknown: undefined,
+})
 
 export const createMockGenericItem = (overrides: {
   id?: string

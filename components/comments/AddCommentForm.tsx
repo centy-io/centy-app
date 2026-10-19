@@ -15,7 +15,7 @@ export function AddCommentForm({
   const [body, setBody] = useState('')
   const [author, setAuthor] = useState('')
   const [expanded, setExpanded] = useState(false)
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.SyntheticEvent) {
     e.preventDefault()
     if (!body.trim()) return
     const success = await onAdd(body, author)
