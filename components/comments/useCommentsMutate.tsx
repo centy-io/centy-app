@@ -41,7 +41,7 @@ export function useUpdateComment(
         },
         setError
       )
-      if (res && res.success && res.item) {
+      if (res?.success && res.item) {
         const { item } = res
         setComments(prev => prev.map(c => (c.id === commentId ? item : c)))
       } else if (res) {
@@ -81,7 +81,7 @@ export function useDeleteComment(
         },
         setError
       )
-      if (res && res.success) {
+      if (res?.success) {
         setComments(prev => prev.filter(c => c.id !== commentId))
       } else if (res) {
         setError(res.error || 'Failed to delete comment')

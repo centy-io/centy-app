@@ -23,7 +23,7 @@ export function useCreateIssue() {
   })
 
   const handleSubmit = useCallback(
-    (e?: React.FormEvent) =>
+    (e?: React.SyntheticEvent) =>
       buildHandleSubmit({
         title: draft.title,
         description: draft.description,

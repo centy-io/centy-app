@@ -7,7 +7,7 @@ export function useOrgDisplayText() {
     if (selectedOrgSlug === null) return 'All Issues'
     if (selectedOrgSlug === '') return 'Ungrouped Issues'
     const org = organizations.find(o => o.slug === selectedOrgSlug)
-    return org && org.name ? `${org.name} Issues` : `${selectedOrgSlug} Issues`
+    return org?.name ? `${org.name} Issues` : `${selectedOrgSlug} Issues`
   }
 
   const getOrgNoteText = () => {

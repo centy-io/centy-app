@@ -59,12 +59,8 @@ describe('useGenericItemFetch', () => {
       })
     )
     expect(result.current.item).not.toBeNull()
-    expect(result.current.item && result.current.item.id).toBe(
-      'getting-started'
-    )
-    expect(result.current.item && result.current.item.title).toBe(
-      'Getting Started'
-    )
+    expect(result.current.item?.id).toBe('getting-started')
+    expect(result.current.item?.title).toBe('Getting Started')
     expect(result.current.editTitle).toBe('Getting Started')
     expect(result.current.editBody).toBe('# Getting Started\n\nWelcome!')
   })

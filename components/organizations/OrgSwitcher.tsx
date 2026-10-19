@@ -54,6 +54,7 @@ export function OrgSwitcher(): React.JSX.Element {
   return (
     <div className="org-switcher-container">
       <button
+        // eslint-disable-next-line @typescript-eslint/unbound-method -- floating-ui callback ref
         ref={refs.setReference}
         className="org-switcher-trigger"
         onClick={() => {

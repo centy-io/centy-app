@@ -33,7 +33,7 @@ export function useCreateOrgIssue() {
   })
 
   const handleSubmit = useCallback(
-    async (e?: React.FormEvent) => {
+    async (e?: React.SyntheticEvent) => {
       if (e) e.preventDefault()
       if (!orgProjectPath || !title.trim()) return
       setLoading(true)

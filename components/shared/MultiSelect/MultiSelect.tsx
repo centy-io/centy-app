@@ -28,6 +28,7 @@ export function MultiSelect({
   return (
     <div className={`multi-select ${resolvedClassName}`}>
       <button
+        // eslint-disable-next-line @typescript-eslint/unbound-method -- floating-ui callback ref
         ref={refs.setReference}
         type="button"
         className={`multi-select-trigger ${isOpen ? 'open' : ''} ${value.length > 0 ? 'has-value' : ''}`}
@@ -45,6 +46,7 @@ export function MultiSelect({
         <MultiSelectDropdown
           options={options}
           value={value}
+          // eslint-disable-next-line @typescript-eslint/unbound-method -- floating-ui callback ref
           floatingRef={refs.setFloating}
           floatingStyles={floatingStyles}
           getFloatingProps={getFloatingProps}

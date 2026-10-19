@@ -28,13 +28,9 @@ export function ItemCardContent({
       <span className="generic-item-id" title={item.id}>
         {item.id}
       </span>
-      {config &&
-        config.features &&
-        config.features.status &&
-        meta &&
-        meta.status && (
-          <span className="generic-item-status">{meta.status}</span>
-        )}
+      {config?.features && config.features.status && meta?.status && (
+        <span className="generic-item-status">{meta.status}</span>
+      )}
       {config && config.customFields.length > 0 && (
         <div className="generic-item-custom-fields">
           {config.customFields.slice(0, 2).map(field => {

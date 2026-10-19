@@ -31,12 +31,11 @@ export function OrgIssuesTable({ orgSlug, issues }: OrgIssuesTableProps) {
               ? parseInt(meta.customFields.org_display_number || '0', 10)
               : 0
             const orgNum = cfOrgNum || (meta ? meta.displayNumber : 0)
-            const status = (meta && meta.status) ?? '—'
+            const status = meta?.status ?? '—'
             const priority = meta ? meta.priority : 2
-            const createdAt =
-              meta && meta.createdAt
-                ? new Date(meta.createdAt).toLocaleDateString()
-                : '—'
+            const createdAt = meta?.createdAt
+              ? new Date(meta.createdAt).toLocaleDateString()
+              : '—'
             return (
               <tr key={issue.id} className="org-issue-row">
                 <td className="org-issue-number">{orgNum}</td>

@@ -17,6 +17,6 @@ export interface CreateIssueFormProps {
   stateOptions: StateOption[]
   setPendingAssets: (assets: PendingAsset[]) => void
   assetUploaderRef: React.RefObject<AssetUploaderHandle | null>
-  onSubmit: (e?: React.FormEvent) => Promise<void>
+  onSubmit: (e?: React.SyntheticEvent) => Promise<void>
   onCancel: () => void
 }

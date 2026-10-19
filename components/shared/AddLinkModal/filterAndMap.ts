@@ -28,8 +28,8 @@ export function filterAndMap(
     .map(i => ({
       id: i.id,
       displayNumber:
-        i.metadata && i.metadata.displayNumber
-          ? i.metadata.displayNumber
+        (i.metadata?.displayNumber ?? 0) > 0
+          ? i.metadata?.displayNumber
           : undefined,
       title: i.title,
       type: i.itemType.endsWith('s') ? i.itemType.slice(0, -1) : i.itemType,

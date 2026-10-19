@@ -19,7 +19,7 @@ interface GenericCreateFormProps {
   loading: boolean
   error: string | null
   listUrl: RouteLiteral
-  handleSubmit: (e: React.FormEvent) => void
+  handleSubmit: (e: React.SyntheticEvent) => void
 }
 
 export function GenericCreateForm({

@@ -18,7 +18,7 @@ export async function softDeleteListItem(
     setDeleting,
     setError
   )
-  if (res && res.success) return true
+  if (res?.success) return true
   if (res) setError(res.error || 'Failed to archive item')
   return false
 }

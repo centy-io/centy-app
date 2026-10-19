@@ -6,6 +6,6 @@ import { parseDaemonError } from './parseDaemonError'
  */
 export function isDaemonUnimplemented(error: string): boolean {
   const parsed = parseDaemonError(error)
-  if (parsed.code && parsed.code.toLowerCase() === 'unimplemented') return true
+  if (parsed.code?.toLowerCase() === 'unimplemented') return true
   return error.toLowerCase().includes('unimplemented')
 }

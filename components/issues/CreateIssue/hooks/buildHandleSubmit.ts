@@ -15,12 +15,12 @@ interface BuildHandleSubmitParams {
   projectPath: string
   submitItem: (
     build: () => ReturnType<typeof buildCreateItemResult>,
-    e?: React.FormEvent
+    e?: React.SyntheticEvent
   ) => Promise<void>
 }
 
 export function buildHandleSubmit(params: BuildHandleSubmitParams) {
-  return async (e?: React.FormEvent): Promise<void> => {
+  return async (e?: React.SyntheticEvent): Promise<void> => {
     const {
       title,
       description,

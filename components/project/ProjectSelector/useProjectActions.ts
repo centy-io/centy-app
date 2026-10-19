@@ -44,7 +44,7 @@ export function useProjectActions(params: UseProjectActionsParams) {
     params.setSearchQuery('')
   }
 
-  const handleManualSubmit = async (e: React.FormEvent): Promise<void> => {
+  const handleManualSubmit = async (e: React.SyntheticEvent): Promise<void> => {
     e.preventDefault()
     if (!params.manualPath.trim()) return
     const path = params.manualPath.trim()
@@ -62,7 +62,7 @@ export function useProjectActions(params: UseProjectActionsParams) {
   const getCurrentProjectName = (): string => {
     if (!projectPath) return 'Select Project'
     const p = params.projects.find(p => p.path === projectPath)
-    if (p && p.name) return p.name
+    if (p?.name) return p.name
     const parts = projectPath.split('/')
     return parts[parts.length - 1] || projectPath
   }
