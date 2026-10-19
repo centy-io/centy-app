@@ -309,3 +309,71 @@
 .text-editor--display .editor-content .tiptap {
   cursor: default;
 }
+
+/* Wikilink nodes */
+.wikilink-wrapper {
+  display: inline;
+}
+
+.wikilink {
+  color: var(--color-primary);
+  background: rgba(59, 130, 246, 0.1);
+  border-radius: 4px;
+  padding: 1px 4px;
+  text-decoration: none;
+  font-size: 0.9em;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  cursor: pointer;
+  user-select: none;
+}
+
+.wikilink:hover {
+  background: rgba(59, 130, 246, 0.2);
+  text-decoration: none;
+}
+
+/* Wikilink autocomplete popup */
+.wikilink-popup {
+  position: fixed;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-default);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  min-width: 240px;
+  max-width: 360px;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 9999;
+}
+
+.wikilink-popup-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.875rem;
+}
+
+.wikilink-popup-item:hover,
+.wikilink-popup-item.is-selected {
+  background: var(--color-gray-50);
+}
+
+.wikilink-popup-item-type {
+  color: var(--color-text-secondary);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.wikilink-popup-item-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

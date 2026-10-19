@@ -33,8 +33,8 @@ export const WikiLinkPopup = forwardRef<WikiLinkPopupRef, WikiLinkPopupProps>(
       const rect = clientRect()
       if (!rect) return
       const el = containerRef.current
-      el.style.top = `${rect.bottom + window.scrollY + 4}px`
-      el.style.left = `${rect.left + window.scrollX}px`
+      el.style.top = `${rect.bottom + 4}px`
+      el.style.left = `${rect.left}px`
     }, [clientRect, items])
 
     useImperativeHandle(ref, () => ({
