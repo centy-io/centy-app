@@ -1,6 +1,5 @@
 import { useCallback } from 'react'
 import { create } from '@bufbuild/protobuf'
-import { ensureMentionsLinkType } from './ensureMentionsLinkType'
 import { MENTIONS_LINK_TYPE } from './MENTIONS_LINK_TYPE'
 import { centyClient } from '@/lib/grpc/client'
 import {
@@ -40,7 +39,6 @@ export function useWikiLinkSync(entityId: string, entityType: string) {
 
       // Create links for new wikilink refs
       const toCreate = wikiRefs.filter(r => !existingMentionIds.has(r.id))
-      if (toCreate.length > 0) await ensureMentionsLinkType(projectPath)
       await Promise.all(
         toCreate.map(ref =>
           centyClient.createLink(
