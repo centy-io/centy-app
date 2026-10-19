@@ -39,7 +39,7 @@ export const createMockGenericItem = (overrides: {
     },
     $typeName: 'centy.v1.GenericItem' as const,
     $unknown: undefined,
-  }) as GenericItem
+  })
 
 export const makeListItemTypesResponse = (plurals?: string[]) => {
   const resolvedPlurals = plurals ?? ['issues', 'docs']

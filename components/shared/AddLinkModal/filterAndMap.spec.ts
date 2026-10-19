@@ -27,7 +27,7 @@ const makeItem = (
     },
     $typeName: 'centy.v1.GenericItem' as const,
     $unknown: undefined,
-  }) as GenericItem
+  })
 
 const makeLink = (targetId: string, linkType: string): LinkType => ({
   targetId,
