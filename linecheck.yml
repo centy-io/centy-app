@@ -1,0 +1,16 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/tupe12334/linecheck/main/schema/linecheck.schema.json
+
+rules:
+  - pattern: "**/*.{ts,tsx}"
+    warn: 200
+    warn_message: "Getting long — consider splitting into smaller modules/components"
+    error: 400
+    error_message: "Too large to review easily; split this file before merging"
+
+exclude:
+  - "gen/**"
+  - "node_modules/**"
+  - ".next/**"
+  - "pnpm-lock.yaml"
+  - "styles/**"
+  - "@types/nextjs-routes.d.ts"

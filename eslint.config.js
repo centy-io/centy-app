@@ -39,6 +39,9 @@ export default [
         'error',
         { allowNumber: true },
       ],
+      // Flag private members assigned only in the constructor/at declaration
+      // and never reassigned, so immutability intent is explicit and enforced.
+      '@typescript-eslint/prefer-readonly': 'error',
     },
   },
   {

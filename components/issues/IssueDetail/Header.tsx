@@ -3,36 +3,31 @@
 import type { ReactElement } from 'react'
 import Link from 'next/link'
 import type { RouteLiteral } from 'nextjs-routes'
-import { EditorSelector } from '@/components/shared/EditorSelector'
 
 interface HeaderProps {
   issuesListUrl: RouteLiteral
   isEditing: boolean
   saving: boolean
-  openingInVscode: boolean
   onEdit: () => void
   onCancelEdit: () => void
   onSave: () => void
   onMove: () => void
   onDuplicate: () => void
   onDelete: () => void
-  onOpenInVscode: () => Promise<void>
-  onOpenInTerminal: () => Promise<void>
+  onOpenInWorktree: () => void
 }
 
 export function Header({
   issuesListUrl,
   isEditing,
   saving,
-  openingInVscode,
   onEdit,
   onCancelEdit,
   onSave,
   onMove,
   onDuplicate,
   onDelete,
-  onOpenInVscode,
-  onOpenInTerminal,
+  onOpenInWorktree,
 }: HeaderProps): ReactElement {
   return (
     <div className="issue-header">
@@ -43,11 +38,12 @@ export function Header({
       <div className="issue-actions">
         {!isEditing ? (
           <>
-            <EditorSelector
-              onOpenInVscode={onOpenInVscode}
-              onOpenInTerminal={onOpenInTerminal}
-              loading={openingInVscode}
-            />
+            <button
+              onClick={onOpenInWorktree}
+              className="editor-primary-btn vscode"
+            >
+              Open in Worktree
+            </button>
             <button onClick={onEdit} className="edit-btn">
               Edit
             </button>

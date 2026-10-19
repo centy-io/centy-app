@@ -8,9 +8,9 @@ import { createRouteHandler } from './mock-grpc-route-handler'
  * Intercepts HTTP requests to the daemon URL and returns mock responses.
  */
 export class GrpcMocker {
-  private page: Page
-  private handlers: Map<string, HandlerConfig>
-  private daemonUrl: string
+  private readonly page: Page
+  private readonly handlers: Map<string, HandlerConfig>
+  private readonly daemonUrl: string
   private isSetup: boolean
 
   constructor(page: Page, daemonUrl?: string) {

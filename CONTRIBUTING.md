@@ -36,7 +36,7 @@ pnpm test:watch
 
 - `pnpm dev` - Start development server
 - `pnpm build` - Build for production
-- `pnpm preview` - Preview production build
+- `pnpm start` - Serve the production build
 - `pnpm test` - Run tests
 - `pnpm test:coverage` - Run tests with coverage
 - `pnpm lint` - Check code quality
