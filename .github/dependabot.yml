@@ -14,10 +14,9 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
-      # Remove when #233 adopts the 3.1 rules.
-      # 3.0.5 ships without rules/require-spec-file-tsx/helpers.js.
+      # Remove when #233 adopts the newer rules (3.0.2+ add jsdoc rules; 3.0.5 is a broken publish).
       - dependency-name: "eslint-config-agent"
-        versions: ["3.0.5", ">=3.1.0"]
+        versions: [">=3.0.2"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
