@@ -25,7 +25,7 @@ init({
   enableLogs: true,
 
   // Enable sending user PII (Personally Identifiable Information)
-  sendDefaultPii: true,
+  dataCollection: { userInfo: true, frameContextLines: 7 },
 
   // Enable automatic instrumentation for browser performance
   integrations: [
