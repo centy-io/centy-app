@@ -1,39 +1,29 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useCallback } from 'react'
+import { useLocalStorage } from 'usehooks-ts'
 
 const STORAGE_KEY = 'centy-issues-last-seen'
 
 type LastSeenMap = Record<string, number>
 
-function getInitialLastSeenMap(): LastSeenMap {
-  if (typeof window === 'undefined') return {}
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    if (!stored) return {}
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const map: LastSeenMap = JSON.parse(stored)
-    return map
-  } catch {
-    return {}
-  }
-}
+const EMPTY: LastSeenMap = {}
+// initializeWithValue: false keeps the first client render equal to the static export.
+const STORAGE_OPTIONS = { initializeWithValue: false }
 
 export function useLastSeenIssues() {
-  const [lastSeenMap, setLastSeenMap] = useState<LastSeenMap>(
-    getInitialLastSeenMap
+  const [lastSeenMap, setLastSeenMap] = useLocalStorage<LastSeenMap>(
+    STORAGE_KEY,
+    EMPTY,
+    STORAGE_OPTIONS
   )
 
-  const recordLastSeen = useCallback((issueId: string) => {
-    const timestamp = Date.now()
-    setLastSeenMap(prev => {
-      const updated = { ...prev, [issueId]: timestamp }
-      if (typeof window !== 'undefined') {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated))
-      }
-      return updated
-    })
-  }, [])
+  const recordLastSeen = useCallback(
+    (issueId: string) => {
+      setLastSeenMap(prev => ({ ...prev, [issueId]: Date.now() }))
+    },
+    [setLastSeenMap]
+  )
 
   return { lastSeenMap, recordLastSeen }
 }
